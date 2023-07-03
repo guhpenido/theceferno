@@ -29,6 +29,8 @@ const storage = getStorage(app);
 const storageRef = ref(storage);
 
 export function Register() {
+
+  //padrão State
   const [state, setState] = useState({
     email: "",
     password: "",
@@ -95,6 +97,7 @@ export function Register() {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isEmailUnique, setIsEmailUnique] = useState(true);
 
+  //padrão Observer
   useEffect(() => {
 
     const checkEmailUniqueness = async () => {
@@ -108,6 +111,7 @@ export function Register() {
     }
   }, [email]);
 
+  //exemplo padrão de projeto Memento
   const [etapa, setEtapa] = useState(1);
 
   const avancarEtapa = (e) => {
