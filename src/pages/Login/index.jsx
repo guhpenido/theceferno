@@ -28,7 +28,7 @@ export function Login() {
     <div className="login">
       <div className="container">
         <header className="header">
-          <img src={logoImg} alt="Workflow" className="logoImg" />
+          <img src={logoImg} alt="CEFERNO" className="logoImg" />
           <span>Por favor digite suas informações de login</span>
         </header>
 

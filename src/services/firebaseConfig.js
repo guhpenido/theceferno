@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
@@ -12,4 +13,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
+
+// Obter a instância do Auth (se você também estiver usando)
 export const auth = getAuth(app);
+
