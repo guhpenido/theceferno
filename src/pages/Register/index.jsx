@@ -1,14 +1,51 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+//import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-import { auth, db } from "../../services/firebaseConfig";
+//import { db, auth, storageRef } from "../../services/firebaseConfig";
 import "./styles.scss";
 import "./styles.css";
 
+import { initializeApp } from "firebase/app";
+import { getFirestore } from 'firebase/firestore/lite';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getStorage, ref } from "firebase/storage";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
+  authDomain: "auth-ceferno.firebaseapp.com",
+  projectId: "auth-ceferno",
+  storageBucket: "auth-ceferno.appspot.com",
+  messagingSenderId: "388861107940",
+  appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const storageRef = ref(storage);
+
 export function Register() {
+  const [state, setState] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    celular: "",
+    instituicao: "",
+    curso: "",
+    dtNascimento: "",
+    nome: "",
+    usuario: "",
+    pseudonimo: "",
+    imageSrc: null,
+    etapa: 1,
+    isEmailValid: true,
+    isPasswordMatch: true,
+  });
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isPasswordMatch, setIsPasswordMatch] = useState(false);
@@ -21,21 +58,47 @@ export function Register() {
     setConfirmPassword(e.target.value);
   };
 
-  // Função para verificar se as senhas são iguais
+  // Função para verificar se as senhas são iguais e atendem às regras de validação
   const checkPasswordMatch = () => {
-    setIsPasswordMatch(password === confirmPassword);
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    setIsPasswordMatch(
+      password === confirmPassword && passwordRegex.test(password)
+    );
+  };
+
+  // Renderização condicional das regras de validação da senha
+  const renderPasswordRules = () => {
+    return (
+      <>
+        <p>A senha deve ter no mínimo 8 caracteres.</p>
+        <p>A senha deve conter pelo menos uma letra maiúscula.</p>
+        <p>A senha deve conter pelo menos um número.</p>
+        <p>A senha deve conter pelo menos um caractere especial.</p>
+      </>
+    );
+  };
+
+  // Renderização condicional das mensagens de validação
+  const renderValidationMessages = () => {
+    if (!isPasswordMatch) {
+      return (
+        <p style={{ color: "red" }}>
+          As senhas não coincidem ou não atendem às regras de validação.
+        </p>
+      );
+    }
+    return null;
   };
 
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isEmailUnique, setIsEmailUnique] = useState(true);
 
-  const [createUserWithEmailAndPassword, user, loading, error] =
-    useCreateUserWithEmailAndPassword(auth);
-
   useEffect(() => {
+
     const checkEmailUniqueness = async () => {
-      const usersRef = firestore.collection("users");
+      const usersRef = db.collection("users");
       const snapshot = await usersRef.where("email", "==", email).get();
       setIsEmailUnique(snapshot.empty);
     };
@@ -44,11 +107,6 @@ export function Register() {
       checkEmailUniqueness();
     }
   }, [email]);
-
-  function handleSignOut(e) {
-    // e.preventDefault();
-    //createUserWithEmailAndPassword(email, password);
-  }
 
   const [etapa, setEtapa] = useState(1);
 
@@ -67,23 +125,34 @@ export function Register() {
 
   const vazio = () => {};
 
-  const [imagemPerfil, setImagemPerfil] = useState(null);
+  const [imageSrc, setImageSrc] = useState(
+    "https://uploaddeimagens.com.br/images/004/529/200/full/logo.png?1688341296"
+  );
 
   const handleImagemPerfilChange = (event) => {
     const arquivo = event.target.files[0];
     const reader = new FileReader();
 
     reader.onload = () => {
-      setImagemPerfil(reader.result);
+      setImageSrc(reader.result);
     };
+
     if (arquivo) {
       reader.readAsDataURL(arquivo);
+      // Upload image to Firebase Storage
+      const imageRef = storageRef.child(arquivo.name);
+      imageRef.put(arquivo).then(() => {
+        // Get image URL
+        imageRef.getDownloadURL().then((url) => {
+          setImageSrc(url);
+        });
+      });
+    } else {
+      // No image selected, set default URL
+      setImageSrc("https://uploaddeimagens.com.br/images/004/529/200/full/logo.png?1688341296");
     }
   };
 
-  const [imageSrc, setImageSrc] = useState(
-    "https://uploaddeimagens.com.br/images/004/529/200/full/logo.png?1688341296"
-  );
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -94,9 +163,20 @@ export function Register() {
 
     if (file) {
       reader.readAsDataURL(file);
+      // Upload image to Firebase Storage
+      const imageRef = storageRef.child(file.name);
+      imageRef.put(file).then(() => {
+        // Get image URL
+        imageRef.getDownloadURL().then((url) => {
+          setImageSrc(url);
+        });
+      });
+    } else {
+      // No file selected, set default URL
+      setImageSrc(defaultImageUrl);
     }
   };
-
+  const [loading, setLoading] = useState(false);
   if (loading) {
     return <p>carregando...</p>;
   }
@@ -162,9 +242,6 @@ export function Register() {
     return usuarioPattern.test(usuario);
   };
 
-  const isImagemPerfilValid = () => {
-    return !!imagemPerfil;
-  };
   const [pseudonimo, setPseudonimo] = useState("");
   const isPseudonimoValid = () => {
     const pseudonimoPattern = /^[^\s]{1,25}$/;
@@ -209,17 +286,17 @@ export function Register() {
     setPseudonimo(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        email,
-        password
-      );
-      const user = userCredential.user;
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-      await firestore.collection("users").doc(user.uid).set({
-        email,
+    try {
+      // Create user in Firebase authentication
+      console.log(email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log(user.uid);
+      // Create user in Firestore
+      const {
         celular,
         instituicao,
         curso,
@@ -227,26 +304,50 @@ export function Register() {
         nome,
         usuario,
         pseudonimo,
+        imageSrc,
+      } = this.state;
+      console.log(celular);
+      console.log(instituicao);
+      console.log(curso);
+      console.log(dtNascimento);
+      console.log(nome);
+      console.log(usuario);
+      console.log(pseudonimo);
+      console.log(imageSrc);
+      await db.collection("users").doc("4vaspCjC5muHhx0VO1hQ").set({
+        uid: user.uid,
+        celular,
+        instituicao,
+        curso,
+        dtNascimento,
+        nome,
+        usuario,
+        pseudonimo,
+        imageSrc,
+        email,
       });
 
-      // Limpar os campos após o cadastro
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setCelular("");
-      setInstituicao("");
-      setCurso("");
-      setDtNascimento("");
-      setNome("");
-      setUsuario("");
-      setPseudonimo("");
+      // Reset form and state
+      this.setState({
+        email: "",
+        password: "",
+        confirmPassword: "",
+        celular: "",
+        instituicao: "",
+        curso: "",
+        dtNascimento: "",
+        nome: "",
+        usuario: "",
+        pseudonimo: "",
+        imageSrc: null,
+        etapa: 1,
+        isEmailValid: true,
+        isPasswordMatch: true,
+      });
 
-      alert("Usuário cadastrado com sucesso!");
+      alert("Usuário cadastrado!");
     } catch (error) {
-      console.error(error);
-      alert(
-        "Ocorreu um erro ao cadastrar o usuário. Por favor, tente novamente."
-      );
+      alert("Não foi possível cadastrar o usuário. " + error);
     }
   };
 
@@ -304,6 +405,8 @@ export function Register() {
               {!isPasswordMatch && (
                 <p style={{ color: "red" }}>As senhas não coincidem</p>
               )}
+              {!isPasswordMatch && renderValidationMessages()}
+              {renderPasswordRules()}
             </div>
             <button
               onClick={avancarEtapa}
@@ -452,7 +555,7 @@ export function Register() {
                   type="file"
                   name="fotoPerfil"
                   accept="image/*"
-                  onChange={handleFileChange}
+                  onChange={handleImagemPerfilChange}
                 />
                 {imageSrc && <img id="output" src={imageSrc} alt="Preview" />}
               </div>
