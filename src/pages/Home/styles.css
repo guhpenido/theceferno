@@ -1,0 +1,135 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #4d01ff;
+  }
+  .home{
+    background: rgb(6,2,13);
+  background: linear-gradient(360deg, rgba(6,2,13,1) 10%, rgba(77,1,255,1) 58%);
+    display: flex;
+    width: 4000px;
+    height: 100vh;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-direction: row;
+  position: fixed;
+  right: 0px;
+  bottom: 200;
+  border-left: #210034 solid 5px;
+  }
+  
+  nav {
+    background-color: #4d01ff;
+    color: #6e0365;
+    padding: 10px;
+  }
+  
+  .navbar {
+    background-color: #4d01ff !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .logo {
+    color: #210034;
+    width: 200px; 
+    height: 200px; 
+    position: absolute;
+    text-decoration: none;
+    font-weight: bold;
+    align-items: center; 
+    font-size: 20px;
+    text-align:unset;
+  }
+
+  .botoes{
+    position: absolute;
+    top: 430px;
+    right: 1580px;
+    text-decoration: none;
+    font-weight: bold;
+    align-items: center; 
+    font-size: 20px;
+    text-align:unset;
+  }
+
+.logo img{
+    position: absolute;
+    top: -650px;
+    right: 1600px;
+    margin-bottom: 25px;
+}
+
+.logo span{
+    position: absolute;
+    top: -500px;
+    right: 1530px;
+    width: 300px;
+    height: 100px;
+    text-decoration: none;
+    font-weight: bold;
+    align-items: center; 
+    font-size: 20px;
+    text-align: justify;
+}
+
+  
+  .nav-links {
+    display: flex;
+  }
+  
+  .nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    margin-left: 10px;
+  }
+  
+  .content {
+    margin-top: 350px;
+  }
+
+    #login{
+        margin: 5px;
+        color: #ffffff !important;
+        background-color: rgb(49, 6, 44);
+        border-color: rgb(49, 6, 44);
+  }
+    #register{
+        margin: 5px;
+        background-color: rgb(49, 6, 44);
+        border-color: rgb(49, 6, 44);
+        padding-left: 20px;
+        padding-right: 20px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .home {
+      width: 100vw;
+      height: auto;
+      position: static;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+  
+    .logo {
+      width: auto;
+      height: auto;
+      margin-bottom: 10px;
+    }
+  
+    .botoes {
+      margin-top: 20px;
+    }
+  
+    .container {
+      height: auto;
+    }
+  
+    .content {
+      margin-top: 20px;
+    }
+  }
