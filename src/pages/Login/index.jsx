@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
 import { auth } from "../../services/firebaseConfig";
-import "./styles.css";
+//import "./styles.css";
 
 export function Login() {
   const [email, setEmail] = useState("");

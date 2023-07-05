@@ -35,10 +35,10 @@ header .header-logo svg {
 }
 
 header .header-logo svg path:first-child {
-  fill: white;
+  fill: #4d01ff;
 } 
 header .header-logo svg path:last-child {
-  fill: #4d01ff;
+  fill: white;
 }
 header .header-logo .logo-text {
   font-size: 1.25rem;
