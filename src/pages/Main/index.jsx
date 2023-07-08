@@ -4,26 +4,14 @@ import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
 import { auth } from "../../services/firebaseConfig";
-//import "./styles.css";
+import "./styles.css";
 
-export function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth);
-
-  function handleSignIn(e) {
-    e.preventDefault();
-    signInWithEmailAndPassword(email, password);
-  }
+export function Main() {
 
   if (loading) {
     return <p>carregando...</p>;
   }
-  if (user) {
-    return console.log(user);
-  }
+
   return (
     <div className="login">
       <div className="container">
