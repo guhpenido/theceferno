@@ -8,11 +8,13 @@
   outline: none;
 }
 
+
 body {
   background-image: url("../../assets/backgroundHome.jpg") !important;
   background-size: cover; 
   background-repeat: no-repeat;
   background-position: center;
+  height: 100%;
 }
 
 header {
@@ -35,10 +37,10 @@ header .header-logo svg {
 }
 
 header .header-logo svg path:first-child {
-  fill: #4d01ff;
+  fill: white;
 } 
 header .header-logo svg path:last-child {
-  fill: white;
+  fill: #4d01ff;
 }
 header .header-logo .logo-text {
   font-size: 1.25rem;
@@ -137,6 +139,63 @@ main .home-section .home-button {
 }
 main .home-section .home-button:hover {
   transform: translateY(-0.25rem);
+}
+
+section {
+  padding: 60px 0;
+  overflow: hidden;
+}
+
+.sections-bg {
+  background-color: #f6f6f6;
+}
+
+.section-header {
+  text-align: center;
+  padding-bottom: 60px;
+}
+
+.section-header h2 {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+.section-header h2:after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: #4d01ff;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.section-header p {
+  margin-bottom: 0;
+  color: #6f6f6f;
+}
+
+.about h3 {
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 20px;
+  font-family: var(--font-secondary);
+}
+
+.about .call-us p {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.about .content p:last-child {
+  margin-bottom: 0;
 }
 
 @media (max-width: 600px) {

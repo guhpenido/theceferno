@@ -8,6 +8,11 @@
   outline: none;
 }
 
+.home{
+  height: 100vh;
+  width: 200vh;
+}
+
 body {
   background-image: url("../../assets/backgroundHome.jpg") !important;
   background-size: cover; 
