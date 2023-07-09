@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import "./bootstrap/css/bootstrap.min.css";
-import "./bootstrap/js/bootstrap.bundle.min.js";
+import "../bootstrap/css/bootstrap.min.css";
+import "../bootstrap/js/bootstrap.bundle.min.js";
 import "./styles.css";
 
 export function Sobre() {
