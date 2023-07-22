@@ -1,5 +1,5 @@
 {
-  "name": "workflow",
+  "name": "ceferno",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,18 +9,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@firebase/firestore": "^4.1.0",
     "bootstrap": "^5.3.0",
-    "firebase": "^9.10.0",
+    "firebase": "^10.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-firebase-hooks": "^5.0.3",
+    "react-firebase-hooks": "^3.0.5",
     "react-router-dom": "^6.4.1",
     "reactstrap": "^9.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
-    "@vitejs/plugin-react": "^2.1.0",
+    "@vitejs/plugin-react": "^2.2.0",
     "sass": "^1.63.6",
     "vite": "^3.1.0"
   }

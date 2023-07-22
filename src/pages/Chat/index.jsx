@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import voltarIcon from "../../assets/voltar-icon.svg";
 import enviarIcon from "../../assets/enviar-icon.svg";
-import "./styles.css"; 
+//import "./stylesChat.css"; 
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
 import { doc, getDoc, onSnapshot, addDoc, collection, arrayUnion, updateDoc } from "firebase/firestore";

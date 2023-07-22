@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import "../bootstrap/css/bootstrap.min.css";
 import "../bootstrap/js/bootstrap.bundle.min.js";
-import "./styles.css";
+//import "./stylesSobre.css";
 
 export function Sobre() {
   return (
