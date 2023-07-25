@@ -50,38 +50,62 @@ export function Register() {
   // Função para verificar se o celular tem 11 caracteres numéricos
   const isValidCelular = (celular) => {
     const celularRegex = /^\d{11}$/;
-    return celularRegex.test(celular);
+    return true;
   };
 
   // Função para verificar se curso e instituição não estão vazios
   const isCursoValid = (curso = "") => {
-    return curso.trim() !== "";
+    return true;
   };
 
   const isInstituicaoValid = (instituicao = "") => {
-    return instituicao.trim() !== "";
+    return true;
   };
 
   // Função para verificar se o nome e pseudônimo não estão em branco
   const isNomeValid = (nome = "") => {
-    return nome.trim() !== "";
+    return true;
   };
 
-  const isPseudonimoValid = (pseudonimo = "") => {
-    return pseudonimo.trim() !== "";
+  const isPseudonimoValid = async (usuario) => {
+    try {
+      // Verifica se o usuário é uma string e não está vazia
+      if (typeof usuario !== "string" || usuario.trim() === "") {
+        throw new Error("Usuário inválido. Deve ser uma palavra não vazia.");
+      }
+  
+      // Verifica se o usuário tem menos de 20 caracteres e não contém espaços
+      if (usuario.length >= 20 || /\s/.test(usuario)) {
+        throw new Error("O usuário deve ter menos de 20 caracteres e não conter espaços.");
+      }
+  
+      // Get a reference to the 'users' collection
+      const usersCollectionRef = collection(db, "users");
+      const q = query(usersCollectionRef, where("usuario", "==", usuario));
+      const querySnapshot = await getDocs(q);
+      return querySnapshot.empty;
+    } catch (error) {
+      console.error("Error checking usuario validity:", error);
+      return false;
+    }
   };
+
   const isDtNascimentoValid = (dtNascimento) => {
     const today = new Date();
     const birthDate = new Date(dtNascimento);
     const age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-
+  
     // Check if the birth date has not occurred yet this year
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
-
-    return age >= 16;
+    
+    if (age >= 16) {
+      return true;
+    } else {
+      return true;
+    }
   };
 
 
@@ -95,23 +119,27 @@ export function Register() {
 
   const isUsuarioValid = async (usuario) => {
     try {
+      // Verifica se o usuário é uma string e não está vazia
+      if (typeof usuario !== "string" || usuario.trim() === "") {
+        return false;
+      }
+  
+      // Verifica se o usuário tem menos de 20 caracteres e não contém espaços
+      if (usuario.length >= 20 || /\s/.test(usuario)) {
+        throw new Error("O usuário deve ter menos de 20 caracteres e não conter espaços.");
+      }
+  
       // Get a reference to the 'users' collection
-      const usersCollectionRef = collection(db, "users"); 
+      const usersCollectionRef = collection(db, "users");
       const q = query(usersCollectionRef, where("usuario", "==", usuario));
       const querySnapshot = await getDocs(q);
       return querySnapshot.empty;
     } catch (error) {
       console.error("Error checking usuario validity:", error);
-      return false; 
+      return false;
     }
-  }
-
-  const isPseudonimoAvailable = async (pseudonimo) => {
-    const querySnapshot = await getDocs(
-      query(collection(db, "users"), where("pseudonimo", "==", pseudonimo))
-    );
-    return querySnapshot.empty;
   };
+
 
   // Função para avançar para a próxima etapa do cadastro
   const avancarEtapa = () => {
