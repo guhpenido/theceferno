@@ -317,6 +317,7 @@ html, body {
     font-size: 12px;
   }
 }
+
 .container form .button:disabled {
   opacity: 0.6; /* Exemplo de redução da opacidade */
   cursor: not-allowed; /* Exemplo de cursor não permitido */
@@ -324,4 +325,82 @@ html, body {
 .profile-pic input{
   width: 100%;
   background-color: #000000;
+}
+
+/*Media queries para tablet*/
+@media screen and (min-width: 481px) and (max-width: 767px) {
+  .login {
+    width: 100vw;
+    height: 100vh;
+    border-left: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .container .inputContainer span {
+    font-size: 8vh;
+    line-height: 10vw;
+    padding-top: 15vh;
+  }
+
+  .container form .inputContainer label {
+    font-size: 8vw;
+    padding: 2vh;
+  }
+
+  .container form .inputContainer input {
+    width: 80vw;
+    height: 8vw;
+  }
+
+  .container form .button {
+    width: 80vw;
+    height: 8vw;
+    font-size: 10px;
+  }
+
+  .container form .footer p,
+  .container form .footer a {
+    font-size: 15px;
+  }
+}
+
+/*Media queries para tablets maiores*/
+@media screen and (min-width:768px) and (max-width:1320px) {
+  .login {
+    width: 100vw;
+    height: 100vh;
+    border-left: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .container .inputContainer span {
+    font-size: 35vh;
+    line-height: 30vw;
+    padding-top: 15vh;
+  }
+
+  .container form .inputContainer label {
+    font-size: 7vw;
+    padding: 5vh;
+  }
+
+  .container form .inputContainer input {
+    width: 90vw;
+    height: 6vw;
+  }
+
+  .container form .button {
+    width: 90vw;
+    height: 6vw;
+    font-size: 15px;
+  }
+
+  .container form .footer p,
+  .container form .footer a {
+    font-size: 20px;
+  }
 }
