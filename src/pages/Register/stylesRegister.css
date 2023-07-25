@@ -299,11 +299,13 @@ html, body {
 
   .container form .inputContainer label {
     font-size: 8vw;
+    padding: 1vh;
   }
 
   .container form .inputContainer input {
     width: 80vw;
     height: 8vw;
+    align-items: center;
   }
 
   .container form .button {
@@ -345,13 +347,14 @@ html, body {
   }
 
   .container form .inputContainer label {
-    font-size: 8vw;
-    padding: 2vh;
+    font-size: 5vw;
+    padding: 1vh;
   }
 
   .container form .inputContainer input {
     width: 80vw;
     height: 8vw;
+    align-items: center;
   }
 
   .container form .button {
@@ -384,19 +387,20 @@ html, body {
   }
 
   .container form .inputContainer label {
-    font-size: 7vw;
-    padding: 5vh;
+    font-size: 4vw;
+    padding: 2vh;
   }
 
   .container form .inputContainer input {
     width: 90vw;
     height: 6vw;
+    align-items: center;
   }
 
   .container form .button {
     width: 90vw;
     height: 6vw;
-    font-size: 15px;
+    font-size: 20px;
   }
 
   .container form .footer p,
