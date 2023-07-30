@@ -8,9 +8,6 @@
   outline: none;
 }
 
-.contato{
-  width: 200vh;
-}
 
 body {
   background-image: url("../../assets/backgroundHome.jpg") !important;
@@ -96,7 +93,7 @@ header .header-items .header-item::before {
   background-color: #4d01ff;
   transition: height 125ms ease-in-out;
 }
-header .header-items .header-item .contato1::before {
+header .header-items .header-item .contato::before {
   height: 0.125rem;
 }
 header .header-link {
@@ -202,27 +199,16 @@ main .home-section .home-button:hover {
   background: rgba(110, 25, 128, 0.8);
 }
 
-@media (max-width: 600px) {
-  header {
+@media (max-width: 768px) {
+  .header-link{
+    margin-top: 15px;
+  }
+
+  .form {
+    /* Centralizar os campos do formulário verticalmente */
+    display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2rem;
   }
-  
-  header .header-logo {
-    margin-bottom: 1rem;
-  }
-  
-  header .header-items {
-    flex-direction: column;
-    margin-top: 2rem;
-  }
-  
-  header .header-items .header-item {
-    margin: 0.5rem 0;
-  }
-  
-  main {
-    padding: 2rem;
-  }
+
 }

@@ -168,4 +168,8 @@ main .home-section .home-button:hover {
   main {
     padding: 2rem;
   }
+
+  .header-link{
+    margin-top: 15px;
+  }
 }

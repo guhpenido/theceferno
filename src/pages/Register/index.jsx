@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-import "./stylesRegister.scss";
-import "./stylesRegister.css";
-import { useHistory } from 'react-router-dom';
+//import "./stylesRegister.scss";
+//import "./stylesRegister.css";
+import { useNavigate } from 'react-router-dom';
 import { app } from "../../services/firebaseConfig";
 import {
   getFirestore,
@@ -25,7 +25,7 @@ import {  doc, setDoc } from "firebase/firestore"; // Import the doc function
 const db = getFirestore(app);
 
 export function Register() {
-  const history = useHistory();
+  const history = useNavigate();
   // Estado inicial do formulário
   const [state, setState] = useState({
     email: "",
