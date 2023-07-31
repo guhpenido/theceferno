@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-import "./stylesRegister.scss";
-import "./stylesRegister.css";
+//import "./stylesRegister.scss";
+//import "./stylesRegister.css";
 
 import { app } from "../../services/firebaseConfig";
 import { getFirestore, collection, addDoc, query, where, getDocs } from "firebase/firestore";
