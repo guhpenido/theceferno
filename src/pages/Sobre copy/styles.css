@@ -8,17 +8,12 @@
   outline: none;
 }
 
-.home{
-  height: 100vh;
-  width: 200vh;
-}
-
 body {
   background-image: url("../../assets/backgroundHome.jpg") !important;
   background-size: cover; 
   background-repeat: no-repeat;
   background-position: center;
-  height: 100vh;
+  height: 100%;
 }
 
 header {
@@ -41,10 +36,10 @@ header .header-logo svg {
 }
 
 header .header-logo svg path:first-child {
-  fill: white;
+  fill: #4d01ff;
 } 
 header .header-logo svg path:last-child {
-  fill: #4d01ff;
+  fill: white;
 }
 header .header-logo .logo-text {
   font-size: 1.25rem;
@@ -88,7 +83,7 @@ header .header-items .header-item .item-title .title-icon svg {
 header .header-items .header-item .item-title .title-icon svg path {
   fill: #4d01ff;
 }
-header .header-items .header-item::before {
+header .header-items .header-item ::before {
   content: "";
   position: absolute;
   bottom: -0.35rem;
@@ -97,9 +92,11 @@ header .header-items .header-item::before {
   background-color: #4d01ff;
   transition: height 125ms ease-in-out;
 }
-header .header-items .header-item:hover::before {
+
+header .header-items .header-item .sobre::before {
   height: 0.125rem;
 }
+
 header .header-link {
   padding: 0.5rem 1rem;
   border-radius: 1.5rem;
@@ -143,6 +140,75 @@ main .home-section .home-button {
 }
 main .home-section .home-button:hover {
   transform: translateY(-0.25rem);
+}
+
+.about h3 {
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 20px;
+  font-family: var(--font-secondary);
+}
+
+.about .content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.about .content p:last-child {
+  margin-bottom: 0;
+}
+
+section {
+  padding: 60px 0;
+  overflow: hidden;
+}
+
+.sections-bg {
+  background-color: #f6f6f6;
+}
+
+.section-header {
+  text-align: center;
+  padding-bottom: 60px;
+}
+
+.section-header h2 {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+.section-header h2:after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: #4d01ff;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.section-header p {
+  margin-bottom: 0;
+  color: #6f6f6f;
+}
+
+.section-header h2 {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+.section-header {
+  text-align: center;
+  padding-bottom: 60px;
 }
 
 @media (max-width: 600px) {

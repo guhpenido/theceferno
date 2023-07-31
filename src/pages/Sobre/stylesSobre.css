@@ -96,6 +96,7 @@ header .header-items .header-item ::before {
 header .header-items .header-item .sobre::before {
   height: 0.125rem;
 }
+
 header .header-link {
   padding: 0.5rem 1rem;
   border-radius: 1.5rem;
