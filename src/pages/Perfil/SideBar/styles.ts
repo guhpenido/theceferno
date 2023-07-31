@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { IconSearch } from '../../styles/Icons';
+import { IconSearch } from '../styles/Icons';
 
 export const Container = styled.div`
     display: none;

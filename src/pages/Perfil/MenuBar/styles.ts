@@ -4,7 +4,7 @@ IconSearch,
 WhisperIcon,
 IconEmail,
 ConfigIcon,
-BellIcon } from '../../styles/Icons';
+BellIcon } from '../styles/Icons';
 
 export const Container = styled.div`
     display: none;

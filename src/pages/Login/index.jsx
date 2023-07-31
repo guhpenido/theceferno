@@ -2,27 +2,34 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-import "./stylesLogin.css";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { app } from "../../services/firebaseConfig.js"
+//import "./stylesLogin.css";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { app } from "../../services/firebaseConfig.js";
+import { useNavigate } from 'react-router-dom';
 
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const auth = getAuth();
-  //const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
+  //const history = useHistory();
 
   function handleSignIn(e) {
     e.preventDefault();
-    signInWithEmailAndPassword(email, password);
-  }
 
-  /*if (loading) {
-    return <p>carregando...</p>;
+    // Sign in the user with the provided email and password using the app.auth() instance
+    signInWithEmailAndPassword(app.auth(), email, password)
+      .then((userCredential) => {
+        // The user has signed in successfully
+        const user = userCredential.user;
+        console.log("User logged in:", user);
+
+        // Redirect to a protected route or any other page after successful login
+        //history.push("/dm");
+      })
+      .catch((error) => {
+        // Handle login error
+        console.error("Error signing in:", error.message);
+      });
   }
-  if (user) {
-    return console.log(user);
-  }*/
   return (
     <div className="login">
       <div className="container">

@@ -5,7 +5,7 @@ IconHome,
 IconSearch,
 WhisperIcon,
 IconEmail,
-ConfigIcon}  from "../../styles/Icons";
+ConfigIcon}  from "../styles/Icons";
 
 export const Container = styled.div`
   display: flex;
