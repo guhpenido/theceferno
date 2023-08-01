@@ -1,5 +1,6 @@
+/*
+
 import React, { useState, useEffect } from 'react';
-//import firebase from 'firebase/app';
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
@@ -9,17 +10,16 @@ import './styleWhisper.css';
 
 //configuração do firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
-    authDomain: "auth-ceferno.firebaseapp.com",
-    projectId: "auth-ceferno",
-    storageBucket: "auth-ceferno.appspot.com",
-    messagingSenderId: "388861107940",
-    appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
+  apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
+  authDomain: "auth-ceferno.firebaseapp.com",
+  projectId: "auth-ceferno",
+  storageBucket: "auth-ceferno.appspot.com",
+  messagingSenderId: "388861107940",
+  appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
 };
 
 // Inicia o Firebase
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 
 function Whisper() {
@@ -41,30 +41,27 @@ function Whisper() {
       }
     };
 
-    /* Obtem o usuario atual quando o componente é criado
-     const unsubscribe = initializeApp.auth().onAuthStateChanged((user) => {
-      setCurrentUser(user);
-
-      
-    }); */
-
+    // Obtem o usuario atual quando o componente é criado 
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // O usuário está autenticado, e você pode acessar suas informações usando o objeto 'user'
         console.log('Usuário atual:', user);
         setCurrentUser(user);
-      } else {
+      } 
+      else {
         // O usuário não está autenticado
         console.log('Nenhum usuário autenticado.');
       }
     });
-
     fetchData();
-
-     // Clean up the listener when the component unmounts
-    
+  
   }, []);
+
+
+  const handleCloseButtonClick = () => {
+    setShowBox(false);
+  };
 
   const handleSendMessage = () => {
     // Obtem a data e hora atuais
@@ -90,6 +87,19 @@ function Whisper() {
         setShowBox(false);
         // Atualizar o estado da última mensagem enviada
         setLastSentMessage(newWhisper);
+        
+        // After sending the message, create a new div to display the message details
+        const messageDetailsDiv = (
+          <div key={formattedDate + formattedTime} className="message-details">
+            <p>Enviado por: {currentUser.displayName}</p>
+            <p>Mensagem: {message}</p>
+            <p>Enviado em: {formattedDate} às {formattedTime}</p>
+          </div>
+        );
+          
+        // Update the state to add the new div to the list of whispers
+        setWhisperData((prevWhispers) => [...prevWhispers, messageDetailsDiv]);
+
       })
       .catch((error) => {
         console.error('Error sending message:', error);
@@ -98,48 +108,121 @@ function Whisper() {
 
   return (
     <>
-      <div className="whisper-container">
       <h1>Whispers</h1>
       <button onClick={() => setShowBox(true)}>Enviar Mensagem</button>
-      {currentUser && showBox && (
-        <div className="message-box">
-          <p className="userName">{currentUser.displayName}</p>
-          <div className="message">
-            <input
-              type="text"
-              placeholder="Digite sua mensagem"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-          </div>
-          <div className="date">
-            <p>Enviado em: {new Date().toLocaleDateString()} as {new Date().toLocaleTimeString()}</p>
-          </div>
-          <button onClick={handleSendMessage}>Enviar</button>
+
+      {showBox && (
+        <div className="whisper-container">
+          {currentUser && (
+            <div className="message-box">
+              <p className="userName">{currentUser.displayName}</p>
+              <div className="message">
+                <input
+                  type="text"
+                  placeholder="Digite sua mensagem"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+              </div>
+              <div className="date">
+                <p>Enviado em: {new Date().toLocaleDateString()} as {new Date().toLocaleTimeString()}</p>
+              </div>
+              <button onClick={handleSendMessage && handleCloseButtonClick}>Enviar</button> 
+              {whisperData.map((whisper) => whisper)}
+            </div>
+          )}   
+        </div>
+      )}
+    </>
+  );
+}
+
+export default Whisper;
+
+*/
+
+import React, { useState } from 'react';
+import './styleWhisper.css';
+import enviarIcon from "../../assets/enviar-icon.svg";
+
+function Whisper() {
+  // Definindo os estados do componente usando o Hook useState
+  const [whisperData, setWhisperData] = useState([]); // Armazena os dados dos sussurros (mensagens)
+  const [showBox, setShowBox] = useState(false); // Controla a exibição da caixa de envio de mensagens
+  const [message, setMessage] = useState(''); // Armazena o texto digitado pelo usuário para enviar como mensagem
+  const [currentUser, setCurrentUser] = useState({ displayName: 'Davi' }); // Usuário atual (pode ser substituído por um objeto de usuário real)
+  const [lastSentMessage, setLastSentMessage] = useState(null); // Armazena a última mensagem enviada para exibição
+
+  // Função para lidar com o envio de uma mensagem
+  const handleSendMessage = () => {
+    if (message.trim() === '') {
+      alert('Please enter a message.');
+      return;
+    }
+
+    // Cria um novo objeto whisper
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString();
+    const formattedTime = currentDate.toLocaleTimeString();
+    const newWhisper = {
+      userName: currentUser.displayName,
+      message,
+      date: formattedDate,
+      time: formattedTime,
+    };
+
+    // Atualiza o estado para adicionar o novo Whisper à lista de mensagens
+    setWhisperData((prevWhispers) => [newWhisper, ...prevWhispers]);
+
+     // Reseta o campo de entrada de mensagem
+    setMessage('');
+
+    // Define a última mensagem enviada para exibição
+    setLastSentMessage(newWhisper);
+  };
+
+  return (
+    <>
+      <h1>Whispers</h1>
+      <button id='mais' onClick={() => setShowBox(true)}>+</button>
+      
+        {/* Exibe a caixa de envio de mensagens quando showBox for verdadeiro */}
+      {showBox && (
+        <div className="whisper-container">
+          {currentUser && (
+            <div className="message-box">
+              <p className="userName">{currentUser.displayName}</p>
+              <div className="message message-details">
+                <div className="message-details">
+                  <img src={enviarIcon} className='foto-perfil'></img>
+                  <div className='enviouRecebeu'>
+                    <p>@userlogado</p>
+                  </div>
+                </div>              
+                <input
+                  type="text"
+                  placeholder="Digite sua mensagem"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+              </div>
+              <button onClick={handleSendMessage}>Enviar</button>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Renderizar a div com a última mensagem enviada */}
-      {lastSentMessage && (
-        <div className="last-sent-message">
-          <p>{lastSentMessage.userName}</p>
-          <p>{lastSentMessage.message}</p>
-          <p>{lastSentMessage.date}</p>
-          <p>{lastSentMessage.time}</p>
+      {/* Exibe as mensagens Whisper em ordem reversa */}
+      {whisperData.map((whisper, index) => (
+        <div key={index} className="message-details">
+          <img src={enviarIcon} className='foto-perfil'></img>
+          <div className='enviouRecebeu'>
+          <p>@{whisper.userName} enviou para @usuarioQueRecebe {/*whisper.userNameRecebe*/}</p>
+          </div>
+          <p className='mensagem'>{whisper.message}</p>
+          <p className='data'>Enviado em: {whisper.date} às {whisper.time}</p>
         </div>
-      )}
-
-      <ul>
-        {whisperData.map((whisper, index) => (
-          <li key={index}>
-            <p>{whisper.userName}</p>
-            <p>{whisper.message}</p>
-            <p>{whisper.date}</p>
-            <p>{whisper.time}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
+      ))}
     </>
   );
 }

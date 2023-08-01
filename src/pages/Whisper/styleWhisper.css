@@ -1,36 +1,107 @@
-.whisper-container {
-    position: relative;
-    width: 300px;
-    height: 150px;
-    border: 1px solid #4763E4;
-    padding: 10px;
-    margin: 10px;
-  }
-  
-  /* Posiciona o userName no canto esquerdo superior */
-  .userName {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    font-weight: bold;
-  }
-  
-  /* Posiciona a data e o dia no canto inferior direito */
-  .date {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-  }
-  
-  /* Estiliza a mensagem no centro vertical da div */
-  .message {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
-  
-  .last-sent-message {
-    border: solid 20px #4763E4;
-    border-radius: 4px;
-  }
+/* styleWhisper.css */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #020202;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #4763E4;
+  border: 1px solid #4763E4;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.message-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-box .userName {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.message-box .message input {
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.message-box .date p {
+  margin-bottom: 10px;
+  color: #4763E4;
+}
+
+.message-box button {
+  background-color: #4764e48e;
+  color: white;
+  border: solid #5b11a1;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.message-details {
+  position: relative;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  background-color: #4763E4;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.mensagem {
+  float: right
+}
+
+.message-details p {
+  margin: 5px 0;
+}
+
+
+
+
+
+
+.enviouRecebeu p{
+  font-size: 85%;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  color:black ;
+  margin: 0;
+  margin-right: 13%;
+}
+
+.foto-perfil {
+  max-width: 20%;
+  max-height: 20¢;
+}
+
+#mais {
+  position: absolute;
+  border: none;
+  bottom: 10%;
+  right: -8%;
+  margin-right: 13%;
+  color:#4763E4 ;
+  font-size: 350%;
+  background-color: #020202;
+}
