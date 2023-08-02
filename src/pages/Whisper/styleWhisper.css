@@ -44,15 +44,17 @@ h1 {
 }
 
 .message-box button {
-  background-color: #4764e48e;
+  background-color: #4763E4;
   color: white;
-  border: solid #5b11a1;
   padding: 10px 20px;
   text-align: center;
-  text-decoration: none;
   font-size: 16px;
-  margin-top: 10px;
+  max-width: 40%;
   cursor: pointer;
+}
+
+.invisivel{
+  background-color: orange
 }
 
 .message-details {
@@ -80,19 +82,45 @@ h1 {
 
 
 .enviouRecebeu p{
-  font-size: 85%;
+  font-size: 100%;
   position: absolute;
   margin: auto;
   top: 0;
   right: 0;
+  color:rgba(0, 0, 0, 0.667) ;
+  margin: 0;
+  
+}
+
+.whisper .enviouRecebeu p {
+  right:  2%;
+  margin: 1%;
+}
+
+.whisper .data {
+  color: rgba(0, 0, 0, 0.667);
+  font-size: 90%;
+  position: absolute;
+  margin: auto;
+  bottom: 0;
+  right: 2%;
+  margin: 1%;
+}
+
+.whisper .mensagem {
+  font-size: 120%;
+  position: absolute;
+  margin: auto;
+  top: 40%;
+  right: 50%;
   color:black ;
   margin: 0;
-  margin-right: 13%;
 }
 
 .foto-perfil {
   max-width: 20%;
-  max-height: 20¢;
+  max-height: 20%;
+  border-radius: 50%;
 }
 
 #mais {
@@ -105,3 +133,4 @@ h1 {
   font-size: 350%;
   background-color: #020202;
 }
+
