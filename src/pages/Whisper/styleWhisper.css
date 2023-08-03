@@ -1,0 +1,36 @@
+.whisper-container {
+    position: relative;
+    width: 300px;
+    height: 150px;
+    border: 1px solid #4763E4;
+    padding: 10px;
+    margin: 10px;
+  }
+  
+  /* Posiciona o userName no canto esquerdo superior */
+  .userName {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-weight: bold;
+  }
+  
+  /* Posiciona a data e o dia no canto inferior direito */
+  .date {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  /* Estiliza a mensagem no centro vertical da div */
+  .message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  
+  .last-sent-message {
+    border: solid 20px #4763E4;
+    border-radius: 4px;
+  }

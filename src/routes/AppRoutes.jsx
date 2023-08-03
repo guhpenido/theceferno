@@ -25,6 +25,7 @@ export function AppRoutes() {
         <Route path="/chat/:userId" element={<Chat/>} />
         <Route path="/perfil" element={<Layout/>} />
         <Route path="/perfil" element={<GlobalStyles/>} />
+        <Route path="/whisper" element={<Whisper />} /> 
       </Routes>
     </BrowserRouter>
   );
