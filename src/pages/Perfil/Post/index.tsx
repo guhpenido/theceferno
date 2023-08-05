@@ -31,7 +31,11 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-const Post: React.FC = () => {
+interface PostProps {
+  avatarUrl: string | null;
+}
+
+const Post: React.FC<PostProps> = ({ avatarUrl }) => {
   const [currentUser, setCurrentUser] = useState<any | null>(null);
 
   useEffect(() => {
@@ -49,7 +53,7 @@ const Post: React.FC = () => {
   return (
     <Container>
       <Body>
-          <Avatar />
+          <Avatar as="img" src={avatarUrl || ''} alt="Novo Avatar" />
         <Content>
           <Header>
             <strong>{currentUser ? currentUser.displayName : 'Nome do Usuário'}</strong>

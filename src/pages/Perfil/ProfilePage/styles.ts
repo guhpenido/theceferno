@@ -57,15 +57,14 @@ export const ProfileData = styled.div`
 
   > p {
     font-size: 15px;
-    margin-top: -60px;
-    margin-left: 200px;
+    margin-top: 10px;
     color: #d9d9d9;
+    margin-left: auto; ; /* Coloca o parágrafo no lado direito */
+    padding: 0 16px; /* Espaçamento interno para telas menores */
 
     @media (min-width: 768px) {
-      top: 100px;
       font-size: 15px;
-      margin-left: 230px;
-      margin-top: -50px;
+      margin-top: -50px; /* Mantenha o valor para telas maiores */
     }
   }
 `;
@@ -83,28 +82,6 @@ export const EditButton = styled(Button)`
     font-size: 15px;
     border-radius: 25px;
   }
-`;
-
-export const inputContainerStyle = styled.div `
-  display: 'flex';
-  flex-direction: 'column';
-  gap: '10px';
-  margin: '20px 0';
-`;
-
-export const inputStyle = styled.div `
-  padding: '8px';
-  border: '1px solid #ccc';
-  border-radius: '6px';
-  width: '100%';
-`;
-
-export const textareaStyle = styled.div `
-  padding: '8px';
-  border: '1px solid #ccc';
-  border-radius: '6px';
-  width: '100%';
-  resize: 'vertical';
 `;
 
 

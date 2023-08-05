@@ -1,12 +1,12 @@
 import React from "react";
-import {
-  Container,
-  Tab,
-  Whispers,
-  TabContainer,
-} from "./styles";
+import { Container, Tab, Whispers, TabContainer } from "./styles";
 import Post from "../Post";
-const Feed: React.FC = () => {
+
+interface FeedProps {
+  avatarUrl: string | null;
+}
+
+const Feed: React.FC<FeedProps> = ({ avatarUrl }) => {
   return (
     <Container>
       <TabContainer>
@@ -15,11 +15,12 @@ const Feed: React.FC = () => {
         <Tab>Respostas</Tab>
       </TabContainer>
       <Whispers>
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
+        {/* Passando avatarUrl como avatarUrl para o componente Post */}
+        <Post avatarUrl={avatarUrl} />
+        <Post avatarUrl={avatarUrl} />
+        <Post avatarUrl={avatarUrl} />
+        <Post avatarUrl={avatarUrl} />
+        <Post avatarUrl={avatarUrl} />
       </Whispers>
     </Container>
   );

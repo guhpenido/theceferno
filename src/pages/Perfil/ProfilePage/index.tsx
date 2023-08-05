@@ -143,35 +143,74 @@ const ProfilePage: React.FC = () => {
       </p>
         <EditButton outlined={true} onClick={openModal}>Editar Perfil</EditButton>
         <ModalReact className="Modal" isOpen={isModalOpen} onRequestClose={closeModal}
-        style={{
-          overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 1000,
-          },
-          content: {
-            backgroundColor: '#4763E4',
-            padding: '20px',
-            borderRadius: '12px',
-            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(60%, 50%)',
-            maxWidth: '500px', // Define a largura máxima do modal
-            height: '300px',
-          },
-        }}
-      >
-        <input placeholder="Escolha uma foto de perfil" type="file" accept="image/*" onChange={handleAvatarChange} />
-        <input placeholder="Escolha uma foto de capa" type="file" accept="image/*" onChange={handleBannerChange} />
-        <input placeholder="Escreva algo sobre você..." value={bio} onChange={handleBioChange} />
-        <button onClick={saveChanges}>Salvar Alterações</button>
-      </ModalReact>
+  style={{
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      zIndex: 1000,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    content: {
+      backgroundColor: '#4763E4',
+      padding: '20px',
+      borderRadius: '12px',
+      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+      width: '90%', // Responsivo: ocupar 90% da largura disponível
+      maxWidth: '400px', // Largura máxima
+      maxHeight: '80%', // Altura máxima
+      display: 'flex',
+      flexDirection: 'column',
 
+      // Estilos para responsividade em telas menores (até 768px)
+      '@media (max-width: 768px)': {
+        width: '95%', // Ocupar 95% da largura disponível
+        maxHeight: '90%', // Altura máxima menor
+        padding: '15px', // Espaçamento interno aumentado para telas menores
+      },
+    },
+  }}>
+  <input
+    placeholder="Escolha uma foto de perfil"
+    type="file"
+    accept="image/*"
+    onChange={handleAvatarChange}
+    style={{ marginBottom: '10px' }} // Espaçamento inferior
+  />
+  <input
+    placeholder="Escolha uma foto de capa"
+    type="file"
+    accept="image/*"
+    onChange={handleBannerChange}
+    style={{ marginBottom: '10px' }} // Espaçamento inferior
+  />
+  <textarea
+    placeholder="Escreva algo sobre você..."
+    value={bio}
+    onChange={handleBioChange}
+    style={{ marginBottom: '10px', resize: 'none', minHeight: '100px' }} // Espaçamento inferior, evita redimensionamento vertical e altura mínima
+  />
+  <button
+    onClick={saveChanges}
+    style={{
+      backgroundColor: '#fff',
+      color: '#4763E4',
+      border: 'none',
+      borderRadius: '4px',
+      padding: '10px 20px',
+      cursor: 'pointer',
+      transition: 'background-color 0.3s, color 0.3s',
+      fontWeight: 'bold',
+    }}
+  >
+    Salvar Alterações
+  </button>
+</ModalReact>
         <h1>{currentUser ? currentUser.displayName : 'Nome do Usuário'}</h1>
         <h2>@{currentUser ? currentUser.username : 'nome_do_usuario'}</h2>
 
       </ProfileData>
-      <Feed />
+      <Feed avatarUrl={newAvatar} />
     </Container>
   );
 };
