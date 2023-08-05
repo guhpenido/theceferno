@@ -114,9 +114,9 @@ function Whisper() {
       <button id='mais' onClick={() => setShowBox(true)}>+</button>
 
       {showBox && (
-       <div className="whisper-container">
-         {currentUser && (
-           <div className="message-box">
+      <div className="whisper-container">
+        {currentUser && (
+        <div className="message-box">
             <p className="userName">{currentUser.displayName}</p>
             <div className="message message-details">
               <div className="message-details">

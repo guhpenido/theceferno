@@ -1,7 +1,7 @@
 import React from "react";
 import "../bootstrap/css/bootstrap.min.css";
 import "../bootstrap/js/bootstrap.bundle.min.js";
-import "./stylesTutorial.css";
+// import "./stylesTutorial.css";
 import { Link } from "react-router-dom";
 
 export function Tutorial() {

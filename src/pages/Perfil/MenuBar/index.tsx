@@ -31,15 +31,8 @@ const MenuBar: React.FC = () => {
                     <span>Postar</span>
                 </Button>       
         </TopSide>
-        <BotSide>
-            <Avatar />
-            <ProfileData>
-                <strong>Nome do Usuário</strong>
-                <span>@nome_do_usuario</span>
-            </ProfileData>
-        </BotSide>
     </Container>
-  );
+);
 }
 
 export default MenuBar;

@@ -42,7 +42,7 @@ export const Logo = styled.div`
     lightgray 50% / cover no-repeat;
 
 > path {
-    fill: var(--ceferno);
+    fill: #4763E4;
 }
     margin-bottom: 20px;
 `;
@@ -51,6 +51,9 @@ export const MenuButton = styled.button `
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    background: #000;
+    color: #d9d9d9;
+    border: 0;
 
 > span {
     display: none;
@@ -98,13 +101,13 @@ export const MenuButton = styled.button `
     border-radius: 25px;
 
     &:hover {
-        background: var(--ceferno-dark-hover);
+        background: #00003d;
     }
 
     &:hover, &.active {
         span, svg {
-            color: var(--ceferno);
-            fill: var(--ceferno);
+            color: #4763E4;
+            fill: #4763E4;
         }
     }
 `;
@@ -132,11 +135,12 @@ export const Avatar = styled.div `
     height: 39px;
     flex-shrink: 0;
     border-radius: 50%;
-    background: var(--gray);
+    background: #7a7a7a;
     align-items: center;
 `;
 export const ProfileData = styled.div `
     display: none;
+    color: #d9d9d9;
 
     @media(min-width: 1280px) {
         display: flex;
@@ -145,7 +149,7 @@ export const ProfileData = styled.div `
         font-size: 14px;
 
     > span {
-        color: var(--gray);
+        color: #7a7a7a;
     }
     }
 `;

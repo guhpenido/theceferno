@@ -12,8 +12,8 @@ const ArrowIcon: React.FC = () => {
       fill="none"
     >
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M14.3724 16.9851L45.4894 17.6588L45.3352 24.7821L14.2182 24.1084L25.8986 36.0953L20.665 41.0206L0.422062 20.2463L21.5452 0.367741L26.5607 5.51489L14.3724 16.9851Z"
         fill="#4763E4"
       />
