@@ -1,7 +1,7 @@
 import React from "react";
-//import "../bootstrap/css/bootstrap.min.css";
-//import "../bootstrap/js/bootstrap.bundle.min.js";
-//import "./stylesContato.css";
+import "../bootstrap/css/bootstrap.min.css";
+import "../bootstrap/js/bootstrap.bundle.min.js";
+// import "./stylesContato.css";
 import { Link } from "react-router-dom";
 
 export function Contato() {
@@ -24,21 +24,27 @@ export function Contato() {
           </div>
           <div className="header-items">
             <div className="header-item">
+            <Link style={{ textDecoration: 'none' }} to="/sobre">
               <div className="item-title">
                 <h1 className="title-text">Sobre</h1>
               </div>
+              </Link>
             </div>
             <div className="header-item">
+            <Link style={{ textDecoration: 'none' }} to="/tutorial">
               <div className="item-title">
                 <h1 className="title-text">Tutorial</h1>
               </div>
+              </Link>
             </div>
             <div className="header-item">
+            <Link style={{ textDecoration: 'none' }} to="/contato">
               <div className="item-title">
-                <h1 className="title-text contato1">Contato</h1>
+                <h1 className="title-text contato">Contato</h1>
               </div>
+              </Link>
             </div>
-            <Link to="/register">
+            <Link style={{ textDecoration: 'none' }} to="/register">
               <p href="" className="header-link">
                 Acesse TheCeferno
               </p>
@@ -47,9 +53,9 @@ export function Contato() {
         </header>
         <main className="main" id="main">
           <section id="contact" className="contact">
-            <div className="container" data-aos="fade-up">
+            <div className="container-fluid" data-aos="fade-up">
               <div className="section-header">
-                <h2>Contato</h2>
+                <h2>Envie aqui suas sugestões!</h2>
               </div>
 
               <div className="row gx-lg-0 ">
@@ -60,7 +66,7 @@ export function Contato() {
                     className="form"
                   >
                     <div className="row">
-                      <div className="col-md-6 form-group">
+                      <div className="col-12 col-md-6 form-group">
                         <input
                           type="text"
                           name="name"
@@ -70,7 +76,7 @@ export function Contato() {
                           required
                         />
                       </div>
-                      <div className="col-md-6 form-group mt-3 mt-md-0">
+                      <div className="col-12 col-md-6 form-group mt-3 mt-md-0">
                         <input
                           type="email"
                           className="form-control"
@@ -86,12 +92,12 @@ export function Contato() {
                         className="form-control"
                         name="message"
                         rows="7"
-                        placeholder="Mensagem:"
+                        placeholder="Sugestão:"
                         required
                       ></textarea>
                     </div>
                     <div className="text-center">
-                      <button type="submit">Send Message</button>
+                      <button type="submit">Enviar sugestão</button>
                     </div>
                   </form>
                 </div>

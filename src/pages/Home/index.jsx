@@ -22,21 +22,27 @@ export function Home() {
           </div>
           <div className="header-items">
             <div className="header-item">
+            <Link style={{ textDecoration: 'none' }} to="/sobre">
               <div className="item-title">
                 <h1 className="title-text">Sobre</h1>
               </div>
+              </Link>
             </div>
             <div className="header-item">
+            <Link style={{ textDecoration: 'none' }} to="/tutorial">
               <div className="item-title">
                 <h1 className="title-text">Tutorial</h1>
               </div>
+              </Link>
             </div>
             <div className="header-item">
+            <Link style={{ textDecoration: 'none' }} to="/contato">
               <div className="item-title">
                 <h1 className="title-text">Contato</h1>
               </div>
+              </Link>
             </div>
-            <Link to="/register">
+            <Link style={{ textDecoration: 'none' }} to="/register">
               <p href="" className="header-link">
                 Acesse TheCeferno
               </p>

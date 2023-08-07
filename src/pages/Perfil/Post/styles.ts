@@ -4,7 +4,7 @@ export const Container = styled.div `
   display: flex;
   flex-direction: column;
   padding: 14px 16px;
-  border-bottom: 1px solid var(--outline);
+  border-bottom: 1px solid #4763E4;
   max-width: 100%;
   flex-shrink: 0;
   max-width: 100%;
@@ -24,7 +24,7 @@ export const Avatar = styled.div`
   height: 49px;
   border-radius: 50%;
   flex-shrink: 0;
-  background: var(--gray);
+  background: #7a7a7a;
   position: absolute;
   top: 0;
   left: 0;
@@ -45,10 +45,11 @@ export const Header = styled.div`
 
   > strong {
     margin-left: 5px;
+    color: #d9d9d9;
   }
 
   > span {
-    color: var(--gray);
+    color: #7a7a7a;
   }
 
   > strong,
@@ -62,6 +63,7 @@ export const Header = styled.div`
 export const Posts = styled.div`
   font-size: 14px;
   margin-top: 4px;
+  color: #d9d9d9;
 `;
 export const Icons = styled.div`
   display: flex;
@@ -84,7 +86,9 @@ export const Icons = styled.div`
   }
 `;
 
-export const Status = styled.div``;
+export const Status = styled.div`
+  color: #d9d9d9;
+`;
 
 const IconCSS = css`
   width: 19px;

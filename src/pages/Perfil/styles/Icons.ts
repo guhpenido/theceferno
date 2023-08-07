@@ -1,10 +1,4 @@
-// export {
-//   Notifications,
-//   Email,
-//   FavoriteBorder,
-//   ExitToApp,
-//   LocationOn,
-// } from "styled-icons/material-outlined";
+
 export { default as ArrowIcon } from "../ArrowIcon";
 export { default as IconHome } from "../IconHome";
 export { default as IconSearch } from "../IconSearch";

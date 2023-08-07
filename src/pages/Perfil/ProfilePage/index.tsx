@@ -1,6 +1,9 @@
-import React from "react";
-
-
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
+import { getStorage, ref, uploadBytes, getDownloadURL  } from 'firebase/storage';
+import React, { useState, useEffect } from 'react';
+import ModalReact from 'react-modal';
 import {
   Container,
   Banner,
@@ -9,45 +12,205 @@ import {
   EditButton,
 } from "./styles";
 
+
 import Feed from "../Feed";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
+  authDomain: "auth-ceferno.firebaseapp.com",
+  projectId: "auth-ceferno",
+  storageBucket: "auth-ceferno.appspot.com",
+  messagingSenderId: "388861107940",
+  appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+ModalReact.setAppElement('#root');
+
 const ProfilePage: React.FC = () => {
+
+  const [currentUser, setCurrentUser] = useState<any | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [bio, setBio] = useState('');
+  const [newAvatar, setNewAvatar] = useState<string | null>(null);
+  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
+
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleBioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBio(event.target.value);
+  };
+
+  const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file) {
+        const avatarURL = URL.createObjectURL(file);
+        setNewAvatar(avatarURL);
+  
+        // Fazer upload da imagem para o Firebase Storage
+        const storageRef = ref(storage, `avatars/${currentUser.uid}`);
+        await uploadBytes(storageRef, file);
+  
+        // Obter o URL da imagem do Firebase Storage
+        const downloadURL = await getDownloadURL(storageRef);
+  
+        // Atualizar o URL do avatar no Firestore
+        const userDocRef = doc(db, 'users', currentUser.uid);
+        await updateDoc(userDocRef, { avatar: downloadURL });
+      }
+    }
+  };
+    
+  const handleBannerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement && inputElement.files && inputElement.files.length > 0) {
+      const file = inputElement.files[0];
+  
+      if (file) {
+        const imageUrl = URL.createObjectURL(file);
+        setBannerUrl(imageUrl);
+      }
+    }
+  };
+
+  const saveChanges = async () => {
+  try {
+    const userDocRef = doc(db, 'users', currentUser.uid);
+
+    const updatedData: any = {};
+
+    if (newAvatar) {
+      updatedData.avatar = newAvatar;
+    }
+
+    if (bannerUrl) {
+      updatedData.banner = bannerUrl; 
+    }
+
+    if (bio) {
+      updatedData.bio = bio;
+    }
+
+    await updateDoc(userDocRef, updatedData);
+
+    closeModal();
+  } catch (error) {
+    console.error('Erro ao salvar as alterações:', error);
+  }
+};
+ 
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setCurrentUser(user);
+
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          setBio(userDoc.data().bio || '');
+        }
+      } else {
+        setCurrentUser(null);
+      }
+    });
+  }, []);
+
   return (
     <Container>
-      <Banner>
-        <svg
-          viewBox="0 0 1138 173"
-          fill="none"
-          style={{
-            transform: "scale(1, 2) translateY(2px)"
-          }}
-        >
-          <path
-            d="M43.9028 13.8761C49.2177 6.12963 58.0087 1.5 67.4032 1.5H1066.54C1076.53 1.5 1085.8 6.73646 1090.95 15.2997L1131.7 82.9753C1137.96 93.3804 1136.94 106.612 1129.16 115.937L1091.34 161.262C1085.92 167.75 1077.91 171.5 1069.45 171.5H68.2251C58.402 171.5 49.2712 166.441 44.0622 158.113L6.69754 98.3736C0.682828 88.7571 0.943014 76.4895 7.36006 67.1367L43.9028 13.8761Z"
-            fill="var(--ceferno)"
-          />
-          <defs>
-            <pattern
-              id="pattern0"
-              patternContentUnits="objectBoundingBox"
-              width="1"
-              height="1"
-            ></pattern>
-          </defs>
-        </svg>
-          <Avatar />
+      <Banner style={{ backgroundImage: bannerUrl ? `url(${bannerUrl})` : 'none' }}>
+        {newAvatar ? (
+        <Avatar as="img" src={newAvatar} alt="Novo Avatar" />
+      ) : (
+        <Avatar />
+      )}
       </Banner>
-
       <ProfileData>
-        <p>
-          Lorem Ipsum is simply dummy text of the printing and typesetting...
-        </p>
-        <EditButton outlined>Editar Perfil</EditButton>
+      <p>
+        {bio || 'Nenhuma bio disponível'} {/* Mostra a bio ou uma mensagem se não houver bio */}
+      </p>
+        <EditButton outlined={true} onClick={openModal}>Editar Perfil</EditButton>
+        <ModalReact className="Modal" isOpen={isModalOpen} onRequestClose={closeModal}
+  style={{
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      zIndex: 1000,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    content: {
+      backgroundColor: '#4763E4',
+      padding: '20px',
+      borderRadius: '12px',
+      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+      width: '90%', // Responsivo: ocupar 90% da largura disponível
+      maxWidth: '400px', // Largura máxima
+      maxHeight: '80%', // Altura máxima
+      display: 'flex',
+      flexDirection: 'column',
 
-        <h1>Nome do Usuário</h1>
-        <h2>@nome_do_usuario</h2>
+      // Estilos para responsividade em telas menores (até 768px)
+      '@media (max-width: 768px)': {
+        width: '95%', // Ocupar 95% da largura disponível
+        maxHeight: '90%', // Altura máxima menor
+        padding: '15px', // Espaçamento interno aumentado para telas menores
+      },
+    },
+  }}>
+  <input
+    placeholder="Escolha uma foto de perfil"
+    type="file"
+    accept="image/*"
+    onChange={handleAvatarChange}
+    style={{ marginBottom: '10px' }} // Espaçamento inferior
+  />
+  <input
+    placeholder="Escolha uma foto de capa"
+    type="file"
+    accept="image/*"
+    onChange={handleBannerChange}
+    style={{ marginBottom: '10px' }} // Espaçamento inferior
+  />
+  <textarea
+    placeholder="Escreva algo sobre você..."
+    value={bio}
+    onChange={handleBioChange}
+    style={{ marginBottom: '10px', resize: 'none', minHeight: '100px' }} // Espaçamento inferior, evita redimensionamento vertical e altura mínima
+  />
+  <button
+    onClick={saveChanges}
+    style={{
+      backgroundColor: '#fff',
+      color: '#4763E4',
+      border: 'none',
+      borderRadius: '4px',
+      padding: '10px 20px',
+      cursor: 'pointer',
+      transition: 'background-color 0.3s, color 0.3s',
+      fontWeight: 'bold',
+    }}
+  >
+    Salvar Alterações
+  </button>
+</ModalReact>
+        <h1>{currentUser ? currentUser.displayName : 'Nome do Usuário'}</h1>
+        <h2>@{currentUser ? currentUser.username : 'nome_do_usuario'}</h2>
+
       </ProfileData>
-      <Feed />
+      <Feed avatarUrl={newAvatar} />
     </Container>
   );
 };

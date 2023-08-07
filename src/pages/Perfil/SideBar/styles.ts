@@ -16,7 +16,7 @@ export const SearchWrapper = styled.div`
     position: fixed;
     top: 0;
     z-index: 2;
-    background: var(--primary);
+    background: #000;
     max-height: 57px;
 `;
 
@@ -24,18 +24,20 @@ export const SearchWrapper = styled.div`
     width: 100%;
     height: 39px;
     font-size: 14px;
+    color: #d9d9d9;
     padding: 0 10px 0 52px;
     border-radius: 19.5px;
-    background: var(--search);
+    background:  #202327;
+    border: 0;
 
     &::placeholder {
-        color: var(--gray);
+        color: #7a7a7a;
     }
 
     ~ svg {
         position: relative;
         top: -33px;
-        left: -150px;
+        margin-left: 10px;
         z-index: 1;
         transition: 180ms ease-in-out;
     }
@@ -43,10 +45,10 @@ export const SearchWrapper = styled.div`
     outline: 0;
 
     &:focus {
-        border: 1px solid var(--ceferno);
+        border: 1px solid #4763E4;
 
         ~ svg {
-        fill: var(--ceferno);
+        fill: #4763E4;
         }
     }
 `;
@@ -54,5 +56,5 @@ export const SearchWrapper = styled.div`
 export const SearchIcon = styled(IconSearch)`
     width: 27px;
     height: 27px;
-    fill: var(--ceferno);
+    fill: #4763E4;
 `;
