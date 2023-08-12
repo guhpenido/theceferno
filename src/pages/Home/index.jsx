@@ -1,5 +1,5 @@
 import React from "react";
-//import "./stylesHome.css";
+import "./stylesHome.css";
 import { Link } from "react-router-dom";
 
 export function Home() {
@@ -49,13 +49,16 @@ export function Home() {
             </Link>
           </div>
         </header>
+
         <main className="main" id="main">
           <section className="home-section" id="home">
+            <img className="aa" style={{maxHeight:'10em', maxWidth:'10em'}} src="src\assets\logoLivre2.png" alt="" />
+            <h1 style={{fontSize:'100px'}} className="titulo">CEFERNO</h1>
             <h1 className="home-title">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </h1>
-            <Link to="/register">
+            <Link className="botaoAcessar" to="/register">
               <button className="home-button">Acesse TheCeferno</button>
             </Link>
           </section>

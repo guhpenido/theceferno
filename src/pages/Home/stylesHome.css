@@ -14,7 +14,8 @@
 }
 
 body {
-  background-image: url("../../assets/backgroundHome.jpg") !important;
+  /* background-image: url("../../assets/backgroundHome.jpg") !important;  */
+  background: linear-gradient(116deg, #190432 3.20%, #391466 12.68%, #472176 23.15%, #1E063D 37.21%, #000 65.74%);
   background-size: cover; 
   background-repeat: no-repeat;
   background-position: center;
@@ -29,12 +30,14 @@ header {
   padding: 3rem;
   font-family: "Poppins", sans-serif;
 }
+
 header .header-logo {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
+
 header .header-logo svg {
   height: 1.5rem;
   width: 1.5rem;
@@ -43,51 +46,63 @@ header .header-logo svg {
 header .header-logo svg path:first-child {
   fill: white;
 } 
+
 header .header-logo svg path:last-child {
   fill: #4d01ff;
 }
+
 header .header-logo .logo-text {
   font-size: 1.25rem;
   font-weight: 500;
   margin-left: 1rem;
   color: #4d01ff;
 }
+
 header .header-items {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 header .header-items .header-item {
   margin: 0 1rem;
   position: relative;
   cursor: pointer;
 }
+
 header .header-items .header-item:first-child {
   margin-left: 0;
 }
+
 header .header-items .header-item:last-child {
   margin-right: 0;
 }
+
 header .header-items .header-item .item-title {
   display: flex;
   align-items: center;
 }
+
 header .header-items .header-item .item-title .title-text {
   font-size: 0.85rem;
   font-weight: 500;
-  color: rgba(0, 0, 0, 0.65);
+  color: rgba(255, 255, 255, 0.785);
 }
+
 header .header-items .header-item .item-title .title-icon {
   display: flex;
   align-items: center;
 }
+
 header .header-items .header-item .item-title .title-icon svg {
   height: 1rem;
   width: 1rem;
 }
+
 header .header-items .header-item .item-title .title-icon svg path {
   fill: #4d01ff;
 }
+
 header .header-items .header-item::before {
   content: "";
   position: absolute;
@@ -97,19 +112,22 @@ header .header-items .header-item::before {
   background-color: #4d01ff;
   transition: height 125ms ease-in-out;
 }
+
 header .header-items .header-item:hover::before {
   height: 0.125rem;
 }
+
 header .header-link {
   padding: 0.5rem 1rem;
   border-radius: 1.5rem;
-  border: 0.15rem solid rgba(0, 0, 0, 0.125);
+  border: 0.15rem solid rgba(251, 251, 251, 0.125);
   font-size: 0.85rem;
   font-weight: 300;
   color: #4d01ff;
   transition: border 250ms ease-in-out;
   margin-left: 1rem;
 }
+
 header .header-link:hover {
   border: 0.15rem solid #4d01ff;
 }
@@ -117,19 +135,40 @@ header .header-link:hover {
 main {
   padding: 5rem 10rem;
 }
+
 main .home-section {
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 5rem;
 }
+
 main .home-section .home-title {
   width: 40rem;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   margin-bottom: 2rem;
-  color: rgba(0, 0, 0, 0.65);
+  color: rgba(255, 255, 255, 0.785);
+  position: relative;
+  margin-left: 30%;
+  margin-top: -4%;
 }
+.botaoAcessar {
+  margin-top: -5%;
+  margin-left: 75%;
+}
+
+.titulo {
+  margin-top: -15%;
+  margin-left: 25% !important;
+  width: 40rem;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.785);
+  position: relative;
+}
+
 main .home-section .home-button {
   width: max-content;
   background-color: #4d01ff;
@@ -141,6 +180,7 @@ main .home-section .home-button {
   transition: transform 250ms ease-in-out;
   cursor: pointer;
 }
+
 main .home-section .home-button:hover {
   transform: translateY(-0.25rem);
 }
