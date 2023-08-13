@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
 import 'firebase/storage';
-//import './styleWhisper.css'; 
+import './styleWhisper.css'; 
 import fotoUsuario from "../../assets/foto.png";
 
 //configuração do firebase

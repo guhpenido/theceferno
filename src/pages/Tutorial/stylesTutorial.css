@@ -6,6 +6,8 @@
   list-style: none;
   border: none;
   outline: none;
+  background-color: #000;
+  color:#d9d9d9;
 }
 
 .tutorial{
@@ -13,7 +15,7 @@
 }
 
 body {
-  background-image: url("../../assets/backgroundHome.jpg") !important;
+  /* background-image: url("../../assets/backgroundHome.jpg") !important; */
   background-size: cover; 
   background-repeat: no-repeat;
   background-position: center;
@@ -33,13 +35,14 @@ hr{
 }
 
 .btn:hover{
-  background-color: #b393d2;
-  border-color: #b393d2;
+  background-color: #00003d;
+  border-color: #4763E4;
 }
 
 .btn{
-  background-color: #4d01ff;
-  border-color: #4d01ff;
+  background-color: #4763E4;
+  border-color: #4763E4;
+  border-radius: 25px;
 }
 
 body {
@@ -74,13 +77,13 @@ header .header-logo svg path:first-child {
   fill: white;
 } 
 header .header-logo svg path:last-child {
-  fill: #4d01ff;
+  fill: #4763E4;
 }
 header .header-logo .logo-text {
   font-size: 1.25rem;
   font-weight: 500;
   margin-left: 1rem;
-  color: #4d01ff;
+  color: #4763E4;
 }
 header .header-items {
   display: flex;
@@ -105,8 +108,12 @@ header .header-items .header-item .item-title {
 header .header-items .header-item .item-title .title-text {
   font-size: 0.85rem;
   font-weight: 500;
-  color: rgba(0, 0, 0, 0.65);
+  color: #d9d9d9;
 }
+header .header-items .header-item .item-title .title-text:hover {
+  color:#4763E4;
+}
+
 header .header-items .header-item .item-title .title-icon {
   display: flex;
   align-items: center;
@@ -116,7 +123,7 @@ header .header-items .header-item .item-title .title-icon svg {
   width: 1rem;
 }
 header .header-items .header-item .item-title .title-icon svg path {
-  fill: #4d01ff;
+  fill: #4763E4;
 }
 header .header-items .header-item ::before {
   content: "";
@@ -124,7 +131,7 @@ header .header-items .header-item ::before {
   bottom: -0.35rem;
   width: 100%;
   height: 0;
-  background-color: #4d01ff;
+  background-color: #4763E4;
   transition: height 125ms ease-in-out;
 }
 header .header-items .header-item .tutorial::before {
@@ -136,12 +143,13 @@ header .header-link {
   border: 0.15rem solid rgba(0, 0, 0, 0.125);
   font-size: 0.85rem;
   font-weight: 300;
-  color: #4d01ff;
+  color: #4763E4;
   transition: border 250ms ease-in-out;
   margin-left: 1rem;
 }
 header .header-link:hover {
-  border: 0.15rem solid #4d01ff;
+  border: 0.15rem solid #4763E4;
+  background: #00003d;
 }
 
 main {
@@ -162,7 +170,7 @@ main .home-section .home-title {
 }
 main .home-section .home-button {
   width: max-content;
-  background-color: #4d01ff;
+  background-color: #4763E4;
   font-family: "Poppins", sans-serif;
   padding: 0.5rem 1rem;
   color: white;
