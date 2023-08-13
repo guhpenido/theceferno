@@ -84,6 +84,31 @@ export const EditButton = styled(Button)`
   }
 `;
 
+export const Tags = styled.div`
+  display:flex;
+  justifyContent: 'space-between';
+  align-items: center; 
+  margin: 0;
+`;
+
+export const Institution = styled.div`
+  background-color: #f0d447;
+  border: 3px solid #b59803;
+  height: 5vh; 
+  width: 8vw;
+  text-align: center; 
+  border-radius: 10px;
+`;
+
+export const Course = styled.div`
+  background-color: #62b038;
+  border: 3px solid #134a05;  
+  margin-left: 2vw;
+  height: 5vh; 
+  width: 8vw;
+  text-align: center; 
+  border-radius: 10px;
+`;
 
 
 
