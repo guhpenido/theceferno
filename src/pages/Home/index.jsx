@@ -1,8 +1,10 @@
-import React from "react";
-// import "./stylesHome.css";
+import React, {useState} from "react";
+import "./stylesHome.css";
 import { Link } from "react-router-dom";
 
 export function Home() {
+  const [menuVisible, setMenuVisible] = useState(false);
+
   return (
     <>
       <div className="home">
@@ -20,34 +22,43 @@ export function Home() {
             </svg>
             <h1 className="logo-text">Ceferno</h1>
           </div>
-          <div className="header-items">
-            <div className="header-item">
-            <Link style={{ textDecoration: 'none' }} to="/sobre">
-              <div className="item-title">
-                <h1 className="title-text">Sobre</h1>
-              </div>
+            <button 
+              style={{fontSize:'3rem', background:'none', color:'white'}} 
+              id="menuHamburguer" 
+              onClick={() => setMenuVisible(!menuVisible)}
+            > 
+              <img src="src\assets\menuHamburguer.svg"/> 
+            </button>
+          {menuVisible && (
+            <div className="header-items">
+              <Link style={{ textDecoration: 'none' }} to="/register">
+                <p href="" className="header-link">
+                  Acesse TheCeferno
+                </p>
               </Link>
-            </div>
-            <div className="header-item">
-            <Link style={{ textDecoration: 'none' }} to="/tutorial">
-              <div className="item-title">
-                <h1 className="title-text">Tutorial</h1>
+              <div className="header-item">
+              <Link style={{ textDecoration: 'none' }} to="/sobre">
+                <div className="item-title">
+                  <h1 className="title-text">Sobre</h1>
+                </div>
+                </Link>
               </div>
-              </Link>
-            </div>
-            <div className="header-item">
-            <Link style={{ textDecoration: 'none' }} to="/contato">
-              <div className="item-title">
-                <h1 className="title-text">Contato</h1>
+              <div className="header-item">
+              <Link style={{ textDecoration: 'none' }} to="/tutorial">
+                <div className="item-title">
+                  <h1 className="title-text">Tutorial</h1>
+                </div>
+                </Link>
               </div>
-              </Link>
+              <div className="header-item">
+              <Link style={{ textDecoration: 'none' }} to="/contato">
+                <div className="item-title">
+                  <h1 className="title-text">Contato</h1>
+                </div>
+                </Link>
+              </div>
             </div>
-            <Link style={{ textDecoration: 'none' }} to="/register">
-              <p href="" className="header-link">
-                Acesse TheCeferno
-              </p>
-            </Link>
-          </div>
+          )}
         </header>
 
         <main className="main" id="main">
@@ -55,8 +66,9 @@ export function Home() {
             <img className="aa" style={{maxHeight:'10em', maxWidth:'10em'}} src="src\assets\logoLivre2.png" alt="" />
             <h1 style={{fontSize:'100px'}} className="titulo">CEFERNO</h1>
             <h1 className="home-title">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Lorem ipsum dolor sit amet, <br></br>consectetur adipiscing <br></br> 
+              elit, sed do eiusmod tempor <br></br>incididunt ut labore et <br></br>
+              dolore magna aliqua.
             </h1>
             <Link className="botaoAcessar" to="/register">
               <button className="home-button">Acesse TheCeferno</button>

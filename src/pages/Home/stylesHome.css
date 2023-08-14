@@ -8,18 +8,13 @@
   outline: none;
 }
 
-.home{
-  height: 100vh;
-  width: 200vh;
-}
-
-body {
-  /* background-image: url("../../assets/backgroundHome.jpg") !important;  */
-  background: linear-gradient(116deg, #190432 3.20%, #391466 12.68%, #472176 23.15%, #1E063D 37.21%, #000 65.74%);
+.home {
+  background: linear-gradient(116deg, #190432 3.20%, #391466 12.68%, #472176b9 23.15%, #1e063d 41.21%, #060111 71.74%);
   background-size: cover; 
   background-repeat: no-repeat;
   background-position: center;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 
 header {
@@ -152,14 +147,16 @@ main .home-section .home-title {
   position: relative;
   margin-left: 30%;
   margin-top: -4%;
+  text-align: justify;
 }
+
 .botaoAcessar {
-  margin-top: -5%;
-  margin-left: 75%;
+  margin-top: -3.5rem; /* Use valores de margem menores para espaçamento */
+  text-align: right; /* Alinhe à direita */
 }
 
 .titulo {
-  margin-top: -15%;
+  margin-top: -20%;
   margin-left: 25% !important;
   width: 40rem;
   font-family: "Poppins", sans-serif;
@@ -185,31 +182,70 @@ main .home-section .home-button:hover {
   transform: translateY(-0.25rem);
 }
 
-@media (max-width: 600px) {
+
+@media (max-width: 400px) {
   header {
     flex-direction: column;
     align-items: center;
     padding: 2rem;
   }
   
-  header .header-logo {
-    margin-bottom: 1rem;
+  .header-logo {
+    margin: -1rem 0 1rem -12rem;
   }
   
-  header .header-items {
+  .header-logo .logo-text {
+    margin-top: 1rem;
+    font-size: 1.5rem !important;
+  }
+
+  .header-items {
+    background-color: rgba(58, 10, 200, 0.141);
+    border: 1px solid  rgb(94, 18, 187) ;
     flex-direction: column;
-    margin-top: 2rem;
+    margin-right: -10rem;
   }
-  
+
   header .header-items .header-item {
     margin: 0.5rem 0;
   }
-  
-  main {
-    padding: 2rem;
+
+  .header-link {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.785) !important;
   }
 
-  .header-link{
-    margin-top: 15px;
+  main {
+    padding: 4rem;
+  }
+
+  main img {
+    margin: -3rem 0 0 auto;
+    max-width: 5rem !important;
+    max-height: 5rem !important;
+  }
+
+  main .titulo {
+    font-size: 4rem !important;
+    margin-top: 1rem;
+    margin-left: -16rem !important;
+  }
+
+  main .home-title {
+    font-size: 0.89em;
+    text-align: center !important;
+    margin-top: -1.5rem !important;
+    margin-left: -16rem !important;
+  }
+
+  main .home-button {
+    margin-top: 5.5rem;
+    margin-bottom: 3rem;
+    margin-left: -2rem;
+  }
+
+  #menuHamburguer { 
+    margin: -5.5rem 0 3rem 18rem;
   }
 }
