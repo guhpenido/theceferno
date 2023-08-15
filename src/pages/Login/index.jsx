@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-//import "./stylesLogin.css";
+// import "./stylesLogin.css";
 //import { signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "../../services/firebaseConfig";
 import { useNavigate } from "react-router-dom";

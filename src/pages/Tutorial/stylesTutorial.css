@@ -40,13 +40,13 @@ hr{
 }
 
 .btn{
-  background-color: #4763E4;
+  background-color: rgb(36, 5, 76);
   border-color: #4763E4;
   border-radius: 25px;
 }
 
 body {
-  background-image: url("../../assets/backgroundHome.jpg") !important;
+  /* background-image: url("../../assets/backgroundHome.jpg") !important; */
   background-size: cover; 
   background-repeat: no-repeat;
   background-position: center;
@@ -59,18 +59,22 @@ header {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 3rem;
+  padding: 2rem;
   font-family: "Poppins", sans-serif;
+  background-color: #7813FB;
+  /* box-shadow: -44.3667984008789px 75.1484375px 999.86666870117188px 94.3667984008789px rgb(120, 19, 251) inset, 84.3667984008789px -41.1484375px 93.86666870117188px 0px rgba(86, 45, 136, 0.232) inset !important; */
 }
 header .header-logo {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  background: none;
 }
 header .header-logo svg {
   height: 1.5rem;
   width: 1.5rem;
+  background-color: #7813FB;
 }
 
 header .header-logo svg path:first-child {
@@ -83,12 +87,14 @@ header .header-logo .logo-text {
   font-size: 1.25rem;
   font-weight: 500;
   margin-left: 1rem;
-  color: #4763E4;
+  color: white;
+  background-color: #7813FB;
 }
 header .header-items {
   display: flex;
   justify-content: center;
   align-items: center;
+  background: none;
 }
 header .header-items .header-item {
   margin: 0 1rem;
@@ -104,14 +110,20 @@ header .header-items .header-item:last-child {
 header .header-items .header-item .item-title {
   display: flex;
   align-items: center;
+  background-color: #7813FB;
 }
+a {
+   background-color: #7813FB;
+}
+
 header .header-items .header-item .item-title .title-text {
   font-size: 0.85rem;
   font-weight: 500;
   color: #d9d9d9;
+  background-color: #7813FB;
 }
 header .header-items .header-item .item-title .title-text:hover {
-  color:#4763E4;
+  color:#26199b;
 }
 
 header .header-items .header-item .item-title .title-icon {
@@ -123,7 +135,7 @@ header .header-items .header-item .item-title .title-icon svg {
   width: 1rem;
 }
 header .header-items .header-item .item-title .title-icon svg path {
-  fill: #4763E4;
+  fill: #7813FB;
 }
 header .header-items .header-item ::before {
   content: "";
@@ -131,7 +143,7 @@ header .header-items .header-item ::before {
   bottom: -0.35rem;
   width: 100%;
   height: 0;
-  background-color: #4763E4;
+  background-color: rgba(255, 255, 255, 0.763);
   transition: height 125ms ease-in-out;
 }
 header .header-items .header-item .tutorial::before {
@@ -140,11 +152,12 @@ header .header-items .header-item .tutorial::before {
 header .header-link {
   padding: 0.5rem 1rem;
   border-radius: 1.5rem;
-  border: 0.15rem solid rgba(0, 0, 0, 0.125);
+  border: 0.1rem solid rgba(255, 255, 255, 0.681);
   font-size: 0.85rem;
   font-weight: 300;
-  color: #4763E4;
+  color: white;
   transition: border 250ms ease-in-out;
+  background-color: #7813FB;
   margin-left: 1rem;
 }
 header .header-link:hover {
@@ -154,6 +167,8 @@ header .header-link:hover {
 
 main {
   padding: 5rem 10rem;
+  background: linear-gradient(64deg, #772fcf 0%, #6e0ee48c 100%) !important;
+  box-shadow: -44.3667984008789px 75.1484375px 999.86666870117188px 74.3667984008789px rgb(120, 19, 251) inset, 84.3667984008789px -41.1484375px 93.86666870117188px 0px rgba(86, 45, 136, 0.232) inset !important;
 }
 main .home-section {
   display: flex;
@@ -188,6 +203,15 @@ main .home-section .home-button:hover {
   align-items: center;
 }
 
+.container-fluid, .section-header, .my-2, .row, .mt-4,.col-12, .col-sm-6, .col-md-6, .col-lg-6, .col-xl-6, .my-4{
+  /* background: linear-gradient(64deg, #772fcf 0%, #6e0ee48c 100%) !important; */
+  background:  none;
+  /* box-shadow: -44.3667984008789px 75.1484375px 999.86666870117188px 94.3667984008789px rgb(120, 19, 251) inset, 84.3667984008789px -41.1484375px 93.86666870117188px 0px rgba(86, 45, 136, 0.232) inset !important; */
+}
+
+.text-center{
+  background: none;
+}
 @media (max-width: 600px) {
   header {
     flex-direction: column;

@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-//  import "./stylesRegister.scss";
-  import "./stylesRegister.css";
+// import "./stylesRegister.scss";
+// import "./stylesRegister.css"; //descomentar apenas esse
 import { useNavigate } from 'react-router-dom';
 import { app } from "../../services/firebaseConfig";
 import {
@@ -497,7 +497,7 @@ export function Register() {
               className={`button ${!isEtapa1Valid() ? "invalid" : ""}`}
               style={{
                 cursor: !isEtapa1Valid() ? "not-allowed" : "pointer",
-                backgroundColor: !isEtapa1Valid() ? "red" : "green",
+                backgroundColor: !isEtapa1Valid() ? "#24054C" : "green",
               }}
             >
               Continuar <img src={arrowImg} alt="->" />
