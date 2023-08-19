@@ -1,8 +1,7 @@
-
 .login {
   display: flex;
-  background-color: #4d01ff;
-  width: 40vw;
+  background-color: none;
+  width: 100vw;
   height: 100vh;
   align-items: flex-end;
   justify-content: flex-end;
@@ -10,15 +9,23 @@
   position: fixed;
   right: 0;
   bottom: 0;
-  border-left: #210034 solid 5px;
+  /* border-left: #210034 solid 5px; */
 }
 
 .container {
-  width: 100vw;
+  background: linear-gradient(64deg, #772fcf 0%, #6e0ee48c 100%) !important;
+  box-shadow: -54.3667984008789px 75.1484375px 93.86666870117188px 0px rgb(120, 19, 251) inset, 84.3667984008789px -41.1484375px 93.86666870117188px 0px rgba(86, 45, 136, 0.232) inset !important;
+  max-width: 100vw !important;
   height: 100vh;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  color: white;
+}
+
+h2 {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.757) !important;
 }
 
 .container .header span {
@@ -87,27 +94,20 @@
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
-  color: #000000;
+  color: white !important;
 }
 
 .container form .footer a {
-  font-weight: 4000;
+  font-weight: 3000;
   font-size: 16px;
   line-height: 19px;
   text-decoration-line: underline;
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
 html {
-  background-image: linear-gradient(30deg, #4d01ff 12%, transparent 12.5%, transparent 87%, #4d01ff 87.5%, #4d01ff),
-    linear-gradient(150deg, #4d01ff 12%, transparent 12.5%, transparent 87%, #4d01ff 87.5%, #4d01ff),
-    linear-gradient(30deg, #4d01ff 12%, transparent 12.5%, transparent 87%, #4d01ff 87.5%, #4d01ff),
-    linear-gradient(150deg, #4d01ff 12%, transparent 12.5%, transparent 87%, #4d01ff 87.5%, #4d01ff),
-    linear-gradient(60deg, rgba(77, 1, 255, 0.5) 25%, transparent 25.5%, transparent 75%, rgba(77, 1, 255, 0.5) 75%, rgba(77, 1, 255, 0.5)),
-    linear-gradient(60deg, rgba(77, 1, 255, 0.5) 25%, transparent 25.5%, transparent 75%, rgba(77, 1, 255, 0.5) 75%, rgba(77, 1, 255, 0.5));
   background-size: 64px 112px;
   background-position: 0 0, 0 0, 32px 56px, 32px 56px, 0 0, 32px 56px;
-  background-color: #210034;
 }
 
 /* Media queries para celular */
@@ -168,14 +168,16 @@ html {
 }
 
 html, body {
-  color: #fff;
-  background-color: #09001c;
   font-family: 'Inter', sans-serif;
+  background: linear-gradient(64deg, #772fcf 0%, #6e0ee48c 100%) !important;
+  box-shadow: -54.3667984008789px 75.1484375px 93.86666870117188px 0px rgb(120, 19, 251) inset, 84.3667984008789px -41.1484375px 93.86666870117188px 0px rgba(86, 45, 136, 0.232) inset !important;
 }
 
 .container {
   width: 100vw;
-  height: 100vh;
+  height: auto; /* Ajusta a altura com base no conteúdo */
+  max-height: 100vh; /* Define uma altura máxima para evitar que a div cresça indefinidamente */
+  overflow-y: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -282,6 +284,10 @@ html, body {
 }
 
 @media only screen and (max-width: 480px) {
+
+  .container {
+    height: 100vh; /* Ajusta a altura com base no conteúdo */
+  }
   .login {
     width: 100vw;
     height: 100vh;
@@ -331,6 +337,9 @@ html, body {
 
 /*Media queries para tablet*/
 @media screen and (min-width: 481px) and (max-width: 767px) {
+  .container {
+    height: 100vh; /* Ajusta a altura com base no conteúdo */
+  }
   .login {
     width: 100vw;
     height: 100vh;
@@ -371,6 +380,9 @@ html, body {
 
 /*Media queries para tablets maiores*/
 @media screen and (min-width:768px) and (max-width:1320px) {
+  .container {
+    height: 100vh; /* Ajusta a altura com base no conteúdo */
+  }
   .login {
     width: 100vw;
     height: 100vh;
