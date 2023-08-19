@@ -9,6 +9,8 @@
   position: fixed;
   right: 0;
   bottom: 0;
+  overflow-y: scroll;
+  overflow-x:hidden;
   /* border-left: #210034 solid 5px; */
 }
 

@@ -13,8 +13,6 @@
   background-size: cover; 
   background-repeat: no-repeat;
   background-position: center;
-  height: 100%;
-  width: 100%;
 }
 
 header {
@@ -129,6 +127,8 @@ header .header-link:hover {
 
 main {
   padding: 5rem 10rem;
+  width: 100vw;
+  height: 100vh;
 }
 
 main .home-section {
@@ -183,13 +183,22 @@ main .home-section .home-button:hover {
 }
 
 
-@media (max-width: 400px) {
+@media (max-width: 550px) {
+
+  .home {
+    background: linear-gradient(116deg, #190432 3.20%, #391466 19.68%, #472176 29.15%, #1e063d 49.21%, #060111 71.74%);
+  }
   header {
     flex-direction: column;
     align-items: center;
     padding: 2rem;
   }
-  
+  header .header-items {
+    flex-direction: column;
+    margin-top: 2rem;
+    margin-top: -1vh;
+  }
+
   .header-logo {
     margin: -1rem 0 1rem -12rem;
   }
@@ -199,12 +208,6 @@ main .home-section .home-button:hover {
     font-size: 1.5rem !important;
   }
 
-  .header-items {
-    background-color: rgba(58, 10, 200, 0.141);
-    border: 1px solid  rgb(94, 18, 187) ;
-    flex-direction: column;
-    margin-right: -10rem;
-  }
 
   header .header-items .header-item {
     margin: 0.5rem 0;
@@ -217,6 +220,7 @@ main .home-section .home-button:hover {
   }
 
   main {
+    margin-top: -13vh;
     padding: 4rem;
   }
 
@@ -227,25 +231,21 @@ main .home-section .home-button:hover {
   }
 
   main .titulo {
-    font-size: 4rem !important;
+    font-size: 3rem !important;
     margin-top: 1rem;
-    margin-left: -16rem !important;
+    margin-left: -12vw !important;
   }
 
   main .home-title {
     font-size: 0.89em;
     text-align: center !important;
-    margin-top: -1.5rem !important;
+    margin-top: -1rem !important;
     margin-left: -16rem !important;
   }
 
   main .home-button {
-    margin-top: 5.5rem;
+    margin-top: 4.5rem;
     margin-bottom: 3rem;
     margin-left: -2rem;
-  }
-
-  #menuHamburguer { 
-    margin: -5.5rem 0 3rem 18rem;
   }
 }
