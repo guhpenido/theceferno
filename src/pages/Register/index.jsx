@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-// import "./stylesRegister.scss";
-// import "./stylesRegister.css"; //descomentar apenas esse
+//import "./stylesRegister.scss";
+//import "./stylesRegister.css"; //descomentar apenas esse
 import { useNavigate } from 'react-router-dom';
 import { app } from "../../services/firebaseConfig";
 import {
@@ -434,8 +434,11 @@ export function Register() {
   };
 
   return (
+
     <div className="login">
+      
       <div className="container">
+      <br></br><br></br>
         <header className="header">
           <img src={logoImg} alt="CEFERNO" className="logoImg" />
           <span>Por favor digite suas informações de cadastro</span>
