@@ -1,28 +1,33 @@
 import { useState } from "react";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-import { auth } from "../../services/firebaseConfig";
-//import "./styles.css";
-
+//import "./stylesLogin.css";
+//import { signInWithEmailAndPassword } from "firebase/auth";
+import { app } from "../../services/firebaseConfig";
+import { useNavigate } from "react-router-dom";
+import { getAuth } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth);
-
+  const navigate = useNavigate();
+  const auth = getAuth();
   function handleSignIn(e) {
     e.preventDefault();
-    signInWithEmailAndPassword(email, password);
-  }
+    signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        // The user has signed in successfully
+        const user = userCredential.user;
+        console.log("User logged in:", user);
 
-  if (loading) {
-    return <p>carregando...</p>;
-  }
-  if (user) {
-    return console.log(user);
+        // Redirect to a protected route or any other page after successful login
+        navigate("/dm");
+      })
+      .catch((error) => {
+        // Handle login error
+        console.error("Error signing in:", error.message);
+      });
   }
   return (
     <div className="login">

@@ -1,36 +1,32 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-//import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-//import { db, auth, storageRef } from "../../services/firebaseConfig";
-import "./styles.scss";
-import "./styles.css";
+//import "./stylesRegister.scss";
+//import "./stylesRegister.css"; //descomentar apenas esse
+import { useNavigate } from 'react-router-dom';
+import { app } from "../../services/firebaseConfig";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {  doc, setDoc } from "firebase/firestore"; // Import the doc function
 
-import { initializeApp } from "firebase/app";
-import { getFirestore } from 'firebase/firestore/lite';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getStorage, ref } from "firebase/storage";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
-  authDomain: "auth-ceferno.firebaseapp.com",
-  projectId: "auth-ceferno",
-  storageBucket: "auth-ceferno.appspot.com",
-  messagingSenderId: "388861107940",
-  appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
-const storageRef = ref(storage);
 
 export function Register() {
-
-  //padrão State
+  const history = useNavigate();
+  // Estado inicial do formulário
   const [state, setState] = useState({
     email: "",
     password: "",
@@ -42,330 +38,415 @@ export function Register() {
     nome: "",
     usuario: "",
     pseudonimo: "",
-    imageSrc: null,
+    imageSrc:
+      "https://cdn.discordapp.com/attachments/871728576972615680/1133946789343531079/logo.png",
     etapa: 1,
     isEmailValid: true,
     isPasswordMatch: true,
   });
 
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isPasswordMatch, setIsPasswordMatch] = useState(false);
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+  // Função para verificar se o email é válido
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email) && isEmailAvailable(email);
   };
 
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
+  // Função para verificar a força da senha
+  const isStrongPassword = (password) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9!@#$%^&*])(?=.{8,})/;
+    return passwordRegex.test(password);
   };
 
-  // Função para verificar se as senhas são iguais e atendem às regras de validação
-  const checkPasswordMatch = () => {
-    const passwordRegex =
-      /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    setIsPasswordMatch(
-      password === confirmPassword && passwordRegex.test(password)
+  // Função para verificar se o celular tem 11 caracteres numéricos
+  const isValidCelular = (celular) => {
+    if (celular && celular.length >= 11) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  // Função para verificar se curso e instituição não estão vazios
+  const isCursoValid = (curso = "") => {
+    // Remove espaços em branco do início e do fim do curso
+    const trimmedCurso = curso.trim();
+
+    // Verifica se o curso tem mais de 5 caracteres
+    if (trimmedCurso.length > 5) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const isInstituicaoValid = (instituicao = "") => {
+    // Remove espaços em branco do início e do fim da instituição
+    const trimmedInstituicao = instituicao.trim();
+
+    // Verifica se a instituição tem mais de 5 caracteres
+    if (trimmedInstituicao.length > 5) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  // Função para verificar se o nome e pseudônimo não estão em branco
+  const isNomeValid = (nome = "") => {
+    // Remove espaços em branco do início e do fim do nome
+    const trimmedNome = nome.trim();
+
+    // Verifica se o nome tem mais de um caractere e não tem mais de 25 caracteres
+    if (trimmedNome.length >= 1 && trimmedNome.length <= 25) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const isPseudonimoValid = async (pseudonimo) => {
+    try {
+      // Verifica se o usuário é uma string e não está vazia
+      if (typeof pseudonimo !== "string" || pseudonimo.trim() === "") {
+        throw new Error("pseudonimo inválido. Deve ser uma palavra não vazia.");
+      }
+
+      // Verifica se o usuário tem menos de 20 caracteres e não contém espaços
+      if (pseudonimo.length >= 20 || /\s/.test(pseudonimo)) {
+        throw new Error(
+          "O pseudonimo deve ter menos de 20 caracteres e não conter espaços."
+        );
+      }
+
+      // Get a reference to the 'users' collection
+      const usersCollectionRef = collection(db, "users");
+      const q = query(
+        usersCollectionRef,
+        where("pseudonimo", "==", pseudonimo)
+      );
+      const querySnapshot = await getDocs(q);
+      if (pseudonimo.length > 5 && querySnapshot.empty) return true;
+    } catch (error) {
+      console.error("Error checking pseudonimo validity:", error);
+      return false;
+    }
+  };
+
+  const isDtNascimentoValid = (dtNascimento) => {
+    const today = new Date();
+    const birthDate = new Date(dtNascimento);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    // Check if the birth date has not occurred yet this year
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    if (age >= 16) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  // Função para verificar se o email e o pseudônimo já existem no banco de dados
+  const isEmailAvailable = async (email) => {
+    const querySnapshot = await getDocs(
+      query(collection(db, "users"), where("email", "==", email))
     );
+    return querySnapshot.empty;
   };
 
-  // Renderização condicional das regras de validação da senha
+  const isUsuarioValid = async (usuario) => {
+    try {
+      // Verifica se o usuário é uma string e não está vazia
+      if (typeof usuario !== "string" || usuario.trim() === "") {
+        return false;
+      }
+
+      // Verifica se o usuário tem menos de 20 caracteres e não contém espaços
+      if (usuario.length >= 20 || /\s/.test(usuario)) {
+        throw new Error(
+          "O usuário deve ter menos de 20 caracteres e não conter espaços."
+        );
+      }
+
+      // Get a reference to the 'users' collection
+      const usersCollectionRef = collection(db, "users");
+      const q = query(usersCollectionRef, where("usuario", "==", usuario));
+      const querySnapshot = await getDocs(q);
+      return querySnapshot.empty;
+    } catch (error) {
+      console.error("Error checking usuario validity:", error);
+      return false;
+    }
+  };
+
+  // Função para avançar para a próxima etapa do cadastro
+  const avancarEtapa = () => {
+    setState((prevState) => ({
+      ...prevState,
+      etapa: Math.min(prevState.etapa + 1, 4), // Ensure the etapa doesn't go beyond 4
+    }));
+  };
+
+  // Função para retroceder para a etapa anterior do cadastro
+  const retrocederEtapa = () => {
+    setState((prevState) => ({
+      ...prevState,
+      etapa: Math.max(prevState.etapa - 1, 1), // Ensure the etapa doesn't go below 1
+    }));
+  };
+
+  // Função para tratar a mudança de email no input
+  const handleEmailChange = (event) => {
+    const email = event.target.value;
+    setState((prevState) => ({
+      ...prevState,
+      email,
+      isEmailValid: isValidEmail(email),
+    }));
+  };
+
+  // Função para tratar a mudança de senha no input
+  const handlePasswordChange = (event) => {
+    const password = event.target.value;
+    setState((prevState) => ({
+      ...prevState,
+      password,
+    }));
+  };
+
+  // Função para tratar a mudança de confirmação de senha no input
+  const handleConfirmPasswordChange = (event) => {
+    const confirmPassword = event.target.value;
+    setState((prevState) => ({
+      ...prevState,
+      confirmPassword,
+      isPasswordMatch: prevState.password === confirmPassword,
+    }));
+  };
+
   const renderPasswordRules = () => {
     return (
-      <>
-        <p>A senha deve ter no mínimo 8 caracteres.</p>
-        <p>A senha deve conter pelo menos uma letra maiúscula.</p>
-        <p>A senha deve conter pelo menos um número.</p>
-        <p>A senha deve conter pelo menos um caractere especial.</p>
-      </>
+      <ul>
+        <li>Deve ter ao menos um número ou caractere especial</li>
+        <li>Deve conter pelo menos uma letra maiúscula</li>
+        <li>Deve ter no mínimo 8 caracteres</li>
+      </ul>
     );
   };
+  const isPasswordMatch = state.password === state.confirmPassword;
 
-  // Renderização condicional das mensagens de validação
+  // Function to render password validation messages
   const renderValidationMessages = () => {
     if (!isPasswordMatch) {
-      return (
-        <p style={{ color: "red" }}>
-          As senhas não coincidem ou não atendem às regras de validação.
-        </p>
-      );
+      return <p style={{ color: "red" }}>As senhas não coincidem</p>;
     }
     return null;
   };
 
-  const [email, setEmail] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(true);
-  const [isEmailUnique, setIsEmailUnique] = useState(true);
-
-  //padrão Observer
-  useEffect(() => {
-
-    const checkEmailUniqueness = async () => {
-      const usersRef = db.collection("users");
-      const snapshot = await usersRef.where("email", "==", email).get();
-      setIsEmailUnique(snapshot.empty);
-    };
-
-    if (email) {
-      checkEmailUniqueness();
-    }
-  }, [email]);
-
-  //exemplo padrão de projeto Memento
-  const [etapa, setEtapa] = useState(1);
-
-  const avancarEtapa = (e) => {
-    e.preventDefault();
-    if (etapa < 4) {
-      setEtapa(etapa + 1);
-    }
+  // Função para tratar a mudança de celular no input
+  const handleCelularChange = (event) => {
+    const celular = event.target.value;
+    setState((prevState) => ({
+      ...prevState,
+      celular,
+    }));
   };
 
-  const retrocederEtapa = () => {
-    if (etapa > 1) {
-      setEtapa(etapa - 1);
-    }
+  const handleUsuarioChange = (event) => {
+    const usuario = event.target.value;
+    setState((prevState) => ({
+      ...prevState,
+      usuario,
+    }));
   };
 
-  const vazio = () => {};
+  // Função para tratar a mudança de instituição no input
+  const handleInstituicaoChange = (event) => {
+    const instituicao = event.target.value;
+    setState((prevState) => ({
+      ...prevState,
+      instituicao,
+    }));
+  };
 
-  const [imageSrc, setImageSrc] = useState(
-    "https://uploaddeimagens.com.br/images/004/529/200/full/logo.png?1688341296"
-  );
+  // Função para tratar a mudança de curso no input
+  const handleCursoChange = (event) => {
+    const curso = event.target.value;
+    setState((prevState) => ({
+      ...prevState,
+      curso,
+    }));
+  };
 
+  // Função para tratar a mudança de data de nascimento no input
+  const handleDtNascimentoChange = (event) => {
+    const dtNascimento = event.target.value;
+    setState((prevState) => ({
+      ...prevState,
+      dtNascimento,
+    }));
+  };
+
+  // Função para tratar a mudança de nome no input
+  const handleNomeChange = (event) => {
+    const nome = event.target.value;
+    setState((prevState) => ({
+      ...prevState,
+      nome,
+    }));
+  };
+
+  // Função para tratar a mudança de pseudônimo no input
+  const handlePseudonimoChange = (event) => {
+    const pseudonimo = event.target.value;
+    setState((prevState) => ({
+      ...prevState,
+      pseudonimo,
+    }));
+  };
+
+  // Função para tratar a mudança de imagem de perfil no input
   const handleImagemPerfilChange = (event) => {
-    const arquivo = event.target.files[0];
+    const imageFile = event.target.files[0];
     const reader = new FileReader();
-
-    reader.onload = () => {
-      setImageSrc(reader.result);
+    reader.onloadend = () => {
+      setState((prevState) => ({
+        ...prevState,
+        imageSrc: reader.result,
+      }));
     };
-
-    if (arquivo) {
-      reader.readAsDataURL(arquivo);
-      // Upload image to Firebase Storage
-      const imageRef = storageRef.child(arquivo.name);
-      imageRef.put(arquivo).then(() => {
-        // Get image URL
-        imageRef.getDownloadURL().then((url) => {
-          setImageSrc(url);
-        });
-      });
-    } else {
-      // No image selected, set default URL
-      setImageSrc("https://uploaddeimagens.com.br/images/004/529/200/full/logo.png?1688341296");
+    if (imageFile) {
+      reader.readAsDataURL(imageFile);
     }
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      setImageSrc(reader.result);
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-      // Upload image to Firebase Storage
-      const imageRef = storageRef.child(file.name);
-      imageRef.put(file).then(() => {
-        // Get image URL
-        imageRef.getDownloadURL().then((url) => {
-          setImageSrc(url);
-        });
-      });
-    } else {
-      // No file selected, set default URL
-      setImageSrc(defaultImageUrl);
-    }
-  };
-  const [loading, setLoading] = useState(false);
-  if (loading) {
-    return <p>carregando...</p>;
-  }
-
-  const isEtapaValid = () => {
-    switch (etapa) {
-      case 1:
-        return isEmailValid && isPasswordMatch;
-      case 2:
-        return (
-          isCelularValid() &&
-          isInstituicaoValid() &&
-          isCursoValid() &&
-          isDtNascimentoValid()
-        );
-      case 3:
-        return isNomeValid() && isUsuarioValid();
-      case 4:
-        return isPseudonimoValid();
-      default:
-        return false;
-    }
-  };
-  const [celular, setCelular] = useState("");
-  const isCelularValid = () => {
-    const celularPattern = /^\([0-9]{2}\) [0-9]{5}-[0-9]{4}$/;
-    return celularPattern.test(celular);
+  // Função para verificar se a etapa 1 é válida
+  const isEtapa1Valid = () => {
+    return (
+      isValidEmail(state.email) &&
+      state.isEmailValid &&
+      isStrongPassword(state.password) &&
+      state.isPasswordMatch &&
+      isEmailAvailable(state.email) &&
+      state.isEmailValid
+    );
   };
 
-  const [instituicao, setInstituicao] = useState("");
-  const isInstituicaoValid = () => {
-    return !!instituicao.trim();
+  // Função para verificar se a etapa 2 é válida
+  const isEtapa2Valid = () => {
+    return (
+      isValidCelular(state.celular) &&
+      isInstituicaoValid(state.instituicao) &&
+      isCursoValid(state.curso) &&
+      isDtNascimentoValid(state.dtNascimento)
+    );
   };
-  const [curso, setCurso] = useState("");
-  const isCursoValid = () => {
-    return !!curso.trim();
+
+  // Função para verificar se a etapa 3 é válida
+  const isEtapa3Valid = () => {
+    return isNomeValid(state.nome);
   };
-  const [dtNascimento, setdtNascimento] = useState("");
-  const isDtNascimentoValid = () => {
-    if (!dtNascimento) {
+
+  const isEtapa4Valid = () => {
+    return isPseudonimoValid(state.pseudonimo);
+  };
+  // Função para verificar se todas as etapas foram preenchidas corretamente
+  const isFormValid = () => {
+    if (
+      isEtapa1Valid() &&
+      isEtapa2Valid() &&
+      isEtapa3Valid() &&
+      isEtapa4Valid()
+    ) {
       return true;
-    }
-
-    const today = new Date();
-    const birthDate = new Date(dtNascimento);
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    const dayDiff = today.getDate() - birthDate.getDate();
-
-    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-      return age - 1 >= 16;
-    }
-
-    return age >= 16;
-  };
-  const [nome, setNome] = useState("");
-  const isNomeValid = () => {
-    return !!nome.trim();
-  };
-  const [usuario, setUsuario] = useState("");
-  const isUsuarioValid = () => {
-    const usuarioPattern = /^[^\s]{1,25}$/;
-    return usuarioPattern.test(usuario);
+    } else return false;
   };
 
-  const [pseudonimo, setPseudonimo] = useState("");
-  const isPseudonimoValid = () => {
-    const pseudonimoPattern = /^[^\s]{1,25}$/;
-    return pseudonimoPattern.test(pseudonimo);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    setIsEmailValid(validateEmail(e.target.value));
-  };
-
-  const validateEmail = (email) => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailPattern.test(email);
-  };
-
-  const handleCelularChange = (e) => {
-    setCelular(e.target.value);
-  };
-
-  const handleInstituicaoChange = (e) => {
-    setInstituicao(e.target.value);
-  };
-
-  const handleCursoChange = (e) => {
-    setCurso(e.target.value);
-  };
-
-  const handleDtNascimentoChange = (e) => {
-    setDtNascimento(e.target.value);
-  };
-
-  const handleNomeChange = (e) => {
-    setNome(e.target.value);
-  };
-
-  const handleUsuarioChange = (e) => {
-    setUsuario(e.target.value);
-  };
-
-  const handlePseudonimoChange = (e) => {
-    setPseudonimo(e.target.value);
-  };
-
+  // Função para tratar o envio do formulário
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      // Create user in Firebase authentication
-      console.log(email, password);
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      console.log(user.uid);
-      // Create user in Firestore
+    // Verifique se todas as etapas foram preenchidas corretamente
+    if (!isFormValid()) {
+      alert("Preencha corretamente todas as etapas antes de cadastrar.");
+      return;
+    } else if (isFormValid()) {
       const {
-        celular,
-        instituicao,
-        curso,
-        dtNascimento,
-        nome,
-        usuario,
-        pseudonimo,
-        imageSrc,
-      } = this.state;
-      console.log(celular);
-      console.log(instituicao);
-      console.log(curso);
-      console.log(dtNascimento);
-      console.log(nome);
-      console.log(usuario);
-      console.log(pseudonimo);
-      console.log(imageSrc);
-      await db.collection("users").doc("4vaspCjC5muHhx0VO1hQ").set({
-        uid: user.uid,
-        celular,
-        instituicao,
-        curso,
-        dtNascimento,
-        nome,
-        usuario,
-        pseudonimo,
-        imageSrc,
         email,
-      });
+        password,
+        celular,
+        instituicao,
+        curso,
+        dtNascimento,
+        nome,
+        usuario,
+        pseudonimo,
+        imageSrc,
+      } = state;
 
-      // Reset form and state
-      this.setState({
-        email: "",
-        password: "",
-        confirmPassword: "",
-        celular: "",
-        instituicao: "",
-        curso: "",
-        dtNascimento: "",
-        nome: "",
-        usuario: "",
-        pseudonimo: "",
-        imageSrc: null,
-        etapa: 1,
-        isEmailValid: true,
-        isPasswordMatch: true,
-      });
+      // Cadastre o usuário no Firebase Authentication
+      try {
+        const auth = getAuth();
+        const { user } = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
 
-      alert("Usuário cadastrado!");
-    } catch (error) {
-      alert("Não foi possível cadastrar o usuário. " + error);
+        // Envie um email de verificação para o usuário
+
+        // Upload da imagem de perfil para o Firebase Storage (se tiver uma imagem selecionada)
+        let imageUrl = null;
+        if (imageSrc) {
+          const storage = getStorage();
+          const storageRef = ref(storage, `profile_images/${user.uid}`);
+          await uploadBytes(storageRef, imageSrc);
+          imageUrl = await getDownloadURL(storageRef);
+        }
+
+        // Cadastre os detalhes do usuário na coleção 'users' com o ID do usuário autenticado
+        const userDocRef = doc(db, "users", user.uid);
+        await setDoc(userDocRef, {
+          id: user.uid, // Store the user ID as a variable inside the document
+          email,
+          celular,
+          instituicao,
+          curso,
+          dtNascimento,
+          nome,
+          usuario,
+          pseudonimo,
+          imageUrl,
+        });
+
+        alert("Usuario cadastrado!");
+        history.push('/login');
+      } catch (error) {
+        alert("Erro ao cadastrar usuário: " + error.message);
+        history.push('/register');
+      }
     }
   };
 
   return (
+
     <div className="login">
+      
       <div className="container">
+      <br></br><br></br>
         <header className="header">
           <img src={logoImg} alt="CEFERNO" className="logoImg" />
           <span>Por favor digite suas informações de cadastro</span>
         </header>
-        <form onSubmit={handleSubmit}>
+        <form>
           <div
             className="etapa01"
-            style={{ display: etapa === 1 ? "block" : "none" }}
+            style={{ display: state.etapa === 1 ? "block" : "none" }}
           >
             <h2>Etapa 01/04</h2>
             <br></br>
@@ -376,11 +457,13 @@ export function Register() {
                 name="email"
                 id="email"
                 placeholder="email@provedor.com"
-                value={email}
+                value={state.email}
                 onChange={handleEmailChange}
-                style={{ borderColor: isEmailValid ? "green" : "red" }}
+                style={{ borderColor: state.isEmailValid ? "green" : "red" }}
               />
-              {!isEmailValid && <p style={{ color: "red" }}>E-mail inválido</p>}
+              {!state.isEmailValid && (
+                <p style={{ color: "red" }}>E-mail inválido</p>
+              )}
             </div>
 
             <div className="inputContainer">
@@ -390,7 +473,7 @@ export function Register() {
                 name="password"
                 id="password"
                 placeholder="********************"
-                value={password}
+                value={state.password}
                 onChange={handlePasswordChange}
               />
             </div>
@@ -401,24 +484,27 @@ export function Register() {
                 name="password"
                 id="password2"
                 placeholder="********************"
-                value={confirmPassword}
+                value={state.confirmPassword}
                 onChange={handleConfirmPasswordChange}
-                onBlur={checkPasswordMatch}
-                style={{ borderColor: isPasswordMatch ? "green" : "red" }}
+                onBlur={state.checkPasswordMatch}
+                style={{ borderColor: state.isPasswordMatch ? "green" : "red" }}
               />
-              {!isPasswordMatch && (
+              {!state.isPasswordMatch && (
                 <p style={{ color: "red" }}>As senhas não coincidem</p>
               )}
-              {!isPasswordMatch && renderValidationMessages()}
+              {!state.isPasswordMatch && renderValidationMessages()}
               {renderPasswordRules()}
             </div>
-            <button
-              onClick={avancarEtapa}
-              className="button"
-              disabled={!isEtapaValid(1)}
+            <h1
+              onClick={() => isEtapa1Valid() && avancarEtapa()} // Click is only triggered if the step is valid
+              className={`button ${!isEtapa1Valid() ? "invalid" : ""}`}
+              style={{
+                cursor: !isEtapa1Valid() ? "not-allowed" : "pointer",
+                backgroundColor: !isEtapa1Valid() ? "#24054C" : "green",
+              }}
             >
               Continuar <img src={arrowImg} alt="->" />
-            </button>
+            </h1>
 
             <div className="footer">
               <p>Você já tem uma conta?</p>
@@ -427,7 +513,7 @@ export function Register() {
           </div>
           <div
             className="etapa02"
-            style={{ display: etapa === 2 ? "block" : "none" }}
+            style={{ display: state.etapa === 2 ? "block" : "none" }}
           >
             <span>
               <a onClick={retrocederEtapa} href="#">
@@ -445,11 +531,11 @@ export function Register() {
                 name="celular"
                 id="celular"
                 placeholder="(xx) xxxxx-xxxx"
-                value={celular}
+                value={state.celular}
                 onChange={handleCelularChange}
-                style={{ borderColor: isCelularValid() ? "green" : "red" }}
+                style={{ borderColor: isValidCelular() ? "green" : "red" }}
               />
-              {!isCelularValid() && (
+              {!isValidCelular() && (
                 <p style={{ color: "red" }}>Celular inválido</p>
               )}
             </div>
@@ -460,7 +546,7 @@ export function Register() {
                 name="instituicao"
                 id="instituicao"
                 placeholder="Nome da instituição"
-                value={instituicao}
+                value={state.instituicao}
                 onChange={handleInstituicaoChange}
                 style={{ borderColor: isInstituicaoValid() ? "green" : "red" }}
               />
@@ -475,7 +561,7 @@ export function Register() {
                 name="curso"
                 id="curso"
                 placeholder="Nome do curso"
-                value={curso}
+                value={state.curso}
                 onChange={handleCursoChange}
                 style={{ borderColor: isCursoValid() ? "green" : "red" }}
               />
@@ -489,25 +575,28 @@ export function Register() {
                 type="date"
                 name="dtNascimento"
                 id="dtNascimento"
-                value={dtNascimento}
-                nChange={handleDtNascimentoChange}
+                value={state.dtNascimento}
+                onChange={handleDtNascimentoChange}
                 style={{ borderColor: isDtNascimentoValid() ? "green" : "red" }}
               />
               {!isDtNascimentoValid() && (
                 <p style={{ color: "red" }}>Data de nascimento inválida</p>
               )}
             </div>
-            <button
-              onClick={avancarEtapa}
-              className="button"
-              disabled={!isEtapaValid()}
+            <h1
+              onClick={() => isEtapa2Valid() && avancarEtapa()} // Click is only triggered if the step is valid
+              className={`button ${!isEtapa2Valid() ? "invalid" : ""}`}
+              style={{
+                cursor: !isEtapa2Valid() ? "not-allowed" : "pointer",
+                backgroundColor: !isEtapa2Valid() ? "red" : "green",
+              }}
             >
               Continuar <img src={arrowImg} alt="->" />
-            </button>
+            </h1>
           </div>
           <div
             className="etapa03"
-            style={{ display: etapa === 3 ? "block" : "none" }}
+            style={{ display: state.etapa === 3 ? "block" : "none" }}
           >
             <span>
               <a onClick={retrocederEtapa} href="#">
@@ -525,7 +614,7 @@ export function Register() {
                 name="nome"
                 id="nome"
                 placeholder="Nome completo"
-                value={nome}
+                value={state.nome}
                 onChange={handleNomeChange}
                 style={{ borderColor: isNomeValid() ? "green" : "red" }}
               />
@@ -538,7 +627,7 @@ export function Register() {
                 name="usuario"
                 id="usuario"
                 placeholder="Usuário"
-                value={usuario}
+                value={state.usuario}
                 onChange={handleUsuarioChange}
                 style={{ borderColor: isUsuarioValid() ? "green" : "red" }}
               />
@@ -561,20 +650,25 @@ export function Register() {
                   accept="image/*"
                   onChange={handleImagemPerfilChange}
                 />
-                {imageSrc && <img id="output" src={imageSrc} alt="Preview" />}
+                {state.imageSrc && (
+                  <img id="output" src={state.imageSrc} alt="Preview" />
+                )}
               </div>
             </div>
-            <button
-              onClick={avancarEtapa}
-              className="button"
-              disabled={!isEtapaValid()}
+            <h1
+              onClick={() => isEtapa3Valid() && avancarEtapa()} // Click is only triggered if the step is valid
+              className={`button ${!isEtapa3Valid() ? "invalid" : ""}`}
+              style={{
+                cursor: !isEtapa3Valid() ? "not-allowed" : "pointer",
+                backgroundColor: !isEtapa3Valid() ? "red" : "green",
+              }}
             >
               Continuar <img src={arrowImg} alt="->" />
-            </button>
+            </h1>
           </div>
           <div
             className="etapa04"
-            style={{ display: etapa === 4 ? "block" : "none" }}
+            style={{ display: state.etapa === 4 ? "block" : "none" }}
           >
             <span>
               <a onClick={retrocederEtapa} href="#">
@@ -592,7 +686,7 @@ export function Register() {
                 name="pseudonimo"
                 id="pseudonimo"
                 placeholder="Pseudônimo"
-                value={pseudonimo}
+                value={state.pseudonimo}
                 onChange={handlePseudonimoChange}
                 style={{ borderColor: isPseudonimoValid() ? "green" : "red" }}
               />
@@ -601,9 +695,14 @@ export function Register() {
               )}
             </div>
             <button
+              type="submit"
               onClick={handleSubmit}
               className="button"
-              disabled={!isEtapaValid()}
+              disabled={!isFormValid()}
+              style={{
+                cursor: !isEtapa4Valid() ? "not-allowed" : "pointer",
+                backgroundColor: !isEtapa4Valid() ? "red" : "green",
+              }}
             >
               Cadastrar
             </button>
