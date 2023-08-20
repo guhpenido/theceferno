@@ -2,59 +2,54 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-import { app } from "../../services/firebaseConfig";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  RecaptchaVerifier,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { app } from "../../services/firebaseConfig"; // Import your Firebase configuration
 import { useNavigate } from "react-router-dom";
 
 export function Login() {
-  const auth = getAuth(app);
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const recaptchaVerifier = new RecaptchaVerifier("recaptcha-container", {
-    size: "invisible",
-    callback: (response) => {
-      handleSignIn();
-    },
-  });
-
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const auth = getAuth(app);
   useEffect(() => {
+    
+    // Observar mudanças de autenticação
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        // Se um usuário estiver logado, redirecione para a página de timeline
         navigate("/timeline");
       }
     });
 
-    return () => unsubscribe();
-  }, [auth]);
+    return () => unsubscribe(); // Limpa o observador quando o componente é desmontado
+  }, [auth, navigate]);
 
-  function handleSignIn() {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("User logged in:", user);
-        navigate("/timeline");
-      })
-      .catch((error) => {
-        console.error("Error signing in:", error.message);
-      });
-  }
+  const handleSignIn = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      alert("Usuário logado!");
+      navigate("/timeline");
+    } catch (error) {
+      console.error("Error signing in:", error.message);
+      setError(error.message);
+      alert(error.message);
+    }
+  };
   return (
     <div className="login">
       <div className="container">
         <header className="header">
-          <div id="recaptcha-container"></div>
           <img src={logoImg} alt="CEFERNO" className="logoImg" />
           <span>Por favor digite suas informações de login</span>
         </header>
 
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
           <div className="inputContainer">
             <label htmlFor="email">E-mail</label>
             <input
@@ -78,7 +73,7 @@ export function Login() {
           </div>
           <a href="#">Esqueceu sua senha ?</a>
 
-          <button className="button" id="sign-in-button" onClick={handleSignIn}>
+          <button className="button" onClick={handleSignIn}>
             Entrar <img src={arrowImg} alt="->" />
           </button>
           <div className="footer">

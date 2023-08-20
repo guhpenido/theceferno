@@ -14,6 +14,7 @@ import { faPaperPlane } from "@fortawesome/fontawesome-free-solid";
 //import { faXmark } from "@fortawesome/fontawesome-free-solid";
 import { app } from "../../services/firebaseConfig";
 import { getFirestore } from "firebase/firestore";
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import {
   doc,
   getDoc,
@@ -22,12 +23,56 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 import "./stylesTimeline.css";
 
 export function Timeline() {
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
   const db = getFirestore(app);
   const [posts, setPosts] = useState([]);
+  const auth = getAuth(app);
+  const [userId, setUserId] = useState(null);
+  const navigate = useNavigate();
+  const [isVisible, setIsVisible] = useState(false);
+  const [userLoggedData, setUserLoggedData] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+        fetchUserDataAndSetState(user.uid);
+      } else {
+        navigate("/login");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth, navigate]);
+
+  useEffect(() => {
+    const unsubscribe = getPostsFromFirestore();
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      fetchUserDataAndSetState(userId);
+    }
+  }, [userId]);
+  
+
+  const fetchUserDataAndSetState = async (userId) => {
+    try {
+      const userLoggedDataResponse = await fetchUserData(userId);
+      setUserLoggedData(userLoggedDataResponse);
+      setIsLoadingUser(false); // Data has been fetched, no longer loading
+    } catch (error) {
+      console.error("Error fetching user data:", error.message);
+      setIsLoading(false); // Even if there's an error, stop loading
+    }
+  };
 
   const getPostsFromFirestore = () => {
     return onSnapshot(collection(db, "timeline"), (snapshot) => {
@@ -53,84 +98,74 @@ export function Timeline() {
     }
   };
 
-  useEffect(() => {
-    const unsubscribe = getPostsFromFirestore();
-    return () => unsubscribe(); // Cleanup: unsubscribe when component unmounts
-  }, []);
-
-  const [isVisible, setIsVisible] = useState(false);
-
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
   };
 
+  if (isLoadingUser) {
+    return <p>Carregando...</p>;
+  }
+
+  console.log(userLoggedData);
   return (
     <>
       <div className="tl-screen">
-      {isVisible && (
-      <div className="tl-addPost">
-          <div className="tl-addPost-header">
-            <div className="tl-addPost-close" onClick={toggleVisibility}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="1em"
-                viewBox="0 0 384 512"
-              >
-                <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
-              </svg>
-            </div>
-            <div className="tl-addPost-mode">
-              <div className="tl-addPost-foto">
-                <img
-                  src="https://cdn.discordapp.com/attachments/871728576972615680/1142350249776648262/image.png"
-                  alt=""
-                />
-              </div>
-              <select className="tl-addPost-modeSelect" name="postMode">
-                <option className="tl-addPost-modeSelect-option" value="normal">
-                  Gustavo Penido
-                </option>
-                <option
-                  className="tl-addPost-modeSelect-option"
-                  value="anonimo"
+        {isVisible && (
+          <div className="tl-addPost">
+            <div className="tl-addPost-header">
+              <div className="tl-addPost-close" onClick={toggleVisibility}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 384 512"
                 >
-                  novinho 69
-                </option>
-              </select>
-              <FontAwesomeIcon
-                className="tl-addPost-arrow"
-                icon={faArrowRight}
-              />
-              <input
-                className="tl-addPost-mark-input"
-                type="search"
-                value="Timeline"
-              />
+                  <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                </svg>
+              </div>
+              <div className="tl-addPost-mode">
+                <div className="tl-addPost-foto">
+                  <img
+                    src={userLoggedData.imageUrl}
+                    alt=""
+                  />
+                </div>
+                <select className="tl-addPost-modeSelect" name="postMode">
+                  <option
+                    className="tl-addPost-modeSelect-option"
+                    value="normal"
+                  >
+                    {userLoggedData.usuario}
+                  </option>
+                  <option
+                    className="tl-addPost-modeSelect-option"
+                    value="anonimo"
+                  >
+                    {userLoggedData.pseudonimo}
+                  </option>
+                </select>
+                
+              </div>
+            </div>
+            <div className="tl-addpost-body">
+              <div className="tl-textInput">
+                <textarea
+                  className="tl-textInput-input"
+                  placeholder="O que você deseja susurrar alto hoje?"
+                ></textarea>
+              </div>
+              <div className="tl-confirmPost">
+                <button>
+                  <FontAwesomeIcon icon={faPaperPlane} /> Wispar
+                </button>
+              </div>
             </div>
           </div>
-          <div className="tl-addpost-body">
-            <div className="tl-textInput">
-              <textarea
-                className="tl-textInput-input"
-                placeholder="O que você deseja susurrar alto hoje?"
-              ></textarea>
-            </div>
-            <div className="tl-confirmPost">
-              <button>
-                <FontAwesomeIcon icon={faPaperPlane} /> Wispar
-              </button>
-            </div>
-          </div>
-        </div>
         )}
         <div className="tl-container">
           <div className="tl-header">
             <div className="tl-header1">
               <div className="tl-foto">
-                <img
-                  src="https://cdn.discordapp.com/attachments/871728576972615680/1142350249776648262/image.png"
-                  alt=""
-                />
+                <img src={userLoggedData.imageUrl} alt="" />
               </div>
               <div className="tl-logo">
                 <img
@@ -145,7 +180,6 @@ export function Timeline() {
           </div>
           <div className="tl-main">
             <div className="tl-box">
-              
               <div className="tl-post">
                 <div className="tl-ps-header">
                   <div className="tl-ps-foto">
@@ -170,16 +204,7 @@ export function Timeline() {
                 </div>
                 <div className="tl-ps-texto">
                   <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. Lorem Ipsum has been the industry's
-                    standard dummy text ever since the 1500s, when an unknown
-                    printer took a galley of type and scrambled it to make a
-                    type specimen book. It has survived not only five centuries,
-                    but also the leap into electronic typesetting, remaining
-                    essentially unchanged. It was popularised in the 1960s with
-                    the release of Letraset sheets containing Lorem Ipsum
-                    passages, and more recently with desktop publishing software
-                    like Aldus PageMaker including versions of Lorem Ipsum.
+                    Ain apelaummmm!
                   </p>
                 </div>
                 <div className="tl-ps-footer">
