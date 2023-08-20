@@ -5,12 +5,13 @@
 }
 
 .profilePicDm:hover{
-  
+  width: 50px;
+  border-radius: 50%;
 }
 
 .mensagemDm{
   display: flex;
-  padding-left: 5%; 
+  padding-left: 50%; 
 }
 
 #msg{

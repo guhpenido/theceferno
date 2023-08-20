@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
-import voltarIcon from "../../assets/voltar-icon.svg";
-import enviarIcon from "../../assets/enviar-icon.svg";
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import voltarIcon from "./assets/voltar-icon.svg";
+import enviarIcon from "./assets/enviar-icon.svg";
 import "./chatStyles.css"; 
+import "./stylesChat.css"; 
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
-import { doc, getDoc, onSnapshot, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc, arrayUnion , setDoc } from "firebase/firestore";
 import { Link, useParams } from "react-router-dom";
 
 // Conexão com o Firebase
@@ -43,21 +44,25 @@ function Chat() {
     idCombinado = userUidSelected + userUid;
   }
 
-  const scrollToBottom = () => {
+  /*const scrollToBottom = useCallback( () => {
     if (mensagemRef.current) {
       mensagemRef.current.scrollIntoView({ behavior: 'smooth' });
       console.log("scroll");
     }
-  };
+  }, []);*/
 
   function AtualizaChat({ currentUserProfilePic, chatPartnerProfilePic }) {
     const [dados, setDados] = useState([]);
     
+
     useEffect(() => {
+      console.log(mensagemRef);
+      console.log("oi");
       const unSub = onSnapshot(doc(db, "chat", idCombinado), (doc) => {
         if (doc.exists()) {
           setDados(doc.data().mensagem);
-          scrollToBottom();
+          mensagemRef.current.scrollIntoView({ behavior: "smooth" });
+          console.log(mensagemRef);
         }
       });
   
@@ -95,11 +100,43 @@ function Chat() {
 
   const enviarMensagem = () => {
     const trimmedInputValue = inputValue.trim();
+    const currentTime = new Date().toLocaleString();
+    const idCombinado = userId > userUid
+        ? userId + userUid
+        : userUid + userId;
+      console.log(idCombinado);
+    const unSub = onSnapshot(doc(db, "chat", idCombinado), async (docUnSub) => {
+      console.log("onSub fora");
+    try {
+      const res = await getDoc(doc(db, "chat", idCombinado));
+      console.log("onSub");
+      if (!res.exists()) {
+        //create a chat in chats collection
+        await setDoc(doc(db, "chat", idCombinado), { mensagem: [] , id1: userId , id2: userUid});
+        updateDoc(doc(db, "chat", idCombinado), {
+          mensagem: arrayUnion({
+            text: trimmedInputValue,
+            idUserSent: userUid,
+            idUserReceived: userUidSelected,
+            time: currentTime,
+          }),
+          time: currentTime
+        });
+
+     /* if (!doc.exists()) {
+        console.log("alo");
+        if (userUid > userUidSelected) {
+          idCombinado = userUid + userUidSelected;
+        } else {
+          idCombinado = userUidSelected + userUid;
+        }
+        await setDoc(doc(db, "chat", idCombinado), { mensagem: [], id1: userUid, id2: userUidSelected});
+      }*/
+    }
+    } catch (err) {console.log(err);}
+    });
     
     if (trimmedInputValue !== '') {
-      const currentTime = new Date().toLocaleString();
-
-      const idCombinado = userUid > userUidSelected ? userUid + userUidSelected : userUidSelected + userUid;
 
       try {
         updateDoc(doc(db, "chat", idCombinado), {
@@ -109,6 +146,7 @@ function Chat() {
             idUserReceived: userUidSelected,
             time: currentTime,
           }),
+          time: currentTime
         });
 
         console.log('Mensagem enviada com sucesso!');
