@@ -1,35 +1,46 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-//import "./stylesLogin.css";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { app } from "../../services/firebaseConfig.js";
-import { useNavigate } from 'react-router-dom';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { app } from "../../services/firebaseConfig"; // Import your Firebase configuration
+import { useNavigate } from "react-router-dom";
 
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //const history = useHistory();
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const auth = getAuth(app);
+  useEffect(() => {
+    
+    // Observar mudanças de autenticação
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Se um usuário estiver logado, redirecione para a página de timeline
+        navigate("/timeline");
+      }
+    });
 
-  function handleSignIn(e) {
-    e.preventDefault();
+    return () => unsubscribe(); // Limpa o observador quando o componente é desmontado
+  }, [auth, navigate]);
 
-    // Sign in the user with the provided email and password using the app.auth() instance
-    signInWithEmailAndPassword(app.auth(), email, password)
-      .then((userCredential) => {
-        // The user has signed in successfully
-        const user = userCredential.user;
-        console.log("User logged in:", user);
-
-        // Redirect to a protected route or any other page after successful login
-        //history.push("/dm");
-      })
-      .catch((error) => {
-        // Handle login error
-        console.error("Error signing in:", error.message);
-      });
-  }
+  const handleSignIn = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      alert("Usuário logado!");
+      navigate("/timeline");
+    } catch (error) {
+      console.error("Error signing in:", error.message);
+      setError(error.message);
+      alert(error.message);
+    }
+  };
   return (
     <div className="login">
       <div className="container">
@@ -38,7 +49,7 @@ export function Login() {
           <span>Por favor digite suas informações de login</span>
         </header>
 
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
           <div className="inputContainer">
             <label htmlFor="email">E-mail</label>
             <input
@@ -60,7 +71,6 @@ export function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-
           <a href="#">Esqueceu sua senha ?</a>
 
           <button className="button" onClick={handleSignIn}>

@@ -10,11 +10,15 @@
 
 
 body {
-  background-image: url("../../assets/backgroundHome.jpg") !important;
+  /* background-image: url("../../assets/backgroundHome.jpg") !important; */
+  background: linear-gradient(64deg, #772fcf 0%, #6e0ee48c 100%) !important;
+  box-shadow: -44.3667984008789px 75.1484375px 999.86666870117188px 74.3667984008789px rgb(120, 19, 251) inset, 84.3667984008789px -41.1484375px 93.86666870117188px 0px rgba(86, 45, 136, 0.232) inset !important;
+
   background-size: cover; 
   background-repeat: no-repeat;
   background-position: center;
-  height: 100%;
+  height: 100vw;
+  color: #d9d9d9;
 }
 
 header {
@@ -40,13 +44,13 @@ header .header-logo svg path:first-child {
   fill: white;
 } 
 header .header-logo svg path:last-child {
-  fill: #4d01ff;
+  fill: #7813FB;
 }
 header .header-logo .logo-text {
   font-size: 1.25rem;
   font-weight: 500;
   margin-left: 1rem;
-  color: #4d01ff;
+  color: white;
 }
 header .header-items {
   display: flex;
@@ -71,7 +75,10 @@ header .header-items .header-item .item-title {
 header .header-items .header-item .item-title .title-text {
   font-size: 0.85rem;
   font-weight: 500;
-  color: rgba(0, 0, 0, 0.65);
+  color: #d9d9d9;
+}
+header .header-items .header-item .item-title .title-text:hover {
+  color:#4763E4;
 }
 header .header-items .header-item .item-title .title-icon {
   display: flex;
@@ -82,15 +89,15 @@ header .header-items .header-item .item-title .title-icon svg {
   width: 1rem;
 }
 header .header-items .header-item .item-title .title-icon svg path {
-  fill: #4d01ff;
+  fill: #4763E4;
 }
-header .header-items .header-item::before {
+header .header-items .header-item ::before {
   content: "";
   position: absolute;
   bottom: -0.35rem;
   width: 100%;
   height: 0;
-  background-color: #4d01ff;
+  background-color: rgba(255, 255, 255, 0.763);
   transition: height 125ms ease-in-out;
 }
 header .header-items .header-item .contato::before {
@@ -99,15 +106,16 @@ header .header-items .header-item .contato::before {
 header .header-link {
   padding: 0.5rem 1rem;
   border-radius: 1.5rem;
-  border: 0.15rem solid rgba(0, 0, 0, 0.125);
+  border: 0.1rem solid rgba(255, 255, 255, 0.681);
   font-size: 0.85rem;
   font-weight: 300;
-  color: #4d01ff;
+  color: white;
   transition: border 250ms ease-in-out;
   margin-left: 1rem;
 }
 header .header-link:hover {
-  border: 0.15rem solid #4d01ff;
+  border: 0.15rem solid #4763E4;
+  background: #00003d;
 }
 
 main {
@@ -128,7 +136,7 @@ main .home-section .home-title {
 }
 main .home-section .home-button {
   width: max-content;
-  background-color: #4d01ff;
+  background-color: #4763E4;
   font-family: "Poppins", sans-serif;
   padding: 0.5rem 1rem;
   color: white;
@@ -149,10 +157,10 @@ main .home-section .home-button:hover {
 .contact .form {
   width: 100%;
   height: 100%;
-  background: #fff;
+  background: #e5ede5;
   box-shadow: 0px 2px 25px rgba(0, 0, 0, 0.1);
   padding: 30px;
-  border-radius: 0 10px 10px 0;
+  border-radius: 25px;
 }
 
 .contact .form .form-group {
@@ -161,8 +169,8 @@ main .home-section .home-button:hover {
 
 .contact .form input,
 .contact .form textarea {
-  border-radius: 0;
-  box-shadow: none;
+  border-radius: 25px;
+  box-shadow: #000;
   font-size: 14px;
 }
 
@@ -170,12 +178,14 @@ main .home-section .home-button:hover {
 .contact .form input[type=email],
 .contact .form textarea {
   padding: 12px 15px;
+  background-color: #d7e3d7;
+  border-color: #cadaca;
 }
 
 .contact .form input[type=text]:focus,
 .contact .form input[type=email]:focus,
 .contact .form textarea:focus {
-  border-color: #4d01ff;
+  border-color: #4763E4;
 }
 
 .contact .form textarea {
@@ -187,7 +197,7 @@ main .home-section .home-button:hover {
 }
 
 .contact .form button[type=submit] {
-  background: #4d01ff;
+  background: #4763E4;
   border: 0;
   padding: 14px 45px;
   color: #fff;
@@ -196,19 +206,63 @@ main .home-section .home-button:hover {
 }
 
 .contact .form button[type=submit]:hover {
-  background: rgba(110, 25, 128, 0.8);
+  background: #00276c;
 }
 
+/* 
 @media (max-width: 768px) {
   .header-link{
     margin-top: 15px;
   }
 
   .form {
-    /* Centralizar os campos do formulário verticalmente */
+    Centralizar os campos do formulário verticalmente
     display: flex;
     flex-direction: column;
     align-items: center;
   }
+} */
 
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+  }
+  header .header-items {
+    flex-direction: column;
+    margin-top: 2rem;
+  }
+  header .header-link {
+    font-size: 14px;
+    margin: 5px;
+  }
+  main {
+    padding: 20px;
+  }
+  .contact .form {
+    padding: 20px;
+  }
+  .contact .form input[type=text],
+  .contact .form input[type=email],
+  .contact .form textarea {
+    padding: 10px 12px;
+  }
+  .contact .form button[type=submit] {
+    padding: 12px 40px;
+  }
+  header .header-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+  }
+  header .header-logo svg {
+    height: 40px;
+    width: 40px;
+  }
+  header .header-logo .logo-text {
+    font-size: 18px;
+    margin-top: 5px;
+  }
 }

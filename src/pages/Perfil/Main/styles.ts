@@ -13,8 +13,8 @@ export const Container = styled.div`
   width: min(601px, 100%);
 
   @media (min-width: 500px) {
-    border-left: 1px solid var(--outline);
-    border-right: 1px solid var(--outline);
+    border-left: 1px solid #4763E4;
+    border-right: 1px solid #4763E4;
   }
 `;
 
@@ -22,21 +22,23 @@ export const Header = styled.div`
   z-index: 2;
   position: sticky;
   top: 0;
-  background: var(--primary);
+  background: #000;
   display: flex;
   align-items: center;
   text-align: left;
   padding: 8px 0 9px 13px;
-  border-bottom: 1px solid var(--outline);
+  border-bottom: 1px solid #4763E4;
 
   > button {
     padding: 8px;
     border-radius: 50%;
     outline: 0;
     cursor: pointer;
+    background: #000;
+    border: 0;
 
     &:hover {
-      background: var(--ceferno-dark-hover);
+      background: #00003d;
     }
   }
 `;
@@ -44,7 +46,8 @@ export const Header = styled.div`
 export const BackIcon = styled(ArrowIcon)`
   width: 24px;
   height: 24px;
-  fill: var(--ceferno);
+  fill: #4763E4;
+  
 `;
 
 export const ProfileInfo = styled.div`
@@ -54,6 +57,7 @@ export const ProfileInfo = styled.div`
 
   > strong {
     font-size: 19px;
+    color: white;
   }
 `;
 
@@ -62,9 +66,9 @@ export const BottomMenu = styled.div`
   bottom: 0;
   left: 0;
   z-index: 2;
-  background: var(--primary);
+  background: #000;
   width: 100%;
-  border-top: 1px solid var(--outline);
+  border-top: 1px solid #4763E4;
   display: flex;
   justify-content: space-between;
   padding: 8px min(46px, max(10vw, 10px));
@@ -78,11 +82,11 @@ const iconCSS = css`
   width: 31px;
   height: 31px;
   cursor: pointer;
-  fill: var(--gray);
+  fill:  #7a7a7a;
 
   &:hover,
   &.active {
-    fill: var(--ceferno);
+    fill: #4763E4;
   }
 `;
 

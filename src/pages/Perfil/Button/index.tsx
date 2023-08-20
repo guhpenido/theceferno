@@ -6,8 +6,8 @@ interface Props {
 
 export default styled.button<Props>`
     background: ${(props) => (props.outlined ? 'transparent' : '#41a7cf')};
-    color: ${(props) => (props.outlined ? 'var(--ceferno)' : 'var(--white)')};
-    border: ${(props) => (props.outlined ? '2px solid var(--ceferno)': 'none')};
+    color: ${(props) => (props.outlined ? '#4763E4' : '#d9d9d9')};
+    border: ${(props) => (props.outlined ? '2px solid #4763E4': 'none')};
     padding: 16px;
     border-radius: 25px;
     font-weight: bold;
@@ -18,7 +18,7 @@ export default styled.button<Props>`
     &:hover {
         background: ${props => 
         props.outlined 
-        ? 'var(--ceferno-dark-hover)' 
-        : 'var(--ceferno-light-hover)'};
+        ? '#00003d' 
+        : '#00276c'};
     }
 `;
