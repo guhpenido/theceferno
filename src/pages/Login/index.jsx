@@ -1,31 +1,47 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-//import "./stylesLogin.css";
-//import { signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "../../services/firebaseConfig";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  RecaptchaVerifier,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { getAuth } from "firebase/auth";
-import { signInWithEmailAndPassword } from "firebase/auth";
+
 export function Login() {
+  const auth = getAuth(app);
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-  const auth = getAuth();
-  function handleSignIn(e) {
-    e.preventDefault();
-    signInWithEmailAndPassword(email, password)
+
+  const recaptchaVerifier = new RecaptchaVerifier("recaptcha-container", {
+    size: "invisible",
+    callback: (response) => {
+      handleSignIn();
+    },
+  });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate("/timeline");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
+
+  function handleSignIn() {
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // The user has signed in successfully
         const user = userCredential.user;
         console.log("User logged in:", user);
-
-        // Redirect to a protected route or any other page after successful login
-        navigate("/dm");
+        navigate("/timeline");
       })
       .catch((error) => {
-        // Handle login error
         console.error("Error signing in:", error.message);
       });
   }
@@ -33,6 +49,7 @@ export function Login() {
     <div className="login">
       <div className="container">
         <header className="header">
+          <div id="recaptcha-container"></div>
           <img src={logoImg} alt="CEFERNO" className="logoImg" />
           <span>Por favor digite suas informações de login</span>
         </header>
@@ -59,10 +76,9 @@ export function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-
           <a href="#">Esqueceu sua senha ?</a>
 
-          <button className="button" onClick={handleSignIn}>
+          <button className="button" id="sign-in-button" onClick={handleSignIn}>
             Entrar <img src={arrowImg} alt="->" />
           </button>
           <div className="footer">
