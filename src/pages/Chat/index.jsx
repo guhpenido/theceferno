@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import voltarIcon from "./assets/voltar-icon.svg";
 import enviarIcon from "./assets/enviar-icon.svg";
-import "./chatStyles.css"; 
-import "./stylesChat.css"; 
+import "./App.css"; 
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
 import { doc, getDoc, onSnapshot, updateDoc, arrayUnion , setDoc } from "firebase/firestore";
@@ -73,8 +72,9 @@ function Chat() {
       <div className="mensagem">
         {dados.map((elemento, index) => (
           <div
-            className={`message ${userUid === elemento.idUserSent ? 'sent' : 'received'}`}
+            className={`message ${userUid === elemento.idUserSent ? 'sentDm' : 'receivedDm'}`}
             key={index}
+            ref={mensagemRef}
           >
             {userUid === elemento.idUserSent ? (
               <img className="profilePicDm" src={currentUserProfilePic} alt="Profile Pic" />
@@ -84,7 +84,7 @@ function Chat() {
             <p className='mensagemChatPv'>{elemento.text}</p>
           </div>
         ))}
-        <div ref={mensagemRef} />
+        <div/>
       </div>
     );
   }
@@ -186,15 +186,15 @@ function Chat() {
   return (
     <>
       <div>
-        <div className="header centralizar">
-          <Link to={`/`}><img id="voltar" className="icon" src={voltarIcon} alt="Voltar" /></Link>
+        <div className="headerDm">
+          <Link to={`/`}><img id="voltarChat" className="iconDm" src={voltarIcon} alt="Voltar" /></Link>
           <img className="profilePicDm" src={chatPartnerProfilePic} alt="Profile Pic" />
-          <p className="nome bold">{chatPartnerName}</p>
+          <p className="nomeUserDm boldDm">{chatPartnerName}</p>
         </div>
         <AtualizaChat currentUserProfilePic={currentUserProfilePic} chatPartnerProfilePic={chatPartnerProfilePic} />
         <div className="enviarMensagem">
-          <input className="input" onChange={handleInputChange} onKeyDown={handleKeyDown} value={inputValue} />
-          <img id="enviar" className="icon" src={enviarIcon}  onKeyDown={handleKeyDown} tabIndex="0" alt="Enviar" onClick={enviarMensagem} />
+          <input className="inputPesquisaDm" onChange={handleInputChange} onKeyDown={handleKeyDown} value={inputValue} />
+          <img id="enviarChat" className="iconDm" src={enviarIcon}  onKeyDown={handleKeyDown} tabIndex="0" alt="Enviar" onClick={enviarMensagem} />
         </div>
       </div> 
     </>
