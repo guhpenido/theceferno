@@ -311,17 +311,30 @@ export function Register() {
   };
 
   // Função para tratar a mudança de imagem de perfil no input
-  const handleImagemPerfilChange = (event) => {
+  const handleImagemPerfilChange = async (event) => {
     const imageFile = event.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setState((prevState) => ({
-        ...prevState,
-        imageSrc: reader.result,
-      }));
-    };
+  
     if (imageFile) {
-      reader.readAsDataURL(imageFile);
+      const storage = getStorage();
+      const storageRef = ref(storage, 'profile_images/' + imageFile.name);
+  
+      try {
+        // Faz o upload do arquivo para o Firebase Storage
+        const snapshot = await uploadBytes(storageRef, imageFile);
+  
+        // Obtém a URL de download do arquivo
+        const downloadURL = await getDownloadURL(snapshot.ref);
+  
+        // Atualiza o estado do componente com a URL de download da imagem
+        setState((prevState) => ({
+          ...prevState,
+          imageSrc: downloadURL,
+        }));
+  
+        console.log('Upload concluído. URL de download:', downloadURL);
+      } catch (error) {
+        console.error('Erro ao fazer o upload da imagem:', error);
+      }
     }
   };
 
@@ -403,10 +416,7 @@ export function Register() {
         // Upload da imagem de perfil para o Firebase Storage (se tiver uma imagem selecionada)
         let imageUrl = null;
         if (imageSrc) {
-          const storage = getStorage();
-          const storageRef = ref(storage, `profile_images/${user.uid}`);
-          await uploadBytes(storageRef, imageSrc);
-          imageUrl = await getDownloadURL(storageRef);
+          imageUrl = imageSrc;
         }
 
         // Cadastre os detalhes do usuário na coleção 'users' com o ID do usuário autenticado
