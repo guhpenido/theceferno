@@ -4,6 +4,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenti
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import React, { useState, useEffect } from 'react';
 import ModalReact from 'react-modal';
+import {useNavigate} from "react-router-dom";
 import {
   Container,
   Banner,
@@ -17,6 +18,7 @@ import {
 
 
 import Feed from "../Feed";
+import { auth } from "firebase-admin";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
@@ -35,6 +37,9 @@ ModalReact.setAppElement('#root');
 
 const ProfilePage: React.FC = () => {
 
+  const navigate = useNavigate();
+  const auth = getAuth(app);
+  
   const [currentUser, setCurrentUser] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bio, setBio] = useState('');
@@ -42,30 +47,44 @@ const ProfilePage: React.FC = () => {
   const [bannerUrl, setBannerUrl] = useState<string | null>(null);
   const [userInstituicao, setUserInstituicao] = useState('');
   const [userCurso, setUserCurso] = useState('');
+  
 
+  //pegar o id do usuario de outra página 
   useEffect(() => {
-    // Colocar ID do documento
-    const docId = 'b0wWO7tGbeYV0vWW7agxxg0lIiL2'; 
-    const userRef = doc(db, 'users', docId);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user.uid);
+        fetchUserDataAndSetState(user.uid);
+      } else {
+        navigate("/login");
+      }
+    });
 
-    getDoc(userRef)
-      .then((docSnapshot) => {
+    return () => unsubscribe();
+  }, [auth, navigate]);
+
+  //pegar curso e instituição
+  useEffect(() => {
+    const fetchDocument = async () => {
+      try {
+        const docRef = doc(db, 'users', currentUser);
+        const docSnapshot = await getDoc(docRef);
+
         if (docSnapshot.exists()) {
           const data = docSnapshot.data();
-          // Nome do campo desejado
-          const instituicao = data.instituicao; 
-          // Nome do campo desejado
-          const curso = data.curso;
-          setUserInstituicao(instituicao);
-          setUserCurso(curso);
+          setUserCurso(data.userCurso);
+          setUserInstituicao(data.userInstituicao);
         } else {
-          console.log('No such document!');
+          console.log('Document not found');
         }
-      })
-      .catch((error) => {
-        console.log('Error getting document:', error);
-      });
-  }, []);
+      } catch (error) {
+        console.error('Error fetching document:', error);
+      }
+    };
+
+    fetchDocument();
+  }, [currentUser]);
+
 
 
   const openModal = () => {
@@ -254,3 +273,7 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
+function fetchUserDataAndSetState(uid: string) {
+  throw new Error("Function not implemented.");
+}
+
