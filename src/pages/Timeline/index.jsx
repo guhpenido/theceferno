@@ -143,15 +143,7 @@ export function Timeline() {
                     {userLoggedData.pseudonimo}
                   </option>
                 </select>
-                {/*<FontAwesomeIcon
-                  className="tl-addPost-arrow"
-                  icon={faArrowRight}
-                />
-                <input
-                  className="tl-addPost-mark-input"
-                  type="search"
-                  value="Timeline"
-        />*/}
+                
               </div>
             </div>
             <div className="tl-addpost-body">
