@@ -264,3 +264,11 @@ html {
     outline: 0;
     border: 0;
 }
+
+.anon .tl-addPost-header{
+  background-color: black;
+}
+
+.anon {
+  background-color: rgb(48, 48, 48) !important;
+}
