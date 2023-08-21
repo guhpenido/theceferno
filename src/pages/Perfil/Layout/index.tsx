@@ -6,7 +6,6 @@ import SideBar from '../SideBar';
 
 import { Container, Wrapper } from './styles';
 
-
 const Layout: React.FC = () => {
   return (
     <Container>
