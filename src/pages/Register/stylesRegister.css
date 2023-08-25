@@ -177,7 +177,9 @@ html, body {
 
 .container {
   width: 100vw;
-  height: 100vh;
+  height: auto; /* Ajusta a altura com base no conteúdo */
+  max-height: 100vh; /* Define uma altura máxima para evitar que a div cresça indefinidamente */
+  overflow-y: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -284,6 +286,10 @@ html, body {
 }
 
 @media only screen and (max-width: 480px) {
+
+  .container {
+    height: 100vh; /* Ajusta a altura com base no conteúdo */
+  }
   .login {
     width: 100vw;
     height: 100vh;
@@ -333,6 +339,9 @@ html, body {
 
 /*Media queries para tablet*/
 @media screen and (min-width: 481px) and (max-width: 767px) {
+  .container {
+    height: 100vh; /* Ajusta a altura com base no conteúdo */
+  }
   .login {
     width: 100vw;
     height: 100vh;
@@ -373,6 +382,9 @@ html, body {
 
 /*Media queries para tablets maiores*/
 @media screen and (min-width:768px) and (max-width:1320px) {
+  .container {
+    height: 100vh; /* Ajusta a altura com base no conteúdo */
+  }
   .login {
     width: 100vw;
     height: 100vh;

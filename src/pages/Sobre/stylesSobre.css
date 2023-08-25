@@ -292,3 +292,52 @@ img{
     width: 100%;
   }
 }
+
+.container {
+  width: 85%;
+  margin: 10px;
+  align-items: baseline;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.conteudo {
+  width: 100%;
+  margin: 20px;
+  padding: 10px;
+  text-align: justify;
+  border-left: 3px solid #d9d9d9;
+  border-right: 3px solid #d9d9d9;
+}
+
+h1 {
+  margin-bottom: 10px;
+  font-size: 50px;
+  text-align: center;
+  font-weight: 550;
+}
+
+h3 {
+  font-weight: 450;
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+@media (min-width: 600px) and (max-width:900) {
+  .container {
+    width: 90%;
+    margin: 10px;
+    align-items: baseline;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+  
+  .conteudo {
+    width: 100vw;
+  }
+}
+
