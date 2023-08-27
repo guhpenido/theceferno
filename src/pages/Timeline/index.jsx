@@ -14,7 +14,7 @@ import { faPaperPlane } from "@fortawesome/fontawesome-free-solid";
 //import { faXmark } from "@fortawesome/fontawesome-free-solid";
 import { app } from "../../services/firebaseConfig";
 import { getFirestore } from "firebase/firestore";
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import {
   doc,
   getDoc,
@@ -26,7 +26,7 @@ import {
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-import "./stylesTimeline.css";
+//import "./stylesTimeline.css";
 
 export function Timeline() {
   const [isLoadingUser, setIsLoadingUser] = useState(true);
@@ -37,6 +37,8 @@ export function Timeline() {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [userLoggedData, setUserLoggedData] = useState(null);
+  const [selectedProfile, setSelectedProfile] = useState(null); // Estado para armazenar o perfil selecionado
+  const [addPostClass, setAddPostClass] = useState("");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -61,12 +63,21 @@ export function Timeline() {
       fetchUserDataAndSetState(userId);
     }
   }, [userId]);
-  
+
+  useEffect(() => {
+    // Lógica para determinar quando aplicar a classe
+    if (userLoggedData && selectedProfile === userLoggedData.usuario) {
+      setAddPostClass("anon");
+    } else {
+      setAddPostClass("");
+    }
+  }, [selectedProfile, userLoggedData]);
 
   const fetchUserDataAndSetState = async (userId) => {
     try {
       const userLoggedDataResponse = await fetchUserData(userId);
       setUserLoggedData(userLoggedDataResponse);
+      setSelectedProfile(userLoggedDataResponse.usuario);
       setIsLoadingUser(false); // Data has been fetched, no longer loading
     } catch (error) {
       console.error("Error fetching user data:", error.message);
@@ -99,6 +110,7 @@ export function Timeline() {
   };
 
   const toggleVisibility = () => {
+    setSelectedProfile(userLoggedData.usuario);
     setIsVisible(!isVisible);
   };
 
@@ -106,12 +118,37 @@ export function Timeline() {
     return <p>Carregando...</p>;
   }
 
-  console.log(userLoggedData);
+  const profile = {
+    username: userLoggedData.pseudonimo,
+    photoURL:
+      "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png",
+  };
+
+  const handleProfileChange = (e) => {
+    setSelectedProfile(e);
+  };
+
+  function ProfileImage() {
+    // Determine qual perfil está selecionado e use o URL da imagem correspondente
+    const profileImageUrl =
+      selectedProfile === userLoggedData.usuario
+        ? userLoggedData.imageUrl
+        : profile.photoURL;
+
+    return <img src={profileImageUrl} alt="Perfil" />;
+  }
+
+  function MudarClasse() {
+    const classe = selectedProfile === userLoggedData.pseudonimo ? "anon" : "";
+
+    return `tl-addPost ${classe}`;
+  }
+
   return (
     <>
       <div className="tl-screen">
         {isVisible && (
-          <div className="tl-addPost">
+          <div className={MudarClasse()}>
             <div className="tl-addPost-header">
               <div className="tl-addPost-close" onClick={toggleVisibility}>
                 <svg
@@ -124,26 +161,26 @@ export function Timeline() {
               </div>
               <div className="tl-addPost-mode">
                 <div className="tl-addPost-foto">
-                  <img
-                    src={userLoggedData.imageUrl}
-                    alt=""
-                  />
+                  <ProfileImage selectedProfile={selectedProfile} />
                 </div>
-                <select className="tl-addPost-modeSelect" name="postMode">
+                <select
+                  className="tl-addPost-modeSelect"
+                  name="postMode"
+                  onChange={(e) => handleProfileChange(e.target.value)}
+                >
                   <option
                     className="tl-addPost-modeSelect-option"
-                    value="normal"
+                    value={userLoggedData.usuario}
                   >
                     {userLoggedData.usuario}
                   </option>
                   <option
                     className="tl-addPost-modeSelect-option"
-                    value="anonimo"
+                    value={userLoggedData.pseudonimo}
                   >
                     {userLoggedData.pseudonimo}
                   </option>
                 </select>
-                
               </div>
             </div>
             <div className="tl-addpost-body">
@@ -165,7 +202,7 @@ export function Timeline() {
           <div className="tl-header">
             <div className="tl-header1">
               <div className="tl-foto">
-                <img src={userLoggedData.imageUrl} alt="" />
+                <ProfileImage selectedProfile={selectedProfile} />
               </div>
               <div className="tl-logo">
                 <img
@@ -180,6 +217,73 @@ export function Timeline() {
           </div>
           <div className="tl-main">
             <div className="tl-box">
+              {/*{posts.map(async (post) => {
+                const userSentData = await fetchUserData(post.userSent);
+                const userMentionedData = await fetchUserData(
+                  post.userMentioned
+                );
+
+                const userSentImage = await fetchUserImage(userSentData);
+                const userMentionedImage = await fetchUserImage(
+                  userMentionedData
+                );
+
+                return (
+                  <div className="tl-box" key={post.id}>
+                    <div className="tl-post">
+                      <div className="tl-ps-header">
+                        <div className="tl-ps-foto">
+                          {userSentImage && <img src={userSentImage} alt="" />}
+                        </div>
+                        <div className="tl-ps-nomes">
+                          <p className="tl-ps-nome">
+                            {userSentData.nome}{" "}
+                            <span className="tl-ps-user">
+                              @{userSentData.usuario}{" "}
+                            </span>
+                            <span className="tl-ps-tempo">• {post.time}</span>
+                            <FontAwesomeIcon
+                              className="arrow"
+                              icon={faArrowRight}
+                            />
+                            {post.userMentioned !== null && (
+                              <div>
+                                {userMentionedImage && (
+                                  <img src={userMentionedImage} alt="" />
+                                )}
+                                {userMentionedData.nome}{" "}
+                                <span className="tl-ps-userReceived">
+                                  @{userMentionedData.usuario}{" "}
+                                </span>
+                              </div>
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="tl-ps-texto">
+                        <p>{post.text}</p>
+                      </div>
+                      <div className="tl-ps-footer">
+                        <div className="tl-ps-opcoes">
+                          <div className="tl-ps-reply">
+                            <FontAwesomeIcon icon={faComment} />
+                            <span>{post.replyCount}</span>
+                          </div>
+                          <div className="tl-ps-like">
+                            <FontAwesomeIcon icon={faThumbsUp} />{" "}
+                            <span>{post.likes}</span>
+                          </div>
+                          <div className="tl-ps-deslike">
+                            <FontAwesomeIcon icon={faThumbsDown} />{" "}
+                            <span>{post.deslikes}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}*/}
+
               <div className="tl-post">
                 <div className="tl-ps-header">
                   <div className="tl-ps-foto">
@@ -203,9 +307,7 @@ export function Timeline() {
                   </div>
                 </div>
                 <div className="tl-ps-texto">
-                  <p>
-                    Ain apelaummmm!
-                  </p>
+                  <p>Ain apelaummmm!</p>
                 </div>
                 <div className="tl-ps-footer">
                   <div className="tl-ps-opcoes">
