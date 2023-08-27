@@ -26,7 +26,19 @@ import {
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-//import "./stylesTimeline.css";
+import "./stylesTimeline.css";
+import {initializeApp} from "firebase/app"
+import {addDoc, getDocs, updateDoc} from "firebase/firestore"
+
+// configurações do firebase
+const firebaseapp = initializeApp({
+  apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
+  authDomain: "auth-ceferno.firebaseapp.com",
+  projectId: "auth-ceferno",
+  storageBucket: "auth-ceferno.appspot.com",
+  messagingSenderId: "388861107940",
+  appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
+});
 
 export function Timeline() {
   const [isLoadingUser, setIsLoadingUser] = useState(true);
@@ -39,6 +51,103 @@ export function Timeline() {
   const [userLoggedData, setUserLoggedData] = useState(null);
   const [selectedProfile, setSelectedProfile] = useState(null); // Estado para armazenar o perfil selecionado
   const [addPostClass, setAddPostClass] = useState("");
+
+
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [box1Visible, setBox1Visible] = useState(false); //para mostrar a div denuncia conteudo indevido
+  const [box2Visible, setBox2Visible] = useState(false); //para mostrar a div denuncia ser outra pessoa
+  const [h1Visible, setH1Visible] = useState(false); //mostra os h1s que chamam as divs
+  
+  const [denunciaId, setDenunciaId] = useState("");
+  const [messageReportedId, setMessageReportedId] = useState("");
+  const [motive, setMotive] = useState("");
+  const [userReported, setUserReported] = useState("");
+  const [userReporting, setUserReporting] = useState("");
+  const [denuncias, setDenuncias] = useState([]);
+
+  // const db = getFirestore(firebaseapp);
+  const userCollectionRef = collection(db, "denuncia");
+
+  async function CriarUser() {
+    const currentTime = new Date();
+    
+    const user = await addDoc(userCollectionRef, {
+        messageReportedId,
+        motive,
+        time: currentTime.toString(),
+        userReported,
+        userReporting
+      });
+
+      const newDenunciaId = user.id;
+      await updateDoc(user, { denunciaId: newDenunciaId });
+      console.log(user);
+  }
+  
+  
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const data = await getDocs(userCollectionRef);  
+      setDenuncias(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
+    };
+    getUsers();
+  }, []); 
+
+  //deixa e tira a visibilidade da div denuncia conteudo indevido
+  const toggleBox1Visibility = () => {
+    setBox1Visible(!box1Visible);
+    setBox2Visible(false); // Hide box2 when showing box1
+  };
+
+  //deixa e tira a visibilidade da div denuncia ser outra pessoa
+  const toggleBox2Visibility = () => {
+    setBox2Visible(!box2Visible);
+    setBox1Visible(false); // Hide box1 when showing box2
+  };
+
+  //deixa e tira a visibilidade dos h1s
+  const toggleh1Visibility = () => {
+    setH1Visible(!h1Visible);
+    setBox1Visible(false);
+    setBox2Visible(false);
+  };
+
+  const handleMotiveChange = (event) => {
+    setMotive(event.target.value);
+  };
+  
+  const renderDivStructure = () => {
+    return (
+      <div className={`denuncia ${h1Visible ? 'visible' : 'invisible'}`}> 
+        <h1>Denúncia <button onClick={toggleh1Visibility}>X</button></h1>
+        <label className={`${h1Visible ? 'visible' : 'invisible'}`} htmlFor='box1'> Está publicando conteúdo que não deveria estar no Ceferno  <button className="alternaOpcao" onClick={toggleBox1Visibility}> <img src="src\pages\Timeline\assets\icone.png"/> </button></label>
+        <select className={`opcoesDenuncia box1 ${box1Visible ? 'visible' : 'invisible'}`} id="box1" name="box1" value={motive} onChange={handleMotiveChange}>
+          <option value="Eh_Spam"> É spam </option>
+          <option value="Nao_Gostei"> Simplesmente não gostei </option>
+          <option value="Suicidio_Automutilacao_Disturbios"> Suicidio, automutilação ou disturbios alimentares </option>
+          <option value="Produtos_ilicitos"> Venda de produtos ilicitos </option>
+          <option value="Nudez"> Nudez ou atividade sexual </option>
+          <option value="Discurso_de_Odio"> Símbolos ou discurso de ódio </option>
+          <option value="Violencia"> Violência ou organizações perigosas </option>
+          <option value="Bullying"> Bullying ou assédio </option>
+          <option value="Violacao_Intelectual"> Violação de propriedade intelectual </option>
+          <option value="Golpe"> Golpe ou fraude </option>
+          <option value="Fake_News"> Informação falsa </option>
+        </select>
+        
+        <label className={`${h1Visible ? 'visible' : 'invisible'}`} htmlFor='box2'> Está publicando conteúdo que não deveria estar no Ceferno  <button className="alternaOpcao" onClick={toggleBox2Visibility}> <img src="src\pages\Timeline\assets\icone.png"/> </button></label>       
+         <select className={`opcoesDenuncia box2 ${box2Visible ? 'visible' : 'invisible'}`} id="box2" name="box2" value={motive} onChange={handleMotiveChange}>
+          <option value="fingindo_Ser_Eu"> Eu </option>
+          <option value="fingindo_Ser_Alguem_que_Sigo"> Alguém que sigo </option>
+          <option value="fingindo_Ser_Uma_Celebridade_Figura_Publica"> Uma celebridade ou figura pública </option>
+          <option value="fingindo_Ser_Empresa"> Uma empresa ou organização </option>
+        </select>
+        <button className={`enviar ${h1Visible ? 'visible' : 'invisible'}`} onClick={CriarUser}>Enviar</button>
+
+      </div>
+    );
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -304,6 +413,10 @@ export function Timeline() {
                       Kettles{" "}
                       <span className="tl-ps-userReceived">@eokettles </span>
                     </p>
+                    <div className='iconeDenuncia'>
+                      <button onClick={toggleh1Visibility}> <img src="src\pages\Timeline\assets\alerta.png" alt="" /></button>
+                    </div>
+                    {renderDivStructure()}
                   </div>
                 </div>
                 <div className="tl-ps-texto">
