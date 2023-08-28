@@ -145,33 +145,33 @@ const Post: React.FC<PostProps> = ({ avatarUrl }) => {
   };
 
   return (
-    <PerfilUsuario/>
-    // <Container>
-    //   <Body>
-    //     <Avatar as="img" src={avatarUrl || ''} alt="Novo Avatar" />
-    //     <Content>
-    //       <Header>
-    //         <strong>{userName}</strong>
-    //         <span>@{nickname}</span>
-    //       </Header>
-    //       <Posts>
-    //       </Posts>
-    //       <Icons>
-    //         <Status>
-    //           <CommentIcon />
-    //           20
-    //         </Status>
-    //         <Status>
-    //           <RepublicationIcon />5
-    //         </Status>
-    //         <Status>
-    //           <LikeIcon />
-    //           300
-    //         </Status>
-    //       </Icons>
-    //     </Content>
-    //   </Body>
-    // </Container>
+    // <PerfilUsuario/>
+    <Container>
+      <Body>
+        <Avatar as="img" src={avatarUrl || ''} alt="Novo Avatar" />
+        <Content>
+          <Header>
+            <strong>{userName}</strong>
+            <span>@{nickname}</span>
+          </Header>
+          <Posts>
+          </Posts>
+          <Icons>
+            <Status>
+              <CommentIcon />
+              20
+            </Status>
+            <Status>
+              <RepublicationIcon />5
+            </Status>
+            <Status>
+              <LikeIcon />
+              300
+            </Status>
+          </Icons>
+        </Content>
+      </Body>
+    </Container>
   );
 };
 
