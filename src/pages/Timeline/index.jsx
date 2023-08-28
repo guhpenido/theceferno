@@ -53,7 +53,7 @@ export function Timeline() {
   const [addPostClass, setAddPostClass] = useState("");
 
 
-  const [selectedOption, setSelectedOption] = useState(null);
+  // const [selectedOption, setSelectedOption] = useState(null);
   const [box1Visible, setBox1Visible] = useState(false); //para mostrar a div denuncia conteudo indevido
   const [box2Visible, setBox2Visible] = useState(false); //para mostrar a div denuncia ser outra pessoa
   const [h1Visible, setH1Visible] = useState(false); //mostra os h1s que chamam as divs
@@ -76,12 +76,16 @@ export function Timeline() {
         motive,
         time: currentTime.toString(),
         userReported,
-        userReporting
+        userReporting: selectedProfile
       });
 
       const newDenunciaId = user.id;
       await updateDoc(user, { denunciaId: newDenunciaId });
       console.log(user);
+
+      setH1Visible(!h1Visible);
+      setBox1Visible(false);
+      setBox2Visible(false);
   }
   
   

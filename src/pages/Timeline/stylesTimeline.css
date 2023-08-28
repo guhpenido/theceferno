@@ -315,6 +315,11 @@ html {
   margin-left: 37vw;
   font-size: 2.5vh;
 }
+
+.denuncia .enviar:hover {
+  color: blue;
+}
+
 .denuncia h1 {
   font-size: 4vh;
   text-align: center;
