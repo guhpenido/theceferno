@@ -14,6 +14,7 @@ import { faPaperPlane } from "@fortawesome/fontawesome-free-solid";
 //import { faXmark } from "@fortawesome/fontawesome-free-solid";
 import { app } from "../../services/firebaseConfig";
 import { getFirestore } from "firebase/firestore";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import {
   doc,
@@ -32,7 +33,7 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "./stylesTimeline.css";
 
 export function Timeline() {
-  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedUser, setSelectedUser] = useState("");
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const db = getFirestore(app);
   const [posts, setPosts] = useState([]);
@@ -47,11 +48,11 @@ export function Timeline() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const nodeRef = useRef(null);
+  const [isUserListVisible, setIsUserListVisible] = useState(false);
   const [newPost, setNewPost] = useState({
     deslikes: 0,
     likes: 0,
     mode: "public",
-    postId: "",
     text: "",
     time: "",
     userMentioned: "",
@@ -95,13 +96,16 @@ export function Timeline() {
   //pega o id do post para incrementar
   const fetchLatestPostId = async () => {
     try {
+      
       const postsRef = collection(db, "timeline");
       const querySnapshot = await getDocs(
         query(postsRef, orderBy("postId", "desc"), limit(1))
       ); // Obtém o último post com o ID mais alto
       if (!querySnapshot.empty) {
         const latestPost = querySnapshot.docs[0].data();
-        setNextPostId(latestPost.postId + 1); // Define o próximo ID disponível com base no último ID
+        const postIdAsNumber = parseInt(latestPost.postId, 10);
+        console.log(postIdAsNumber);
+        setNextPostId(postIdAsNumber + 1); // Define o próximo ID disponível com base no último ID
       }
     } catch (error) {
       console.error("Error fetching latest post ID:", error.message);
@@ -151,6 +155,7 @@ export function Timeline() {
   const toggleVisibility = () => {
     setSelectedProfile(userLoggedData.usuario);
     setIsVisible(!isVisible);
+    setIsUserListVisible(!isUserListVisible);
   };
 
   if (isLoadingUser) {
@@ -168,6 +173,7 @@ export function Timeline() {
   };
 
   const handlePostChange = (e) => {
+    
     const currentTime = new Date().toISOString();
     if (selectedProfile === userLoggedData.usuario) setPostMode("public");
     else setPostMode("anon");
@@ -176,12 +182,18 @@ export function Timeline() {
       [e.target.name]: e.target.value,
       time: currentTime,
       mode: postMode,
+      userMentioned: selectedUser,
+      postId: nextPostId
     });
   };
 
   const handleSubmitPost = async (e) => {
     e.preventDefault();
     // Crie um novo documento na coleção "timeline" com os dados do novo post
+    setNewPost({
+      ...newPost,
+      postId: nextPostId,
+    });
     try {
       const docRef = await addDoc(collection(db, "timeline"), newPost);
       console.log("Post adicionado com sucesso! ID do documento: ", docRef.id);
@@ -190,12 +202,12 @@ export function Timeline() {
         deslikes: 0,
         likes: 0,
         mode: "public",
-        postId: nextPostId,
         text: "",
         time: "",
         userMentioned: "",
         userSent: userId,
       });
+      setNextPostId(nextPostId + 1);
     } catch (error) {
       console.error("Erro ao adicionar o post: ", error);
     }
@@ -204,11 +216,11 @@ export function Timeline() {
   // Function to handle search input change
   const handleSearchInputChange = (event) => {
     const searchValue = event.target.value.trim();
-    console.log("1");
 
     setSearchTerm(searchValue);
 
     // Create a Firestore query to search for users by name
+    if (searchValue !== "") {
     const usersRef = collection(db, "users");
 
     // const searchQuery = query(usersRef, or( where("usuario", "==", searchValue), where("nome", "==", searchValue)));
@@ -240,12 +252,23 @@ export function Timeline() {
       }));
 
       setSearchResults((prevResults) => prevResults.concat(results2));
+      setIsUserListVisible(true); // Mostrar a lista de usuários
     });
+  }else{
+    setSearchResults([]); // Limpar os resultados da pesquisa se o termo de pesquisa estiver vazio
+    setIsUserListVisible(false); // Ocultar a lista de usuários
+  }
   };
 
   const handleUserSelection = (user) => {
     setSelectedUser(user);
-    setIsVisible(false); // Feche a lista de usuários após a seleção
+    setIsUserListVisible(false); // Feche a lista de usuários após a seleção
+  };
+
+  const clearSelectedUser = () => {
+    setSelectedUser(""); // Define o usuário selecionado como vazio
+    setSearchTerm(""); // Redefine o termo de pesquisa como vazio
+    setIsUserListVisible(false); // Abre a lista de usuários
   };
 
   function ProfileImage() {
@@ -301,44 +324,70 @@ export function Timeline() {
                     {userLoggedData.pseudonimo}
                   </option>
                 </select>
-
-                {/* <FontAwesomeIcon
+                <FontAwesomeIcon
                   className="tl-addPost-arrow"
                   icon={faArrowRight}
                 />
-                {selectedUser ? (
-                  <span className="tl-addPost-mark-input">{selectedUser}</span>
-                ) : (
-                  <input
-                    className="tl-addPost-mark-input"
-                    type="search"
-                    value={searchTerm}
-                    onChange={handleSearchInputChange}
+                <div className="tl-addPost-list-input">
+                  <FontAwesomeIcon
+                    className="tl-addPost-clear-icon"
+                    icon={faTimes}
+                    onClick={clearSelectedUser}
+                  />
+                  {selectedUser ? (
+                    <span className="tl-addPost-mark-input">
+                      {selectedUser}
+                    </span>
+                  ) : (
+                    <input
+                      className="tl-addPost-mark-input"
+                      type="search"
+                      value={searchTerm}
+                      onChange={handleSearchInputChange}
+                    />
+                  )}
+                  {selectedUser && (
+                  <FontAwesomeIcon
+                    className="tl-addPost-clear-icon"
+                    icon={faTimes}
+                    onClick={clearSelectedUser}
                   />
                 )}
-                <TransitionGroup component="ul">
-                  {searchResults.map((user) => (
-                    <CSSTransition
-                      nodeRef={nodeRef}
-                      timeout={500}
-                      classNames="my-node"
-                      key={user.id + "1"}
-                    >
-                      <li
-                        className="listaResultadosPesquisa"
-                        key={user.id}
-                        ref={nodeRef}
-                        onClick={() => handleUserSelection(user.usuario)}
-                      >
-                        <img className="profilePic" src={user.imageSrc}></img>
-                        <div className="dadosPessoais">
-                          <p className="nome bold">{user.nome}</p>
-                          <p className="user light">@{user.usuario}</p>
-                        </div>
-                      </li>
-                    </CSSTransition>
-                  ))}
-                </TransitionGroup> */}
+                  {isUserListVisible && ( // Verifica se a lista de usuários deve ser exibida
+                    <div className="tl-addPost-list-container">
+                      <TransitionGroup component="ul">
+                        {searchResults.map((user) => (
+                          <CSSTransition
+                            nodeRef={nodeRef}
+                            timeout={500}
+                            classNames="my-node"
+                            key={user.id + "1"}
+                          >
+                            <li
+                              className="tl-addPost-list-item"
+                              key={user.id}
+                              ref={nodeRef}
+                              onClick={() => handleUserSelection(user.usuario)}
+                            >
+                              <img
+                                className="tl-addPost-list-profilePic"
+                                src={user.imageUrl}
+                              ></img>
+                              <div className="tl-addPost-list-dadosPessoais">
+                                <p className="tl-addPost-list-nome bold">
+                                  {user.nome}
+                                </p>
+                                <p className="tl-addPost-list-user light">
+                                  @{user.usuario}
+                                </p>
+                              </div>
+                            </li>
+                          </CSSTransition>
+                        ))}
+                      </TransitionGroup>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             <div className="tl-addpost-body">
