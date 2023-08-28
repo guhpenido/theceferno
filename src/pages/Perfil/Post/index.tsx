@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
-import { getStorage, ref, uploadBytes, getDownloadURL  } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import React, { useState, useEffect } from 'react';
 import {
   Container,
@@ -53,12 +53,15 @@ const Post: React.FC<PostProps> = ({ avatarUrl }) => {
   return (
     <Container>
       <Body>
-          <Avatar as="img" src={avatarUrl || ''} alt="Novo Avatar" />
+        <Avatar as="img" src={avatarUrl || ''} alt="Novo Avatar" />
         <Content>
           <Header>
             <strong>{currentUser ? currentUser.displayName : 'Nome do Usuário'}</strong>
             <span>@{currentUser ? currentUser.username : 'nome_do_usuario'}</span>
           </Header>
+
+          
+
           <Posts>
             Lorem Ipsum is simply dummy text of the printing and typesetting...
           </Posts>
