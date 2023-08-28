@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import homeIcon from "./assets/home-icon.svg";
-import dmIcon from "./assets/dm-icon.svg";
-import notificacaoIcon from "./assets/notificacao-icon.svg";
-import pesquisaIcon from "./assets/pesquisa-icon.svg";
-import cefernoIcon from "./assets/ceferno icon.png";
-import "./App.css";
+import homeIcon from "../../assets/home-icon.svg";
+import dmIcon from "../../assets/dm-icon.svg";
+import notificacaoIcon from "../../assets/notificacao-icon.svg";
+import pesquisaIcon from "../../assets/pesquisa-icon.svg";
+import "./dmStyles.css"; 
+import "./stylesDm.css"; 
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
@@ -59,7 +59,7 @@ function Dm() {
     const chatDivs = [];
 
     // Create an array to hold the chat divs
-s
+
     // Get the current user's ID (replace this with your actual method to get the user ID)
     const currentUserID = "ovTWKzRPZmaAsluan0Fkr6elhn02";
 
@@ -99,7 +99,7 @@ s
             const userDocSnapshot = await getDoc(userDocRef);
 
             const partnerData2 = userPartnerSnapshot.data();
-            partnerImg = partnerData2.imageSrc;
+            partnerImg = partnerData2.imageUrl;
             partnerNome = partnerData2.nome;
             partnerUsuario = partnerData2.usuario;
 
@@ -193,12 +193,9 @@ s
   }
 
   useEffect(() => {
-    console.log("1");
 
     RenderUserChats();
   }, []);
-
-  console.log(chats);
 
   /*useEffect(() => {
       const unSub = onSnapshot(q, (doc) => {
@@ -229,7 +226,7 @@ s
 
   // Function to handle search input change
   const handleSearchInputChange = (event) => {
-    const searchValue = event.target.value.trim();
+    const searchValue = event.target.value
     console.log("1");
     setSearchTerm(searchValue);
     if(searchValue > ""){
@@ -257,7 +254,7 @@ s
           ...doc.data(),
         }));
 
-        setSearchResults(results);
+        setSearchResults((prevResults) => prevResults.concat(results));
       });
 
       onSnapshot(searchQuery2, (snapshot) => {
@@ -272,7 +269,7 @@ s
     else {
       setSearchResults([])
     }
-    
+    setSearchResults([])
   };
 
   return (
@@ -304,9 +301,9 @@ s
                 <li
                   className="listaResultadosPesquisaDm"
                   key={user.id}
-                  ref={nodeRef}
+                  noderef={nodeRef}
                 >
-                  <img className="profilePicDm" src={user.imageSrc}></img>
+                  <img className="profilePicDm" src={user.imageUrl}></img>
                   <div className="dadosPessoaisDm">
                     <p className="nomeUserDm boldDm">{user.nome}</p>
                     <p className="userDm lightDm">@{user.usuario}</p>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Tab, Whispers, TabContainer } from "./styles";
 import Post from "../Post";
 
@@ -7,12 +7,15 @@ interface FeedProps {
 }
 
 const Feed: React.FC<FeedProps> = ({ avatarUrl }) => {
+
+  
+
   return (
     <Container>
       <TabContainer>
-        <Tab>Whispers</Tab>
+        <Tab>Perfil</Tab>
         <Tab>Postagens</Tab>
-        <Tab>Respostas</Tab>
+        <Tab>Whispers</Tab>
       </TabContainer>
       <Whispers>
         {/* Passando avatarUrl como avatarUrl para o componente Post */}
