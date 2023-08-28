@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment } from "@fortawesome/fontawesome-free-solid";
@@ -25,10 +25,14 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { getDocs, orderBy, limit } from "firebase/firestore";
+import { addDoc } from "firebase/firestore";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-//import "./stylesTimeline.css";
+import "./stylesTimeline.css";
 
 export function Timeline() {
+  const [selectedUser, setSelectedUser] = useState('');
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const db = getFirestore(app);
   const [posts, setPosts] = useState([]);
@@ -38,7 +42,22 @@ export function Timeline() {
   const [isVisible, setIsVisible] = useState(false);
   const [userLoggedData, setUserLoggedData] = useState(null);
   const [selectedProfile, setSelectedProfile] = useState(null); // Estado para armazenar o perfil selecionado
+  const [postMode, setPostMode] = useState("public"); //estado p armazenar modo
   const [addPostClass, setAddPostClass] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const nodeRef = useRef(null);
+  const [newPost, setNewPost] = useState({
+    deslikes: 0,
+    likes: 0,
+    mode: "public",
+    postId: "",
+    text: "",
+    time: "",
+    userMentioned: "",
+    userSent: userId,
+  });
+  const [nextPostId, setNextPostId] = useState(0);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -72,6 +91,26 @@ export function Timeline() {
       setAddPostClass("");
     }
   }, [selectedProfile, userLoggedData]);
+
+  //pega o id do post para incrementar
+  const fetchLatestPostId = async () => {
+    try {
+      const postsRef = collection(db, "timeline");
+      const querySnapshot = await getDocs(
+        query(postsRef, orderBy("postId", "desc"), limit(1))
+      ); // Obtém o último post com o ID mais alto
+      if (!querySnapshot.empty) {
+        const latestPost = querySnapshot.docs[0].data();
+        setNextPostId(latestPost.postId + 1); // Define o próximo ID disponível com base no último ID
+      }
+    } catch (error) {
+      console.error("Error fetching latest post ID:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchLatestPostId();
+  }, []);
 
   const fetchUserDataAndSetState = async (userId) => {
     try {
@@ -128,6 +167,87 @@ export function Timeline() {
     setSelectedProfile(e);
   };
 
+  const handlePostChange = (e) => {
+    const currentTime = new Date().toISOString();
+    if (selectedProfile === userLoggedData.usuario) setPostMode("public");
+    else setPostMode("anon");
+    setNewPost({
+      ...newPost,
+      [e.target.name]: e.target.value,
+      time: currentTime,
+      mode: postMode,
+    });
+  };
+
+  const handleSubmitPost = async (e) => {
+    e.preventDefault();
+    // Crie um novo documento na coleção "timeline" com os dados do novo post
+    try {
+      const docRef = await addDoc(collection(db, "timeline"), newPost);
+      console.log("Post adicionado com sucesso! ID do documento: ", docRef.id);
+      // Limpe o estado do novo post após a submissão bem-sucedida
+      setNewPost({
+        deslikes: 0,
+        likes: 0,
+        mode: "public",
+        postId: nextPostId,
+        text: "",
+        time: "",
+        userMentioned: "",
+        userSent: userId,
+      });
+    } catch (error) {
+      console.error("Erro ao adicionar o post: ", error);
+    }
+  };
+
+  // Function to handle search input change
+  const handleSearchInputChange = (event) => {
+    const searchValue = event.target.value.trim();
+    console.log("1");
+
+    setSearchTerm(searchValue);
+
+    // Create a Firestore query to search for users by name
+    const usersRef = collection(db, "users");
+
+    // const searchQuery = query(usersRef, or( where("usuario", "==", searchValue), where("nome", "==", searchValue)));
+    const searchQuery = query(
+      usersRef,
+      where("usuario", ">=", searchValue),
+      where("usuario", "<=", searchValue + "\uf8ff")
+    );
+    const searchQuery2 = query(
+      usersRef,
+      where("nome", ">=", searchValue),
+      where("nome", "<=", searchValue + "\uf8ff")
+    );
+
+    // Listen for real-time updates and update searchResults state
+    onSnapshot(searchQuery, (snapshot) => {
+      const results = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setSearchResults(results);
+    });
+
+    onSnapshot(searchQuery2, (snapshot) => {
+      const results2 = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setSearchResults((prevResults) => prevResults.concat(results2));
+    });
+  };
+
+  const handleUserSelection = (user) => {
+    setSelectedUser(user);
+    setIsVisible(false); // Feche a lista de usuários após a seleção
+  };
+
   function ProfileImage() {
     // Determine qual perfil está selecionado e use o URL da imagem correspondente
     const profileImageUrl =
@@ -181,20 +301,63 @@ export function Timeline() {
                     {userLoggedData.pseudonimo}
                   </option>
                 </select>
+
+                {/* <FontAwesomeIcon
+                  className="tl-addPost-arrow"
+                  icon={faArrowRight}
+                />
+                {selectedUser ? (
+                  <span className="tl-addPost-mark-input">{selectedUser}</span>
+                ) : (
+                  <input
+                    className="tl-addPost-mark-input"
+                    type="search"
+                    value={searchTerm}
+                    onChange={handleSearchInputChange}
+                  />
+                )}
+                <TransitionGroup component="ul">
+                  {searchResults.map((user) => (
+                    <CSSTransition
+                      nodeRef={nodeRef}
+                      timeout={500}
+                      classNames="my-node"
+                      key={user.id + "1"}
+                    >
+                      <li
+                        className="listaResultadosPesquisa"
+                        key={user.id}
+                        ref={nodeRef}
+                        onClick={() => handleUserSelection(user.usuario)}
+                      >
+                        <img className="profilePic" src={user.imageSrc}></img>
+                        <div className="dadosPessoais">
+                          <p className="nome bold">{user.nome}</p>
+                          <p className="user light">@{user.usuario}</p>
+                        </div>
+                      </li>
+                    </CSSTransition>
+                  ))}
+                </TransitionGroup> */}
               </div>
             </div>
             <div className="tl-addpost-body">
-              <div className="tl-textInput">
-                <textarea
-                  className="tl-textInput-input"
-                  placeholder="O que você deseja susurrar alto hoje?"
-                ></textarea>
-              </div>
-              <div className="tl-confirmPost">
-                <button>
-                  <FontAwesomeIcon icon={faPaperPlane} /> Wispar
-                </button>
-              </div>
+              <form onSubmit={handleSubmitPost}>
+                <div className="tl-textInput">
+                  <textarea
+                    className="tl-textInput-input"
+                    placeholder="O que você deseja susurrar alto hoje?"
+                    name="text"
+                    value={newPost.text}
+                    onChange={handlePostChange}
+                  ></textarea>
+                </div>
+                <div className="tl-confirmPost">
+                  <button type="submit">
+                    <FontAwesomeIcon icon={faPaperPlane} /> Wispar
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}
