@@ -1,10 +1,11 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc, onSnapshot, collection } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import React, { useState, useEffect } from 'react';
 import ModalReact from 'react-modal';
-import {useNavigate} from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Banner,
@@ -18,7 +19,6 @@ import {
 
 
 import Feed from "../Feed";
-import { auth } from "firebase-admin";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
@@ -39,53 +39,121 @@ const ProfilePage: React.FC = () => {
 
   const navigate = useNavigate();
   const auth = getAuth(app);
-  
+
   const [currentUser, setCurrentUser] = useState<any | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [nickname, setNickname] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bio, setBio] = useState('');
   const [newAvatar, setNewAvatar] = useState<string | null>(null);
   const [bannerUrl, setBannerUrl] = useState<string | null>(null);
   const [userInstituicao, setUserInstituicao] = useState('');
   const [userCurso, setUserCurso] = useState('');
-  
+  const [isVisible, setIsVisible] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
-  //pegar o id do usuario de outra página 
+  const [userLoggedData, setUserLoggedData] = useState<any>(null); // Adjust the type accordingly
+  const [selectedProfile, setSelectedProfile] = useState<any>(null); // Adjust the type accordingly
+  const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
+  const [posts, setPosts] = useState<any[]>([]); // Adjust the type accordingly
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setCurrentUser(user.uid);
+        setUserId(user.uid);
         fetchUserDataAndSetState(user.uid);
+        searchUserFields(user.uid);
       } else {
-        navigate("/login");
+        navigate('/login');
       }
     });
 
     return () => unsubscribe();
   }, [auth, navigate]);
 
-  //pegar curso e instituição
   useEffect(() => {
-    const fetchDocument = async () => {
-      try {
-        const docRef = doc(db, 'users', currentUser);
-        const docSnapshot = await getDoc(docRef);
+    const unsubscribe = getPostsFromFirestore();
+    return () => unsubscribe();
+  }, []);
 
-        if (docSnapshot.exists()) {
-          const data = docSnapshot.data();
-          setUserCurso(data.userCurso);
-          setUserInstituicao(data.userInstituicao);
+  useEffect(() => {
+    if (userId) {
+      fetchUserDataAndSetState(userId);
+    }
+  }, [userId]);
+
+  const fetchUserDataAndSetState = async (userId: string) => {
+    try {
+      if (userId) {
+        const userLoggedDataResponse = await fetchUserData(userId);
+        if (userLoggedDataResponse) {
+          setUserLoggedData(userLoggedDataResponse);
+          setSelectedProfile(userLoggedDataResponse.usuario);
+          setIsLoadingUser(false); // Data has been fetched, no longer loading
         } else {
-          console.log('Document not found');
+          alert("User data not found!"); // Show an alert when userLoggedDataResponse is null
         }
-      } catch (error) {
-        console.error('Error fetching document:', error);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching user data:', error.message);
+    }
+  };
 
-    fetchDocument();
-  }, [currentUser]);
 
+  const getPostsFromFirestore = () => {
+    return onSnapshot(collection(db, 'timeline'), (snapshot) => {
+      const postsData: any[] = [];
+      snapshot.forEach((doc) => {
+        const postData = {
+          id: doc.id,
+          ...doc.data(),
+        };
+        postsData.push(postData);
+      });
+      setPosts(postsData);
+    });
+  };
 
+  const fetchUserData = async (userId: string) => {
+    const userDoc = await getDoc(doc(db, 'users', userId));
+    if (userDoc.exists()) {
+      return userDoc.data();
+    } else {
+      console.log('User not found');
+      return null;
+    }
+  };
+
+  // Função para pesquisar os campos "curso" e "instituição" com base no ID do usuário logado
+  const searchUserFields = async (userId) => {
+    try {
+      if (userId) {
+        // console.log('acessou');
+        const userDoc = await getDoc(doc(db, 'users', userId));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const cursoValue = userData['curso'] || '';
+          const instituicaoValue = userData['instituicao'] || '';
+          const bannerUrlValue = userData['avatar'] || ''; 
+          const newAvatarValue = userData['imageUrl'] || ''; 
+          const nicknameValue = userData['usuario'] || ''; 
+          const userNameValue = userData['nome'] || ''; 
+          // console.log(cursoValue); 
+          setUserCurso(cursoValue);
+          setUserInstituicao(instituicaoValue);
+          setNewAvatar(newAvatarValue);
+          setNickname(nicknameValue);
+          setUserName(userNameValue); 
+          // console.log(userNameValue);
+          setBannerUrl(bannerUrlValue); 
+        } else {
+          console.log('User not found');
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error.message);
+    }
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -256,8 +324,8 @@ const ProfilePage: React.FC = () => {
             Salvar Alterações
           </button>
         </ModalReact>
-        <h1>{currentUser ? currentUser.displayName : 'Nome do Usuário'}</h1>
-        <h2>@{currentUser ? currentUser.username : 'nome_do_usuario'}</h2>
+        <h1>{userName}</h1>
+        <h2>@{nickname}</h2>
         <Tags>
           <Institution>
             <p>{userInstituicao}</p>
@@ -273,7 +341,6 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
-function fetchUserDataAndSetState(uid: string) {
-  throw new Error("Function not implemented.");
-}
+
+
 

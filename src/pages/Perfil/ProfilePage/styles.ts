@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Button from "../Button";
 
 
-export const Container = styled.div `
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
   max-height: 100%;
@@ -92,8 +92,8 @@ export const Tags = styled.div`
 `;
 
 export const Institution = styled.div`
-  background-color: #f0d447;
-  border: 3px solid #b59803;
+  border: 3px solid rgb(71, 99, 228);
+  background-color: rgba(71, 99, 228, 0.2);
   height: 5vh; 
   width: 8vw;
   text-align: center; 
@@ -101,8 +101,8 @@ export const Institution = styled.div`
 `;
 
 export const Course = styled.div`
-  background-color: #62b038;
-  border: 3px solid #134a05;  
+  border: 3px solid rgb(71, 99, 228);  
+  background-color: rgba(71, 99, 228, 0.2);
   margin-left: 2vw;
   height: 5vh; 
   width: 8vw;
