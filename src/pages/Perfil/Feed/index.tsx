@@ -13,36 +13,28 @@ const Feed: React.FC<FeedProps> = ({ avatarUrl }) => {
 
   const [mostrarComponente, setMostrarComponente] = useState(false);
 
-  const handleWhisper = () => {
-    setMostrarComponente(!mostrarComponente);
-  }
+  // const handleWhisper = () => {
+  //   setMostrarComponente(!mostrarComponente);
+  // }
 
-  const handlePerfil = () => {
-    setMostrarComponente(!mostrarComponente);
-  }
-
-  const handlePostagens = () => {
-    setMostrarComponente(!mostrarComponente);
-  }
+  // const handlePostagens = () => {
+  //   setMostrarComponente(!mostrarComponente);
+  // }
 
   return (
     <Container>
       <TabContainer>
-        <Tab onClick={handlePerfil}>Perfil</Tab>
-        {mostrarComponente && <PerfilUsuario/>}
-        <Tab onClick={handlePostagens}>Postagens</Tab>
+        <Tab>Perfil</Tab>
+        <Tab>Postagens</Tab>
+        <Tab>Whispers </Tab>
+        {/* <Tab onClick={handlePostagens}>Postagens</Tab>
         {mostrarComponente && <PostagensUsuario/>}
         <Tab onClick={handleWhisper}>Whispers</Tab>
-        {mostrarComponente && <WhispersUsuario/>}
+        {mostrarComponente && <WhispersUsuario/>} */}
       </TabContainer>
       <Whispers>
         {/* Passando avatarUrl como avatarUrl para o componente Post */}
-        <Post avatarUrl={avatarUrl} />
-        <Post avatarUrl={avatarUrl} />
-        <Post avatarUrl={avatarUrl} />
-        <Post avatarUrl={avatarUrl} />
-        <Post avatarUrl={avatarUrl} />
-        
+        <Post avatarUrl={avatarUrl} />  
       </Whispers>
     </Container>
   );

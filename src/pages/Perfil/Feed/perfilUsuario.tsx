@@ -70,7 +70,7 @@ const PerfilUsuario: React.FC = () => {
             if (user) {
                 setUserId(user.uid);
                 fetchUserDataAndSetState(user.uid);
-                fetchTimelineItemsForUser(user.uid); 
+                fetchTimelineItemsForUser(user.uid);
             } else {
                 navigate('/login');
             }
@@ -159,10 +159,26 @@ const PerfilUsuario: React.FC = () => {
         }
     };
 
+    // console.log(timelineItems); 
     return (
         <div>
-            {noItemsFound ? (
-                <div>Nada Encontrado</div>
+            {timelineItems.length === 0 ? (
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '14px 16px',
+                    borderBottom: '1px solid #4763E4',
+                    maxWidth: '100%',
+                    flexShrink: 0,
+                    borderRadius: '5px',
+                    border: '2px solid #4763e4',
+                    background: 'rgba(71, 99, 228, 0.2)',
+                    marginBottom: '15px',
+                    color: 'whitesmoke',
+                    textAlign: 'center', 
+                }}>
+                    Nada Encontrado
+                </div>
             ) : (
                 timelineItems.map((item) => (
                     <Container key={item.postId}>

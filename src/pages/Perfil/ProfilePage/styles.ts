@@ -6,6 +6,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   max-height: 100%;
+  max-width: 100%;
   overflow-y: auto;
 
   ::-webkit-scrollbar {
@@ -85,30 +86,43 @@ export const EditButton = styled(Button)`
 `;
 
 export const Tags = styled.div`
-  display:flex;
-  justifyContent: 'space-between';
-  align-items: center; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin: 0;
+  color: whitesmoke;
+  width: 50%; 
 `;
 
-export const Institution = styled.div`
+const responsiveWidth = '5vw'; // Adjust this value as needed
+
+const ResponsiveTag = styled.div`
   border: 3px solid rgb(71, 99, 228);
   background-color: rgba(71, 99, 228, 0.2);
-  height: 5vh; 
-  width: 8vw;
-  text-align: center; 
+  height: 5vh;
+  width: ${responsiveWidth};
+  text-align: center;
   border-radius: 10px;
+
+  @media (max-width: 900px) {
+    width: 70%; // Take up full width on smaller screens
+    margin-bottom: 2px; // Add some spacing between tags
+  }
+
+  @media (min-width: 901px) {
+    width: 70%
+  }
 `;
 
-export const Course = styled.div`
-  border: 3px solid rgb(71, 99, 228);  
-  background-color: rgba(71, 99, 228, 0.2);
-  margin-left: 2vw;
-  height: 5vh; 
-  width: 8vw;
-  text-align: center; 
-  border-radius: 10px;
+export const Institution = styled(ResponsiveTag)`
+  /* Add any specific styles for Institution tag here */
 `;
+
+export const Course = styled(ResponsiveTag)`
+  margin-left: 2vw; /* Adjust margin if needed */
+  /* Add any specific styles for Course tag here */
+`;
+
 
 
 

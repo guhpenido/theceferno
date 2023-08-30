@@ -104,4 +104,10 @@ export const LikeIcon = styled.div`
   ${IconCSS};
 `;
 
+export const ConteudoPostagens = styled.div `
+  background-color: black; 
+  width:100%; 
+  height: 100%; 
+`
+
 

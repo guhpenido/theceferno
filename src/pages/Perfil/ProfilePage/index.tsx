@@ -46,7 +46,7 @@ const ProfilePage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bio, setBio] = useState('');
   const [newAvatar, setNewAvatar] = useState<string | null>(null);
-  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
+  const [newBanner, setNewBanner] = useState<string | null>(null);
   const [userInstituicao, setUserInstituicao] = useState('');
   const [userCurso, setUserCurso] = useState('');
   const [isVisible, setIsVisible] = useState(false);
@@ -134,18 +134,18 @@ const ProfilePage: React.FC = () => {
           const userData = userDoc.data();
           const cursoValue = userData['curso'] || '';
           const instituicaoValue = userData['instituicao'] || '';
-          const bannerUrlValue = userData['avatar'] || ''; 
-          const newAvatarValue = userData['imageUrl'] || ''; 
-          const nicknameValue = userData['usuario'] || ''; 
-          const userNameValue = userData['nome'] || ''; 
+          const bannerUrlValue = userData['banner'] || '';
+          const newAvatarValue = userData['avatar'] || '';
+          const nicknameValue = userData['usuario'] || '';
+          const userNameValue = userData['nome'] || '';
           // console.log(cursoValue); 
           setUserCurso(cursoValue);
           setUserInstituicao(instituicaoValue);
           setNewAvatar(newAvatarValue);
           setNickname(nicknameValue);
-          setUserName(userNameValue); 
+          setUserName(userNameValue);
           // console.log(userNameValue);
-          setBannerUrl(bannerUrlValue); 
+          setNewBanner(bannerUrlValue);
         } else {
           console.log('User not found');
         }
@@ -189,17 +189,26 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const handleBannerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputElement = event.target as HTMLInputElement;
-    if (inputElement && inputElement.files && inputElement.files.length > 0) {
-      const file = inputElement.files[0];
-
+  //mudar o banner
+  const handleBannerChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
       if (file) {
-        const imageUrl = URL.createObjectURL(file);
-        setBannerUrl(imageUrl);
+        // Fazer upload da imagem para o Firebase Storage
+        const storageRef = ref(storage, `banners/${currentUser.uid}/${file.name}`);
+        await uploadBytes(storageRef, file);
+
+        // Obter o URL da imagem do Firebase Storage
+        const downloadURL = await getDownloadURL(storageRef);
+
+        // Atualizar o URL do banner no Firestore
+        const userDocRef = doc(db, 'users', currentUser.uid);
+        await updateDoc(userDocRef, { banner: downloadURL });
       }
     }
   };
+
 
   const saveChanges = async () => {
     try {
@@ -211,8 +220,8 @@ const ProfilePage: React.FC = () => {
         updatedData.avatar = newAvatar;
       }
 
-      if (bannerUrl) {
-        updatedData.banner = bannerUrl;
+      if (newBanner) {
+        updatedData.banner = newBanner;
       }
 
       if (bio) {
@@ -244,11 +253,13 @@ const ProfilePage: React.FC = () => {
     });
   }, []);
 
-
+  function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
   return (
     <Container>
-      <Banner style={{ backgroundImage: bannerUrl ? `url(${bannerUrl})` : 'none' }}>
+      <Banner style={{ backgroundImage: `url(${newBanner})` }}>
         {newAvatar ? (
           <Avatar as="img" src={newAvatar} alt="Novo Avatar" />
         ) : (
@@ -328,10 +339,10 @@ const ProfilePage: React.FC = () => {
         <h2>@{nickname}</h2>
         <Tags>
           <Institution>
-            <p>{userInstituicao}</p>
+            <p style={{ color: 'white' }}>{userInstituicao}</p>
           </Institution>
           <Course>
-            <p>{userCurso}</p>
+            <p style={{ color: 'white' }}>{capitalizeFirstLetter(userCurso)}</p>
           </Course>
         </Tags>
       </ProfileData>

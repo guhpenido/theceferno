@@ -3,21 +3,11 @@ import { getFirestore, doc, getDoc, updateDoc, onSnapshot, collection } from 'fi
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import React, { useState, useEffect } from 'react';
-import {
-  Container,
-  Body,
-  Avatar,
-  Content,
-  Header,
-  Posts,
-  Icons,
-  Status,
-  CommentIcon,
-  RepublicationIcon,
-  LikeIcon,
-} from "./styles";
 import { useNavigate } from "react-router-dom";
 import PerfilUsuario from "../Feed/perfilUsuario";
+import PostagensUsuario from "../Feed/postagensUsuario";
+import './styles';
+import { ConteudoPostagens } from "./styles";
 
 //configuração do firebase
 const firebaseConfig = {
@@ -145,33 +135,10 @@ const Post: React.FC<PostProps> = ({ avatarUrl }) => {
   };
 
   return (
+    <ConteudoPostagens>
+      <PostagensUsuario />
+    </ConteudoPostagens>
     // <PerfilUsuario/>
-    <Container>
-      <Body>
-        <Avatar as="img" src={avatarUrl || ''} alt="Novo Avatar" />
-        <Content>
-          <Header>
-            <strong>{userName}</strong>
-            <span>@{nickname}</span>
-          </Header>
-          <Posts>
-          </Posts>
-          <Icons>
-            <Status>
-              <CommentIcon />
-              20
-            </Status>
-            <Status>
-              <RepublicationIcon />5
-            </Status>
-            <Status>
-              <LikeIcon />
-              300
-            </Status>
-          </Icons>
-        </Content>
-      </Body>
-    </Container>
   );
 };
 
