@@ -8,6 +8,8 @@ import "./stylesDm.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import {
   doc,
   getDoc,
@@ -36,11 +38,6 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-// Id Do Usuário Logado (pegar com o firebaseAuth) = auth.currentUser.id;
-const userUid = "lEHi9cUB9TO5yWCmA2ocbt5fhq02";
-
-// Id Do Usuário que está recebendo as mensagens
-const userUidSelected = "ovTWKzRPZmaAsluan0Fkr6elhn02";
 
 /*function AbrirChat(id){
     return <Link to={`/Chat/${id}`}></Link>;
@@ -51,25 +48,69 @@ function Dm() {
   const [searchResults, setSearchResults] = useState([]);
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const auth = getAuth(app);
+  const [userId, setUserId] = useState(null);
+  const navigate = useNavigate();
+  const [userLoggedData, setUserLoggedData] = useState(null);
+  const imageref = useRef(null);
 
   const nodeRef = useRef(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+        fetchUserDataAndSetState(user.uid);
+      } else {
+        navigate("/login");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth, navigate]);
+
+  useEffect(() => {
+    if (userId) {
+      fetchUserDataAndSetState(userId);
+      RenderUserChats();
+    } 
+  }, [userId]);
+
+  const fetchUserDataAndSetState = async (userId) => {
+    try {
+      const userLoggedDataResponse = await fetchUserData(userId);
+      setUserLoggedData(userLoggedDataResponse);
+      console.log(userLoggedData);
+      
+    } catch (error) {
+      console.error("Error fetching user data:", error.message);
+      setIsLoading(false); // Even if there's an error, stop loading
+    }
+  };
+
+  const fetchUserData = async (userId) => {
+    const userDoc = await getDoc(doc(db, "users", userId));
+    if (userDoc.exists()) {
+      console.log(userDoc.data().imageUrl);
+      imageref.current.src = userDoc.data().imageUrl;
+      return userDoc.data();
+    } else {
+      console.log("User not found");
+      return null;
+    }
+  };
+
 
   function RenderUserChats() {
     // Firestore collection reference for the "chat" collection
     const chatDivs = [];
 
-    // Create an array to hold the chat divs
-
-    // Get the current user's ID (replace this with your actual method to get the user ID)
-    const currentUserID = "ovTWKzRPZmaAsluan0Fkr6elhn02";
-
     const chatRef = collection(db, "chat");
 
     // Query the "chat" collection for chats that include the current user's ID
-
     const q = query(
       collection(db, "chat"),
-      or(where("id1", "==", currentUserID), where("id2", "==", currentUserID)),
+      or(where("id1", "==", userId), where("id2", "==", userId)),
       orderBy("time", "desc")
     );
 
@@ -82,20 +123,20 @@ function Dm() {
     onSnapshot(q, (snapshot) => {
       snapshot.docs.forEach(async (doc2) => {
         const chatData = doc2.data();
-        console.log("aaaa");
+        console.log("updates on the chat");
 
         // Check if the current user is either the sender or the receiver of the last message
         const lastMessage = chatData.mensagem[chatData.mensagem.length - 1];
         if (lastMessage) {
           const chatPartnerID =
-            lastMessage.idUserSent === currentUserID
+            lastMessage.idUserSent === userId
               ? lastMessage.idUserReceived
               : lastMessage.idUserSent;
           try {
             const userPartnerRef = doc(db, "users", chatPartnerID);
             const userPartnerSnapshot = await getDoc(userPartnerRef);
 
-            const userDocRef = doc(db, "users", currentUserID);
+            const userDocRef = doc(db, "users", userId);
             const userDocSnapshot = await getDoc(userDocRef);
 
             const partnerData2 = userPartnerSnapshot.data();
@@ -139,7 +180,6 @@ function Dm() {
                 segundos
               );
               return dataFormatada;
-              console.log(dataFormatada); // Data no formato de objeto Date
             } else {
               return console.error("Formato de data ou horário inválido.");
             }
@@ -159,7 +199,7 @@ function Dm() {
 
           // Create the chat div and add it to the array
           chatDivs.push(
-            <Link to={`./Chat/${chatPartnerID}`}>
+            <Link to={`/Chat/${chatPartnerID}`}>
             <div className="chatDm" key={num}>
               {/* Replace the following lines with appropriate data */}
               <div className="imgProfilePic">
@@ -192,10 +232,10 @@ function Dm() {
     });
   }
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    RenderUserChats();
-  }, []);
+  //   RenderUserChats();
+  // }, []);
 
   /*useEffect(() => {
       const unSub = onSnapshot(q, (doc) => {
@@ -253,7 +293,7 @@ function Dm() {
           id: doc.id,
           ...doc.data(),
         }));
-
+        // console.log(results[0].imageUrl);
         setSearchResults((prevResults) => prevResults.concat(results));
       });
 
@@ -262,22 +302,26 @@ function Dm() {
           id: doc.id,
           ...doc.data(),
         }));
-
+        console.log(results2);
         setSearchResults((prevResults) => prevResults.concat(results2));
       });
     }
     else {
       setSearchResults([])
     }
-    setSearchResults([])
+    
   };
-
   return (
     <>
       <div className="headerDm">
         <img
           className="profilePicDm"
-          src="https://pbs.twimg.com/profile_images/1653051776298360833/bUymYMlt_400x400.jpg"
+          ref={imageref}
+          //src={userLoggedData.imageUrl?userLoggedData.imageUrl:cefernoIcon}
+          //src="https://pbs.twimg.com/profile_images/1653051776298360833/bUymYMlt_400x400.jpg"
+          //src={userLoggedData.imageUrl}
+          //src={userId.imageUrl}
+          //src={user.imageUrl}
         ></img>
         <p id="msg">Mensagens</p>
       </div>
@@ -295,12 +339,12 @@ function Dm() {
               nodeRef={nodeRef}
               timeout={500}
               classNames="my-node"
-              key={user.id + "1"}
+              key={user.id?user.id:user.uid + "1"}
             >
-              <Link to={`./Chat/${user.id}`}>
+              <Link to={`/Chat/${user.id?user.id:user.uid}`}> 
                 <li
                   className="listaResultadosPesquisaDm"
-                  key={user.id}
+                  key={user.id?user.id:user.uid}
                   noderef={nodeRef}
                 >
                   <img className="profilePicDm" src={user.imageUrl}></img>
@@ -320,18 +364,24 @@ function Dm() {
       ))}
       </div>
       <div className="footerDm">
-        <div>
+      <Link className="botaoAcessar" to="/timeline"><div>
           <img id="home" src={homeIcon}></img>
         </div>
+        </Link>
+        <Link className="botaoAcessar" to="/timeline">
         <div>
           <img id="pesquisa" src={pesquisaIcon}></img>
         </div>
+        </Link>
+        <Link className="botaoAcessar" to="/timeline">
         <div>
           <img id="notificacao" src={notificacaoIcon}></img>
         </div>
-        <div>
+        </Link>
+        <Link className="botaoAcessar" to="/dm"><div>
           <img id="dm" src={dmIcon}></img>
         </div>
+        </Link>
       </div>
     </>
   );

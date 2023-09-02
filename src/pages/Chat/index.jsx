@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import voltarIcon from "../../assets/voltar-icon.svg";
 import enviarIcon from "../../assets/enviar-icon.svg";
-import "./chatStyles.css"; 
-import "./stylesChat.css"; 
+import "./chatStyles.css";
+import "./stylesChat.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
 import { doc, getDoc, onSnapshot, updateDoc, arrayUnion , setDoc } from "firebase/firestore";
 import { Link, useParams } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 // Conexão com o Firebase
 const firebaseConfig = {
@@ -28,19 +30,69 @@ function Chat() {
   const { userId } = useParams();
   const mensagemRef = useRef(null);
   const inputRef = useRef(null);
-  const userUid = "ovTWKzRPZmaAsluan0Fkr6elhn02";
+  //const userUid = "lEHi9cUB9TO5yWCmA2ocbt5fhq02";
   const userUidSelected = userId;
   const [needScroll, setNeedScroll] = useState(false);
   const [dados, setDados] = useState([]);
+  const auth = getAuth(app);
+  const [userUid, setUserId] = useState(null);
+  const navigate = useNavigate();
+  const [userLoggedData, setUserLoggedData] = useState(null);
 
   let idCombinado = "";
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+        fetchUserDataAndSetState(user.uid);
+      } else {
+        navigate("/login");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth, navigate]);
+
+  useEffect(() => {
+    if (userUid) {
+      fetchUserDataAndSetState(userUid);
+    }
+  }, [userUid]);
+
+  const fetchUserDataAndSetState = async (userUid) => {
+    try {
+      const userLoggedDataResponse = await fetchUserData(userUid);
+      setUserLoggedData(userLoggedDataResponse);
+      console.log(userLoggedData);
+
+    } catch (error) {
+      console.error("Error fetching user data:", error.message);
+      setIsLoading(false); // Even if there's an error, stop loading
+    }
+  };
+
+  const fetchUserData = async (userUid) => {
+    const userDoc = await getDoc(doc(db, "users", userUid));
+    if (userDoc.exists()) {
+      console.log('effect')
+      const unSub = onSnapshot(doc(db, "chat", idCombinado), (doc) => {
+        setDados(doc.data().mensagem);
+      });
+      return userDoc.data();
+    } else {
+      console.log("User not found");
+      return null;
+    }
+  };
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       enviarMensagem();
+      event.target.value = "";
     }
   };
-  
+
   if (userUid > userUidSelected) {
     idCombinado = userUid + userUidSelected;
   } else {
@@ -60,7 +112,6 @@ function Chat() {
     useEffect(() => {
 
       scrollToBottom()
-
     }, [dados]);
 
     return (
@@ -87,8 +138,8 @@ function Chat() {
   const [chatPartnerProfilePic, setChatPartnerProfilePic] = useState('');
   const [currentUserProfilePic, setCurrentUserProfilePic] = useState('');
 
-  const handleInputChange = (event) => {  
-    setInputValue(event.target.value); 
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
   };
 
   const enviarMensagem = () => {
@@ -126,7 +177,7 @@ function Chat() {
     }
     } catch (err) {console.log(err);}
     });
-    
+
     if (trimmedInputValue !== '') {
 
       try {
@@ -150,7 +201,7 @@ function Chat() {
 
   };
 
-  
+
   const scrollToBottom = () => {
     console.log('scroll fora')
     if(mensagemRef.current.childNodes.length > 0){
@@ -168,7 +219,7 @@ function Chat() {
 
       const userDocRef = doc(db, "users", userUid);
       const userDocSnapshot = await getDoc(userDocRef);
-      
+
       if (userPartnerSnapshot.exists()) {
         const partnerData = userPartnerSnapshot.data();
         setChatPartnerName(partnerData.nome);
@@ -185,13 +236,12 @@ function Chat() {
   };
 
   useEffect(() => {
-    console.log('effect')
-    const unSub = onSnapshot(doc(db, "chat", idCombinado), (doc) => {
-      setDados(doc.data().mensagem);
-    });
+     console.log('effect')
+     const unSub = onSnapshot(doc(db, "chat", idCombinado), (doc) => {
+       setDados(doc.data().mensagem);
+     });
     return () => unSub();
-
-  }, []);
+   }, []);
 
   fetchChatInfo()
 
@@ -199,7 +249,7 @@ function Chat() {
     <>
       <div>
         <div className="headerDm">
-          <Link to={`/`}><img id="voltarChat" className="iconDm" src={voltarIcon} alt="Voltar" /></Link>
+          <Link to={`/dm`}><img id="voltarChat" className="iconDm" src={voltarIcon} alt="Voltar" /></Link>
           <img className="profilePicDm" src={chatPartnerProfilePic} alt="Profile Pic" />
           <p className="nomeUserDm boldDm">{chatPartnerName}</p>
         </div>
@@ -208,7 +258,7 @@ function Chat() {
           <input className="inputPesquisaDm" onKeyDown={handleKeyDown} ref={inputRef} />
           <img id="enviarChat" className="iconDm" src={enviarIcon}  onKeyDown={handleKeyDown} tabIndex="0" alt="Enviar" onClick={enviarMensagem} />
         </div>
-      </div> 
+      </div>
     </>
   );
 }

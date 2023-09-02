@@ -61,7 +61,7 @@ export function Timeline() {
   useEffect(() => {
     if (userId) {
       fetchUserDataAndSetState(userId);
-    }
+    } 
   }, [userId]);
 
   useEffect(() => {
