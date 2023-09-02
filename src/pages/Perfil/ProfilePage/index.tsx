@@ -128,24 +128,35 @@ const ProfilePage: React.FC = () => {
   const searchUserFields = async (userId) => {
     try {
       if (userId) {
-        // console.log('acessou');
         const userDoc = await getDoc(doc(db, 'users', userId));
         if (userDoc.exists()) {
           const userData = userDoc.data();
           const cursoValue = userData['curso'] || '';
           const instituicaoValue = userData['instituicao'] || '';
-          const bannerUrlValue = userData['banner'] || '';
-          const newAvatarValue = userData['avatar'] || '';
+          const bannerUrlValue = userData['banner'] || ''; // Campo banner
+          const newAvatarValue = userData['avatar'] || ''; // Campo avatar
           const nicknameValue = userData['usuario'] || '';
           const userNameValue = userData['nome'] || '';
-          // console.log(cursoValue); 
-          setUserCurso(cursoValue);
-          setUserInstituicao(instituicaoValue);
-          setNewAvatar(newAvatarValue);
+
+          // Verifique e defina o valor padrão para bannerUrl e newAvatarValue
+          if (!bannerUrlValue) {
+            setNewBanner(userData['bannerUrl'] || '');
+            // console.log(userData['bannerUrl']); 
+          } else {
+            setNewBanner(bannerUrlValue);
+          }
+
+          if (!newAvatarValue) {
+            setNewAvatar(userData['imageUrl'] || '');
+            console.log(userData['banner']); 
+          } else {
+            setNewAvatar(newAvatarValue);
+          }
+
           setNickname(nicknameValue);
           setUserName(userNameValue);
-          // console.log(userNameValue);
-          setNewBanner(bannerUrlValue);
+          setUserCurso(cursoValue);
+          setUserInstituicao(instituicaoValue);
         } else {
           console.log('User not found');
         }
@@ -154,6 +165,7 @@ const ProfilePage: React.FC = () => {
       console.error('Error fetching user data:', error.message);
     }
   };
+
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -259,9 +271,9 @@ const ProfilePage: React.FC = () => {
 
   return (
     <Container>
-      <Banner style={{ backgroundImage: `url(${newBanner})` }}>
+      <Banner style={{ backgroundImage: `url(${newBanner})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         {newAvatar ? (
-          <Avatar as="img" src={newAvatar} alt="Novo Avatar" />
+          <Avatar as="img" src={newAvatar} alt="Novo Avatar" style={{backgroundSize: 'cover', backgroundPosition: 'center'}} />
         ) : (
           <Avatar />
         )}

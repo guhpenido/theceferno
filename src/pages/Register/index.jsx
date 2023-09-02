@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
 //import "./stylesRegister.scss";
-// import "./stylesRegister.css"; //descomentar apenas esse
+import "./stylesRegister.css"; //descomentar apenas esse
 import { useNavigate } from 'react-router-dom';
 import { app } from "../../services/firebaseConfig";
 import {
@@ -40,7 +40,7 @@ export function Register() {
     pseudonimo: "",
     imageSrc:
       "https://cdn.discordapp.com/attachments/871728576972615680/1133946789343531079/logo.png",
-    bannerSrc: "https://discord.com/channels/@me/1100381589805998080/1146446704997060638",
+    bannerSrc: "https://media.discordapp.net/attachments/1100381589805998080/1147535718642614322/Cabecalho_do_Twitter_1500x500_px..jpeg?width=1025&height=342",
     etapa: 1,
     isEmailValid: true,
     isPasswordMatch: true,

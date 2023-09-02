@@ -132,7 +132,14 @@ const MenuBar: React.FC = () => {
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
                     const newAvatarValue = userData['avatar'] || '';
-                    setNewAvatar(newAvatarValue);
+
+                    if (!newAvatarValue) {
+                        setNewAvatar(userData['imageUrl'] || '');
+                    } 
+                    else {
+                        setNewAvatar(newAvatarValue);
+                    }
+                    
                 } else {
                     console.log('User not found');
                 }
@@ -145,7 +152,7 @@ const MenuBar: React.FC = () => {
     return (
         <Container>
             <TopSide>
-                <Logo as="img" src={newAvatar} alt="Novo Avatar" />
+                <Logo as="img" src={newAvatar} alt="Novo Avatar" style={{backgroundSize: 'cover', backgroundPosition: 'center'}} />
                 <MenuButton>
                     <SearchIcon />
                     <span>Pesquisa</span>
