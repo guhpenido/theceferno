@@ -190,7 +190,7 @@ const PerfilUsuario: React.FC = () => {
                                     <span>@{nickname}</span>
                                 </Header>
                                 <Posts>
-                                    <p>{item.text}</p> {/* Adjust this according to your needs */}
+                                    <p>{item.text}</p> 
                                 </Posts>
                                 <Icons>
                                     <Status>

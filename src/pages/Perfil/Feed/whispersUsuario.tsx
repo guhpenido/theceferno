@@ -7,7 +7,19 @@ import ModalReact from 'react-modal';
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { onSnapshot, collection, query, where } from 'firebase/firestore';
-import { auth } from "firebase-admin";
+import {
+    Container,
+    Body,
+    Avatar,
+    Content,
+    Header,
+    Posts,
+    Icons,
+    Status,
+    CommentIcon,
+    RepublicationIcon,
+    LikeIcon,
+} from "../Post/styles";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
@@ -36,10 +48,17 @@ interface TimelineItem {
 const WhispersUsuario: React.FC = () => {
     const navigate = useNavigate();
     const auth = getAuth(app);
+    const [userName, setUserName] = useState<string | null>(null);
+    const [nickname, setNickname] = useState<string | null>(null);
+    const [newAvatar, setNewAvatar] = useState<string | null>(null);
 
     const [currentUser, setCurrentUser] = useState<any | null>(null);
 
     const [timelineItems, setTimelineItems] = useState<TimelineItem[]>([]); // Corrigido o tipo
+    const [userLoggedData, setUserLoggedData] = useState<any>(null); // Adjust the type accordingly
+    const [selectedProfile, setSelectedProfile] = useState<any>(null); // Adjust the type accordingly
+    const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
+    const [noItemsFound, setNoItemsFound] = useState<boolean>(false);
 
     //pegar o id do usuario de outra página
     useEffect(() => {
@@ -80,18 +99,56 @@ const WhispersUsuario: React.FC = () => {
     }, [currentUser]);
 
     return (
-        <div className="containerWhispers">
-            {timelineItems.map((item) => (
-                <div key={item.postId} className="timeline-item">
-                    <p>User Mentioned: {item.userMentioned}</p>
-                    <p>Text: {item.text}</p>
-                    <p>Time: {item.time}</p>
-                    <p>Replies Count: {item.replysCount}</p>
-                    <p>Likes: {item.likes}</p>
-                    <p>Dislikes: {item.dislikes}</p>
-                    <hr />
+        <div>
+            {timelineItems.length === 0 ? (
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '14px 16px',
+                    borderBottom: '1px solid #4763E4',
+                    maxWidth: '100%',
+                    flexShrink: 0,
+                    borderRadius: '5px',
+                    border: '2px solid #4763e4',
+                    background: 'rgba(71, 99, 228, 0.2)',
+                    marginBottom: '15px',
+                    color: 'whitesmoke',
+                    textAlign: 'center', 
+                }}>
+                    Nada Encontrado
                 </div>
-            ))}
+            ) : (
+                timelineItems.map((item) => (
+                    <Container key={item.postId}>
+                        {<Body>
+                            <Avatar as="img" src={newAvatar || ''} alt="Novo Avatar" />
+                            <Content>
+                                <Header>
+                                    <strong>{userName}</strong>
+                                    <span>@{nickname}</span>
+                                </Header>
+                                <Posts>
+                                    <p>{item.text}</p> {/* Adjust this according to your needs */}
+                                </Posts>
+                                <Icons>
+                                    <Status>
+                                        <CommentIcon />
+                                        {item.replysCount}
+                                    </Status>
+                                    <Status>
+                                        <RepublicationIcon />
+                                        {item.likes}
+                                    </Status>
+                                    <Status>
+                                        <LikeIcon />
+                                        {item.dislikes}
+                                    </Status>
+                                </Icons>
+                            </Content>
+                        </Body>}
+                    </Container>
+                ))
+            )}
         </div>
     );
 };

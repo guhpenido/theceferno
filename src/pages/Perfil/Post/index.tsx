@@ -8,6 +8,7 @@ import PerfilUsuario from "../Feed/perfilUsuario";
 import PostagensUsuario from "../Feed/postagensUsuario";
 import './styles';
 import { ConteudoPostagens } from "./styles";
+import WhispersUsuario from "../Feed/whispersUsuario";
 
 //configuração do firebase
 const firebaseConfig = {
@@ -136,9 +137,7 @@ const Post: React.FC<PostProps> = ({ avatarUrl }) => {
 
   return (
     <ConteudoPostagens>
-      <PostagensUsuario />
     </ConteudoPostagens>
-    // <PerfilUsuario/>
   );
 };
 
