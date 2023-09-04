@@ -19,6 +19,7 @@ import {
 
 
 import Feed from "../Feed";
+import { auth } from "firebase-admin";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
@@ -39,7 +40,6 @@ const ProfilePage: React.FC = () => {
 
   const navigate = useNavigate();
   const auth = getAuth(app);
-
   const [currentUser, setCurrentUser] = useState<any | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [nickname, setNickname] = useState<string | null>(null);

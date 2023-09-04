@@ -1,4 +1,6 @@
-
+*{
+  box-sizing: border-box;
+}
 .profilePicDm{
   width: 50px;
   border-radius: 50%;
@@ -11,7 +13,6 @@
 
 .mensagemDm{
   display: flex;
-  padding-left: 50%; 
 }
 
 #msg{
@@ -26,6 +27,7 @@
   left: 0;
   width: 100%;
   overflow: visible;
+  background-color: #242424
 }
 
 .footerDm img{
@@ -33,6 +35,10 @@
   width: 24px;
   filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%);
   transition: all 300ms;
+}
+
+.imgProfilePic{
+  width: 50px
 }
 
 .footerDm div{
@@ -62,16 +68,22 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 2% 0% 2% 0%;
+  padding: 2%;
 }
 
 .inputPesquisaDm {
   padding: 0.7rem 2rem 0.7rem 2rem;
-  border-radius: 10px;
+  border-radius: 15px;
   text-align: center;
-  /*width: 90%;*/
-  border-color: #4763E4;
+  background-color: rgba(255, 255, 255, 0);
+  border: 1px solid #4763E4;
   color: #ffffff;
+  outline-color: #4763E4;
+}
+.inputPesquisaDm:focus,
+.inputPesquisaDm:active{
+  outline: none;
+  outline: 2px solid #4763E4!important;
 }
 
 .centralizarDm{
@@ -80,6 +92,7 @@
 }
 
 .tudoMenosImg{
+  width: 100%;
   margin-left:4%;
 }
 
@@ -98,6 +111,7 @@
 }
 
 .dadosPessoaisDm{
+  width: 100%;
   display: flex;
   gap: 5%;
 }
@@ -106,6 +120,7 @@ body{
   height: 100vh;
   max-width: 100vw;
   overflow: hidden;
+  margin: 0;
 }
 
 
@@ -241,6 +256,16 @@ link, a{
 
 #blocoPesquisaDm{
   flex-direction: column;
+  padding: 2%;
+}
+
+.fullDmMessages > div{
+  padding: 2%;
+  transition: background-color 200ms;
+}
+
+.fullDmMessages > div:hover{
+  background-color: rgba(0, 0, 0, 0.15);
 }
 
 .listaResultadosPesquisaDm{
@@ -249,9 +274,9 @@ link, a{
   padding: 10px;
 }
 
-ulDm{
+.ulDm{
   padding:  0;
-  margin: 0;
+  margin: 0!important;
   /*width: 90%;*/
   background-color: #3d3c3c;
   border-radius: 0 0 10px 10px;
