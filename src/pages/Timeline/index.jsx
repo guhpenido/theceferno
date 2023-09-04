@@ -141,6 +141,43 @@ export function Timeline() {
     }
   }, [selectedProfile, userLoggedData]);
 
+  const carregaTml = async () => {
+    const postsCollectionRef = collection(db, "timeline");
+    const postsQuery = query(
+      postsCollectionRef,
+      orderBy("time", "desc"), // Substitua "timestamp" pelo campo que você deseja ordenar
+      limit(10) // Substitua 10 pelo número de documentos que você deseja obter
+    );
+
+    const fetchData = async () => {
+      try {
+        const postsData = await getPostsFromFirestore(postsQuery);
+        console.log("Posts Data:", postsData);
+        const postsWithUserData = [];
+
+        for (const post of postsData) {
+          const userSentData = await fetchUserData(post.userSent);
+          let userMentionedData = null;
+
+          if (post.userMentioned !== null) {
+            userMentionedData = await fetchUserData(post.userMentioned);
+          }
+
+          postsWithUserData.push({
+            post,
+            userSentData,
+            userMentionedData,
+          });
+        }
+
+        setPosts(postsWithUserData);
+      } catch (error) {
+        console.error("Erro ao obter os posts:", error);
+      }
+    };
+
+    fetchData();
+  }
   //pega o id do post para incrementar
   const fetchLatestPostId = async () => {
     try {
@@ -233,6 +270,7 @@ export function Timeline() {
     setNewPost({
       ...newPost,
       [e.target.name]: e.target.value,
+      userSent: userId,
       time: currentTime,
       mode: postMode,
       userMentioned: selectedId,
@@ -250,6 +288,7 @@ export function Timeline() {
     try {
       const docRef = await addDoc(collection(db, "timeline"), newPost);
       console.log("Post adicionado com sucesso! ID do documento: ", docRef.id);
+      carregaTml();
       // Limpe o estado do novo post após a submissão bem-sucedida
       setNewPost({
         deslikes: 0,
