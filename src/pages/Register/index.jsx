@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
 //import "./stylesRegister.scss";
-import "./stylesRegister.css"; //descomentar apenas esse
+//import "./stylesRegister.css"; //descomentar apenas esse
 import { useNavigate } from 'react-router-dom';
 import { app } from "../../services/firebaseConfig";
 import {

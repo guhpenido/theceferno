@@ -14,23 +14,35 @@ import { faPaperPlane } from "@fortawesome/fontawesome-free-solid";
 //import { faXmark } from "@fortawesome/fontawesome-free-solid";
 import { app } from "../../services/firebaseConfig";
 import { getFirestore } from "firebase/firestore";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+//import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import {
+  getDatabase,
+  ref,
+  orderByKey,
+  limitToLast,
+  onChildAdded,
+} from "firebase/database";
 import {
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   collection,
-  query,
   where,
+  query,
+  orderBy,
+  limit,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import PostDisplay from "./post";
 
-// import "./stylesTimeline.css";
+import "./stylesTimeline.css";
 
 export function Timeline() {
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const db = getFirestore(app);
+  const db2 = getDatabase(app);
   const [posts, setPosts] = useState([]);
   const auth = getAuth(app);
   const [userId, setUserId] = useState(null);
@@ -54,9 +66,42 @@ export function Timeline() {
   }, [auth, navigate]);
 
   useEffect(() => {
-    const unsubscribe = getPostsFromFirestore();
-    return () => unsubscribe();
-  }, []);
+    const postsCollectionRef = collection(db, "timeline");
+    const postsQuery = query(
+      postsCollectionRef,
+      orderBy("time", "desc"), // Substitua "timestamp" pelo campo que você deseja ordenar
+      limit(10) // Substitua 10 pelo número de documentos que você deseja obter
+    );
+
+    const fetchData = async () => {
+      try {
+        const postsData = await getPostsFromFirestore(postsQuery);
+        console.log("Posts Data:", postsData);
+        const postsWithUserData = [];
+
+        for (const post of postsData) {
+          const userSentData = await fetchUserData(post.userSent);
+          let userMentionedData = null;
+
+          if (post.userMentioned !== null) {
+            userMentionedData = await fetchUserData(post.userMentioned);
+          }
+
+          postsWithUserData.push({
+            post,
+            userSentData,
+            userMentionedData,
+          });
+        }
+
+        setPosts(postsWithUserData);
+      } catch (error) {
+        console.error("Erro ao obter os posts:", error);
+      }
+    };
+
+    fetchData();
+  }, [db]);
 
   useEffect(() => {
     if (userId) {
@@ -85,26 +130,33 @@ export function Timeline() {
     }
   };
 
-  const getPostsFromFirestore = () => {
-    return onSnapshot(collection(db, "timeline"), (snapshot) => {
-      const postsData = [];
-      snapshot.forEach((doc) => {
-        const postData = {
-          id: doc.id,
-          ...doc.data(),
-        };
-        postsData.push(postData);
-      });
-      setPosts(postsData);
+  const getPostsFromFirestore = async (query) => {
+    const querySnapshot = await getDocs(query);
+    console.log("Query Snapshot:", querySnapshot);
+    const postsData = [];
+
+    querySnapshot.forEach((doc) => {
+      const postData = {
+        id: doc.id,
+        ...doc.data(),
+      };
+      postsData.push(postData);
     });
+
+    return postsData;
   };
 
   const fetchUserData = async (userId) => {
-    const userDoc = await getDoc(doc(db, "users", userId));
-    if (userDoc.exists()) {
-      return userDoc.data();
-    } else {
-      console.log("User not found");
+    try {
+      const userDoc = await getDoc(doc(db, "users", userId));
+      if (userDoc.exists()) {
+        return userDoc.data();
+      } else {
+        console.log("User not found");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error.message);
       return null;
     }
   };
@@ -216,147 +268,17 @@ export function Timeline() {
             </div>
           </div>
           <div className="tl-main">
-            <div className="tl-box">
-              {/*{posts.map(async (post) => {
-                const userSentData = await fetchUserData(post.userSent);
-                const userMentionedData = await fetchUserData(
-                  post.userMentioned
-                );
+          <div className="tl-container">
+          {posts.map(({ post, userSentData, userMentionedData }) => (
+            <PostDisplay
+              key={post.id}
+              post={post}
+              userSentData={userSentData}
+              userMentionedData={userMentionedData}
+            />
+          ))}
+        </div>
 
-                const userSentImage = await fetchUserImage(userSentData);
-                const userMentionedImage = await fetchUserImage(
-                  userMentionedData
-                );
-
-                return (
-                  <div className="tl-box" key={post.id}>
-                    <div className="tl-post">
-                      <div className="tl-ps-header">
-                        <div className="tl-ps-foto">
-                          {userSentImage && <img src={userSentImage} alt="" />}
-                        </div>
-                        <div className="tl-ps-nomes">
-                          <p className="tl-ps-nome">
-                            {userSentData.nome}{" "}
-                            <span className="tl-ps-user">
-                              @{userSentData.usuario}{" "}
-                            </span>
-                            <span className="tl-ps-tempo">• {post.time}</span>
-                            <FontAwesomeIcon
-                              className="arrow"
-                              icon={faArrowRight}
-                            />
-                            {post.userMentioned !== null && (
-                              <div>
-                                {userMentionedImage && (
-                                  <img src={userMentionedImage} alt="" />
-                                )}
-                                {userMentionedData.nome}{" "}
-                                <span className="tl-ps-userReceived">
-                                  @{userMentionedData.usuario}{" "}
-                                </span>
-                              </div>
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="tl-ps-texto">
-                        <p>{post.text}</p>
-                      </div>
-                      <div className="tl-ps-footer">
-                        <div className="tl-ps-opcoes">
-                          <div className="tl-ps-reply">
-                            <FontAwesomeIcon icon={faComment} />
-                            <span>{post.replyCount}</span>
-                          </div>
-                          <div className="tl-ps-like">
-                            <FontAwesomeIcon icon={faThumbsUp} />{" "}
-                            <span>{post.likes}</span>
-                          </div>
-                          <div className="tl-ps-deslike">
-                            <FontAwesomeIcon icon={faThumbsDown} />{" "}
-                            <span>{post.deslikes}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}*/}
-
-              <div className="tl-post">
-                <div className="tl-ps-header">
-                  <div className="tl-ps-foto">
-                    <img
-                      src="https://cdn.discordapp.com/attachments/871728576972615680/1142349089133047868/image.png"
-                      alt=""
-                    />
-                  </div>
-                  <div className="tl-ps-nomes">
-                    <p className="tl-ps-nome">
-                      Stella <span className="tl-ps-user">@tellaswift </span>
-                      <span className="tl-ps-tempo">• 42s</span>
-                      <FontAwesomeIcon className="arrow" icon={faArrowRight} />
-                      <img
-                        src="https://cdn.discordapp.com/attachments/871728576972615680/1142348920949833829/image.png"
-                        alt=""
-                      />{" "}
-                      Kettles{" "}
-                      <span className="tl-ps-userReceived">@eokettles </span>
-                    </p>
-                  </div>
-                </div>
-                <div className="tl-ps-texto">
-                  <p>Ain apelaummmm!</p>
-                </div>
-                <div className="tl-ps-footer">
-                  <div className="tl-ps-opcoes">
-                    <div className="tl-ps-reply">
-                      <FontAwesomeIcon icon={faComment} />
-                      <span>10</span>
-                    </div>
-                    <div className="tl-ps-like">
-                      <FontAwesomeIcon icon={faThumbsUp} /> <span>10</span>
-                    </div>
-                    <div className="tl-ps-deslike">
-                      <FontAwesomeIcon icon={faThumbsDown} />
-                      <span>10</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="tl-post">
-                <div className="tl-ps-header">
-                  <div className="tl-ps-foto">
-                    <img
-                      src="https://cdn.discordapp.com/attachments/871728576972615680/1142349089133047868/image.png"
-                      alt=""
-                    />
-                  </div>
-                  <div className="tl-ps-nomes">
-                    <p className="tl-ps-nome">
-                      Stella <span className="tl-ps-user">@tellaswift </span>
-                      <span className="tl-ps-tempo">• 1h</span>
-                    </p>
-                  </div>
-                </div>
-                <div className="tl-ps-texto">Esse é meu primeiro post.</div>
-                <div className="tl-ps-footer">
-                  <div className="tl-ps-opcoes">
-                    <div className="tl-ps-reply">
-                      <FontAwesomeIcon icon={faComment} />
-                      <span>10</span>
-                    </div>
-                    <div className="tl-ps-like">
-                      <FontAwesomeIcon icon={faThumbsUp} /> <span>10</span>
-                    </div>
-                    <div className="tl-ps-deslike">
-                      <FontAwesomeIcon icon={faThumbsDown} />
-                      <span>10</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
           <div className="tl-addpost" onClick={toggleVisibility}>
@@ -409,7 +331,6 @@ export function Timeline() {
           </div>
           <div className="tl-menu-footer"></div>
   </div>*/}
-      </div>
     </>
   );
 }
