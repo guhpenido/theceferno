@@ -116,15 +116,11 @@
   gap: 5%;
 }
 
-body{
+#body{
   height: 100vh;
   max-width: 100vw;
   overflow: hidden;
   margin: 0;
-}
-
-
-:root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -145,8 +141,9 @@ body{
 
 
 
+
 @media (prefers-color-scheme: lightDm) {
-  :root {
+  #body {
     color: #213547;
     background-color: #ffffff;
   }
