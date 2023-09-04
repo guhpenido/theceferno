@@ -23,7 +23,7 @@ import {
   onChildAdded,
 } from "firebase/database";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+
 
 import {
   doc,
@@ -41,7 +41,7 @@ import { useNavigate } from "react-router-dom";
 
 import PostDisplay from "./post";
 
-import { getDocs, orderBy, limit } from "firebase/firestore";
+
 import { addDoc } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
