@@ -30,7 +30,11 @@ import { getDocs, orderBy, limit } from "firebase/firestore";
 import { addDoc } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
+<<<<<<< HEAD
 import "./stylesTimeline.css";
+=======
+// import "./stylesTimeline.css";
+>>>>>>> origin/production
 
 export function Timeline() {
   const [selectedUser, setSelectedUser] = useState("");

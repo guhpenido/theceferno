@@ -1,10 +1,11 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc, onSnapshot, collection } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import React, { useState, useEffect } from 'react';
 import ModalReact from 'react-modal';
-import {useNavigate} from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Banner,
@@ -18,7 +19,6 @@ import {
 
 
 import Feed from "../Feed";
-import { auth } from "firebase-admin";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
@@ -39,52 +39,132 @@ const ProfilePage: React.FC = () => {
 
   const navigate = useNavigate();
   const auth = getAuth(app);
-  
+
   const [currentUser, setCurrentUser] = useState<any | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [nickname, setNickname] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bio, setBio] = useState('');
   const [newAvatar, setNewAvatar] = useState<string | null>(null);
-  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
+  const [newBanner, setNewBanner] = useState<string | null>(null);
   const [userInstituicao, setUserInstituicao] = useState('');
   const [userCurso, setUserCurso] = useState('');
-  
+  const [isVisible, setIsVisible] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
-  //pegar o id do usuario de outra página 
+  const [userLoggedData, setUserLoggedData] = useState<any>(null); // Adjust the type accordingly
+  const [selectedProfile, setSelectedProfile] = useState<any>(null); // Adjust the type accordingly
+  const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
+  const [posts, setPosts] = useState<any[]>([]); // Adjust the type accordingly
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setCurrentUser(user.uid);
+        setUserId(user.uid);
         fetchUserDataAndSetState(user.uid);
+        searchUserFields(user.uid);
       } else {
-        navigate("/login");
+        navigate('/login');
       }
     });
 
     return () => unsubscribe();
   }, [auth, navigate]);
 
-  //pegar curso e instituição
   useEffect(() => {
-    const fetchDocument = async () => {
-      try {
-        const docRef = doc(db, 'users', currentUser);
-        const docSnapshot = await getDoc(docRef);
+    const unsubscribe = getPostsFromFirestore();
+    return () => unsubscribe();
+  }, []);
 
-        if (docSnapshot.exists()) {
-          const data = docSnapshot.data();
-          setUserCurso(data.userCurso);
-          setUserInstituicao(data.userInstituicao);
+  useEffect(() => {
+    if (userId) {
+      fetchUserDataAndSetState(userId);
+    }
+  }, [userId]);
+
+  const fetchUserDataAndSetState = async (userId: string) => {
+    try {
+      if (userId) {
+        const userLoggedDataResponse = await fetchUserData(userId);
+        if (userLoggedDataResponse) {
+          setUserLoggedData(userLoggedDataResponse);
+          setSelectedProfile(userLoggedDataResponse.usuario);
+          setIsLoadingUser(false); // Data has been fetched, no longer loading
         } else {
-          console.log('Document not found');
+          alert("User data not found!"); // Show an alert when userLoggedDataResponse is null
         }
-      } catch (error) {
-        console.error('Error fetching document:', error);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching user data:', error.message);
+    }
+  };
 
-    fetchDocument();
-  }, [currentUser]);
 
+  const getPostsFromFirestore = () => {
+    return onSnapshot(collection(db, 'timeline'), (snapshot) => {
+      const postsData: any[] = [];
+      snapshot.forEach((doc) => {
+        const postData = {
+          id: doc.id,
+          ...doc.data(),
+        };
+        postsData.push(postData);
+      });
+      setPosts(postsData);
+    });
+  };
+
+  const fetchUserData = async (userId: string) => {
+    const userDoc = await getDoc(doc(db, 'users', userId));
+    if (userDoc.exists()) {
+      return userDoc.data();
+    } else {
+      console.log('User not found');
+      return null;
+    }
+  };
+
+  // Função para pesquisar os campos "curso" e "instituição" com base no ID do usuário logado
+  const searchUserFields = async (userId) => {
+    try {
+      if (userId) {
+        const userDoc = await getDoc(doc(db, 'users', userId));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const cursoValue = userData['curso'] || '';
+          const instituicaoValue = userData['instituicao'] || '';
+          const bannerUrlValue = userData['banner'] || ''; // Campo banner
+          const newAvatarValue = userData['avatar'] || ''; // Campo avatar
+          const nicknameValue = userData['usuario'] || '';
+          const userNameValue = userData['nome'] || '';
+
+          // Verifique e defina o valor padrão para bannerUrl e newAvatarValue
+          if (!bannerUrlValue) {
+            setNewBanner(userData['bannerUrl'] || '');
+            // console.log(userData['bannerUrl']); 
+          } else {
+            setNewBanner(bannerUrlValue);
+          }
+
+          if (!newAvatarValue) {
+            setNewAvatar(userData['imageUrl'] || '');
+            console.log(userData['banner']); 
+          } else {
+            setNewAvatar(newAvatarValue);
+          }
+
+          setNickname(nicknameValue);
+          setUserName(userNameValue);
+          setUserCurso(cursoValue);
+          setUserInstituicao(instituicaoValue);
+        } else {
+          console.log('User not found');
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error.message);
+    }
+  };
 
 
   const openModal = () => {
@@ -121,17 +201,26 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const handleBannerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputElement = event.target as HTMLInputElement;
-    if (inputElement && inputElement.files && inputElement.files.length > 0) {
-      const file = inputElement.files[0];
-
+  //mudar o banner
+  const handleBannerChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
       if (file) {
-        const imageUrl = URL.createObjectURL(file);
-        setBannerUrl(imageUrl);
+        // Fazer upload da imagem para o Firebase Storage
+        const storageRef = ref(storage, `banners/${currentUser.uid}/${file.name}`);
+        await uploadBytes(storageRef, file);
+
+        // Obter o URL da imagem do Firebase Storage
+        const downloadURL = await getDownloadURL(storageRef);
+
+        // Atualizar o URL do banner no Firestore
+        const userDocRef = doc(db, 'users', currentUser.uid);
+        await updateDoc(userDocRef, { banner: downloadURL });
       }
     }
   };
+
 
   const saveChanges = async () => {
     try {
@@ -143,8 +232,8 @@ const ProfilePage: React.FC = () => {
         updatedData.avatar = newAvatar;
       }
 
-      if (bannerUrl) {
-        updatedData.banner = bannerUrl;
+      if (newBanner) {
+        updatedData.banner = newBanner;
       }
 
       if (bio) {
@@ -176,13 +265,15 @@ const ProfilePage: React.FC = () => {
     });
   }, []);
 
-
+  function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
   return (
     <Container>
-      <Banner style={{ backgroundImage: bannerUrl ? `url(${bannerUrl})` : 'none' }}>
+      <Banner style={{ backgroundImage: `url(${newBanner})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         {newAvatar ? (
-          <Avatar as="img" src={newAvatar} alt="Novo Avatar" />
+          <Avatar as="img" src={newAvatar} alt="Novo Avatar" style={{backgroundSize: 'cover', backgroundPosition: 'center'}} />
         ) : (
           <Avatar />
         )}
@@ -256,14 +347,14 @@ const ProfilePage: React.FC = () => {
             Salvar Alterações
           </button>
         </ModalReact>
-        <h1>{currentUser ? currentUser.displayName : 'Nome do Usuário'}</h1>
-        <h2>@{currentUser ? currentUser.username : 'nome_do_usuario'}</h2>
+        <h1>{userName}</h1>
+        <h2>@{nickname}</h2>
         <Tags>
           <Institution>
-            <p>{userInstituicao}</p>
+            <p style={{ color: 'white' }}>{userInstituicao}</p>
           </Institution>
           <Course>
-            <p>{userCurso}</p>
+            <p style={{ color: 'white' }}>{capitalizeFirstLetter(userCurso)}</p>
           </Course>
         </Tags>
       </ProfileData>
@@ -273,7 +364,6 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
-function fetchUserDataAndSetState(uid: string) {
-  throw new Error("Function not implemented.");
-}
+
+
 

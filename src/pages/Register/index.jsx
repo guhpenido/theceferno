@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
 //import "./stylesRegister.scss";
-//import "./stylesRegister.css"; //descomentar apenas esse
+import "./stylesRegister.css"; //descomentar apenas esse
 import { useNavigate } from 'react-router-dom';
 import { app } from "../../services/firebaseConfig";
 import {
@@ -40,6 +40,7 @@ export function Register() {
     pseudonimo: "",
     imageSrc:
       "https://cdn.discordapp.com/attachments/871728576972615680/1133946789343531079/logo.png",
+    bannerSrc: "https://media.discordapp.net/attachments/1100381589805998080/1147535718642614322/Cabecalho_do_Twitter_1500x500_px..jpeg?width=1025&height=342",
     etapa: 1,
     isEmailValid: true,
     isPasswordMatch: true,
@@ -338,6 +339,34 @@ export function Register() {
     }
   };
 
+  // Função para tratar a mudança de imagem de perfil no input
+  const handleBannerPerfilChange = async (event) => {
+    const bannerFile = event.target.files[0];
+  
+    if (bannerFile) {
+      const storage = getStorage();
+      const storageRef = ref(storage, 'profile_images/' + bannerFile.name);
+  
+      try {
+        // Faz o upload do arquivo para o Firebase Storage
+        const snapshot = await uploadBytes(storageRef, bannerFile);
+  
+        // Obtém a URL de download do arquivo
+        const downloadURL = await getDownloadURL(snapshot.ref);
+  
+        // Atualiza o estado do componente com a URL de download da imagem
+        setState((prevState) => ({
+          ...prevState,
+          bannerSrc: downloadURL,
+        }));
+  
+        console.log('Upload concluído. URL de download:', downloadURL);
+      } catch (error) {
+        console.error('Erro ao fazer o upload da imagem:', error);
+      }
+    }
+  };
+
   // Função para verificar se a etapa 1 é válida
   const isEtapa1Valid = () => {
     return (
@@ -400,6 +429,7 @@ export function Register() {
         usuario,
         pseudonimo,
         imageSrc,
+        bannerSrc, 
       } = state;
 
       // Cadastre o usuário no Firebase Authentication
@@ -419,6 +449,11 @@ export function Register() {
           imageUrl = imageSrc;
         }
 
+        let bannerUrl = null;
+        if (bannerSrc) {
+          bannerUrl =  bannerSrc; 
+        }
+
         // Cadastre os detalhes do usuário na coleção 'users' com o ID do usuário autenticado
         const userDocRef = doc(db, "users", user.uid);
         await setDoc(userDocRef, {
@@ -432,6 +467,7 @@ export function Register() {
           usuario,
           pseudonimo,
           imageUrl,
+          bannerUrl,
         });
 
         alert("Usuario cadastrado!");
@@ -662,6 +698,22 @@ export function Register() {
                 />
                 {state.imageSrc && (
                   <img id="output" src={state.imageSrc} alt="Preview" />
+                )}
+              </div>
+              <div className="profile-pic">
+                <label className="-label" htmlFor="file">
+                  <span className="glyphicon glyphicon-camera"></span>
+                  <span>Mudar banner</span>
+                </label>
+                <input
+                  id="file"
+                  type="file"
+                  name="fotoPerfilBanner"
+                  accept="image/*"
+                  onChange={handleBannerPerfilChange}
+                />
+                {state.bannerSrc && (
+                  <img id="output" src={state.bannerSrc} alt="Preview" />
                 )}
               </div>
             </div>
