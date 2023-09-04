@@ -24,7 +24,6 @@ import {
 } from "firebase/database";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-
 import {
   doc,
   getDoc,
@@ -41,10 +40,8 @@ import { useNavigate } from "react-router-dom";
 
 import PostDisplay from "./post";
 
-
 import { addDoc } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-
 
 import "./stylesTimeline.css";
 
@@ -67,15 +64,7 @@ export function Timeline() {
   const [searchResults, setSearchResults] = useState([]);
   const nodeRef = useRef(null);
   const [isUserListVisible, setIsUserListVisible] = useState(false);
-  const [newPost, setNewPost] = useState({
-    deslikes: 0,
-    likes: 0,
-    mode: "public",
-    text: "",
-    time: "",
-    userMentioned: "",
-    userSent: userId,
-  });
+
   const [nextPostId, setNextPostId] = useState(0);
 
   useEffect(() => {
@@ -90,7 +79,15 @@ export function Timeline() {
 
     return () => unsubscribe();
   }, [auth, navigate]);
-
+  const [newPost, setNewPost] = useState({
+    deslikes: 0,
+    likes: 0,
+    mode: "public",
+    text: "",
+    time: "",
+    userMentioned: "",
+    userSent: userId,
+  });
   useEffect(() => {
     const postsCollectionRef = collection(db, "timeline");
     const postsQuery = query(
@@ -147,7 +144,6 @@ export function Timeline() {
   //pega o id do post para incrementar
   const fetchLatestPostId = async () => {
     try {
-      
       const postsRef = collection(db, "timeline");
       const querySnapshot = await getDocs(
         query(postsRef, orderBy("postId", "desc"), limit(1))
@@ -231,7 +227,6 @@ export function Timeline() {
   };
 
   const handlePostChange = (e) => {
-    
     const currentTime = new Date().toISOString();
     if (selectedProfile === userLoggedData.usuario) setPostMode("public");
     else setPostMode("anon");
@@ -241,7 +236,7 @@ export function Timeline() {
       time: currentTime,
       mode: postMode,
       userMentioned: selectedId,
-      postId: nextPostId
+      postId: nextPostId,
     });
   };
 
@@ -279,43 +274,43 @@ export function Timeline() {
 
     // Create a Firestore query to search for users by name
     if (searchValue !== "") {
-    const usersRef = collection(db, "users");
+      const usersRef = collection(db, "users");
 
-    // const searchQuery = query(usersRef, or( where("usuario", "==", searchValue), where("nome", "==", searchValue)));
-    const searchQuery = query(
-      usersRef,
-      where("usuario", ">=", searchValue),
-      where("usuario", "<=", searchValue + "\uf8ff")
-    );
-    const searchQuery2 = query(
-      usersRef,
-      where("nome", ">=", searchValue),
-      where("nome", "<=", searchValue + "\uf8ff")
-    );
+      // const searchQuery = query(usersRef, or( where("usuario", "==", searchValue), where("nome", "==", searchValue)));
+      const searchQuery = query(
+        usersRef,
+        where("usuario", ">=", searchValue),
+        where("usuario", "<=", searchValue + "\uf8ff")
+      );
+      const searchQuery2 = query(
+        usersRef,
+        where("nome", ">=", searchValue),
+        where("nome", "<=", searchValue + "\uf8ff")
+      );
 
-    // Listen for real-time updates and update searchResults state
-    onSnapshot(searchQuery, (snapshot) => {
-      const results = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      // Listen for real-time updates and update searchResults state
+      onSnapshot(searchQuery, (snapshot) => {
+        const results = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
-      setSearchResults(results);
-    });
+        setSearchResults(results);
+      });
 
-    onSnapshot(searchQuery2, (snapshot) => {
-      const results2 = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      onSnapshot(searchQuery2, (snapshot) => {
+        const results2 = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
-      setSearchResults((prevResults) => prevResults.concat(results2));
-      setIsUserListVisible(true); // Mostrar a lista de usuários
-    });
-  }else{
-    setSearchResults([]); // Limpar os resultados da pesquisa se o termo de pesquisa estiver vazio
-    setIsUserListVisible(false); // Ocultar a lista de usuários
-  }
+        setSearchResults((prevResults) => prevResults.concat(results2));
+        setIsUserListVisible(true); // Mostrar a lista de usuários
+      });
+    } else {
+      setSearchResults([]); // Limpar os resultados da pesquisa se o termo de pesquisa estiver vazio
+      setIsUserListVisible(false); // Ocultar a lista de usuários
+    }
   };
 
   const handleUserSelection = (id, usuario) => {
@@ -406,12 +401,12 @@ export function Timeline() {
                     />
                   )}
                   {selectedUser && (
-                  <FontAwesomeIcon
-                    className="tl-addPost-clear-icon"
-                    icon={faTimes}
-                    onClick={clearSelectedUser}
-                  />
-                )}
+                    <FontAwesomeIcon
+                      className="tl-addPost-clear-icon"
+                      icon={faTimes}
+                      onClick={clearSelectedUser}
+                    />
+                  )}
                   {isUserListVisible && ( // Verifica se a lista de usuários deve ser exibida
                     <div className="tl-addPost-list-container">
                       <TransitionGroup component="ul">
@@ -426,7 +421,9 @@ export function Timeline() {
                               className="tl-addPost-list-item"
                               key={user.id}
                               ref={nodeRef}
-                              onClick={() => handleUserSelection(user.id, user.usuario)}
+                              onClick={() =>
+                                handleUserSelection(user.id, user.usuario)
+                              }
                             >
                               <img
                                 className="tl-addPost-list-profilePic"
@@ -487,41 +484,40 @@ export function Timeline() {
             </div>
           </div>
           <div className="tl-main">
-          <div className="tl-container">
-          {posts.map(({ post, userSentData, userMentionedData }) => (
-            <PostDisplay
-              key={post.id}
-              post={post}
-              userSentData={userSentData}
-              userMentionedData={userMentionedData}
-            />
-          ))}
-        </div>
-
-            </div>
-          </div>
-          <div className="tl-addpost" onClick={toggleVisibility}>
-            <img
-              src="https://cdn.discordapp.com/attachments/871728576972615680/1142352433352294482/asa.png"
-              alt=""
-            />
-          </div>
-          <div className="tl-footer">
-            <div>
-              <FontAwesomeIcon icon={faEnvelope} />
-            </div>
-            <div>
-              <FontAwesomeIcon icon={faBell} />
-            </div>
-            <div>
-              <FontAwesomeIcon icon={faQuestion} />
-            </div>
-            <div>
-              <FontAwesomeIcon icon={faQuestion} />
+            <div className="tl-container">
+              {posts.map(({ post, userSentData, userMentionedData }) => (
+                <PostDisplay
+                  key={post.id}
+                  post={post}
+                  userSentData={userSentData}
+                  userMentionedData={userMentionedData}
+                />
+              ))}
             </div>
           </div>
         </div>
-        {/*<div className="tl-menu">
+        <div className="tl-addpost" onClick={toggleVisibility}>
+          <img
+            src="https://cdn.discordapp.com/attachments/871728576972615680/1142352433352294482/asa.png"
+            alt=""
+          />
+        </div>
+        <div className="tl-footer">
+          <div>
+            <FontAwesomeIcon icon={faEnvelope} />
+          </div>
+          <div>
+            <FontAwesomeIcon icon={faBell} />
+          </div>
+          <div>
+            <FontAwesomeIcon icon={faQuestion} />
+          </div>
+          <div>
+            <FontAwesomeIcon icon={faQuestion} />
+          </div>
+        </div>
+      </div>
+      {/*<div className="tl-menu">
           <div className="tl-menu-header">
             <div className="tl-menu-header-profile">
               <div className="tl-menu-foto"></div>

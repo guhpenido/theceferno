@@ -40,21 +40,33 @@ function PostDisplay({ post, userSentData, userMentionedData }) {
     const daysAgo = differenceInDays(now, postDate);
     timeAgo = `${daysAgo} dia${daysAgo !== 1 ? "s" : ""} atrás`;
   }
+  let imageSent = null;
+  let nomeEnvio = null;
+  let userEnvio = null;
+  if (post.mode == "anon") {
+    imageSent =
+      "https://media.discordapp.net/attachments/871728576972615680/1148261217840926770/logoanon.png?width=473&height=473";
+      nomeEnvio = userSentData.pseudonimo;
+      userEnvio = "ceferno 😈";
+  } else {
+    nomeEnvio = userSentData.nome;
+    imageSent = userSentData.imageUrl;
+    userEnvio = userSentData.usuario;
+  }
   return (
-    <div className="tl-box" key={post.id}>
       <div className="tl-box" key={post.id}>
         <div className="tl-post">
           <div className="tl-ps-header">
             <div className="tl-ps-foto">
-              {userSentData.imageUrl && (
-                <img src={userSentData.imageUrl} alt="" />
+              {imageSent && (
+                <img src={imageSent} alt="" />
               )}
             </div>
             {post.userMentioned !== null ? (
               <div className="tl-ps-nomes">
                 <p className="tl-ps-nome">
-                  {userSentData.nome}{" "}
-                  <span className="tl-ps-user">@{userSentData.usuario} </span>
+                  {nomeEnvio}{" "}
+                  <span className="tl-ps-user">@{userEnvio} </span>
                   <span className="tl-ps-tempo">• {timeAgo}</span>
                   <FontAwesomeIcon className="arrow" icon={faArrowRight} />
                   {userMentionedData && (
@@ -74,8 +86,8 @@ function PostDisplay({ post, userSentData, userMentionedData }) {
             ) : (
               <div className="tl-ps-nomes">
                 <p className="tl-ps-nome">
-                  {userSentData.nome}{" "}
-                  <span className="tl-ps-user">@{userSentData.usuario} </span>
+                  {nomeEnvio}{" "}
+                  <span className="tl-ps-user">@{userEnvio} </span>
                   <span className="tl-ps-tempo">• {timeAgo}</span>
                 </p>
               </div>
@@ -101,7 +113,6 @@ function PostDisplay({ post, userSentData, userMentionedData }) {
           </div>
         </div>
       </div>
-    </div>
   );
 }
 
