@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment } from "@fortawesome/fontawesome-free-solid";
@@ -22,6 +22,9 @@ import {
   limitToLast,
   onChildAdded,
 } from "firebase/database";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+
 import {
   doc,
   getDoc,
@@ -35,11 +38,19 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+
 import PostDisplay from "./post";
+
+import { getDocs, orderBy, limit } from "firebase/firestore";
+import { addDoc } from "firebase/firestore";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+
 
 import "./stylesTimeline.css";
 
 export function Timeline() {
+  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedId, setSelectedId] = useState("");
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const db = getFirestore(app);
   const db2 = getDatabase(app);
@@ -50,7 +61,22 @@ export function Timeline() {
   const [isVisible, setIsVisible] = useState(false);
   const [userLoggedData, setUserLoggedData] = useState(null);
   const [selectedProfile, setSelectedProfile] = useState(null); // Estado para armazenar o perfil selecionado
+  const [postMode, setPostMode] = useState("public"); //estado p armazenar modo
   const [addPostClass, setAddPostClass] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const nodeRef = useRef(null);
+  const [isUserListVisible, setIsUserListVisible] = useState(false);
+  const [newPost, setNewPost] = useState({
+    deslikes: 0,
+    likes: 0,
+    mode: "public",
+    text: "",
+    time: "",
+    userMentioned: "",
+    userSent: userId,
+  });
+  const [nextPostId, setNextPostId] = useState(0);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -118,6 +144,29 @@ export function Timeline() {
     }
   }, [selectedProfile, userLoggedData]);
 
+  //pega o id do post para incrementar
+  const fetchLatestPostId = async () => {
+    try {
+      
+      const postsRef = collection(db, "timeline");
+      const querySnapshot = await getDocs(
+        query(postsRef, orderBy("postId", "desc"), limit(1))
+      ); // Obtém o último post com o ID mais alto
+      if (!querySnapshot.empty) {
+        const latestPost = querySnapshot.docs[0].data();
+        const postIdAsNumber = parseInt(latestPost.postId, 10);
+        console.log(postIdAsNumber);
+        setNextPostId(postIdAsNumber + 1); // Define o próximo ID disponível com base no último ID
+      }
+    } catch (error) {
+      console.error("Error fetching latest post ID:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchLatestPostId();
+  }, []);
+
   const fetchUserDataAndSetState = async (userId) => {
     try {
       const userLoggedDataResponse = await fetchUserData(userId);
@@ -164,6 +213,7 @@ export function Timeline() {
   const toggleVisibility = () => {
     setSelectedProfile(userLoggedData.usuario);
     setIsVisible(!isVisible);
+    setIsUserListVisible(!isUserListVisible);
   };
 
   if (isLoadingUser) {
@@ -178,6 +228,106 @@ export function Timeline() {
 
   const handleProfileChange = (e) => {
     setSelectedProfile(e);
+  };
+
+  const handlePostChange = (e) => {
+    
+    const currentTime = new Date().toISOString();
+    if (selectedProfile === userLoggedData.usuario) setPostMode("public");
+    else setPostMode("anon");
+    setNewPost({
+      ...newPost,
+      [e.target.name]: e.target.value,
+      time: currentTime,
+      mode: postMode,
+      userMentioned: selectedId,
+      postId: nextPostId
+    });
+  };
+
+  const handleSubmitPost = async (e) => {
+    e.preventDefault();
+    // Crie um novo documento na coleção "timeline" com os dados do novo post
+    setNewPost({
+      ...newPost,
+      postId: nextPostId,
+    });
+    try {
+      const docRef = await addDoc(collection(db, "timeline"), newPost);
+      console.log("Post adicionado com sucesso! ID do documento: ", docRef.id);
+      // Limpe o estado do novo post após a submissão bem-sucedida
+      setNewPost({
+        deslikes: 0,
+        likes: 0,
+        mode: "public",
+        text: "",
+        time: "",
+        userMentioned: "",
+        userSent: userId,
+      });
+      setNextPostId(nextPostId + 1);
+    } catch (error) {
+      console.error("Erro ao adicionar o post: ", error);
+    }
+  };
+
+  // Function to handle search input change
+  const handleSearchInputChange = (event) => {
+    const searchValue = event.target.value.trim();
+
+    setSearchTerm(searchValue);
+
+    // Create a Firestore query to search for users by name
+    if (searchValue !== "") {
+    const usersRef = collection(db, "users");
+
+    // const searchQuery = query(usersRef, or( where("usuario", "==", searchValue), where("nome", "==", searchValue)));
+    const searchQuery = query(
+      usersRef,
+      where("usuario", ">=", searchValue),
+      where("usuario", "<=", searchValue + "\uf8ff")
+    );
+    const searchQuery2 = query(
+      usersRef,
+      where("nome", ">=", searchValue),
+      where("nome", "<=", searchValue + "\uf8ff")
+    );
+
+    // Listen for real-time updates and update searchResults state
+    onSnapshot(searchQuery, (snapshot) => {
+      const results = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setSearchResults(results);
+    });
+
+    onSnapshot(searchQuery2, (snapshot) => {
+      const results2 = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setSearchResults((prevResults) => prevResults.concat(results2));
+      setIsUserListVisible(true); // Mostrar a lista de usuários
+    });
+  }else{
+    setSearchResults([]); // Limpar os resultados da pesquisa se o termo de pesquisa estiver vazio
+    setIsUserListVisible(false); // Ocultar a lista de usuários
+  }
+  };
+
+  const handleUserSelection = (id, usuario) => {
+    setSelectedUser(usuario);
+    setSelectedId(id);
+    setIsUserListVisible(false); // Feche a lista de usuários após a seleção
+  };
+
+  const clearSelectedUser = () => {
+    setSelectedUser(""); // Define o usuário selecionado como vazio
+    setSearchTerm(""); // Redefine o termo de pesquisa como vazio
+    setIsUserListVisible(false); // Abre a lista de usuários
   };
 
   function ProfileImage() {
@@ -233,20 +383,89 @@ export function Timeline() {
                     {userLoggedData.pseudonimo}
                   </option>
                 </select>
+                <FontAwesomeIcon
+                  className="tl-addPost-arrow"
+                  icon={faArrowRight}
+                />
+                <div className="tl-addPost-list-input">
+                  <FontAwesomeIcon
+                    className="tl-addPost-clear-icon"
+                    icon={faTimes}
+                    onClick={clearSelectedUser}
+                  />
+                  {selectedUser ? (
+                    <span className="tl-addPost-mark-input">
+                      {selectedUser}
+                    </span>
+                  ) : (
+                    <input
+                      className="tl-addPost-mark-input"
+                      type="search"
+                      value={searchTerm}
+                      onChange={handleSearchInputChange}
+                    />
+                  )}
+                  {selectedUser && (
+                  <FontAwesomeIcon
+                    className="tl-addPost-clear-icon"
+                    icon={faTimes}
+                    onClick={clearSelectedUser}
+                  />
+                )}
+                  {isUserListVisible && ( // Verifica se a lista de usuários deve ser exibida
+                    <div className="tl-addPost-list-container">
+                      <TransitionGroup component="ul">
+                        {searchResults.map((user) => (
+                          <CSSTransition
+                            nodeRef={nodeRef}
+                            timeout={500}
+                            classNames="my-node"
+                            key={user.id + "1"}
+                          >
+                            <li
+                              className="tl-addPost-list-item"
+                              key={user.id}
+                              ref={nodeRef}
+                              onClick={() => handleUserSelection(user.id, user.usuario)}
+                            >
+                              <img
+                                className="tl-addPost-list-profilePic"
+                                src={user.imageUrl}
+                              ></img>
+                              <div className="tl-addPost-list-dadosPessoais">
+                                <p className="tl-addPost-list-nome bold">
+                                  {user.nome}
+                                </p>
+                                <p className="tl-addPost-list-user light">
+                                  @{user.usuario}
+                                </p>
+                              </div>
+                            </li>
+                          </CSSTransition>
+                        ))}
+                      </TransitionGroup>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             <div className="tl-addpost-body">
-              <div className="tl-textInput">
-                <textarea
-                  className="tl-textInput-input"
-                  placeholder="O que você deseja susurrar alto hoje?"
-                ></textarea>
-              </div>
-              <div className="tl-confirmPost">
-                <button>
-                  <FontAwesomeIcon icon={faPaperPlane} /> Wispar
-                </button>
-              </div>
+              <form onSubmit={handleSubmitPost}>
+                <div className="tl-textInput">
+                  <textarea
+                    className="tl-textInput-input"
+                    placeholder="O que você deseja susurrar alto hoje?"
+                    name="text"
+                    value={newPost.text}
+                    onChange={handlePostChange}
+                  ></textarea>
+                </div>
+                <div className="tl-confirmPost">
+                  <button type="submit">
+                    <FontAwesomeIcon icon={faPaperPlane} /> Wispar
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}

@@ -272,3 +272,73 @@ html {
 .anon {
   background-color: rgb(48, 48, 48) !important;
 }
+
+/* Adicione estilo para cada item da lista */
+.tl-addPost-list-item {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tl-addPost-list-container {
+  position: absolute;
+  width: 50%;
+  background-color: #193cd8;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  z-index: 1;
+  max-height: 200px; /* Defina a altura máxima desejada */
+  overflow-y: auto;
+}
+
+/* Estilos para cada item da lista de usuários */
+.tl-addPost-list-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tl-addPost-list-item:hover {
+  background-color: #4562e2; /* Cor de fundo ao passar o mouse */
+}
+
+/* Estilos para a imagem do perfil do usuário na lista */
+.tl-addPost-list-profilePic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* Estilos para os dados pessoais do usuário na lista */
+.tl-addPost-list-dadosPessoais {
+  flex-grow: 1;
+}
+
+.tl-addPost-list-nome {
+  font-weight: bold;
+  margin: 0;
+}
+
+.tl-addPost-list-user {
+  font-size: 14px;
+  color: #666666;
+}
+
+/* Estilos para o ícone "X" de limpar seleção */
+.tl-addPost-clear-icon {
+  cursor: pointer;
+  color: #ffffff; 
+  margin-left: 10px;
+  font-size: 18px;
+  position: absolute;
+  right: 25px;
+}
+
+.tl-addPost-clear-icon:hover {
+  color: #d43f3f; /* Cor vermelha mais escura no hover */
+}
