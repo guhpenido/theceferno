@@ -30,14 +30,11 @@ import { getDocs, orderBy, limit } from "firebase/firestore";
 import { addDoc } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-<<<<<<< HEAD
 import "./stylesTimeline.css";
-=======
-// import "./stylesTimeline.css";
->>>>>>> origin/production
 
 export function Timeline() {
   const [selectedUser, setSelectedUser] = useState("");
+  const [selectedId, setSelectedId] = useState("");
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const db = getFirestore(app);
   const [posts, setPosts] = useState([]);
@@ -186,7 +183,7 @@ export function Timeline() {
       [e.target.name]: e.target.value,
       time: currentTime,
       mode: postMode,
-      userMentioned: selectedUser,
+      userMentioned: selectedId,
       postId: nextPostId
     });
   };
@@ -264,8 +261,9 @@ export function Timeline() {
   }
   };
 
-  const handleUserSelection = (user) => {
-    setSelectedUser(user);
+  const handleUserSelection = (id, usuario) => {
+    setSelectedUser(usuario);
+    setSelectedId(id);
     setIsUserListVisible(false); // Feche a lista de usuários após a seleção
   };
 
@@ -371,7 +369,7 @@ export function Timeline() {
                               className="tl-addPost-list-item"
                               key={user.id}
                               ref={nodeRef}
-                              onClick={() => handleUserSelection(user.usuario)}
+                              onClick={() => handleUserSelection(user.id, user.usuario)}
                             >
                               <img
                                 className="tl-addPost-list-profilePic"
