@@ -11,7 +11,7 @@ import   Chat   from "../pages/Chat";
 //import Layout from '../pages/Perfil/Layout';
 import Whisper from "../pages/Whisper";
 import {Timeline} from "../pages/Timeline";
-//<Route path="/perfil" element={<Layout />} />
+//
 export function AppRoutes() {
   return (
     <BrowserRouter>

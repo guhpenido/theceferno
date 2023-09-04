@@ -306,13 +306,13 @@ img{
 .conteudo {
   width: 100%;
   margin: 20px;
-  padding: 10px;
+  padding: 30px;
   text-align: justify;
   border-left: 3px solid #d9d9d9;
   border-right: 3px solid #d9d9d9;
 }
 
-h1 {
+#titulo {
   margin-bottom: 10px;
   font-size: 50px;
   text-align: center;

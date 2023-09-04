@@ -53,10 +53,10 @@ export function Sobre() {
           </div>
         </header>
         <main className="main" id="main">
-          <h1>TERMOS E CONDIÇÕES</h1>
+          <h1 id="titulo">TERMOS E CONDIÇÕES</h1>
           <div className="container">
             <div className="conteudo">
-              <h3>POLÍTICA DE PRIVACIDADE</h3>
+              <h3 >POLÍTICA DE PRIVACIDADE</h3>
               <p>A sua privacidade é a coisa mais importante para nós. Temos como nossa principal política garantir e respeitar a sua privacidade em relação a qualquer informação sua que coletemos no site CEFERNO, e outros sites que possuímos e operamos.
               </p>
               <p>Solicitamos informações e dados somente quando for de extrema importância e necessidade para fornecer o nosso serviço.

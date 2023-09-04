@@ -26,7 +26,7 @@ import {
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-//import "./stylesTimeline.css";
+// import "./stylesTimeline.css";
 
 export function Timeline() {
   const [isLoadingUser, setIsLoadingUser] = useState(true);
@@ -61,7 +61,7 @@ export function Timeline() {
   useEffect(() => {
     if (userId) {
       fetchUserDataAndSetState(userId);
-    } 
+    }
   }, [userId]);
 
   useEffect(() => {
