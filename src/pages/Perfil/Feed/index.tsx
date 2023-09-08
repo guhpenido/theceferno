@@ -46,8 +46,8 @@ const Feed: React.FC<FeedProps> = ({ avatarUrl }) => {
       <Whispers>
         {/* Passando avatarUrl como avatarUrl para o componente Post */}
         {visibilityPostagens && <PostagensUsuario />}
-        {/* {visibilityPerfil && <PerfilUsuario />}
-        {visibilityWhispers && <WhispersUsuario />} */}
+        {visibilityPerfil && <PerfilUsuario />}
+        {visibilityWhispers && <WhispersUsuario />}
         {/* <Post avatarUrl={avatarUrl} />   */}
       </Whispers>
     </Container>

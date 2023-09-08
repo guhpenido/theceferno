@@ -79,10 +79,10 @@ const PostagensUsuario: React.FC = () => {
     }, [auth, navigate]);
 
 
-    // useEffect(() => {
-    //     const unsubscribe = getPostsFromFirestore();
-    //     return () => unsubscribe();
-    // }, []);
+    useEffect(() => {
+        const unsubscribe = getPostsFromFirestore();
+        return () => unsubscribe();
+    }, []);
 
     useEffect(() => {
         if (userId) {
@@ -108,19 +108,19 @@ const PostagensUsuario: React.FC = () => {
     };
 
 
-    // const getPostsFromFirestore = () => {
-    //     return onSnapshot(collection(db, 'timeline'), (snapshot) => {
-    //         const postsData: any[] = [];
-    //         snapshot.forEach((doc) => {
-    //             const postData = {
-    //                 id: doc.id,
-    //                 ...doc.data(),
-    //             };
-    //             postsData.push(postData);
-    //         });
-    //         setPosts(postsData);
-    //     });
-    // };
+    const getPostsFromFirestore = () => {
+        return onSnapshot(collection(db, 'timeline'), (snapshot) => {
+            const postsData: any[] = [];
+            snapshot.forEach((doc) => {
+                const postData = {
+                    id: doc.id,
+                    ...doc.data(),
+                };
+                postsData.push(postData);
+            });
+            setPosts(postsData);
+        });
+    };
 
     const fetchUserData = async (userId: string) => {
         const userDoc = await getDoc(doc(db, 'users', userId));
