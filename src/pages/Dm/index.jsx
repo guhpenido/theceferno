@@ -8,6 +8,8 @@ import pesquisaIcon from "../../assets/pesquisa-icon.svg";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import {
   doc,
   getDoc,
@@ -36,11 +38,6 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-// Id Do Usuário Logado (pegar com o firebaseAuth) = auth.currentUser.id;
-const userUid = "lEHi9cUB9TO5yWCmA2ocbt5fhq02";
-
-// Id Do Usuário que está recebendo as mensagens
-const userUidSelected = "ovTWKzRPZmaAsluan0Fkr6elhn02";
 
 /*function AbrirChat(id){
     return <Link to={`/Chat/${id}`}></Link>;
@@ -51,25 +48,69 @@ function Dm() {
   const [searchResults, setSearchResults] = useState([]);
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const auth = getAuth(app);
+  const [userId, setUserId] = useState(null);
+  const navigate = useNavigate();
+  const [userLoggedData, setUserLoggedData] = useState(null);
+  const imageref = useRef(null);
 
   const nodeRef = useRef(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+        fetchUserDataAndSetState(user.uid);
+      } else {
+        navigate("/login");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth, navigate]);
+
+  useEffect(() => {
+    if (userId) {
+      fetchUserDataAndSetState(userId);
+      RenderUserChats();
+    } 
+  }, [userId]);
+
+  const fetchUserDataAndSetState = async (userId) => {
+    try {
+      const userLoggedDataResponse = await fetchUserData(userId);
+      setUserLoggedData(userLoggedDataResponse);
+      console.log(userLoggedData);
+      
+    } catch (error) {
+      console.error("Error fetching user data:", error.message);
+      setIsLoading(false); // Even if there's an error, stop loading
+    }
+  };
+
+  const fetchUserData = async (userId) => {
+    const userDoc = await getDoc(doc(db, "users", userId));
+    if (userDoc.exists()) {
+      console.log(userDoc.data().imageUrl);
+      imageref.current.src = userDoc.data().imageUrl;
+      return userDoc.data();
+    } else {
+      console.log("User not found");
+      return null;
+    }
+  };
+
 
   function RenderUserChats() {
     // Firestore collection reference for the "chat" collection
     const chatDivs = [];
 
-    // Create an array to hold the chat divs
-
-    // Get the current user's ID (replace this with your actual method to get the user ID)
-    const currentUserID = "ovTWKzRPZmaAsluan0Fkr6elhn02";
-
     const chatRef = collection(db, "chat");
 
     // Query the "chat" collection for chats that include the current user's ID
-
     const q = query(
       collection(db, "chat"),
-      or(where("id1", "==", currentUserID), where("id2", "==", currentUserID)),
+      or(where("id1", "==", userId), where("id2", "==", userId)),
       orderBy("time", "desc")
     );
 
@@ -82,24 +123,24 @@ function Dm() {
     onSnapshot(q, (snapshot) => {
       snapshot.docs.forEach(async (doc2) => {
         const chatData = doc2.data();
-        console.log("aaaa");
+        console.log("updates on the chat");
 
         // Check if the current user is either the sender or the receiver of the last message
         const lastMessage = chatData.mensagem[chatData.mensagem.length - 1];
         if (lastMessage) {
           const chatPartnerID =
-            lastMessage.idUserSent === currentUserID
+            lastMessage.idUserSent === userId
               ? lastMessage.idUserReceived
               : lastMessage.idUserSent;
           try {
             const userPartnerRef = doc(db, "users", chatPartnerID);
             const userPartnerSnapshot = await getDoc(userPartnerRef);
 
-            const userDocRef = doc(db, "users", currentUserID);
+            const userDocRef = doc(db, "users", userId);
             const userDocSnapshot = await getDoc(userDocRef);
 
             const partnerData2 = userPartnerSnapshot.data();
-            partnerImg = partnerData2.imageSrc;
+            partnerImg = partnerData2.imageUrl;
             partnerNome = partnerData2.nome;
             partnerUsuario = partnerData2.usuario;
 
@@ -139,7 +180,6 @@ function Dm() {
                 segundos
               );
               return dataFormatada;
-              console.log(dataFormatada); // Data no formato de objeto Date
             } else {
               return console.error("Formato de data ou horário inválido.");
             }
@@ -159,25 +199,25 @@ function Dm() {
 
           // Create the chat div and add it to the array
           chatDivs.push(
-            <Link to={`./Chat/${chatPartnerID}`}>
-            <div className="chat" key={num}>
+            <Link to={`/Chat/${chatPartnerID}`}>
+            <div className="chatDm" key={num}>
               {/* Replace the following lines with appropriate data */}
               <div className="imgProfilePic">
                 <img
                   className="profilePicDm"
-                  src={partnerImg}
+                  src={partnerImg?partnerImg:cefernoIcon}
                   alt="Profile Pic"
                 />
               </div>
               <div className="tudoMenosImg">
                 <div className="dadosPessoaisDm">
-                  <p className="nome bold">{partnerNome.split(' ')[0]}</p>
-                  <p className="user light">@{partnerUsuario}</p>
-                  <p className="light">•</p>
-                  <p className="horaUltimaMensagem light">{horaEMinutos}</p>
+                  <p className="boldDm">{partnerNome.split(' ')[0]}</p>
+                  <p className="userDm lightDm">@{partnerUsuario}</p>
+                  <p className="lightDm">•</p>
+                  <p className="horaUltimaMensagem lightDm">{horaEMinutos}</p>
                 </div>
                 <div className="mensagemDm">
-                  <p className="ultimaMensagem light">{lastMessage.text}</p>
+                  <p className="ultimaMensagem lightDm">{lastMessage.text}</p>
                 </div>
               </div>
             </div></Link>
@@ -192,13 +232,10 @@ function Dm() {
     });
   }
 
-  useEffect(() => {
-    console.log("1");
+  // useEffect(() => {
 
-    RenderUserChats();
-  }, []);
-
-  console.log(chats);
+  //   RenderUserChats();
+  // }, []);
 
   /*useEffect(() => {
       const unSub = onSnapshot(q, (doc) => {
@@ -229,81 +266,91 @@ function Dm() {
 
   // Function to handle search input change
   const handleSearchInputChange = (event) => {
-    const searchValue = event.target.value.trim();
+    const searchValue = event.target.value
     console.log("1");
-
     setSearchTerm(searchValue);
+    if(searchValue > ""){
+      setSearchTerm(searchValue);
 
-    // Create a Firestore query to search for users by name
-    const usersRef = collection(db, "users");
+      // Create a Firestore query to search for users by name
+      const usersRef = collection(db, "users");
 
-    // const searchQuery = query(usersRef, or( where("usuario", "==", searchValue), where("nome", "==", searchValue)));
-    const searchQuery = query(
-      usersRef,
-      where("usuario", ">=", searchValue),
-      where("usuario", "<=", searchValue + "\uf8ff")
-    );
-    const searchQuery2 = query(
-      usersRef,
-      where("nome", ">=", searchValue),
-      where("nome", "<=", searchValue + "\uf8ff")
-    );
+      // const searchQuery = query(usersRef, or( where("usuario", "==", searchValue), where("nome", "==", searchValue)));
+      const searchQuery = query(
+        usersRef,
+        where("usuario", ">=", searchValue),
+        where("usuario", "<=", searchValue + "\uf8ff")
+      );
+      const searchQuery2 = query(
+        usersRef,
+        where("nome", ">=", searchValue),
+        where("nome", "<=", searchValue + "\uf8ff")
+      );
 
-    // Listen for real-time updates and update searchResults state
-    onSnapshot(searchQuery, (snapshot) => {
-      const results = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      // Listen for real-time updates and update searchResults state
+      onSnapshot(searchQuery, (snapshot) => {
+        const results = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        // console.log(results[0].imageUrl);
+        setSearchResults((prevResults) => prevResults.concat(results));
+      });
 
-      setSearchResults(results);
-    });
-
-    onSnapshot(searchQuery2, (snapshot) => {
-      const results2 = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      setSearchResults((prevResults) => prevResults.concat(results2));
-    });
+      onSnapshot(searchQuery2, (snapshot) => {
+        const results2 = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log(results2);
+        setSearchResults((prevResults) => prevResults.concat(results2));
+      });
+    }
+    else {
+      setSearchResults([])
+    }
+    
   };
-
   return (
     <>
-      <div className="header">
+      <div className="headerDm">
         <img
           className="profilePicDm"
-          src="https://pbs.twimg.com/profile_images/1653051776298360833/bUymYMlt_400x400.jpg"
+          ref={imageref}
+          //src={userLoggedData.imageUrl?userLoggedData.imageUrl:cefernoIcon}
+          //src="https://pbs.twimg.com/profile_images/1653051776298360833/bUymYMlt_400x400.jpg"
+          //src={userLoggedData.imageUrl}
+          //src={userId.imageUrl}
+          //src={user.imageUrl}
         ></img>
         <p id="msg">Mensagens</p>
       </div>
-      <div id="blocoPesquisa" className="centraliza">
+      <div id="blocoPesquisaDm" className="centralizarDm">
         <input
-          className="input"
+          className="inputPesquisaDm"
           type="search"
           placeholder="Quem você está procurando?"
           value={searchTerm}
           onChange={handleSearchInputChange}
         ></input>
-        <TransitionGroup component="ul">
+        <TransitionGroup component="ul" className="ulDm">
           {searchResults.map((user) => (
             <CSSTransition
               nodeRef={nodeRef}
               timeout={500}
               classNames="my-node"
-              key={user.id + "1"}
+              key={user.id?user.id:user.uid + "1"}
             >
-              <Link to={`./Chat/${user.id}`}>
+              <Link to={`/Chat/${user.id?user.id:user.uid}`}> 
                 <li
-                  className="listaResultadosPesquisa"
-                  key={user.id}
-                  ref={nodeRef}
+                  className="listaResultadosPesquisaDm"
+                  key={user.id?user.id:user.uid}
+                  noderef={nodeRef}
                 >
-                  <img className="profilePicDm" src={user.imageSrc}></img>
+                  <img className="profilePicDm" src={user.imageUrl}></img>
                   <div className="dadosPessoaisDm">
-                    <p className="nome bold">{user.nome}</p>
-                    <p className="user light">@{user.usuario}</p>
+                    <p className="nomeUserDm boldDm">{user.nome}</p>
+                    <p className="userDm lightDm">@{user.usuario}</p>
                   </div>
                 </li>
               </Link>
@@ -311,22 +358,30 @@ function Dm() {
           ))}
         </TransitionGroup>
       </div>
+      <div className="fullDmMessages">
       {chats.map((chatDiv, index) => (
         <div key={index + 1}>{chatDiv}</div>
       ))}
-      <div className="footer">
-        <div>
+      </div>
+      <div className="footerDm">
+      <Link className="botaoAcessar" to="/timeline"><div>
           <img id="home" src={homeIcon}></img>
         </div>
+        </Link>
+        <Link className="botaoAcessar" to="/timeline">
         <div>
           <img id="pesquisa" src={pesquisaIcon}></img>
         </div>
+        </Link>
+        <Link className="botaoAcessar" to="/timeline">
         <div>
           <img id="notificacao" src={notificacaoIcon}></img>
         </div>
-        <div>
+        </Link>
+        <Link className="botaoAcessar" to="/dm"><div>
           <img id="dm" src={dmIcon}></img>
         </div>
+        </Link>
       </div>
     </>
   );
