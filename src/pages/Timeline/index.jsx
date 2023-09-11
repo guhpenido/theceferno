@@ -71,11 +71,13 @@ export function Timeline() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserId(user.uid);
+        console.log(user);
         fetchUserDataAndSetState(user.uid);
       } else {
         navigate("/login");
       }
     });
+    
 
     return () => unsubscribe();
   }, [auth, navigate]);
