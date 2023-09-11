@@ -8,9 +8,9 @@ import { Contato } from "../pages/Contato";
 import { Tutorial } from "../pages/Tutorial";
 import   Dm  from "../pages/Dm";
 import   Chat   from "../pages/Chat"; 
-//import Layout from '../pages/Perfil/Layout';
+import Layout from '../pages/Perfil/Layout';
 import Whisper from "../pages/Whisper";
-import {Timeline} from "../pages/Timeline";
+import {Timeline} from "../pages/Timeline/index";
 //
 export function AppRoutes() {
   return (
@@ -24,7 +24,7 @@ export function AppRoutes() {
         <Route path="/contato" element={<Contato />} />
         <Route path="/dm" element={<Dm/>} />
         <Route path="/chat/:userId" element={<Chat/>} />
-        
+        <Route path="/perfil" element={<Layout/>} />
         <Route path="/whisper" element={<Whisper />} /> 
         <Route path="/timeline" element={<Timeline />} /> 
       </Routes>
