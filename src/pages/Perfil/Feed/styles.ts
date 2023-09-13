@@ -34,6 +34,7 @@ export const TabContainer = styled.div`
 `;
 
 export const Whispers = styled.div`
+  background-color: black; 
   padding: 30px;
   display: flex;
   flex-direction: column;
@@ -44,3 +45,4 @@ export const Whispers = styled.div`
     padding: 20px;
   }
 `;
+

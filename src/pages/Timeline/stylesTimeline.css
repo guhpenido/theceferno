@@ -1,7 +1,19 @@
-html {
+body{
+  margin: 0;
+}
+.tl-screen {
   background-color: rgb(12, 12, 12);
+<<<<<<< HEAD
   width: 100vw;
   height: 100vh;
+=======
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+*{
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+>>>>>>> production
 }
 .tl-container {
   width: 100%;
@@ -84,7 +96,10 @@ html {
   border-radius: 50%;
 }
 .tl-ps-nomes {
+  display: flex;
   margin-left: 5px;
+  justify-content: center;
+  align-items: center;
 }
 .tl-ps-nome span {
   font-size: 8px;
@@ -93,8 +108,9 @@ html {
 .tl-ps-texto {
   margin-top: -5px;
   margin-left: 30px;
-  color: #fff;
+  color: #d6d6d6;
   font-size: 10px;
+  font-weight: normal
 }
 .tl-ps-footer {
   width: 100%;
@@ -146,7 +162,7 @@ html {
   background-color: rgb(20, 20, 20);
   border-top: 0.2px rgb(36, 35, 35) solid;
   width: 100%;
-  height: 40px;
+  height: 50px;
   position: fixed;
   bottom: 0%;
   display: flex;
@@ -275,6 +291,7 @@ html {
   background-color: rgb(48, 48, 48) !important;
 }
 
+<<<<<<< HEAD
 /* denuncia */
 
 .iconeDenuncia button {
@@ -344,4 +361,114 @@ html {
 
 .alternaOpcao {
   padding-left: 3vw;
+=======
+/* Adicione estilo para cada item da lista */
+.tl-addPost-list-item {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tl-addPost-list-container {
+  position: absolute;
+  width: 50%;
+  background-color: #193cd8;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  z-index: 1;
+  max-height: 200px; /* Defina a altura máxima desejada */
+  overflow-y: auto;
+}
+
+/* Estilos para cada item da lista de usuários */
+.tl-addPost-list-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tl-addPost-list-item:hover {
+  background-color: #4562e2; /* Cor de fundo ao passar o mouse */
+}
+
+/* Estilos para a imagem do perfil do usuário na lista */
+.tl-addPost-list-profilePic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* Estilos para os dados pessoais do usuário na lista */
+.tl-addPost-list-dadosPessoais {
+  flex-grow: 1;
+}
+
+.tl-addPost-list-nome {
+  font-weight: bold;
+  margin: 0;
+}
+
+.tl-addPost-list-user {
+  font-size: 14px;
+  color: #666666;
+}
+
+/* Estilos para o ícone "X" de limpar seleção */
+.tl-addPost-clear-icon {
+  cursor: pointer;
+  color: #ffffff; 
+  margin-left: 10px;
+  font-size: 18px;
+  position: absolute;
+  right: 25px;
+}
+
+.tl-addPost-clear-icon:hover {
+  color: #d43f3f; /* Cor vermelha mais escura no hover */
+}
+.tl-ps-reply,.tl-ps-like,.tl-ps-deslike {
+  color:#4763e4;
+}
+
+.footerDm{
+  justify-content: space-around;
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: visible;
+  background-color: #242424
+}
+
+.footerDm img{
+  overflow: visible;
+  width: 24px;
+  filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%);
+  transition: all 300ms;
+}
+
+.imgProfilePic{
+  width: 50px
+}
+
+.footerDm div{
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  width: 100%;
+  overflow: visible;
+}
+
+.footerDm div:hover img{
+  filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%) drop-shadow(0px 0px 5px #4763E4) drop-shadow(0px 0px 15px #4763E4);
+>>>>>>> production
 }
