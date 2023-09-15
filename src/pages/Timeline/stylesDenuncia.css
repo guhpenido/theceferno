@@ -1,0 +1,65 @@
+/* denuncia */
+
+.iconeDenuncia button {
+    margin-left: 75vw;
+    background: #0C0C0C !important;
+    border: none;
+  }
+  
+  .iconeDenuncia img {
+    width: 4vw;
+    height: 3vh;
+  }
+  
+  .DenunciaInvisible {
+    display: none;
+  }
+  
+  .denuncia {
+    position: fixed !important;
+    margin-left: -12vw;
+    margin-top: 20vh;
+    width: 99vw;
+    height: auto;
+    background-color: #000000;
+    border: 4.5px groove white;
+    padding-left: 5vw;
+    padding-right: 5vw;
+  }
+  
+  .denuncia button {
+    background: #000000;
+    border: none;
+    color: white;
+  }
+  
+  .denuncia .enviar {
+    margin-top: 10vh;
+    margin-left: 37vw;
+    font-size: 2.5vh;
+  }
+  .denuncia h1 {
+    font-size: 4vh;
+    text-align: center;
+    margin-top: 1vh;
+    margin-left: 20vw;
+    padding-bottom: 1.5vh;
+  }
+  
+  .denuncia h1 button {
+    margin-left: 15vw;
+  }
+  
+  
+  .opcoesDenuncia {
+    background: black !important;
+    color: white;
+    font-weight: bold;
+    height: 5vh;
+    width: auto;
+    border: 2.5px groove blue !important;
+  }
+  
+  .alternaOpcao {
+    padding-left: 3vw;
+  }
