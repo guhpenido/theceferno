@@ -29,69 +29,69 @@ header {
   padding: 3rem;
   font-family: "Poppins", sans-serif;
 }
-header .header-logo {
+header .header-logo-contato {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
-header .header-logo svg {
+header .header-logo-contato svg {
   height: 1.5rem;
   width: 1.5rem;
 }
 
-header .header-logo svg path:first-child {
+header .header-logo-contato svg path:first-child {
   fill: white;
 } 
-header .header-logo svg path:last-child {
+header .header-logo-contato svg path:last-child {
   fill: #7813FB;
 }
-header .header-logo .logo-text {
+header .header-logo-contato .logo-text {
   font-size: 1.25rem;
   font-weight: 500;
   margin-left: 1rem;
   color: white;
 }
-header .header-items {
+header .header-items-contato {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-header .header-items .header-item {
+header .header-items-contato .header-item-contato {
   margin: 0 1rem;
   position: relative;
   cursor: pointer;
 }
-header .header-items .header-item:first-child {
+header .header-items-contato .header-item-contato:first-child {
   margin-left: 0;
 }
-header .header-items .header-item:last-child {
+header .header-items-contato .header-item-contato:last-child {
   margin-right: 0;
 }
-header .header-items .header-item .item-title {
+header .header-items-contato .header-item-contato .item-title-contato {
   display: flex;
   align-items: center;
 }
-header .header-items .header-item .item-title .title-text {
+header .header-items-contato .header-item-contato .item-title-contato .title-text-contato {
   font-size: 0.85rem;
   font-weight: 500;
   color: #d9d9d9;
 }
-header .header-items .header-item .item-title .title-text:hover {
+header .header-items-contato .header-item-contato .item-title-contato .title-text-contato:hover {
   color:#4763E4;
 }
-header .header-items .header-item .item-title .title-icon {
+header .header-items-contato .header-item-contato .item-title-contato .title-icon-contato {
   display: flex;
   align-items: center;
 }
-header .header-items .header-item .item-title .title-icon svg {
+header .header-items-contato .header-item-contato .item-title-contato .title-icon-contato svg {
   height: 1rem;
   width: 1rem;
 }
-header .header-items .header-item .item-title .title-icon svg path {
+header .header-items-contato .header-item-contato .item-title-contato .title-icon-contato svg path {
   fill: #4763E4;
 }
-header .header-items .header-item ::before {
+header .header-items-contato .header-item-contato ::before {
   content: "";
   position: absolute;
   bottom: -0.35rem;
@@ -100,10 +100,10 @@ header .header-items .header-item ::before {
   background-color: rgba(255, 255, 255, 0.763);
   transition: height 125ms ease-in-out;
 }
-header .header-items .header-item .contato::before {
+header .header-items-contato .header-item-contato .contato::before {
   height: 0.125rem;
 }
-header .header-link {
+header .header-link-contato {
   padding: 0.5rem 1rem;
   border-radius: 1.5rem;
   border: 0.1rem solid rgba(255, 255, 255, 0.681);
@@ -113,7 +113,7 @@ header .header-link {
   transition: border 250ms ease-in-out;
   margin-left: 1rem;
 }
-header .header-link:hover {
+header .header-link-contato:hover {
   border: 0.15rem solid #4763E4;
   background: #00003d;
 }
@@ -121,20 +121,20 @@ header .header-link:hover {
 main {
   padding: 5rem 10rem;
 }
-main .home-section {
+main .home-section-contato {
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 5rem;
 }
-main .home-section .home-title {
+main .home-section-contato .home-title-contato {
   width: 40rem;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   margin-bottom: 2rem;
   color: rgba(0, 0, 0, 0.65);
 }
-main .home-section .home-button {
+main .home-section-contato .home-button-contato {
   width: max-content;
   background-color: #4763E4;
   font-family: "Poppins", sans-serif;
@@ -145,11 +145,11 @@ main .home-section .home-button {
   transition: transform 250ms ease-in-out;
   cursor: pointer;
 }
-main .home-section .home-button:hover {
+main .home-section-contato .home-button-contato:hover {
   transform: translateY(-0.25rem);
 }
 
-.container{
+.container {
   width: 100%;
   height: 100%;
 }
@@ -163,11 +163,11 @@ main .home-section .home-button:hover {
   border-radius: 25px;
 }
 
-.contact .form .form-group {
+.contact  .form .form-group {
   padding-bottom: 8px;
 }
 
-.contact .form input,
+.contact  .form input,
 .contact .form textarea {
   border-radius: 25px;
   box-shadow: #000;
@@ -192,7 +192,7 @@ main .home-section .home-button:hover {
   padding: 10px 12px;
 }
 
-.mensagem{
+.mensagem-contato{
   width: 100%;
 }
 
@@ -229,11 +229,11 @@ main .home-section .home-button:hover {
     align-items: center;
     padding: 2rem;
   }
-  header .header-items {
+  header .header-items-contato {
     flex-direction: column;
     margin-top: 2rem;
   }
-  header .header-link {
+  header .header-link-contato {
     font-size: 14px;
     margin: 5px;
   }
@@ -251,17 +251,17 @@ main .home-section .home-button:hover {
   .contact .form button[type=submit] {
     padding: 12px 40px;
   }
-  header .header-logo {
+  header .header-logo-contato {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
   }
-  header .header-logo svg {
+  header .header-logo-contato svg {
     height: 40px;
     width: 40px;
   }
-  header .header-logo .logo-text {
+  header .header-logo-contato .logo-text {
     font-size: 18px;
     margin-top: 5px;
   }
