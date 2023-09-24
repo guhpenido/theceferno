@@ -1,7 +1,7 @@
 import React from "react";
 // import "../bootstrap/css/bootstrap.min.css";
 // import "../bootstrap/js/bootstrap.bundle.min.js";
-// import "./stylesContato.css";
+import "./stylesContato.css";
 import { Link } from "react-router-dom";
 
 export function Contato() {
@@ -26,7 +26,7 @@ export function Contato() {
             <div className="header-item">
             <Link style={{ textDecoration: 'none' }} to="/sobre">
               <div className="item-title">
-                <h1 className="title-text">Sobre</h1>
+                <h1 className="title-text sobre">Sobre</h1>
               </div>
               </Link>
             </div>

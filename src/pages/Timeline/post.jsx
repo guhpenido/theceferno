@@ -50,7 +50,7 @@ import {
   isYesterday,
   differenceInDays,
 } from "date-fns";
-import "./stylesDenuncia.css";
+// import "./stylesDenuncia.css";
 
 function PostDisplay({ post, userSentData, userMentionedData }) {
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post

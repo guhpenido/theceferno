@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import 'firebase/database';
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
-import "./stylesTml.css"; // Importe o arquivo CSS com os estilos
+// import "./stylesTml.css"; // Importe o arquivo CSS com os estilos
 import "../bootstrap/css/bootstrap.min.css";
 import "../bootstrap/js/bootstrap.bundle.min.js";
 import { Link } from "react-router-dom";

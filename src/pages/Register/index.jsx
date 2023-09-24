@@ -232,10 +232,10 @@ export function Register() {
 
   const renderPasswordRules = () => {
     return (
-      <ul>
-        <li>Deve ter ao menos um número ou caractere especial</li>
-        <li>Deve conter pelo menos uma letra maiúscula</li>
-        <li>Deve ter no mínimo 8 caracteres</li>
+      <ul className="regrasSenha">
+        <li>Deve ter ao menos um número ou caractere especial.</li>
+        <li>Deve conter pelo menos uma letra maiúscula.</li>
+        <li>Deve ter no mínimo 8 caracteres.</li>
       </ul>
     );
   };
@@ -584,7 +584,7 @@ export function Register() {
               {!isValidCelular() && (
                 <p style={{ color: "red" }}>Celular inválido</p>
               )}
-            </div>
+            </div> 
             <div className="inputContainer">
               <label htmlFor="instituicao">Instituição de Ensino</label>
               <input
@@ -681,9 +681,9 @@ export function Register() {
                 <p style={{ color: "red" }}>Usuário inválido</p>
               )}
             </div>
+            <div className="mudaImagem">
             <h3>Foto</h3>
             <br></br>
-            <div>
               <div className="profile-pic">
                 <label className="-label" htmlFor="file">
                   <span className="glyphicon glyphicon-camera"></span>
@@ -732,7 +732,7 @@ export function Register() {
             className="etapa04"
             style={{ display: state.etapa === 4 ? "block" : "none" }}
           >
-            <span>
+            <span className="voltarEtapa04">
               <a onClick={retrocederEtapa} href="#">
                 - Voltar
               </a>

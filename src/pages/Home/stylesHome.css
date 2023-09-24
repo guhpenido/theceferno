@@ -152,7 +152,7 @@ main .home-section .home-title {
 
 .botaoAcessar {
   margin-top: -3.5rem; /* Use valores de margem menores para espaçamento */
-  text-align: right; /* Alinhe à direita */
+  margin-left: 3.4vw;
 }
 
 .titulo {
@@ -240,7 +240,7 @@ main .home-section .home-button:hover {
     font-size: 0.89em;
     text-align: center !important;
     margin-top: -1rem !important;
-    margin-left: -16rem !important;
+    margin-left: -16.1rem !important;
   }
 
   main .home-button {

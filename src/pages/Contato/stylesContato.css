@@ -10,10 +10,7 @@
 
 
 body {
-  /* background-image: url("../../assets/backgroundHome.jpg") !important; */
-  background: linear-gradient(64deg, #772fcf 0%, #6e0ee48c 100%) !important;
-  box-shadow: -44.3667984008789px 75.1484375px 999.86666870117188px 74.3667984008789px rgb(120, 19, 251) inset, 84.3667984008789px -41.1484375px 93.86666870117188px 0px rgba(86, 45, 136, 0.232) inset !important;
-
+  /* background: #25064a9e; */
   background-size: cover; 
   background-repeat: no-repeat;
   background-position: center;
@@ -21,76 +18,94 @@ body {
   color: #d9d9d9;
 }
 
+
 header {
-  display: flex;
+  background: #4d08a1c8;
+    display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 3rem;
   font-family: "Poppins", sans-serif;
 }
+
 header .header-logo {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
+
 header .header-logo svg {
   height: 1.5rem;
   width: 1.5rem;
 }
 
+
 header .header-logo svg path:first-child {
   fill: white;
 } 
+
 header .header-logo svg path:last-child {
   fill: #7813FB;
 }
+
 header .header-logo .logo-text {
   font-size: 1.25rem;
   font-weight: 500;
   margin-left: 1rem;
   color: white;
 }
+
 header .header-items {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 header .header-items .header-item {
   margin: 0 1rem;
   position: relative;
   cursor: pointer;
 }
+
 header .header-items .header-item:first-child {
   margin-left: 0;
 }
+
 header .header-items .header-item:last-child {
   margin-right: 0;
 }
+
 header .header-items .header-item .item-title {
   display: flex;
   align-items: center;
 }
+
 header .header-items .header-item .item-title .title-text {
   font-size: 0.85rem;
   font-weight: 500;
   color: #d9d9d9;
 }
+
 header .header-items .header-item .item-title .title-text:hover {
   color:#4763E4;
 }
+
 header .header-items .header-item .item-title .title-icon {
   display: flex;
   align-items: center;
 }
+
 header .header-items .header-item .item-title .title-icon svg {
   height: 1rem;
   width: 1rem;
 }
+
 header .header-items .header-item .item-title .title-icon svg path {
   fill: #4763E4;
 }
+
 header .header-items .header-item ::before {
   content: "";
   position: absolute;
@@ -100,9 +115,11 @@ header .header-items .header-item ::before {
   background-color: rgba(255, 255, 255, 0.763);
   transition: height 125ms ease-in-out;
 }
+
 header .header-items .header-item .contato::before {
   height: 0.125rem;
 }
+
 header .header-link {
   padding: 0.5rem 1rem;
   border-radius: 1.5rem;
@@ -113,20 +130,26 @@ header .header-link {
   transition: border 250ms ease-in-out;
   margin-left: 1rem;
 }
+
 header .header-link:hover {
   border: 0.15rem solid #4763E4;
   background: #00003d;
 }
 
+
 main {
   padding: 5rem 10rem;
+  background: #4d08a1c8;
+
 }
+
 main .home-section {
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 5rem;
 }
+
 main .home-section .home-title {
   width: 40rem;
   font-family: "Poppins", sans-serif;
@@ -134,6 +157,7 @@ main .home-section .home-title {
   margin-bottom: 2rem;
   color: rgba(0, 0, 0, 0.65);
 }
+
 main .home-section .home-button {
   width: max-content;
   background-color: #4763E4;
@@ -145,14 +169,17 @@ main .home-section .home-button {
   transition: transform 250ms ease-in-out;
   cursor: pointer;
 }
+
 main .home-section .home-button:hover {
   transform: translateY(-0.25rem);
 }
+
 
 .container{
   width: 100%;
   height: 100%;
 }
+
 
 .contact .form {
   width: 100%;
@@ -192,10 +219,6 @@ main .home-section .home-button:hover {
   padding: 10px 12px;
 }
 
-.mensagem{
-  width: 100%;
-}
-
 .contact .form button[type=submit] {
   background: #4763E4;
   border: 0;
@@ -207,6 +230,10 @@ main .home-section .home-button:hover {
 
 .contact .form button[type=submit]:hover {
   background: #00276c;
+}
+
+.mensagem{
+  width: 100%;
 }
 
 /* 
@@ -229,40 +256,65 @@ main .home-section .home-button:hover {
     align-items: center;
     padding: 2rem;
   }
+  
   header .header-items {
     flex-direction: column;
     margin-top: 2rem;
   }
+
   header .header-link {
     font-size: 14px;
     margin: 5px;
   }
+
   main {
     padding: 20px;
+    height: 60vh;
   }
+
   .contact .form {
     padding: 20px;
   }
+
   .contact .form input[type=text],
   .contact .form input[type=email],
   .contact .form textarea {
     padding: 10px 12px;
+    width: 80vw;
   }
+
   .contact .form button[type=submit] {
     padding: 12px 40px;
   }
+
   header .header-logo {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
   }
+
   header .header-logo svg {
     height: 40px;
     width: 40px;
   }
+
   header .header-logo .logo-text {
     font-size: 18px;
     margin-top: 5px;
+    margin-left: -0.4vw;
+  }
+
+  .sobre {
+    margin-left: 3.3vw;    
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 1vh;
+  }
+
+  .text-center {
+    text-align: center;
   }
 }
