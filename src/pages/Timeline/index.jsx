@@ -13,8 +13,12 @@ import { faQuestion } from "@fortawesome/fontawesome-free-solid";
 import { faPaperPlane } from "@fortawesome/fontawesome-free-solid";
 //import { faXmark } from "@fortawesome/fontawesome-free-solid";
 import { app } from "../../services/firebaseConfig";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, startAfter } from "firebase/firestore";
 //import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import homeIcon from "../../assets/home-icon.svg";
+import dmIcon from "../../assets/dm-icon.svg";
+import notificacaoIcon from "../../assets/notificacao-icon.svg";
+import pesquisaIcon from "../../assets/pesquisa-icon.svg";
 import {
   getDatabase,
   ref,
@@ -64,15 +68,49 @@ export function Timeline() {
   const [searchResults, setSearchResults] = useState([]);
   const nodeRef = useRef(null);
   const [isUserListVisible, setIsUserListVisible] = useState(false);
+  const [loadedPosts, setLoadedPosts] = useState([]);
+  const [hasLoadedPosts, setHasLoadedPosts] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
 
   const [nextPostId, setNextPostId] = useState(0);
+  const handleScroll = () => {
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
 
+    // Defina um limite inferior para acionar a busca por mais posts
+    const triggerLimit = 100; // Você pode ajustar isso conforme necessário
+
+    if (windowHeight + scrollTop >= documentHeight - triggerLimit && !isFetching) {
+      setIsFetching(true);
+    }
+  };
+
+  useEffect(() => {
+    // Adicione um ouvinte de rolagem quando o componente for montado
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      // Remova o ouvinte de rolagem quando o componente for desmontado
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isFetching) {
+      carregaTml().then(() => {
+        setIsFetching(false);
+      });
+    }
+  }, [isFetching]);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        console.log(user);
         setUserId(user.uid);
         console.log(user);
         fetchUserDataAndSetState(user.uid);
+        carregaTml();
       } else {
         navigate("/login");
       }
@@ -81,6 +119,7 @@ export function Timeline() {
 
     return () => unsubscribe();
   }, [auth, navigate]);
+
   const [newPost, setNewPost] = useState({
     deslikes: 0,
     likes: 0,
@@ -90,43 +129,71 @@ export function Timeline() {
     userMentioned: "",
     userSent: userId,
   });
-  useEffect(() => {
+
+  const carregaTml = async () => {
+    if(isFetching){
+      return;
+    }
+
+    setIsFetching(true);
     const postsCollectionRef = collection(db, "timeline");
-    const postsQuery = query(
-      postsCollectionRef,
-      orderBy("time", "desc"), // Substitua "timestamp" pelo campo que você deseja ordenar
-      limit(10) // Substitua 10 pelo número de documentos que você deseja obter
-    );
-
-    const fetchData = async () => {
-      try {
-        const postsData = await getPostsFromFirestore(postsQuery);
-        console.log("Posts Data:", postsData);
+    const lastLoadedPost =
+      loadedPosts.length > 0 ? loadedPosts[loadedPosts.length - 1].post : null;
+    const lastLoadedPostId = lastLoadedPost ? lastLoadedPost.id : "";
+    let postsQuery;
+  
+    if (lastLoadedPostId) {
+      console.log("Latest post:" + lastLoadedPostId);
+      // Se houver um último post carregado, use startAfter para obter os próximos posts
+      postsQuery = query(
+        postsCollectionRef,
+        orderBy("postId", "desc"),
+        startAfter(lastLoadedPostId),
+        limit(10)
+      );
+    } else {
+      // Se não houver último post carregado, simplesmente carregue os 10 posts mais recentes
+      postsQuery = query(
+        postsCollectionRef,
+        orderBy("postId", "desc"),
+        limit(10)
+      );
+    }
+  
+    try {
+      const postsData = await getPostsFromFirestore(postsQuery);
+  
+      if (postsData.length === 0) {
+        console.log("Você já chegou ao fim");
+      } else {
         const postsWithUserData = [];
-
+  
         for (const post of postsData) {
           const userSentData = await fetchUserData(post.userSent);
           let userMentionedData = null;
-
+  
           if (post.userMentioned !== null) {
             userMentionedData = await fetchUserData(post.userMentioned);
           }
-
+  
           postsWithUserData.push({
             post,
             userSentData,
             userMentionedData,
           });
         }
-
-        setPosts(postsWithUserData);
-      } catch (error) {
-        console.error("Erro ao obter os posts:", error);
+  
+        // Aqui, substitua todo o estado de loadedPosts com os novos posts carregados
+        setLoadedPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
+      console.log("Novos posts carregados!");
       }
-    };
-
-    fetchData();
-  }, [db]);
+    } catch (error) {
+      console.error("Erro ao obter os posts:", error);
+    }finally{
+      setIsFetching(false);
+    }
+  };
+  
 
   useEffect(() => {
     if (userId) {
@@ -143,43 +210,6 @@ export function Timeline() {
     }
   }, [selectedProfile, userLoggedData]);
 
-  const carregaTml = async () => {
-    const postsCollectionRef = collection(db, "timeline");
-    const postsQuery = query(
-      postsCollectionRef,
-      orderBy("time", "desc"), // Substitua "timestamp" pelo campo que você deseja ordenar
-      limit(10) // Substitua 10 pelo número de documentos que você deseja obter
-    );
-
-    const fetchData = async () => {
-      try {
-        const postsData = await getPostsFromFirestore(postsQuery);
-        console.log("Posts Data:", postsData);
-        const postsWithUserData = [];
-
-        for (const post of postsData) {
-          const userSentData = await fetchUserData(post.userSent);
-          let userMentionedData = null;
-
-          if (post.userMentioned !== null) {
-            userMentionedData = await fetchUserData(post.userMentioned);
-          }
-
-          postsWithUserData.push({
-            post,
-            userSentData,
-            userMentionedData,
-          });
-        }
-
-        setPosts(postsWithUserData);
-      } catch (error) {
-        console.error("Erro ao obter os posts:", error);
-      }
-    };
-
-    fetchData();
-  }
   //pega o id do post para incrementar
   const fetchLatestPostId = async () => {
     try {
@@ -203,6 +233,7 @@ export function Timeline() {
   }, []);
 
   const fetchUserDataAndSetState = async (userId) => {
+    console.log(userId);
     try {
       const userLoggedDataResponse = await fetchUserData(userId);
       setUserLoggedData(userLoggedDataResponse);
@@ -221,18 +252,26 @@ export function Timeline() {
 
     querySnapshot.forEach((doc) => {
       const postData = {
-        id: doc.id,
+        id: doc.data().postId,
         ...doc.data(),
       };
       postsData.push(postData);
     });
-
+    console.log("Posts Data:", postsData);
     return postsData;
   };
 
   const fetchUserData = async (userId) => {
     try {
-      const userDoc = await getDoc(doc(db, "users", userId));
+      if (!userId) {
+        console.error("Invalid userId");
+        return null;
+      }
+
+      const userDocRef = doc(db, "users", userId);
+
+      const userDoc = await getDoc(userDocRef);
+
       if (userDoc.exists()) {
         return userDoc.data();
       } else {
@@ -290,7 +329,6 @@ export function Timeline() {
     try {
       const docRef = await addDoc(collection(db, "timeline"), newPost);
       console.log("Post adicionado com sucesso! ID do documento: ", docRef.id);
-      carregaTml();
       // Limpe o estado do novo post após a submissão bem-sucedida
       setNewPost({
         deslikes: 0,
@@ -302,9 +340,10 @@ export function Timeline() {
         userSent: userId,
       });
       setNextPostId(nextPostId + 1);
+      window.location.reload();
     } catch (error) {
       console.error("Erro ao adicionar o post: ", error);
-    }
+    } 
   };
 
   // Function to handle search input change
@@ -332,7 +371,7 @@ export function Timeline() {
       // Listen for real-time updates and update searchResults state
       onSnapshot(searchQuery, (snapshot) => {
         const results = snapshot.docs.map((doc) => ({
-          id: doc.id,
+          id: doc.data,
           ...doc.data(),
         }));
 
@@ -381,6 +420,7 @@ export function Timeline() {
 
     return `tl-addPost ${classe}`;
   }
+
 
   return (
     <>
@@ -510,9 +550,11 @@ export function Timeline() {
         <div className="tl-container">
           <div className="tl-header">
             <div className="tl-header1">
-              <div className="tl-foto">
-                <ProfileImage selectedProfile={selectedProfile} />
-              </div>
+              <Link className="tl-foto" to="/perfil">
+                <div>
+                  <ProfileImage selectedProfile={selectedProfile} />
+                </div>
+              </Link>
               <div className="tl-logo">
                 <img
                   src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png"
@@ -526,7 +568,7 @@ export function Timeline() {
           </div>
           <div className="tl-main">
             <div className="tl-container">
-              {posts.map(({ post, userSentData, userMentionedData }) => (
+              {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
                 <PostDisplay
                   key={post.id}
                   post={post}
@@ -535,6 +577,7 @@ export function Timeline() {
                 />
               ))}
             </div>
+            {isFetching && <p>Carregando mais posts...</p>}
           </div>
         </div>
         <div className="tl-addpost" onClick={toggleVisibility}>
@@ -544,17 +587,27 @@ export function Timeline() {
           />
         </div>
         <div className="tl-footer">
-          <div>
-            <FontAwesomeIcon icon={faEnvelope} />
-          </div>
-          <div>
-            <FontAwesomeIcon icon={faBell} />
-          </div>
-          <div>
-            <FontAwesomeIcon icon={faQuestion} />
-          </div>
-          <div>
-            <FontAwesomeIcon icon={faQuestion} />
+          <div className="footerDm">
+            <Link className="botaoAcessar" to="/timeline">
+              <div>
+                <img id="home" src={homeIcon}></img>
+              </div>
+            </Link>
+            <Link className="botaoAcessar" to="/timeline">
+              <div>
+                <img id="pesquisa" src={pesquisaIcon}></img>
+              </div>
+            </Link>
+            <Link className="botaoAcessar" to="/timeline">
+              <div>
+                <img id="notificacao" src={notificacaoIcon}></img>
+              </div>
+            </Link>
+            <Link className="botaoAcessar" to="/dm">
+              <div>
+                <img id="dm" src={dmIcon}></img>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
