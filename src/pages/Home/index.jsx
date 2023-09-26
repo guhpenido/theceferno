@@ -3,8 +3,7 @@ import "./stylesHome.css";
 import { Link } from "react-router-dom";
 
 export function Home() {
-  const [menuVisible, setMenuVisible] = useState(false);
-
+  
   return (
     <>
       <div className="home">
@@ -22,20 +21,7 @@ export function Home() {
             </svg>
             <h1 className="logo-text-home">Ceferno</h1>
           </div>
-            <button 
-              style={{fontSize:'3rem', background:'none', color:'white'}} 
-              id="menuHamburguer" 
-              onClick={() => setMenuVisible(!menuVisible)}
-            > 
-              <img src="src\assets\menuHamburguer.svg"/> 
-            </button>
-          {menuVisible && (
-            <div className="header-items-home">
-              <Link style={{ textDecoration: 'none' }} to="/register">
-                <p href="" className="header-link-home">
-                  Acesse TheCeferno
-                </p>
-              </Link>
+            <div className="header-items">
               <div className="header-item">
               <Link style={{ textDecoration: 'none' }} to="/sobre">
                 <div className="item-title-home">
@@ -57,8 +43,12 @@ export function Home() {
                 </div>
                 </Link>
               </div>
+              <Link style={{ textDecoration: 'none' }} to="/register">
+                <p href="" className="header-link">
+                  Acesse TheCeferno
+                </p>
+              </Link>
             </div>
-          )}
         </header>
 
         <main className="main-home" id="main">

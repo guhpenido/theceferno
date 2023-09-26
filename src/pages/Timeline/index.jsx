@@ -47,7 +47,7 @@ import PostDisplay from "./post";
 import { addDoc } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-import "./stylesTimeline.css";
+// import "./stylesTimeline.css";
 
 export function Timeline() {
   const [selectedUser, setSelectedUser] = useState("");
@@ -698,6 +698,7 @@ export function Timeline() {
                   key={post.id}
                   post={post}
                   userSentData={userSentData}
+                  userId = {userId}
                   userMentionedData={userMentionedData}
                 />
               ))}
