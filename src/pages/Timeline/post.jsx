@@ -254,35 +254,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
       </div>
     );
   };
-
-  return (
-    // teste para deixar o fundo borrado quando abrir a denúncia
-    // <div className={`tl-box ${fundoVisible ? '' : 'FundoInvisible'}`} key={post.id}>
-    <div className="tl-box" key={post.id}>
-      <div className="tl-post">
-        <div className="tl-ps-header">
-          <div className="tl-ps-foto">
-            {imageSent && <img src={imageSent} alt="" />}
-          </div>
-          {post.userMentioned !== null ? (
-            <div className="tl-ps-nomes">
-              <p className="tl-ps-nome">
-                {nomeEnvio} <span className="tl-ps-user">@{userEnvio} </span>
-                <span className="tl-ps-tempo">• {timeAgo}</span>
-                <FontAwesomeIcon className="arrow" icon={faArrowRight} />
-                {userMentionedData && (
-                  <img src={userMentionedData.imageUrl} alt="" />
-                )}
-                {userMentionedData && (
-                  <>
-                    {" "}
-                    {userMentionedData.nome}{" "}
-                    <span className="tl-ps-userReceived">
-                      @{userMentionedData.usuario}{" "}
-                    </span>
-                  </>
-                )}
-              </p>
+  
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [showReplies, setShowReplies] = useState(false);
