@@ -52,7 +52,7 @@ import {
 } from "date-fns";
 // import "./stylesDenuncia.css";
 
-function PostDisplay({ post, userSentData, userMentionedData }) {
+function PostDisplay({ post, userSentData, userMentionedData, userId }) {
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
   const [likes, setLikes] = useState(post.likes);
   const postDate = new Date(post.time);
@@ -155,6 +155,7 @@ function PostDisplay({ post, userSentData, userMentionedData }) {
   const [box1Visible, setBox1Visible] = useState(false); //para mostrar a div denuncia conteudo indevido
   const [box2Visible, setBox2Visible] = useState(false); //para mostrar a div denuncia ser outra pessoa
   const [h1Visible, setH1Visible] = useState(false); //mostra os h1s que chamam as divs
+  const [fundoVisible, setfundoVisible] = useState(false); //mostra os h1s que chamam as divs
 
   const [denunciaId, setDenunciaId] = useState("");
   const [messageReportedId, setMessageReportedId] = useState("");
@@ -170,11 +171,11 @@ function PostDisplay({ post, userSentData, userMentionedData }) {
     const currentTime = new Date();
 
     const denuncia = await addDoc(denunciaCollectionRef, {
-        messageReportedId,
+        messageReportedId: post.postId,
         motive,
         time: currentTime.toString(),
-        userReported,
-        userReporting
+        userReported: userSentData.id,
+        userReporting: userId
       });
 
       const newDenunciaId = denuncia.id;
@@ -207,9 +208,11 @@ function PostDisplay({ post, userSentData, userMentionedData }) {
 
   //deixa e tira a visibilidade dos h1s
   const toggleh1Visibility = () => {
+    console.log("entrou")
     setH1Visible(!h1Visible);
     setBox1Visible(false);
     setBox2Visible(false);
+    setFundoVisible(!fundoVisible);
   };
 
   const handleMotiveChange = (event) => {
@@ -222,6 +225,7 @@ function PostDisplay({ post, userSentData, userMentionedData }) {
         <h1>Denúncia <button onClick={toggleh1Visibility}>X</button></h1>
         <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box1'> Está publicando conteúdo que não deveria estar no Ceferno  <button className="alternaOpcao" onClick={toggleBox1Visibility}> <img src="src\pages\Timeline\assets\icone.png"/> </button></label>
         <select className={`opcoesDenuncia box1 ${box1Visible ? 'visible' : 'DenunciaInvisible'}`} id="box1" name="box1" value={motive} onChange={handleMotiveChange}>
+          <option></option>
           <option value="Eh_Spam"> É spam </option>
           <option value="Nao_Gostei"> Simplesmente não gostei </option>
           <option value="Suicidio_Automutilacao_Disturbios"> Suicidio, automutilação ou disturbios alimentares </option>
@@ -235,8 +239,10 @@ function PostDisplay({ post, userSentData, userMentionedData }) {
           <option value="Fake_News"> Informação falsa </option>
         </select>
 
+        <br></br>
         <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box2'> Está fingindo ser outra pessoa  <button className="alternaOpcao" onClick={toggleBox2Visibility}> <img src="src\pages\Timeline\assets\icone.png"/> </button></label>       
          <select className={`opcoesDenuncia box2 ${box2Visible ? 'visible' : 'DenunciaInvisible'}`} id="box2" name="box2" value={motive} onChange={handleMotiveChange}>
+          <option></option>
           <option value="fingindo_Ser_Eu"> Eu </option>
           <option value="fingindo_Ser_Alguem_que_Sigo"> Alguém que sigo </option>
           <option value="fingindo_Ser_Uma_Celebridade_Figura_Publica"> Uma celebridade ou figura pública </option>
@@ -249,6 +255,8 @@ function PostDisplay({ post, userSentData, userMentionedData }) {
   };
 
   return (
+    // teste para deixar o fundo borrado quando abrir a denúncia
+    // <div className={`tl-box ${fundoVisible ? '' : 'FundoInvisible'}`} key={post.id}>
     <div className="tl-box" key={post.id}>
       <div className="tl-post">
         <div className="tl-ps-header">
@@ -284,10 +292,7 @@ function PostDisplay({ post, userSentData, userMentionedData }) {
             </div>
           )}
 
-          <div className='iconeDenuncia'>
-            <button onClick={toggleh1Visibility}> <img src="src\pages\Timeline\assets\alerta.png" alt="" /></button>
-          </div>
-          {renderDivStructure()}
+          
 
         </div>
         <div className="tl-ps-texto">
@@ -306,6 +311,8 @@ function PostDisplay({ post, userSentData, userMentionedData }) {
               <FontAwesomeIcon icon={faThumbsDown} />{" "}
               <span>{post.deslikes}</span>
             </div>
+            <img className='iconeDenuncia' onClick={toggleh1Visibility} src="src\pages\Timeline\assets\alerta.png" alt="imagem de um ícone de denúncia" />
+              {renderDivStructure()}
           </div>
         </div>
       </div>

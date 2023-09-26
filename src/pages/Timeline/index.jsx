@@ -571,6 +571,7 @@ export function Timeline() {
                   key={post.id}
                   post={post}
                   userSentData={userSentData}
+                  userId = {userId}
                   userMentionedData={userMentionedData}
                 />
               ))}
