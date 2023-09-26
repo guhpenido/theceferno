@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 // import "../bootstrap/css/bootstrap.min.css";
 // import "../bootstrap/js/bootstrap.bundle.min.js";
 // import "./stylesContato.css";
 import { Link } from "react-router-dom";
+import { addDoc } from "firebase/firestore";
+import { app } from "../../services/firebaseConfig";
+import { getFirestore } from "firebase/firestore";
+import axios from "axios";
+import {
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  collection,
+  where,
+  query,
+  orderBy,
+  limit,
+} from "firebase/firestore";
+
 
 export function Contato() {
+  const [success, setSuccess] = useState(false);
+
   return (
     <>
       <div className="contato">
@@ -24,24 +42,24 @@ export function Contato() {
           </div>
           <div className="header-items-contato">
             <div className="header-item-contato">
-            <Link style={{ textDecoration: 'none' }} to="/sobre">
-              <div className="item-title-contato">
-                <h1 className="title-text-contato">Sobre</h1>
-              </div>
+              <Link style={{ textDecoration: 'none' }} to="/sobre">
+                <div className="item-title-contato">
+                  <h1 className="title-text-contato">Sobre</h1>
+                </div>
               </Link>
             </div>
             <div className="header-item-contato">
-            <Link style={{ textDecoration: 'none' }} to="/tutorial">
-              <div className="item-title-contato">
-                <h1 className="title-text-contato">Tutorial</h1>
-              </div>
+              <Link style={{ textDecoration: 'none' }} to="/tutorial">
+                <div className="item-title-contato">
+                  <h1 className="title-text-contato">Tutorial</h1>
+                </div>
               </Link>
             </div>
             <div className="header-item-contato">
-            <Link style={{ textDecoration: 'none' }} to="/contato">
-              <div className="item-title-contato">
-                <h1 className="title-text-contato contato">Contato</h1>
-              </div>
+              <Link style={{ textDecoration: 'none' }} to="/contato">
+                <div className="item-title-contato">
+                  <h1 className="title-text-contato contato">Contato</h1>
+                </div>
               </Link>
             </div>
             <Link style={{ textDecoration: 'none' }} to="/register">
@@ -59,49 +77,58 @@ export function Contato() {
               </div>
 
               <div className="row gx-lg-0 ">
-                  <form
-                    action=""
-                    method="post"
-                    role="form"
-                    className="form"
-                  >
-                    <div className="row">
-                      <div className="col-12 col-md-6 form-group">
-                        <input
-                          type="text"
-                          name="name"
-                          className="form-control"
-                          id="name"
-                          placeholder="Seu Nome"
-                          required
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 form-group mt-3 mt-md-0">
-                        <input
-                          type="email"
-                          className="form-control"
-                          name="email"
-                          id="email"
-                          placeholder="Seu Email"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="form-group mt-3 mensagem">
-                      <textarea
-                        className="form-control-contato"
-                        name="message"
-                        rows="7"
-                        placeholder="Sugestão:"
+                <form
+                  action="https://formsubmit.co/theceferno@gmail.com"
+                  method="post"
+                  role="form"
+                  className="form"
+                >
+                  <div className="row">
+                    <div className="col-12 col-md-6 form-group">
+                      <input
+                        type="text"
+                        name="name"
+                        className="form-control"
+                        id="name"
+                        placeholder="Seu Nome"
                         required
-                      ></textarea>
+                      />
                     </div>
-                    <div className="text-center-contato">
-                      <button type="submit">Enviar sugestão</button>
+                    <div className="col-12 col-md-6 form-group mt-3 mt-md-0">
+                      <input
+                        type="email"
+                        className="form-control"
+                        name="email"
+                        id="email"
+                        placeholder="Seu Email"
+                        required
+                      />
                     </div>
-                  </form>
-                </div>
+                  </div>
+                  <div className="form-group mt-3 mensagem">
+                    <textarea
+                      className="form-control-contato"
+                      name="message"
+                      rows="7"
+                      placeholder="Sugestão:"
+                      required
+                    ></textarea>
+                  </div>
+                  <div className="text-center-contato">
+                    <button type="submit">Enviar sugestão</button>
+                  </div>
+                  <input type="hidden" name="_subject" value="Nova sugestão!"/>
+                  <input type="text" name="_honey" style={{display: 'none'}}/>
+                  <input type="hidden" name="_captcha" value="false"/>
+                  <input type="hidden" name="_next" value="http://localhost:5173/contato"/>
+                </form>
+                {success ? (
+                  <div className="alert-contato alert-successo-contato">
+                    Sua sugestão foi enviada com sucesso!
+                  </div>
+                ) : null}
               </div>
+            </div>
           </section>
         </main>
       </div>

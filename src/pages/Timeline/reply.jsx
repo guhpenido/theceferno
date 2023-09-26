@@ -36,12 +36,46 @@ import {
 
 const db = getFirestore(app);
 
+
+
 function ReplyDisplay({ reply}) {
+    const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
+    const [likes, setLikes] = useState(reply.likes);
     const postDate = new Date(reply.time);
     console.log(postDate)
     const now = new Date();
     let timeAgo;
 
+
+    const handleLikeClick = async () => {
+        // Incrementar o número de likes localmente
+        const newLikes = likes + 1;
+        setLikes(newLikes);
+    
+        // Atualizar o número de likes no Firebase
+        const q = query(collection(db, "timeline"), where("postId", "==", post.id));
+    
+        try {
+          const querySnapshot = await getDocs(q);
+      
+          if (!querySnapshot.empty) {
+            const postDoc = querySnapshot.docs[0]; // Supondo que haja apenas um documento correspondente
+      
+            // Atualizar o campo "likes" no documento
+            await updateDoc(doc(db, "timeline", postDoc.id), { likes: newLikes });
+            console.log("Likes atualizados no Firebase com sucesso!");
+          } else {
+            console.error("Post não encontrado no Firebase.");
+            // Reverter a contagem local de likes em caso de erro
+            setLikes(likes);
+          }
+        } catch (error) {
+          console.error("Erro ao atualizar likes no Firebase: ", error);
+          // Reverter a contagem local de likes em caso de erro
+          setLikes(likes);
+        }
+      };
+      
     // Calcule a diferença em segundos entre as datas
     const secondsAgo = Math.floor((now - postDate) / 1000);
 
@@ -137,6 +171,8 @@ function ReplyDisplay({ reply}) {
         }
     };
 
+    
+
     return (
         <>
             <div className="reply tl-box" key={reply.id} onClick={toggleReplies}>
@@ -177,8 +213,8 @@ function ReplyDisplay({ reply}) {
                                 <FontAwesomeIcon icon={faComment} onClick={toggleReply} />
                                 <span>{reply.replyCount}</span>
                             </div>
-                            <div className="tl-ps-like">
-                                <FontAwesomeIcon icon={faThumbsUp} /> <span>{reply.likes}</span>
+                            <div className="tl-ps-like" onClick={handleLikeClick}>
+                                <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes}</span>
                             </div>
                             <div className="tl-ps-deslike">
                                 <FontAwesomeIcon icon={faThumbsDown} />{" "}
