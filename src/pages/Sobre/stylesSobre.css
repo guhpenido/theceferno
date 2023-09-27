@@ -40,82 +40,82 @@ header {
   box-shadow: -44.3667984008789px 75.1484375px 999.86666870117188px 74.3667984008789px rgb(120, 19, 251) inset, 84.3667984008789px -41.1484375px 93.86666870117188px 0px rgba(86, 45, 136, 0.232) inset !important;
 }
 
-header .header-logo {
+header .header-logo-sobre {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
 
-header .header-logo svg {
+header .header-logo-sobre svg {
   height: 1.5rem;
   width: 1.5rem;
 }
 
-header .header-logo svg path:first-child {
+header .header-logo-sobre svg path:first-child {
   fill: white;
 } 
 
-header .header-logo svg path:last-child {
+header .header-logo-sobre svg path:last-child {
   fill: #7813FB;
 }
 
-header .header-logo .logo-text {
+header .header-logo-sobre .logo-text {
   font-size: 1.25rem;
   font-weight: 500;
   margin-left: 1rem;
   color: white;
 }
 
-header .header-items {
+header .header-items-sobre {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-header .header-items .header-item {
+header .header-items-sobre .header-item-sobre {
   margin: 0 1rem;
   position: relative;
   cursor: pointer;
 }
 
-header .header-items .header-item:first-child {
+header .header-items-sobre .header-item-sobre:first-child {
   margin-left: 0;
 }
 
-header .header-items .header-item:last-child {
+header .header-items-sobre .header-item-sobre:last-child {
   margin-right: 0;
 }
 
-header .header-items .header-item .item-title {
+header .header-items-sobre .header-item-sobre .item-title {
   display: flex;
   align-items: center;
 }
 
-header .header-items .header-item .item-title .title-text {
+header .header-items-sobre .header-item-sobre .item-title-sobre .title-text-sobre {
   font-size: 0.85rem;
   font-weight: 500;
   color: #d9d9d9;
 }
 
-header .header-items .header-item .item-title .title-text:hover {
+header .header-items-sobre .header-item-sobre .item-title-sobre .title-text-sobre:hover {
   color:#26199b;
 }
 
-header .header-items .header-item .item-title .title-icon {
+header .header-items-sobre .header-item-sobre .item-title-sobre .title-icon-sobre {
   display: flex;
   align-items: center;
 }
 
-header .header-items .header-item .item-title .title-icon svg {
+header .header-items-sobre .header-item-sobre .item-title-sobre .title-icon-sobre svg {
   height: 1rem;
   width: 1rem;
 }
-header .header-items .header-item .item-title .title-icon svg path {
+header .header-items-sobre .header-item-sobre .item-title-sobre .title-icon-sobre svg path {
   fill: #4763E4;
 }
 
-header .header-items .header-item ::before {
+header .header-items-sobre .header-item-sobre ::before {
   content: "";
   position: absolute;
   bottom: -0.35rem;
@@ -125,11 +125,11 @@ header .header-items .header-item ::before {
   transition: height 125ms ease-in-out;
 }
 
-header .header-items .header-item .sobre::before {
+header .header-items-sobre .header-item-sobre .sobre::before {
   height: 0.125rem;
 }
 
-header .header-link {
+header .header-link-sobre {
   padding: 0.5rem 1rem;
   border-radius: 1.5rem;
   border: 0.1rem solid rgba(255, 255, 255, 0.681);
@@ -140,7 +140,7 @@ header .header-link {
   margin-left: 1rem;
 }
 
-header .header-link:hover {
+header .header-link-sobre:hover {
   border: 0.15rem solid #4763E4;
   background: #00003d;
 }
@@ -154,14 +154,14 @@ main {
   box-shadow: -44.3667984008789px 75.1484375px 999.86666870117188px 74.3667984008789px rgb(120, 19, 251) inset, 84.3667984008789px -41.1484375px 93.86666870117188px 0px rgba(86, 45, 136, 0.232) inset !important;
 }
 
-main .home-section {
+main .home-section-sobre {
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 5rem;
 }
 
-main .home-section .home-title {
+main .home-section-sobre .home-title-sobre {
   width: 40rem;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
@@ -169,7 +169,7 @@ main .home-section .home-title {
   color: rgba(0, 0, 0, 0.65);
 }
 
-main .home-section .home-button {
+main .home-section-sobre .home-button-sobre {
   width: max-content;
   background-color: #4d01ff;
   font-family: "Poppins", sans-serif;
@@ -181,7 +181,7 @@ main .home-section .home-button {
   cursor: pointer;
 }
 
-main .home-section .home-button:hover {
+main .home-section-sobre .home-button-sobre:hover {
   transform: translateY(-0.25rem);
 }
 

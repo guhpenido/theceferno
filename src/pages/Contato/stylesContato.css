@@ -10,10 +10,7 @@
 
 
 body {
-  /* background-image: url("../../assets/backgroundHome.jpg") !important; */
-  background: linear-gradient(64deg, #772fcf 0%, #6e0ee48c 100%) !important;
-  box-shadow: -44.3667984008789px 75.1484375px 999.86666870117188px 74.3667984008789px rgb(120, 19, 251) inset, 84.3667984008789px -41.1484375px 93.86666870117188px 0px rgba(86, 45, 136, 0.232) inset !important;
-
+  /* background: #25064a9e; */
   background-size: cover; 
   background-repeat: no-repeat;
   background-position: center;
@@ -21,77 +18,153 @@ body {
   color: #d9d9d9;
 }
 
+
 header {
-  display: flex;
+  background: #4d08a1c8;
+    display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 3rem;
   font-family: "Poppins", sans-serif;
 }
+<<<<<<< HEAD
+
 header .header-logo {
+=======
+header .header-logo-contato {
+>>>>>>> production
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
+<<<<<<< HEAD
+
 header .header-logo svg {
+=======
+header .header-logo-contato svg {
+>>>>>>> production
   height: 1.5rem;
   width: 1.5rem;
 }
 
+<<<<<<< HEAD
+
 header .header-logo svg path:first-child {
   fill: white;
 } 
+
 header .header-logo svg path:last-child {
   fill: #7813FB;
 }
+
 header .header-logo .logo-text {
+=======
+header .header-logo-contato svg path:first-child {
+  fill: white;
+} 
+header .header-logo-contato svg path:last-child {
+  fill: #7813FB;
+}
+header .header-logo-contato .logo-text {
+>>>>>>> production
   font-size: 1.25rem;
   font-weight: 500;
   margin-left: 1rem;
   color: white;
 }
+<<<<<<< HEAD
+
 header .header-items {
+=======
+header .header-items-contato {
+>>>>>>> production
   display: flex;
   justify-content: center;
   align-items: center;
 }
+<<<<<<< HEAD
+
 header .header-items .header-item {
+=======
+header .header-items-contato .header-item-contato {
+>>>>>>> production
   margin: 0 1rem;
   position: relative;
   cursor: pointer;
 }
+<<<<<<< HEAD
+
 header .header-items .header-item:first-child {
   margin-left: 0;
 }
+
 header .header-items .header-item:last-child {
   margin-right: 0;
 }
+
 header .header-items .header-item .item-title {
   display: flex;
   align-items: center;
 }
+
 header .header-items .header-item .item-title .title-text {
+=======
+header .header-items-contato .header-item-contato:first-child {
+  margin-left: 0;
+}
+header .header-items-contato .header-item-contato:last-child {
+  margin-right: 0;
+}
+header .header-items-contato .header-item-contato .item-title-contato {
+  display: flex;
+  align-items: center;
+}
+header .header-items-contato .header-item-contato .item-title-contato .title-text-contato {
+>>>>>>> production
   font-size: 0.85rem;
   font-weight: 500;
   color: #d9d9d9;
 }
+<<<<<<< HEAD
+
 header .header-items .header-item .item-title .title-text:hover {
   color:#4763E4;
 }
+
 header .header-items .header-item .item-title .title-icon {
   display: flex;
   align-items: center;
 }
+
 header .header-items .header-item .item-title .title-icon svg {
   height: 1rem;
   width: 1rem;
 }
+
 header .header-items .header-item .item-title .title-icon svg path {
   fill: #4763E4;
 }
+
 header .header-items .header-item ::before {
+=======
+header .header-items-contato .header-item-contato .item-title-contato .title-text-contato:hover {
+  color:#4763E4;
+}
+header .header-items-contato .header-item-contato .item-title-contato .title-icon-contato {
+  display: flex;
+  align-items: center;
+}
+header .header-items-contato .header-item-contato .item-title-contato .title-icon-contato svg {
+  height: 1rem;
+  width: 1rem;
+}
+header .header-items-contato .header-item-contato .item-title-contato .title-icon-contato svg path {
+  fill: #4763E4;
+}
+header .header-items-contato .header-item-contato ::before {
+>>>>>>> production
   content: "";
   position: absolute;
   bottom: -0.35rem;
@@ -100,10 +173,19 @@ header .header-items .header-item ::before {
   background-color: rgba(255, 255, 255, 0.763);
   transition: height 125ms ease-in-out;
 }
+<<<<<<< HEAD
+
 header .header-items .header-item .contato::before {
   height: 0.125rem;
 }
+
 header .header-link {
+=======
+header .header-items-contato .header-item-contato .contato::before {
+  height: 0.125rem;
+}
+header .header-link-contato {
+>>>>>>> production
   padding: 0.5rem 1rem;
   border-radius: 1.5rem;
   border: 0.1rem solid rgba(255, 255, 255, 0.681);
@@ -113,28 +195,51 @@ header .header-link {
   transition: border 250ms ease-in-out;
   margin-left: 1rem;
 }
+<<<<<<< HEAD
+
 header .header-link:hover {
+=======
+header .header-link-contato:hover {
+>>>>>>> production
   border: 0.15rem solid #4763E4;
   background: #00003d;
 }
 
+
 main {
   padding: 5rem 10rem;
+  background: #4d08a1c8;
+
 }
+<<<<<<< HEAD
+
 main .home-section {
+=======
+main .home-section-contato {
+>>>>>>> production
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 5rem;
 }
+<<<<<<< HEAD
+
 main .home-section .home-title {
+=======
+main .home-section-contato .home-title-contato {
+>>>>>>> production
   width: 40rem;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   margin-bottom: 2rem;
   color: rgba(0, 0, 0, 0.65);
 }
+<<<<<<< HEAD
+
 main .home-section .home-button {
+=======
+main .home-section-contato .home-button-contato {
+>>>>>>> production
   width: max-content;
   background-color: #4763E4;
   font-family: "Poppins", sans-serif;
@@ -145,14 +250,25 @@ main .home-section .home-button {
   transition: transform 250ms ease-in-out;
   cursor: pointer;
 }
+<<<<<<< HEAD
+
 main .home-section .home-button:hover {
   transform: translateY(-0.25rem);
 }
 
+
 .container{
+=======
+main .home-section-contato .home-button-contato:hover {
+  transform: translateY(-0.25rem);
+}
+
+.container {
+>>>>>>> production
   width: 100%;
   height: 100%;
 }
+
 
 .contact .form {
   width: 100%;
@@ -163,11 +279,11 @@ main .home-section .home-button:hover {
   border-radius: 25px;
 }
 
-.contact .form .form-group {
+.contact  .form .form-group {
   padding-bottom: 8px;
 }
 
-.contact .form input,
+.contact  .form input,
 .contact .form textarea {
   border-radius: 25px;
   box-shadow: #000;
@@ -192,10 +308,13 @@ main .home-section .home-button:hover {
   padding: 10px 12px;
 }
 
-.mensagem{
+<<<<<<< HEAD
+=======
+.mensagem-contato{
   width: 100%;
 }
 
+>>>>>>> production
 .contact .form button[type=submit] {
   background: #4763E4;
   border: 0;
@@ -207,6 +326,10 @@ main .home-section .home-button:hover {
 
 .contact .form button[type=submit]:hover {
   background: #00276c;
+}
+
+.mensagem{
+  width: 100%;
 }
 
 /* 
@@ -229,40 +352,85 @@ main .home-section .home-button:hover {
     align-items: center;
     padding: 2rem;
   }
+<<<<<<< HEAD
+  
   header .header-items {
     flex-direction: column;
     margin-top: 2rem;
   }
+
   header .header-link {
+=======
+  header .header-items-contato {
+    flex-direction: column;
+    margin-top: 2rem;
+  }
+  header .header-link-contato {
+>>>>>>> production
     font-size: 14px;
     margin: 5px;
   }
+
   main {
     padding: 20px;
+    height: 60vh;
   }
+
   .contact .form {
     padding: 20px;
   }
+
   .contact .form input[type=text],
   .contact .form input[type=email],
   .contact .form textarea {
     padding: 10px 12px;
+    width: 80vw;
   }
+
   .contact .form button[type=submit] {
     padding: 12px 40px;
   }
+<<<<<<< HEAD
+
   header .header-logo {
+=======
+  header .header-logo-contato {
+>>>>>>> production
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
   }
+<<<<<<< HEAD
+
   header .header-logo svg {
     height: 40px;
     width: 40px;
   }
+
   header .header-logo .logo-text {
+=======
+  header .header-logo-contato svg {
+    height: 40px;
+    width: 40px;
+  }
+  header .header-logo-contato .logo-text {
+>>>>>>> production
     font-size: 18px;
     margin-top: 5px;
+    margin-left: -0.4vw;
+  }
+
+  .sobre {
+    margin-left: 3.3vw;    
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 1vh;
+  }
+
+  .text-center {
+    text-align: center;
   }
 }
