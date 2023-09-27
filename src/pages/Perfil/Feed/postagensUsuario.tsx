@@ -148,8 +148,8 @@ const PostagensUsuario: React.FC = () => {
                     replysCount: data.replysCount,
                     likes: data.likes,
                     dislikes: data.dislikes,
-                    userSent: data.userSent,
-                    mode: data.mode,
+                    // userSent: data.userSent,
+                    // mode: data.mode,
                 });
             });
 
@@ -160,9 +160,7 @@ const PostagensUsuario: React.FC = () => {
         }
     };
     
-     
-
-
+    
     // console.log(timelineItems); 
     return (
         <div>

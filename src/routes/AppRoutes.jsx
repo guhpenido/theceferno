@@ -10,7 +10,7 @@ import   Dm  from "../pages/Dm";
 import   Chat   from "../pages/Chat"; 
 import Layout from '../pages/Perfil/Layout';
 import Whisper from "../pages/Whisper";
-import {Timeline} from "../pages/Timeline";
+import {Timeline} from "../pages/Timeline/index";
 //
 export function AppRoutes() {
   return (

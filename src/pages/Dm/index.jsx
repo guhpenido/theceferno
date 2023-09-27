@@ -3,8 +3,8 @@ import homeIcon from "../../assets/home-icon.svg";
 import dmIcon from "../../assets/dm-icon.svg";
 import notificacaoIcon from "../../assets/notificacao-icon.svg";
 import pesquisaIcon from "../../assets/pesquisa-icon.svg";
-//import "./dmStyles.css"; 
-//import "./stylesDm.css"; 
+//import "./dmStyles.css";
+import "./stylesDm.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
@@ -22,7 +22,6 @@ import {
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
 
-
 // Conexao com o firebase
 
 const firebaseConfig = {
@@ -37,7 +36,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
-
 
 /*function AbrirChat(id){
     return <Link to={`/Chat/${id}`}></Link>;
@@ -73,7 +71,7 @@ function Dm() {
     if (userId) {
       fetchUserDataAndSetState(userId);
       RenderUserChats();
-    } 
+    }
   }, [userId]);
 
   const fetchUserDataAndSetState = async (userId) => {
@@ -81,7 +79,6 @@ function Dm() {
       const userLoggedDataResponse = await fetchUserData(userId);
       setUserLoggedData(userLoggedDataResponse);
       console.log(userLoggedData);
-      
     } catch (error) {
       console.error("Error fetching user data:", error.message);
       setIsLoading(false); // Even if there's an error, stop loading
@@ -99,7 +96,6 @@ function Dm() {
       return null;
     }
   };
-
 
   function RenderUserChats() {
     // Firestore collection reference for the "chat" collection
@@ -200,27 +196,28 @@ function Dm() {
           // Create the chat div and add it to the array
           chatDivs.push(
             <Link to={`/Chat/${chatPartnerID}`}>
-            <div className="chatDm" key={num}>
-              {/* Replace the following lines with appropriate data */}
-              <div className="imgProfilePic">
-                <img
-                  className="profilePicDm"
-                  src={partnerImg?partnerImg:cefernoIcon}
-                  alt="Profile Pic"
-                />
-              </div>
-              <div className="tudoMenosImg">
-                <div className="dadosPessoaisDm">
-                  <p className="boldDm">{partnerNome.split(' ')[0]}</p>
-                  <p className="userDm lightDm">@{partnerUsuario}</p>
-                  <p className="lightDm">•</p>
-                  <p className="horaUltimaMensagem lightDm">{horaEMinutos}</p>
+              <div className="chatDm" key={num}>
+                {/* Replace the following lines with appropriate data */}
+                <div className="imgProfilePic">
+                  <img
+                    className="profilePicDm"
+                    src={partnerImg ? partnerImg : cefernoIcon}
+                    alt="Profile Pic"
+                  />
                 </div>
-                <div className="mensagemDm">
-                  <p className="ultimaMensagem lightDm">{lastMessage.text}</p>
+                <div className="tudoMenosImg">
+                  <div className="dadosPessoaisDm">
+                    <p className="boldDm">{partnerNome.split(" ")[0]}</p>
+                    <p className="userDm lightDm">@{partnerUsuario}</p>
+                    <p className="lightDm">•</p>
+                    <p className="horaUltimaMensagem lightDm">{horaEMinutos}</p>
+                  </div>
+                  <div className="mensagemDm">
+                    <p className="ultimaMensagem lightDm">{lastMessage.text}</p>
+                  </div>
                 </div>
               </div>
-            </div></Link>
+            </Link>
           );
           num++;
           setIsLoading(false);
@@ -266,10 +263,10 @@ function Dm() {
 
   // Function to handle search input change
   const handleSearchInputChange = (event) => {
-    const searchValue = event.target.value
+    const searchValue = event.target.value;
     console.log("1");
     setSearchTerm(searchValue);
-    if(searchValue > ""){
+    if (searchValue > "") {
       setSearchTerm(searchValue);
 
       // Create a Firestore query to search for users by name
@@ -305,83 +302,85 @@ function Dm() {
         console.log(results2);
         setSearchResults((prevResults) => prevResults.concat(results2));
       });
+    } else {
+      setSearchResults([]);
     }
-    else {
-      setSearchResults([])
-    }
-    
   };
   return (
     <>
-      <div className="headerDm">
-        <img
-          className="profilePicDm"
-          ref={imageref}
-          //src={userLoggedData.imageUrl?userLoggedData.imageUrl:cefernoIcon}
-          //src="https://pbs.twimg.com/profile_images/1653051776298360833/bUymYMlt_400x400.jpg"
-          //src={userLoggedData.imageUrl}
-          //src={userId.imageUrl}
-          //src={user.imageUrl}
-        ></img>
-        <p id="msg">Mensagens</p>
-      </div>
-      <div id="blocoPesquisaDm" className="centralizarDm">
-        <input
-          className="inputPesquisaDm"
-          type="search"
-          placeholder="Quem você está procurando?"
-          value={searchTerm}
-          onChange={handleSearchInputChange}
-        ></input>
-        <TransitionGroup component="ul" className="ulDm">
-          {searchResults.map((user) => (
-            <CSSTransition
-              nodeRef={nodeRef}
-              timeout={500}
-              classNames="my-node"
-              key={user.id?user.id:user.uid + "1"}
-            >
-              <Link to={`/Chat/${user.id?user.id:user.uid}`}> 
-                <li
-                  className="listaResultadosPesquisaDm"
-                  key={user.id?user.id:user.uid}
-                  noderef={nodeRef}
-                >
-                  <img className="profilePicDm" src={user.imageUrl}></img>
-                  <div className="dadosPessoaisDm">
-                    <p className="nomeUserDm boldDm">{user.nome}</p>
-                    <p className="userDm lightDm">@{user.usuario}</p>
-                  </div>
-                </li>
-              </Link>
-            </CSSTransition>
+      <div className="dm-screen">
+        <div className="headerDm">
+          <img
+            className="profilePicDm"
+            ref={imageref}
+            //src={userLoggedData.imageUrl?userLoggedData.imageUrl:cefernoIcon}
+            //src="https://pbs.twimg.com/profile_images/1653051776298360833/bUymYMlt_400x400.jpg"
+            //src={userLoggedData.imageUrl}
+            //src={userId.imageUrl}
+            //src={user.imageUrl}
+          ></img>
+          <p id="msg">Mensagens</p>
+        </div>
+        <div id="blocoPesquisaDm" className="centralizarDm">
+          <input
+            className="inputPesquisaDm"
+            type="search"
+            placeholder="Quem você está procurando?"
+            value={searchTerm}
+            onChange={handleSearchInputChange}
+          ></input>
+          <TransitionGroup component="ul" className="ulDm">
+            {searchResults.map((user) => (
+              <CSSTransition
+                nodeRef={nodeRef}
+                timeout={500}
+                classNames="my-node"
+                key={user.id ? user.id : user.uid + "1"}
+              >
+                <Link to={`/Chat/${user.id ? user.id : user.uid}`}>
+                  <li
+                    className="listaResultadosPesquisaDm"
+                    key={user.id ? user.id : user.uid}
+                    noderef={nodeRef}
+                  >
+                    <img className="profilePicDm" src={user.imageUrl}></img>
+                    <div className="dadosPessoaisDm">
+                      <p className="nomeUserDm boldDm">{user.nome}</p>
+                      <p className="userDm lightDm">@{user.usuario}</p>
+                    </div>
+                  </li>
+                </Link>
+              </CSSTransition>
+            ))}
+          </TransitionGroup>
+        </div>
+        <div className="fullDmMessages">
+          {chats.map((chatDiv, index) => (
+            <div key={index + 1}>{chatDiv}</div>
           ))}
-        </TransitionGroup>
-      </div>
-      <div className="fullDmMessages">
-      {chats.map((chatDiv, index) => (
-        <div key={index + 1}>{chatDiv}</div>
-      ))}
-      </div>
-      <div className="footerDm">
-      <Link className="botaoAcessar" to="/timeline"><div>
-          <img id="home" src={homeIcon}></img>
         </div>
-        </Link>
-        <Link className="botaoAcessar" to="/timeline">
-        <div>
-          <img id="pesquisa" src={pesquisaIcon}></img>
+        <div className="footerDm">
+          <Link className="botaoAcessar" to="/timeline">
+            <div>
+              <img id="home" src={homeIcon}></img>
+            </div>
+          </Link>
+          <Link className="botaoAcessar" to="/timeline">
+            <div>
+              <img id="pesquisa" src={pesquisaIcon}></img>
+            </div>
+          </Link>
+          <Link className="botaoAcessar" to="/timeline">
+            <div>
+              <img id="notificacao" src={notificacaoIcon}></img>
+            </div>
+          </Link>
+          <Link className="botaoAcessar" to="/dm">
+            <div>
+              <img id="dm" src={dmIcon}></img>
+            </div>
+          </Link>
         </div>
-        </Link>
-        <Link className="botaoAcessar" to="/timeline">
-        <div>
-          <img id="notificacao" src={notificacaoIcon}></img>
-        </div>
-        </Link>
-        <Link className="botaoAcessar" to="/dm"><div>
-          <img id="dm" src={dmIcon}></img>
-        </div>
-        </Link>
       </div>
     </>
   );

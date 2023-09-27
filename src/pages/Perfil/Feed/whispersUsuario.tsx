@@ -60,6 +60,7 @@ const WhispersUsuario: React.FC = () => {
     const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
     const [noItemsFound, setNoItemsFound] = useState<boolean>(false);
 
+
     //pegar o id do usuario de outra página
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -73,13 +74,15 @@ const WhispersUsuario: React.FC = () => {
 
         return () => unsubscribe();
     }, [auth, navigate]);
-
     //pegar os whispers (mensagens que aquela pessoa postou/direcionou na página de alguém.)
+    
+    //pegar os whispers que a pessoa recebeu
     useEffect(() => {
         const q = query(collection(db, 'timeline'), where('userSent', '==', currentUser), orderBy('time', 'desc'));
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const items: TimelineItem[] = [];
+
             snapshot.forEach((doc) => {
                 const data = doc.data();
                 items.push({
@@ -113,7 +116,7 @@ const WhispersUsuario: React.FC = () => {
                     background: 'rgba(71, 99, 228, 0.2)',
                     marginBottom: '15px',
                     color: 'whitesmoke',
-                    textAlign: 'center', 
+                    textAlign: 'center',
                 }}>
                     Nada Encontrado
                 </div>
@@ -128,7 +131,7 @@ const WhispersUsuario: React.FC = () => {
                                     <span>@{nickname}</span>
                                 </Header>
                                 <Posts>
-                                    <p>{item.text}</p> {/* Adjust this according to your needs */}
+                                    <p>{item.text}</p>
                                 </Posts>
                                 <Icons>
                                     <Status>
