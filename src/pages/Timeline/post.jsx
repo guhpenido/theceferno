@@ -50,7 +50,7 @@ import {
   isYesterday,
   differenceInDays,
 } from "date-fns";
-// import "./stylesDenuncia.css";
+import "./stylesDenuncia.css";
 import ReplyDisplay from "./reply";
 
 function PostDisplay({ post, userSentData, userMentionedData, userId }) {
@@ -394,26 +394,6 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
 
           
 
-        </div>
-        <div className="tl-ps-texto">
-          <p>{post.text}</p>
-        </div>
-        <div className="tl-ps-footer">
-          <div className="tl-ps-opcoes">
-            <div className="tl-ps-reply">
-              <FontAwesomeIcon icon={faComment} />
-              <span>{post.replyCount}</span>
-            </div>
-            <div className="tl-ps-like" onClick={handleLikeClick}>
-              <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes}</span>
-            </div>
-            <div className="tl-ps-deslike">
-              <FontAwesomeIcon icon={faThumbsDown} />{" "}
-              <span>{post.deslikes}</span>
-            </div>
-            <img className='iconeDenuncia' onClick={toggleh1Visibility} src="src\pages\Timeline\assets\alerta.png" alt="imagem de um ícone de denúncia" />
-              {renderDivStructure()}
-          </div>
         </div>
       </div>
       {showReplies && (

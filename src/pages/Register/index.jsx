@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-//import "./stylesRegister.scss";
-import "./stylesRegister.css"; //descomentar apenas esse
+// import "./stylesRegister.scss";
+// import "./stylesRegister.css"; //descomentar apenas esse
 import { useNavigate } from 'react-router-dom';
 import { app } from "../../services/firebaseConfig";
 import {
@@ -25,7 +25,7 @@ import {  doc, setDoc } from "firebase/firestore"; // Import the doc function
 const db = getFirestore(app);
 
 export function Register() {
-  const history = useNavigate();
+  const navigate = useNavigate();
   // Estado inicial do formulário
   const [state, setState] = useState({
     email: "",
@@ -471,10 +471,10 @@ export function Register() {
         });
 
         alert("Usuario cadastrado!");
-        history.push('/login');
+        navigate("/login");
       } catch (error) {
         alert("Erro ao cadastrar usuário: " + error.message);
-        history.push('/register');
+        navigate("/register");
       }
     }
   };

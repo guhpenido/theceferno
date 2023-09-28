@@ -47,7 +47,7 @@ import PostDisplay from "./post";
 import { addDoc } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-// import "./stylesTimeline.css";
+import "./stylesTimeline.css";
 
 export function Timeline() {
   const [selectedUser, setSelectedUser] = useState("");
@@ -165,85 +165,85 @@ export function Timeline() {
       );
     }
 
-    if(selectedCurso !== "" && selectedInstituicao !== ""){
-      console.log(selectedInstituicao); 
-      console.log(selectedCurso);
-      const usersCollectionRef = collection(db, "users");
-      const usersQuery = query(usersCollectionRef, where("curso", "==", selectedCurso), where("instituicao", "==", selectedInstituicao));
+    // if(selectedCurso !== "" && selectedInstituicao !== ""){
+    //   console.log(selectedInstituicao); 
+    //   console.log(selectedCurso);
+    //   const usersCollectionRef = collection(db, "users");
+    //   const usersQuery = query(usersCollectionRef, where("curso", "==", selectedCurso), where("instituicao", "==", selectedInstituicao));
 
-      try {
-        const usersSnapshot = await getDocs(usersQuery);
-        const userIds = [];
+    //   try {
+    //     const usersSnapshot = await getDocs(usersQuery);
+    //     const userIds = [];
 
-        usersSnapshot.forEach((userDoc) => {
-          userIds.push(userDoc.id);
-        });
+    //     usersSnapshot.forEach((userDoc) => {
+    //       userIds.push(userDoc.id);
+    //     });
 
-        const postsCollectionRef = collection(db, "timeline");
-        postsQuery = query(
-          postsCollectionRef,
-          where("userSent", "in", userIds),
-          orderBy("postId", "desc"),
-          limit(10)
-        );
-        }catch (error) {
-          console.error("Erro ao buscar posts por curso:", error);
-        }
-      }
-
-
-      else if(selectedCurso !== ""){
-      const usersCollectionRef = collection(db, "users");
-      const usersQuery = query(usersCollectionRef, where("curso", "==", selectedCurso));
-
-      try {
-        const usersSnapshot = await getDocs(usersQuery);
-        const userIds = [];
-
-        usersSnapshot.forEach((userDoc) => {
-          userIds.push(userDoc.id);
-        });
-
-        const postsCollectionRef = collection(db, "timeline");
-        postsQuery = query(
-          postsCollectionRef,
-          where("userSent", "in", userIds),
-          orderBy("postId", "desc"),
-          limit(10)
-        );
-        }catch (error) {
-          console.error("Erro ao buscar posts por curso:", error);
-        }
-      }
+    //     const postsCollectionRef = collection(db, "timeline");
+    //     postsQuery = query(
+    //       postsCollectionRef,
+    //       where("userSent", "in", userIds),
+    //       orderBy("postId", "desc"),
+    //       limit(10)
+    //     );
+    //     }catch (error) {
+    //       console.error("Erro ao buscar posts por curso:", error);
+    //     }
+    //   }
 
 
-      else if(selectedInstituicao !== ""){
-      const usersCollectionRef = collection(db, "users");
-      const usersQuery = query(
-        usersCollectionRef,
-        where("instituicao", "==", selectedInstituicao)
-      );
+    //   else if(selectedCurso !== ""){
+    //   const usersCollectionRef = collection(db, "users");
+    //   const usersQuery = query(usersCollectionRef, where("curso", "==", selectedCurso));
 
-      try {
-        const usersSnapshot = await getDocs(usersQuery);
-        const userIds = [];
+    //   try {
+    //     const usersSnapshot = await getDocs(usersQuery);
+    //     const userIds = [];
 
-        usersSnapshot.forEach((userDoc) => {
-          userIds.push(userDoc.id);
-        });
+    //     usersSnapshot.forEach((userDoc) => {
+    //       userIds.push(userDoc.id);
+    //     });
+
+    //     const postsCollectionRef = collection(db, "timeline");
+    //     postsQuery = query(
+    //       postsCollectionRef,
+    //       where("userSent", "in", userIds),
+    //       orderBy("postId", "desc"),
+    //       limit(10)
+    //     );
+    //     }catch (error) {
+    //       console.error("Erro ao buscar posts por curso:", error);
+    //     }
+    //   }
 
 
-        const postsCollectionRef = collection(db, "timeline");
-        postsQuery = query(
-          postsCollectionRef,
-          where("userSent", "in", userIds),
-          orderBy("postId", "desc"),
-          limit(10)
-        );
-      } catch (error) {
-        console.error("Erro ao buscar posts por instituição:", error);
-      }
-      }
+    //   else if(selectedInstituicao !== ""){
+    //   const usersCollectionRef = collection(db, "users");
+    //   const usersQuery = query(
+    //     usersCollectionRef,
+    //     where("instituicao", "==", selectedInstituicao)
+    //   );
+
+    //   try {
+    //     const usersSnapshot = await getDocs(usersQuery);
+    //     const userIds = [];
+
+    //     usersSnapshot.forEach((userDoc) => {
+    //       userIds.push(userDoc.id);
+    //     });
+
+
+    //     const postsCollectionRef = collection(db, "timeline");
+    //     postsQuery = query(
+    //       postsCollectionRef,
+    //       where("userSent", "in", userIds),
+    //       orderBy("postId", "desc"),
+    //       limit(10)
+    //     );
+    //   } catch (error) {
+    //     console.error("Erro ao buscar posts por instituição:", error);
+    //   }
+    //   }
     
       try {
         const postsData = await getPostsFromFirestore(postsQuery);
@@ -508,23 +508,23 @@ export function Timeline() {
   }
 
   
-  const handleCursoChange = async (e) => {
-      const curso = e.target.value;
-      setSelectedCurso(curso);
-      carregaTml();
-  };
+  // const handleCursoChange = async (e) => {
+  //     const curso = e.target.value;
+  //     setSelectedCurso(curso);
+  //     carregaTml();
+  // };
 
-  const handleInstituicaoChange = async (e) => {      
-      const instituicao = e.target.value;
-      setSelectedInstituicao(instituicao);
-      console.log(instituicao);
-      carregaTml();
-  };
+  // const handleInstituicaoChange = async (e) => {      
+  //     const instituicao = e.target.value;
+  //     setSelectedInstituicao(instituicao);
+  //     console.log(instituicao);
+  //     carregaTml();
+  // };
 
 
   return (
     <>
-    <div className="tl-filters">
+    {/* <div className="tl-filters">
         <select
           className="tl-filter-select"
           onChange={handleCursoChange}
@@ -535,7 +535,7 @@ export function Timeline() {
           <option value="Eletrônica">Eletrônica</option>
           <option value="Meio Ambiente">Meio Ambiente</option>
           {/* Adicione outras opções de cursos aqui */}
-        </select>
+        {/* </select>
 
         <select
           className="tl-filter-select"
@@ -546,9 +546,9 @@ export function Timeline() {
           <option value="CEFET-MG">CEFET-MG</option>
           <option value="UFMG">UFMG</option>
           {/* Adicione outras opções de instituições aqui */}
-        </select>
+        {/* </select>
         <button onClick={() => carregaTml()}>Aplicar Filtro</button>
-      </div>
+      </div> */}
       <div className="tl-screen">
         {isVisible && (
           <div className={MudarClasse()}>
