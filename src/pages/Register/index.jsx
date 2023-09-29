@@ -482,7 +482,7 @@ export function Register() {
   return (
 
     <div className="login">
-      
+      <div className="registr-borda">
       <div className="container">
       <br></br><br></br>
         <header className="header">
@@ -770,6 +770,7 @@ export function Register() {
             </button>
           </div>
         </form>
+      </div>
       </div>
     </div>
   );

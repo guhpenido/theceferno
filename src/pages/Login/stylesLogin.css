@@ -1,4 +1,4 @@
-.login {
+/* .login {
   display: flex;
   background-color: #4d01ff;
   width: 40vw;
@@ -105,7 +105,7 @@ html {
   background-color: #210034;
 }
 
-/* Media queries para celular */
+
 @media only screen and (max-width: 480px) {
   .login {
     width: 100vw;
@@ -141,4 +141,4 @@ html {
   .container form .footer a {
     font-size: 12px;
   }
-}
+} */

@@ -1,12 +1,14 @@
 import React, {useState} from "react";
 // import "./stylesHome.css";
 import { Link } from "react-router-dom";
+import logoImg from "../../assets/logo.png";
 
 export function Home() {
   const [menuVisible, setMenuVisible] = useState(false);
 
   return (
     <>
+<<<<<<< Updated upstream
       <div className="home">
         <header className="header" id="header">
           <div className="header-logo">
@@ -70,10 +72,42 @@ export function Home() {
               elit, sed do eiusmod tempor <br></br>incididunt ut labore et <br></br>
               dolore magna aliqua.
             </h1>
+=======
+      <div className="home-screen">
+        <header className="header-home" id="header">
+           <div className="header-logo-home">
+            <img src={logoImg} alt="CEFERNO" className="home-logo" id="home-logo-Tlpequena"></img>
+          </div>    
+        </header>
+        <main className="main-home" id="main">
+          <section className="home-section" id="home">
+            <div><h1 className="home-titulo-Tlgrande">Tudo que deseja sussurar</h1></div>
+            <div className="home-main-Tlgrande"><div className="home-img-logo-Tlgrande"><img className="logo-home-header" src="src\assets\logoLivre2.png" id="home-logo-Tlgrande" alt="" /></div>
+            <div className="home-div-centro-Tlgrande">
+            <h2 className="home-title">
+              Rede Social Estudantil que permite a postagem de mensagens de texto de forma pública ou anônima
+            </h2>
+>>>>>>> Stashed changes
             <Link className="botaoAcessar" to="/register">
-              <button className="home-button">Acesse TheCeferno</button>
+              <button className="home-button home-botao-Tlpequena">Acesse TheCeferno</button>
             </Link>
+            <Link className="botaoAcessar" to="/register">
+              <button className="home-button home-botao-Tlgrande">Criar Conta</button>
+            </Link>
+            <p className="home-p-Tlgrande">Ao se inscrever você concorda com os <Link className="span-home" to="/register">Termos de condição</Link></p>  
+            <p className="home-p-ou-Tlgrande" id="p-home-Tlgrande-centralizar">ou</p>
+            <Link className="botaoAcessar" to="/login">
+              <button className="home-button home-botao-Tlgrande" id="home-botao-entrar">Entrar</button>
+            </Link>
+            
+            </div>
+            </div>
           </section>
+          <div className="home-footer">
+          <div><Link to="/sobre"><p className="title-text-home">Sobre</p></Link></div>
+          <div><Link  to="/tutorial"><p className="title-text-home">Tutorial</p></Link></div>   
+          <div><Link to="/contato"><p className="title-text-home">Contato</p></Link></div>  
+          </div>
         </main>
       </div>
     </>

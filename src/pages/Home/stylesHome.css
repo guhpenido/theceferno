@@ -1,13 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
-* {
-  padding: 0;
+*{
   margin: 0;
+  padding: 0;
   box-sizing: border-box;
-  list-style: none;
-  border: none;
-  outline: none;
 }
 
+<<<<<<< Updated upstream
 .home {
   background: linear-gradient(116deg, #190432 3.20%, #391466 12.68%, #472176b9 23.15%, #1e063d 41.21%, #060111 71.74%);
   background-size: cover; 
@@ -129,12 +126,39 @@ header .header-link:hover {
 
 main {
   padding: 5rem 10rem;
+=======
+body, html{
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+>>>>>>> Stashed changes
 }
 
-main .home-section {
+.home-screen{
+  background-color: #0c0c0c;
+  font-family: 'Inter';
+  height:100vh;
+  width: 100vw;
+  padding: 30px;
+  position: relative;
+}
+
+.titulo-home{
+  font-size: 40px;
+  color: #f9f9f9;
+} 
+
+#home-logo-Tlpequena{
   display: flex;
-  flex-direction: column;
+}
+
+.logo-text-home {
+  padding: 0 0 0 20px;
+}
+
+.home-title{
   justify-content: center;
+<<<<<<< Updated upstream
   padding: 5rem;
 }
 
@@ -192,13 +216,190 @@ main .home-section .home-button:hover {
   
   .header-logo {
     margin: -1rem 0 1rem -12rem;
-  }
+=======
+  color: #f9f9f9;
   
-  .header-logo .logo-text {
-    margin-top: 1rem;
-    font-size: 1.5rem !important;
+  /* align-content: center; */
+  align-items: center;
+  text-align: center;
+}
+
+
+.home-button{
+  all: unset;
+  margin: 30px 0 10px 0;
+  width: 100%;
+  background-color: #4763E4;
+  color: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.botaoAcessar{
+  text-decoration: none;
+}
+
+.home-section{
+  display: flex;
+  justify-content: center;
+  color: #f9f9f9;
+  height: 70vh;
+  align-items: center;
+  flex-direction: column;
+  
+}
+
+.home-footer{
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  justify-content: space-between;
+  left: 0;
+  padding: 30px;
+}
+
+.title-text-home{
+  color: #f9f9f980;
+  font-size: 15px;
+  text-decoration: none;
+  /* margin: 0px 20px 0px 20px; */
+}
+
+#home-logo-Tlgrande{
+  display: none;
+}
+
+.home-botao-Tlgrande{
+  display: none;
+}
+
+.home-p-ou-Tlgrande, .home-titulo-Tlgrande, .home-img-logo-Tlgrande, .home-p-Tlgrande{
+  display: none;
+}
+
+#home-botao-entrar{
+  color: #4763E4;
+  background-color: #0c0c0c;
+  border: 2px solid #4763E4;
+}
+
+.home-main-Tlgrande{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  margin-top: 10%;
+}
+
+.home-img-logo-Tlgrande{
+  padding: 20px;
+  width: 40%;
+}
+
+.home-div-centro-Tlgrande{
+  width: 60%;
+  padding-bottom: 20px;
+}
+
+.span-home{
+  color:  #4763E4;
+}
+
+
+@media screen and (max-width:1279px) and (min-width: 769px){
+  #home-logo-Tlgrande{
+    display: block;
+    margin: auto;;
+    width: 100%;
+    height: 100%;
   }
 
+  #home-logo-Tlpequena{
+    display: none!important; 
+  }
+
+  .home-botao-Tlgrande, .home-titulo-Tlgrande, .home-img-logo-Tlgrande{
+    display: flex;
+  }
+
+  .home-p-ou-Tlgrande, .home-p-Tlgrande{
+    display: flex;
+  }
+
+  .home-p-Tlgrande{
+    flex-direction: row;
+    text-align: center;
+    padding-bottom: 5px;
+  }
+
+  .home-botao-Tlpequena{
+    display: none!important;
+  }
+
+  .home-main-Tlgrande{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    align-items: center;
+    margin-top: 10%;
+  }
+
+  #p-home-Tlgrande-centralizar{
+    justify-content: center;
+  }
+
+  .home-footer{
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    padding: 30px;
+    justify-content: center;
+  }
+
+  .title-text-home{
+    padding: 0px 10px 0px 10px;
+  }
+
+  .home-section{
+    display: flex;
+    justify-content: center;
+    color: #f9f9f9;
+    height: 90vh;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .home-title{
+    justify-content: center;
+    color: #f9f9f9;
+    /* align-content: center; */
+    align-items: center;
+    text-align: center;
+>>>>>>> Stashed changes
+  }
+  
+  .home-button{
+    all: unset;
+    margin: 10px 0 10px 0;
+    width: 100%;
+    background-color: #4763E4;
+    color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+
+<<<<<<< Updated upstream
   .header-items {
     background-color: rgba(58, 10, 200, 0.141);
     border: 1px solid  rgb(94, 18, 187) ;
@@ -243,6 +444,10 @@ main .home-section .home-button:hover {
     margin-top: 5.5rem;
     margin-bottom: 3rem;
     margin-left: -2rem;
+=======
+  .home-section > div{
+    align-items: center;
+>>>>>>> Stashed changes
   }
 
   #menuHamburguer { 
