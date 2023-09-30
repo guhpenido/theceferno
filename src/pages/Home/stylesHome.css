@@ -139,6 +139,32 @@ body, html{
   display: none;
 }
 
+.home-botao-Tlgrande:hover{
+    box-shadow: 0 0 0 0.3125rem #7f5af010;
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: all 0.7s ease-in-out;
+}
+
+.home-botao-Tlpequena:hover{
+    box-shadow: 0 0 0 0.3125rem #7f5af010;
+    cursor: pointer;
+    transform: scale(1.01);
+    transition: all 0.7s ease-in-out;
+}
+
+.title-text-home:hover{
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: all 0.7s ease-in-out;
+}
+
+.span-home:hover{
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: all 0.7s ease-in-out;
+}
+
 @media screen and (max-width:1279px) and (min-width: 720px){
   /* #home-logo-Tlgrande{
     display: block;

@@ -75,6 +75,21 @@ body, html{
   font-size: 14px;
 }
 
+
+.title-text-sobre:hover{
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: all 0.7s ease-in-out;
+}
+
+.header-link-sobre:hover{
+  box-shadow: 0 0 0 0.3125rem #7f5af010;
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: all 0.7s ease-in-out;
+}
+
+
 @media screen and (max-width:768px) and (min-width: 481px){
 
   .header-link-sobre{
