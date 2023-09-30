@@ -1,0 +1,206 @@
+import React, { useEffect, useState, useRef } from 'react';
+import { Container, SearchWrapper, SearchInput, SearchIcon } from './styles';
+import { initializeApp } from "firebase/app";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { getFirestore } from "firebase/firestore";
+import { Link } from 'react-router-dom';
+import {
+  doc,
+  getDocs,
+  onSnapshot,
+  collection,
+  query,
+  where,
+  or,
+  orderBy,
+} from "firebase/firestore";
+import ViewUsers from './viewUsers';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
+  authDomain: "auth-ceferno.firebaseapp.com",
+  projectId: "auth-ceferno",
+  storageBucket: "auth-ceferno.appspot.com",
+  messagingSenderId: "388861107940",
+  appId: "1:388861107940:web:0bf718602145d96cc9d6f1",
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const SideBar = () => {
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const nodeRef = useRef(null);
+  const imageref = useRef(null);
+  const [isFetching, setIsFetching] = useState(false);
+  const [loadedPosts, setLoadedPosts] = useState([]);
+
+
+  useEffect(() => {
+    console.log('cheguei'); 
+    if (isFetching) {
+      carregaTml().then(() => {
+        setIsFetching(false);
+      });
+    }
+  }, [isFetching]);
+
+  const handleSearchInputChange = (event) => {
+    const searchValue = event.target.value;
+    // console.log("1");
+    setSearchTerm(searchValue);
+    if (searchValue > "") {
+      setSearchTerm(searchValue);
+
+      // Create a Firestore query to search for users by name
+      const usersRef = collection(db, "users");
+
+      // const searchQuery = query(usersRef, or( where("usuario", "==", searchValue), where("nome", "==", searchValue)));
+      const searchQuery = query(
+        usersRef,
+        where("usuario", ">=", searchValue),
+        where("usuario", "<=", searchValue + "\uf8ff")
+      );
+      const searchQuery2 = query(
+        usersRef,
+        where("nome", ">=", searchValue),
+        where("nome", "<=", searchValue + "\uf8ff")
+      );
+
+      // Listen for real-time updates and update searchResults state
+      onSnapshot(searchQuery, (snapshot) => {
+        const results = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        // console.log(results[0].imageUrl);
+        setSearchResults((prevResults) => prevResults.concat(results));
+      });
+
+      onSnapshot(searchQuery2, (snapshot) => {
+        const results2 = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        // console.log(results2);
+        setSearchResults((prevResults) => prevResults.concat(results2));
+      });
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  const getPostsFromFirestore = async (query) => {
+    const querySnapshot = await getDocs(query);
+    const postsData = [];
+
+    querySnapshot.forEach((doc) => {
+      const postData = {
+        id: doc.data().postId,
+        ...doc.data(),
+      };
+      postsData.push(postData);
+    });
+    return postsData;
+  };
+
+  const carregaTml = async () => {
+    if (isFetching) {
+      return;
+    }
+
+    setIsFetching(true);
+    const postsCollectionRef = collection(db, "timeline");
+    const lastLoadedPost =
+      loadedPosts.length > 0 ? loadedPosts[loadedPosts.length - 1].post : null;
+    const lastLoadedPostId = lastLoadedPost ? lastLoadedPost.id : "";
+    let postsQuery;
+
+    if (lastLoadedPostId) {
+      console.log("Latest post:" + lastLoadedPostId);
+      // Se houver um último post carregado, use startAfter para obter os próximos posts
+      postsQuery = query(
+        postsCollectionRef,
+        orderBy("postId", "desc"),
+        startAfter(lastLoadedPostId),
+        limit(10)
+      );
+    } else {
+      // Se não houver último post carregado, simplesmente carregue os 10 posts mais recentes
+      postsQuery = query(
+        postsCollectionRef,
+        orderBy("postId", "desc"),
+        limit(10)
+      );
+    }
+
+    try {
+      const postsData = await getPostsFromFirestore(postsQuery);
+      console.log({ postsData });
+      if (postsData.length === 0) {
+        console.log("Você já chegou ao fim");
+      } else {
+        const postsWithUserData = [];
+
+        // Aqui, substitua todo o estado de loadedPosts com os novos posts carregados
+        setLoadedPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
+        console.log("Novos posts carregados!");
+      }
+    } catch (error) {
+      console.error("Erro ao obter os posts:", error);
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  return (
+    <Container>
+      <SearchWrapper>
+        <div id="blocoPesquisaDm" className="centralizarDm">
+          <input
+            className="inputPesquisaDm"
+            type="search"
+            placeholder="Procure no CEFERNO"
+            value={searchTerm}
+            onChange={handleSearchInputChange}
+          ></input>
+          <TransitionGroup component="ul" className="ulDm">
+            <div style={{ textAlign: 'center', marginBottom: '2px' }}>
+              {
+                searchTerm
+              }
+            </div>
+            {searchResults.map((user) => (
+              <CSSTransition
+                nodeRef={nodeRef}
+                timeout={500}
+                classNames="my-node"
+                key={user.id ? user.id : user.uid + "1"}
+              >
+                <Link to="/VisitorPage" state={{ objetoUsuario: user, modo: 'public' }} style={{ color: 'white' }}>
+                  <li
+                    className="listaResultadosPesquisaDm"
+                    key={user.id ? user.id : user.uid}
+                    noderef={nodeRef}
+                  >
+                    <img className="profilePicDm" src={user.imageUrl}></img>
+                    <div className="dadosPessoaisDm">
+                      <p className="nomeUserDm boldDm">{user.nome}</p>
+                      <p className="userDm lightDm">@{user.usuario}</p>
+                    </div>
+                  </li>
+                </Link>
+              </CSSTransition>
+            ))}
+          </TransitionGroup>
+        </div>
+      </SearchWrapper>
+
+    </Container >
+  );
+}
+
+export default SideBar;

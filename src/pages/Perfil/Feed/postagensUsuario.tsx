@@ -1,12 +1,20 @@
 import React from "react";
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc, updateDoc, orderBy, getDocs } from 'firebase/firestore';
+import {
+    getFirestore,
+    doc,
+    getDoc,
+    updateDoc,
+    orderBy,
+    getDocs,
+    limit,
+} from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import ModalReact from 'react-modal';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import ModalReact from "react-modal";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { onSnapshot, collection, query, where } from 'firebase/firestore';
+import { onSnapshot, collection, query, where } from "firebase/firestore";
 import {
     Container,
     Body,
@@ -19,7 +27,15 @@ import {
     CommentIcon,
     RepublicationIcon,
     LikeIcon,
+    ImgConteiner,
+    HeaderName,
+    HeaderNameMentioned,
+    Postdays,
 } from "../Post/styles";
+import { parseISO, formatDistanceToNow } from "date-fns";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown } from "@fortawesome/fontawesome-free-solid";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
@@ -27,7 +43,7 @@ const firebaseConfig = {
     projectId: "auth-ceferno",
     storageBucket: "auth-ceferno.appspot.com",
     messagingSenderId: "388861107940",
-    appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
+    appId: "1:388861107940:web:0bf718602145d96cc9d6f1",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -42,9 +58,8 @@ type TimelineItem = {
     time: string;
     replysCount: number;
     likes: number;
-    dislikes: number;
+    deslikes: number;
 };
-
 
 const PostagensUsuario: React.FC = () => {
     const navigate = useNavigate();
@@ -52,9 +67,11 @@ const PostagensUsuario: React.FC = () => {
 
     const [currentUser, setCurrentUser] = useState<any | null>(null);
 
-    const [timelineItems, setTimelineItems] = useState<TimelineItem[]>([]); // Corrigido o tipo
+    const [timelineItems, setTimelineItems] = useState<TimelineItem[]>([]);
 
     const [userId, setUserId] = useState<string | null>(null);
+
+    const [isUserSent, setUsersent] = useState<string | null>(null);
 
     const [userLoggedData, setUserLoggedData] = useState<any>(null); // Adjust the type accordingly
     const [selectedProfile, setSelectedProfile] = useState<any>(null); // Adjust the type accordingly
@@ -64,15 +81,19 @@ const PostagensUsuario: React.FC = () => {
     const [nickname, setNickname] = useState<string | null>(null);
     const [newAvatar, setNewAvatar] = useState<string | null>(null);
     const [noItemsFound, setNoItemsFound] = useState<boolean>(false);
+    const [isMetionedDataAndPropsPosts, setMetionedDataAndPropsPosts] = useState<
+        any[]
+    >([]);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 setUserId(user.uid);
+                setUsersent(user.uid);
                 fetchUserDataAndSetState(user.uid);
                 fetchTimelineItemsForUser(user.uid);
             } else {
-                navigate('/login');
+                navigate("/login");
             }
         });
 
@@ -80,9 +101,11 @@ const PostagensUsuario: React.FC = () => {
     }, [auth, navigate]);
 
     useEffect(() => {
-        const unsubscribe = getPostsFromFirestore();
-        return () => unsubscribe();
-    }, []);
+        if (isUserSent) {
+            const unsubscribe = getPostsFromFirestore();
+            return () => unsubscribe();
+        }
+    }, [isUserSent]);
 
     useEffect(() => {
         if (userId) {
@@ -96,45 +119,110 @@ const PostagensUsuario: React.FC = () => {
                 const userLoggedDataResponse = await fetchUserData(userId);
                 if (userLoggedDataResponse) {
                     setUserLoggedData(userLoggedDataResponse);
+                    setUserName(userLoggedDataResponse.nome);
+                    setNickname(userLoggedDataResponse.usuario);
+                    setNewAvatar(userLoggedDataResponse.avatar);
                     setSelectedProfile(userLoggedDataResponse.usuario);
-                    setIsLoadingUser(false); // Data has been fetched, no longer loading
-                } else {
-                    alert("User data not found!"); // Show an alert when userLoggedDataResponse is null
+                    setIsLoadingUser(false);
                 }
             }
         } catch (error) {
-            console.error('Error fetching user data:', error.message);
+            console.error("Error fetching user data:", error.message);
         }
     };
 
     const getPostsFromFirestore = () => {
-        return onSnapshot(collection(db, 'timeline'), (snapshot) => {
-            const postsData: any[] = [];
+        const q = query(
+            collection(db, "timeline"),
+            where("userSent", "==", isUserSent),
+            orderBy("time", "desc")
+        );
+
+        return onSnapshot(q, (snapshot) => {
+            const postsDataFilter: any[] = [];
             snapshot.forEach((doc) => {
                 const postData = {
                     id: doc.id,
                     ...doc.data(),
                 };
-                postsData.push(postData);
+                postsDataFilter.push(postData);
             });
-            setPosts(postsData);
+
+            setPosts(postsDataFilter);
         });
     };
 
+    useEffect(() => {
+        const postsCollectionRef = collection(db, "timeline");
+        const postsQuery = query(
+            postsCollectionRef,
+            orderBy("time", "desc"),
+            limit(10)
+        );
+
+        const fetchData = async () => {
+            try {
+                const postsData = await getPostsFromFirestoreOnMetioneData(postsQuery);
+                const filteredPostData = postsData.filter(
+                    (element) => element.userMentioned !== ""
+                );
+                const userMentionedValues = filteredPostData.map(
+                    (element) => element.userMentioned
+                );
+
+                // console.log({userMentionedValues});
+
+                const postsWithUserDataArray = [];
+
+                for (const post of userMentionedValues) {
+                    let myUserMetioned = await fetchUserData(post);
+
+                    if (post !== null) {
+                        postsWithUserDataArray.push(myUserMetioned);
+                    }
+                }
+                setMetionedDataAndPropsPosts(postsWithUserDataArray);
+            } catch (error) {
+                console.error("Erro ao obter os posts:", error);
+            }
+        };
+
+        fetchData();
+    }, [db, posts]);
+
+    const getPostsFromFirestoreOnMetioneData = async (query) => {
+        const querySnapshot = await getDocs(query);
+        const postsData = [];
+        querySnapshot.forEach((doc) => {
+            const postData = {
+                id: doc.id,
+                ...doc.data(),
+            };
+            postsData.push(postData);
+        });
+
+        return postsData;
+    };
+
     const fetchUserData = async (userId: string) => {
-        const userDoc = await getDoc(doc(db, 'users', userId));
+        const userDoc = await getDoc(doc(db, "users", userId));
         if (userDoc.exists()) {
             return userDoc.data();
         } else {
-            console.log('User not found');
+            console.log("User not found");
             return null;
         }
     };
 
-    //pegar os whispers (mensagens que aquela pessoa foi direcionada)
-    const fetchTimelineItemsForUser = async (userId: string): Promise<TimelineItem[]> => {
+    const fetchTimelineItemsForUser = async (
+        userId: string
+    ): Promise<TimelineItem[]> => {
         try {
-            const q = query(collection(db, 'timeline'), where('userSent', '==', userId), orderBy('time', 'desc'));
+            const q = query(
+                collection(db, "timeline"),
+                where("userSent", "==", userId),
+                orderBy("time", "desc")
+            );
             const querySnapshot = await getDocs(q);
 
             const timelineItems: TimelineItem[] = [];
@@ -147,72 +235,106 @@ const PostagensUsuario: React.FC = () => {
                     time: data.time,
                     replysCount: data.replysCount,
                     likes: data.likes,
-                    dislikes: data.dislikes,
-                    // userSent: data.userSent,
-                    // mode: data.mode,
+                    deslikes: data.deslikes,
                 });
             });
 
+            setTimelineItems(timelineItems);
             return timelineItems;
         } catch (error) {
-            console.error('Error fetching timeline items:', error.message);
+            console.error("Error fetching timeline items:", error.message);
             return [];
         }
     };
-    
-    
-    // console.log(timelineItems); 
+
+    const defaultUserImageURL =
+        "https://media.discordapp.net/attachments/871728576972615680/1148261217840926770/logoanon.png?width=473&height=473";
+
+    const combinedData = posts.map((post) => {
+        const matchedUser = isMetionedDataAndPropsPosts.find(
+            (user) => user.id === post.userMentioned
+        );
+        return {
+            ...post,
+            userMentionedData: matchedUser || null,
+        };
+    });
+
+    // Renderize o array combinado
     return (
         <div>
             {timelineItems.length === 0 ? (
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    padding: '14px 16px',
-                    borderBottom: '1px solid #4763E4',
-                    maxWidth: '100%',
-                    flexShrink: 0,
-                    borderRadius: '5px',
-                    border: '2px solid #4763e4',
-                    background: 'rgba(71, 99, 228, 0.2)',
-                    marginBottom: '15px',
-                    color: 'whitesmoke',
-                    textAlign: 'center', 
-                }}>
-                    Nada Encontrado
-                </div>
+                <div>{/* Renderize a mensagem de "Nada Encontrado" aqui */}</div>
             ) : (
-                //
-                timelineItems.map((item) => (
-
-                    <Container key={item.postId}>
-                        {<Body>
-                            
-                            <Avatar as="img" src={newAvatar || ''} alt="Novo Avatar" />
-                            <Content>
+                combinedData.map((item) => (
+                    <Container key={item.id}>
+                        <Body>
+                            {/* Renderize os componentes com base em item */}
+                            <Avatar as="img" src={newAvatar || ""} alt="Novo Avatar" />
+                            <Icons>
                                 <Header>
-                                    <strong>{userName}</strong>
-                                    <span>@{nickname}</span>
+                                    <HeaderName>
+                                        <div>{userName}</div>
+                                        <div>@{nickname}</div>
+                                    </HeaderName>
+                                    <FontAwesomeIcon className="arrow" icon={faArrowDown} />
+                                    {item.userMentionedData && (
+                                        <div>
+                                            {item.userMentionedData.avatar ? (
+                                                <ImgConteiner
+                                                    src={item.userMentionedData.avatar}
+                                                    alt=""
+                                                />
+                                            ) : (
+                                                <ImgConteiner src={defaultUserImageURL} alt="" />
+                                            )}
+                                            <HeaderNameMentioned>
+                                                <div>{item.userMentionedData.nome}</div>
+                                                <div className="tl-ps-userReceived">
+                                                    @{item.userMentionedData.usuario}
+                                                </div>
+                                            </HeaderNameMentioned>
+                                            <Posts>
+                                                <span>
+                                                    O usuario {item.userMentionedData.nome} disse{" "}
+                                                    {item.text}
+                                                </span>
+                                            </Posts>
+                                        </div>
+                                    )}
+                                    {item.userMentioned && !item.userMentionedData && (
+                                        // Renderize algo se o usuário mencionado não for encontrado
+                                        <span>Usuário mencionado não encontrado</span>
+                                    )}
                                 </Header>
-                                <Posts>
-                                    <p>{item.text}</p>  
-                                </Posts>
-                                <Icons>
-                                    <Status>
-                                        <CommentIcon />
-                                        {item.replysCount}
-                                    </Status>
-                                    <Status>
-                                        <RepublicationIcon />
-                                        {item.likes}
-                                    </Status>
-                                    <Status>
-                                        <LikeIcon />
-                                        {item.dislikes}
-                                    </Status>
-                                </Icons>
-                            </Content>
-                        </Body>}
+                                <Status>
+                                    <CommentIcon />
+                                    {item.replysCount}
+                                </Status>
+                                <Status>
+                                    <RepublicationIcon />
+                                    Likes: {item.likes}
+                                </Status>
+                                <Status>
+                                    <LikeIcon />
+                                    Deslikes: {item.deslikes}
+                                </Status>
+                                <Status>
+                                    <Postdays>
+                                        <div>
+                                            {item.time
+                                                ? `Postado há ${formatDistanceToNow(
+                                                    parseISO(item.time),
+                                                    {
+                                                        addSuffix: true,
+                                                    }
+                                                )}`
+                                                : "Tempo não disponível"}
+                                        </div>
+                                    </Postdays>
+                                </Status>
+                            </Icons>
+                        </Body>
                     </Container>
                 ))
             )}
@@ -221,4 +343,3 @@ const PostagensUsuario: React.FC = () => {
 };
 
 export default PostagensUsuario;
-

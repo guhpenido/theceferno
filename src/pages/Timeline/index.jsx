@@ -47,7 +47,7 @@ import PostDisplay from "./post";
 import { addDoc } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-// import "./stylesTimeline.css";
+import "./stylesTimeline.css";
 
 export function Timeline() {
   const [selectedUser, setSelectedUser] = useState("");
@@ -71,10 +71,8 @@ export function Timeline() {
   const [loadedPosts, setLoadedPosts] = useState([]);
   const [hasLoadedPosts, setHasLoadedPosts] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
-  const [selectedCurso, setSelectedCurso] = useState("");
-  const [selectedInstituicao, setSelectedInstituicao] = useState("");
-  const [nextPostId, setNextPostId] = useState(0);
 
+  const [nextPostId, setNextPostId] = useState(0);
   const handleScroll = () => {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
@@ -110,14 +108,12 @@ export function Timeline() {
       if (user) {
         console.log(user);
         setUserId(user.uid);
-        console.log(user);
         fetchUserDataAndSetState(user.uid);
         carregaTml();
       } else {
         navigate("/login");
       }
     });
-    
 
     return () => unsubscribe();
   }, [auth, navigate]);
@@ -142,11 +138,8 @@ export function Timeline() {
     const lastLoadedPost =
       loadedPosts.length > 0 ? loadedPosts[loadedPosts.length - 1].post : null;
     const lastLoadedPostId = lastLoadedPost ? lastLoadedPost.id : "";
-    let postsQuery = null;
-    console.log(selectedInstituicao);
-    console.log(selectedCurso);
-
-
+    let postsQuery;
+  
     if (lastLoadedPostId) {
       console.log("Latest post:" + lastLoadedPostId);
       // Se houver um último post carregado, use startAfter para obter os próximos posts
@@ -164,115 +157,34 @@ export function Timeline() {
         limit(10)
       );
     }
-
-    if(selectedCurso !== "" && selectedInstituicao !== ""){
-      console.log(selectedInstituicao); 
-      console.log(selectedCurso);
-      const usersCollectionRef = collection(db, "users");
-      const usersQuery = query(usersCollectionRef, where("curso", "==", selectedCurso), where("instituicao", "==", selectedInstituicao));
-
-      try {
-        const usersSnapshot = await getDocs(usersQuery);
-        const userIds = [];
-
-        usersSnapshot.forEach((userDoc) => {
-          userIds.push(userDoc.id);
-        });
-
-        const postsCollectionRef = collection(db, "timeline");
-        postsQuery = query(
-          postsCollectionRef,
-          where("userSent", "in", userIds),
-          orderBy("postId", "desc"),
-          limit(10)
-        );
-        }catch (error) {
-          console.error("Erro ao buscar posts por curso:", error);
-        }
-      }
-
-
-      else if(selectedCurso !== ""){
-      const usersCollectionRef = collection(db, "users");
-      const usersQuery = query(usersCollectionRef, where("curso", "==", selectedCurso));
-
-      try {
-        const usersSnapshot = await getDocs(usersQuery);
-        const userIds = [];
-
-        usersSnapshot.forEach((userDoc) => {
-          userIds.push(userDoc.id);
-        });
-
-        const postsCollectionRef = collection(db, "timeline");
-        postsQuery = query(
-          postsCollectionRef,
-          where("userSent", "in", userIds),
-          orderBy("postId", "desc"),
-          limit(10)
-        );
-        }catch (error) {
-          console.error("Erro ao buscar posts por curso:", error);
-        }
-      }
-
-
-      else if(selectedInstituicao !== ""){
-      const usersCollectionRef = collection(db, "users");
-      const usersQuery = query(
-        usersCollectionRef,
-        where("instituicao", "==", selectedInstituicao)
-      );
-
-      try {
-        const usersSnapshot = await getDocs(usersQuery);
-        const userIds = [];
-
-        usersSnapshot.forEach((userDoc) => {
-          userIds.push(userDoc.id);
-        });
-
-
-        const postsCollectionRef = collection(db, "timeline");
-        postsQuery = query(
-          postsCollectionRef,
-          where("userSent", "in", userIds),
-          orderBy("postId", "desc"),
-          limit(10)
-        );
-      } catch (error) {
-        console.error("Erro ao buscar posts por instituição:", error);
-      }
-      }
-    
-      try {
-        const postsData = await getPostsFromFirestore(postsQuery);
-    
-        if (postsData.length === 0) {
-          console.log("Você já chegou ao fim");
-        } else {
-          const postsWithUserData = [];
-    
-          for (const post of postsData) {
-            const userSentData = await fetchUserData(post.userSent);
-            let userMentionedData = null;
-    
-            if (post.userMentioned !== null) {
-              userMentionedData = await fetchUserData(post.userMentioned);
-            }
-    
-            postsWithUserData.push({
-              post,
-              userSentData,
-              userMentionedData,
-            });
+  
+    try {
+      const postsData = await getPostsFromFirestore(postsQuery);
+  
+      if (postsData.length === 0) {
+        console.log("Você já chegou ao fim");
+      } else {
+        const postsWithUserData = [];
+  
+        for (const post of postsData) {
+          const userSentData = await fetchUserData(post.userSent);
+          let userMentionedData = null;
+  
+          if (post.userMentioned !== null) {
+            userMentionedData = await fetchUserData(post.userMentioned);
           }
-    
-          // Aqui, substitua todo o estado de loadedPosts com os novos posts carregados
-          setLoadedPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
-        console.log("Novos posts carregados!");
+  
+          postsWithUserData.push({
+            post,
+            userSentData,
+            userMentionedData,
+          });
         }
-      
+  
+        // Aqui, substitua todo o estado de loadedPosts com os novos posts carregados
+        setLoadedPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
+      console.log("Novos posts carregados!");
+      }
     } catch (error) {
       console.error("Erro ao obter os posts:", error);
     }finally{
@@ -507,48 +419,9 @@ export function Timeline() {
     return `tl-addPost ${classe}`;
   }
 
-  
-  const handleCursoChange = async (e) => {
-      const curso = e.target.value;
-      setSelectedCurso(curso);
-      carregaTml();
-  };
-
-  const handleInstituicaoChange = async (e) => {      
-      const instituicao = e.target.value;
-      setSelectedInstituicao(instituicao);
-      console.log(instituicao);
-      carregaTml();
-  };
-
 
   return (
     <>
-    <div className="tl-filters">
-        <select
-          className="tl-filter-select"
-          onChange={handleCursoChange}
-          value={selectedCurso}
-        >
-          <option value="">Filtrar por Curso</option>
-          <option value="Informática">Informática</option>
-          <option value="Eletrônica">Eletrônica</option>
-          <option value="Meio Ambiente">Meio Ambiente</option>
-          {/* Adicione outras opções de cursos aqui */}
-        </select>
-
-        <select
-          className="tl-filter-select"
-          onChange={handleInstituicaoChange}
-          value={selectedInstituicao}
-        >
-          <option value="">Filtrar por Instituição</option>
-          <option value="CEFET-MG">CEFET-MG</option>
-          <option value="UFMG">UFMG</option>
-          {/* Adicione outras opções de instituições aqui */}
-        </select>
-        <button onClick={() => carregaTml()}>Aplicar Filtro</button>
-      </div>
       <div className="tl-screen">
         {isVisible && (
           <div className={MudarClasse()}>
@@ -698,7 +571,6 @@ export function Timeline() {
                   key={post.id}
                   post={post}
                   userSentData={userSentData}
-                  userId = {userId}
                   userMentionedData={userMentionedData}
                 />
               ))}
