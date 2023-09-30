@@ -50,7 +50,7 @@ import {
   isYesterday,
   differenceInDays,
 } from "date-fns";
-// import "./stylesDenuncia.css";
+import "./stylesDenuncia.css";
 import ReplyDisplay from "./reply";
 import VisitorPage from "../Perfil/ProfilePage/VisitorPage";
 import { AppRoutes } from "../../routes/AppRoutes";
