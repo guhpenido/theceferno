@@ -4,134 +4,10 @@
   box-sizing: border-box;
 }
 
-<<<<<<< Updated upstream
-.home {
-  background: linear-gradient(116deg, #190432 3.20%, #391466 12.68%, #472176b9 23.15%, #1e063d 41.21%, #060111 71.74%);
-  background-size: cover; 
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 100%;
-  width: 100%;
-}
-
-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 3rem;
-  font-family: "Poppins", sans-serif;
-}
-
-header .header-logo {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-header .header-logo svg {
-  height: 1.5rem;
-  width: 1.5rem;
-}
-
-header .header-logo svg path:first-child {
-  fill: white;
-} 
-
-header .header-logo svg path:last-child {
-  fill: #4d01ff;
-}
-
-header .header-logo .logo-text {
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin-left: 1rem;
-  color: #4d01ff;
-}
-
-header .header-items {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-header .header-items .header-item {
-  margin: 0 1rem;
-  position: relative;
-  cursor: pointer;
-}
-
-header .header-items .header-item:first-child {
-  margin-left: 0;
-}
-
-header .header-items .header-item:last-child {
-  margin-right: 0;
-}
-
-header .header-items .header-item .item-title {
-  display: flex;
-  align-items: center;
-}
-
-header .header-items .header-item .item-title .title-text {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.785);
-}
-
-header .header-items .header-item .item-title .title-icon {
-  display: flex;
-  align-items: center;
-}
-
-header .header-items .header-item .item-title .title-icon svg {
-  height: 1rem;
-  width: 1rem;
-}
-
-header .header-items .header-item .item-title .title-icon svg path {
-  fill: #4d01ff;
-}
-
-header .header-items .header-item::before {
-  content: "";
-  position: absolute;
-  bottom: -0.35rem;
-  width: 100%;
-  height: 0;
-  background-color: #4d01ff;
-  transition: height 125ms ease-in-out;
-}
-
-header .header-items .header-item:hover::before {
-  height: 0.125rem;
-}
-
-header .header-link {
-  padding: 0.5rem 1rem;
-  border-radius: 1.5rem;
-  border: 0.15rem solid rgba(251, 251, 251, 0.125);
-  font-size: 0.85rem;
-  font-weight: 300;
-  color: #4d01ff;
-  transition: border 250ms ease-in-out;
-  margin-left: 1rem;
-}
-
-header .header-link:hover {
-  border: 0.15rem solid #4d01ff;
-}
-
-main {
-  padding: 5rem 10rem;
-=======
 body, html{
   width: 100vw;
   height: 100vh;
   overflow-x: hidden;
->>>>>>> Stashed changes
 }
 
 .home-screen{
@@ -149,7 +25,8 @@ body, html{
 } 
 
 #home-logo-Tlpequena{
-  display: flex;
+  display: block;
+    margin: auto;
 }
 
 .logo-text-home {
@@ -158,72 +35,12 @@ body, html{
 
 .home-title{
   justify-content: center;
-<<<<<<< Updated upstream
-  padding: 5rem;
-}
-
-main .home-section .home-title {
-  width: 40rem;
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  margin-bottom: 2rem;
-  color: rgba(255, 255, 255, 0.785);
-  position: relative;
-  margin-left: 30%;
-  margin-top: -4%;
-  text-align: justify;
-}
-
-.botaoAcessar {
-  margin-top: -3.5rem; /* Use valores de margem menores para espaçamento */
-  text-align: right; /* Alinhe à direita */
-}
-
-.titulo {
-  margin-top: -20%;
-  margin-left: 25% !important;
-  width: 40rem;
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  margin-bottom: 2rem;
-  color: rgba(255, 255, 255, 0.785);
-  position: relative;
-}
-
-main .home-section .home-button {
-  width: max-content;
-  background-color: #4d01ff;
-  font-family: "Poppins", sans-serif;
-  padding: 0.5rem 1rem;
-  color: white;
-  border-radius: 1rem;
-  font-weight: 500;
-  transition: transform 250ms ease-in-out;
-  cursor: pointer;
-}
-
-main .home-section .home-button:hover {
-  transform: translateY(-0.25rem);
-}
-
-
-@media (max-width: 400px) {
-  header {
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-  }
-  
-  .header-logo {
-    margin: -1rem 0 1rem -12rem;
-=======
   color: #f9f9f9;
-  
+  font-weight: 500;
   /* align-content: center; */
   align-items: center;
   text-align: center;
 }
-
 
 .home-button{
   all: unset;
@@ -287,18 +104,18 @@ main .home-section .home-button:hover {
   border: 2px solid #4763E4;
 }
 
+.home-titulo-Tlgrande{
+  font-size: 50px;
+}
+
 .home-main-Tlgrande{
   display: flex;
   justify-content: center;
   width: 100%;
   height: 100%;
   align-items: center;
-  margin-top: 10%;
-}
+  margin-top: 5%;
 
-.home-img-logo-Tlgrande{
-  padding: 20px;
-  width: 40%;
 }
 
 .home-div-centro-Tlgrande{
@@ -310,14 +127,25 @@ main .home-section .home-button:hover {
   color:  #4763E4;
 }
 
+#home-botao-criar-conta-Tlgrande{
+  margin-bottom: 15px;
+}
 
-@media screen and (max-width:1279px) and (min-width: 769px){
-  #home-logo-Tlgrande{
+.home-cefernoTextoImg{
+  display: none;
+}
+
+.div-home-cefernoFullImg{
+  display: none;
+}
+
+@media screen and (max-width:1279px) and (min-width: 720px){
+  /* #home-logo-Tlgrande{
     display: block;
     margin: auto;;
     width: 100%;
     height: 100%;
-  }
+  } */
 
   #home-logo-Tlpequena{
     display: none!important; 
@@ -327,14 +155,23 @@ main .home-section .home-button:hover {
     display: flex;
   }
 
-  .home-p-ou-Tlgrande, .home-p-Tlgrande{
+
+  .home-img-logo-Tlgrande{
+    padding: 20px 50px 20px 20px;
+    width: 40%;
+  }
+
+
+  .home-p-ou-Tlgrande{
     display: flex;
   }
 
   .home-p-Tlgrande{
     flex-direction: row;
     text-align: center;
-    padding-bottom: 5px;
+    padding-bottom: 20px;
+    justify-content: center;
+    display: block;
   }
 
   .home-botao-Tlpequena{
@@ -347,7 +184,8 @@ main .home-section .home-button:hover {
     width: 100%;
     height: auto;
     align-items: center;
-    margin-top: 10%;
+    margin-top: 5%;
+    align-items: flex-end;
   }
 
   #p-home-Tlgrande-centralizar{
@@ -383,12 +221,11 @@ main .home-section .home-button:hover {
     /* align-content: center; */
     align-items: center;
     text-align: center;
->>>>>>> Stashed changes
   }
   
   .home-button{
     all: unset;
-    margin: 10px 0 10px 0;
+    margin: 15px 0 0px 0;
     width: 100%;
     background-color: #4763E4;
     color: #f9f9f9;
@@ -399,58 +236,280 @@ main .home-section .home-button:hover {
     box-sizing: border-box;
   }
 
-<<<<<<< Updated upstream
-  .header-items {
-    background-color: rgba(58, 10, 200, 0.141);
-    border: 1px solid  rgb(94, 18, 187) ;
-    flex-direction: column;
-    margin-right: -10rem;
+  .home-cefernoTextoImg{
+    display: block;
+    width: 100%;
+    height: 50%;
   }
 
-  header .header-items .header-item {
-    margin: 0.5rem 0;
-  }
-
-  .header-link {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.785) !important;
-  }
-
-  main {
-    padding: 4rem;
-  }
-
-  main img {
-    margin: -3rem 0 0 auto;
-    max-width: 5rem !important;
-    max-height: 5rem !important;
-  }
-
-  main .titulo {
-    font-size: 4rem !important;
-    margin-top: 1rem;
-    margin-left: -16rem !important;
-  }
-
-  main .home-title {
-    font-size: 0.89em;
-    text-align: center !important;
-    margin-top: -1.5rem !important;
-    margin-left: -16rem !important;
-  }
-
-  main .home-button {
-    margin-top: 5.5rem;
-    margin-bottom: 3rem;
-    margin-left: -2rem;
-=======
-  .home-section > div{
+  .div-home-cefernoTextoImg{
+    display: flex;
     align-items: center;
->>>>>>> Stashed changes
+  }
+}
+
+@media screen and (min-width: 1279px) and (max-width: 1416px){
+  /* #home-logo-Tlgrande{
+    display: block;
+    margin: auto;;
+    width: 115%;
+    height: 115%;
+  } */
+
+  #home-logo-Tlpequena{
+    display: none!important; 
+  }
+  
+  .home-titulo-Tlgrande{
+    font-size: 42px;
   }
 
-  #menuHamburguer { 
-    margin: -5.5rem 0 3rem 18rem;
+  .home-botao-Tlgrande, .home-titulo-Tlgrande, .home-img-logo-Tlgrande{
+    display: flex;
+  }
+
+  .home-img-logo-Tlgrande{
+    padding: 20px 50px 20px 20px;
+    width: 40%;
+  }
+
+  .home-p-ou-Tlgrande, .home-p-Tlgrande{
+    display: flex;
+  }
+
+  .home-p-Tlgrande{
+    flex-direction: row;
+    text-align: center;
+    padding-bottom: 20px;
+    justify-content: center;
+    display: block;
+  }
+
+  .home-botao-Tlpequena{
+    display: none!important;
+  }
+
+  .home-main-Tlgrande{
+    display: flex;
+    justify-content: center;
+    width: 60vw;
+    height: auto;
+    align-items: center;
+    margin-top: 5%;
+    align-items: flex-end;
+  }
+
+  #p-home-Tlgrande-centralizar{
+    justify-content: center;
+  }
+
+  .home-footer{
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    padding: 30px;
+    justify-content: center;
+  }
+
+  .title-text-home{
+    padding: 0px 10px 0px 10px;
+  }
+
+  .home-section{
+    display: flex;
+    justify-content: center;
+    color: #f9f9f9;
+    height: 90vh;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .home-title{
+    justify-content: center;
+    color: #f9f9f9;
+    /* align-content: center; */
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .home-button{
+    all: unset;
+    margin: 15px 0 0px 0;
+    width: 100%;
+    background-color: #4763E4;
+    color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+
+  .home-cefernoTextoImg{
+    display: block;
+    width: 100%;
+    height: 50%;
+  }
+
+  .div-home-cefernoTextoImg{
+    display: none;
+    
+  }
+
+  .div-home-cefernoFullImg{
+    display: flex;
+    background-color: #4763e4;
+    width: 40%;
+  }
+
+  .home-cefernoFullImg{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 100px;
+  }
+
+  .home-super-screen{
+    display: flex;
+  }
+
+  .home-screen{
+    width: 60%;
+  }
+}
+
+@media screen and (min-width: 1416px){
+  /* #home-logo-Tlgrande{
+    display: block;
+    margin: auto;;
+    width: auto;
+    height: auto;
+  } */
+
+   #home-logo-Tlpequena{
+    display: none!important; 
+  }
+  
+  .home-titulo-Tlgrande{
+    font-size: 42px;
+  }
+  
+  .home-botao-Tlgrande, .home-titulo-Tlgrande, .home-img-logo-Tlgrande{
+    display: flex;
+  }
+
+  .home-img-logo-Tlgrande{
+    padding: 20px 50px 20px 20px;
+    width: 40%;
+  }
+
+  .home-p-ou-Tlgrande, .home-p-Tlgrande{
+    display: flex;
+  }
+
+  .home-p-Tlgrande{
+    flex-direction: row;
+    text-align: center;
+    padding-bottom: 20px;
+    justify-content: center;
+    display: block;
+  }
+
+  .home-botao-Tlpequena{
+    display: none!important;
+  }
+
+  .home-main-Tlgrande{
+    display: flex;
+    justify-content: center;
+    width: 60vw;
+    height: auto;
+    align-items: center;
+    margin-top: 5%;
+    align-items: flex-end;
+  }
+
+  #p-home-Tlgrande-centralizar{
+    justify-content: center;
+  }
+
+  .home-footer{
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    padding: 30px;
+    justify-content: center;
+  }
+
+  .title-text-home{
+    padding: 0px 10px 0px 10px;
+  }
+
+  .home-section{
+    display: flex;
+    justify-content: center;
+    color: #f9f9f9;
+    height: 90vh;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .home-title{
+    justify-content: center;
+    color: #f9f9f9;
+    /* align-content: center; */
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .home-button{
+    all: unset;
+    margin: 15px 0 0px 0;
+    width: 100%;
+    background-color: #4763E4;
+    color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+
+  .home-cefernoTextoImg{
+    display: block;
+    width: 100%;
+    height: 50%;
+  }
+
+  .div-home-cefernoTextoImg{
+    display: none;
+    
+  }
+
+  .div-home-cefernoFullImg{
+    display: flex;
+    background-color: #4763e4;
+    width: 40%;
+  }
+
+  .home-cefernoFullImg{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 150px;
+  }
+
+  .home-super-screen{
+    display: flex;
+  }
+
+  .home-screen{
+    width: 60%;
   }
 }

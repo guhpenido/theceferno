@@ -39,7 +39,7 @@ hr{
 }
 
 .btn{
-  background-color: rgb(36, 5, 76);
+  
   border-color: #4763E4;
   border-radius: 25px;
 }
@@ -61,14 +61,8 @@ header {
   padding: 2rem;
   font-family: "Poppins", sans-serif;
   background-color: #7813FB;
-<<<<<<< Updated upstream
-  /* box-shadow: -44.3667984008789px 75.1484375px 999.86666870117188px 94.3667984008789px rgb(120, 19, 251) inset, 84.3667984008789px -41.1484375px 93.86666870117188px 0px rgba(86, 45, 136, 0.232) inset !important; */
-}
-header .header-logo {
-=======
  }
 header .header-logo-tutorial {
->>>>>>> Stashed changes
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -206,16 +200,6 @@ main .home-section .home-button:hover {
   margin-bottom: 600px;
   align-items: center;
 }
-
-<<<<<<< Updated upstream
-.container-fluid, .section-header, .my-2, .row, .mt-4,.col-12, .col-sm-6, .col-md-6, .col-lg-6, .col-xl-6, .my-4{
-  /* background: linear-gradient(64deg, #772fcf 0%, #6e0ee48c 100%) !important; */
-=======
-.container-fluid, .section-header-tutorial, .my-2, .row, .mt-4,.col-12, .col-sm-6, .col-md-6, .col-lg-6, .col-xl-6, .my-4{
-
->>>>>>> Stashed changes
-  background:  none;
-  }
 
 .text-center{
   background: none;

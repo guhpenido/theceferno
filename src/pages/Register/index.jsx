@@ -21,6 +21,7 @@ import {
 } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {  doc, setDoc } from "firebase/firestore"; // Import the doc function
+import cefernoFullImg from "../../assets/ceferno_icon_full.png";
 
 const db = getFirestore(app);
 
@@ -481,12 +482,15 @@ export function Register() {
 
   return (
 
+    
     <div className="login">
+    <div className="registro-full-screen">
+    <div className="div-registro-cefernoFullImg"><img className="registro-cefernoFullImg" src={cefernoFullImg}></img></div>
       <div className="registr-borda">
       <div className="container">
       <br></br><br></br>
         <header className="header">
-          <img src={logoImg} alt="CEFERNO" className="logoImg" />
+          <img src={logoImg} alt="CEFERNO" className="registro-logoImg" />
           <span>Por favor digite suas informações de cadastro</span>
         </header>
         <form>
@@ -497,7 +501,7 @@ export function Register() {
             <h2>Etapa 01/04</h2>
             <br></br>
             <div className="inputContainer">
-              <label htmlFor="email">E-mail</label>
+              <label className="label-registro" htmlFor="email">E-mail</label>
               <input
                 type="text"
                 name="email"
@@ -773,5 +777,6 @@ export function Register() {
       </div>
       </div>
     </div>
+  </div>
   );
 }
