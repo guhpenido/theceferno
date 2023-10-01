@@ -17,7 +17,6 @@ import {
   Course,
 } from "./styles";
 
-
 import Feed from "../Feed";
 import { auth } from "firebase-admin";
 
@@ -41,7 +40,7 @@ const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const auth = getAuth(app);
   const [currentUser, setCurrentUser] = useState<any | null>(null);
-  const [userName, setUserName] = useState<string | null>(null);
+  const [userName, setUserName] = useState('');
   const [nickname, setNickname] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bio, setBio] = useState('');
@@ -136,7 +135,7 @@ const ProfilePage: React.FC = () => {
           const bannerUrlValue = userData['banner'] || ''; // Campo banner
           const newAvatarValue = userData['avatar'] || ''; // Campo avatar
           const nicknameValue = userData['usuario'] || '';
-          const userNameValue = userData['nome'] || '';
+          const userNameValue = userData['userName'] || '';
 
           // Verifique e defina o valor padrão para bannerUrl e newAvatarValue
           if (!bannerUrlValue) {
@@ -148,10 +147,11 @@ const ProfilePage: React.FC = () => {
 
           if (!newAvatarValue) {
             setNewAvatar(userData['imageUrl'] || '');
-            console.log(userData['banner']); 
+            // console.log(userData['banner']);
           } else {
             setNewAvatar(newAvatarValue);
           }
+
 
           setNickname(nicknameValue);
           setUserName(userNameValue);
@@ -221,6 +221,11 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+  //mudar o nome
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserName(event.target.value);
+  };
+
 
   const saveChanges = async () => {
     try {
@@ -238,6 +243,10 @@ const ProfilePage: React.FC = () => {
 
       if (bio) {
         updatedData.bio = bio;
+      }
+
+      if (userName) {
+        updatedData.nome = userName;
       }
 
       await updateDoc(userDocRef, updatedData);
@@ -269,11 +278,15 @@ const ProfilePage: React.FC = () => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
+  const estiloInput = {
+    display: 'none',
+  };
+
   return (
     <Container>
-      <Banner style={{ backgroundImage: `url(${newBanner})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <Banner style={{ backgroundImage: `url(${newBanner})`, backgroundSize: 'cover', height: 'auto', width: '100%' }}>
         {newAvatar ? (
-          <Avatar as="img" src={newAvatar} alt="Novo Avatar" style={{backgroundSize: 'cover', backgroundPosition: 'center'}} />
+          <Avatar as="img" src={newAvatar} alt="Novo Avatar" style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} />
         ) : (
           <Avatar />
         )}
@@ -311,12 +324,14 @@ const ProfilePage: React.FC = () => {
               },
             },
           }}>
+
+
           <input
             placeholder="Escolha uma foto de perfil"
             type="file"
             accept="image/*"
             onChange={handleAvatarChange}
-            style={{ marginBottom: '10px' }} // Espaçamento inferior
+            style={{ estiloInput }} // Espaçamento inferior
           />
           <input
             placeholder="Escolha uma foto de capa"
@@ -326,10 +341,14 @@ const ProfilePage: React.FC = () => {
             style={{ marginBottom: '10px' }} // Espaçamento inferior
           />
           <textarea
-            placeholder="Escreva algo sobre você..."
             value={bio}
             onChange={handleBioChange}
             style={{ marginBottom: '10px', resize: 'none', minHeight: '100px' }} // Espaçamento inferior, evita redimensionamento vertical e altura mínima
+          />
+          <textarea
+            value={userName}
+            onChange={handleNameChange}
+            style={{ marginBottom: '10px', resize: 'none', minHeight: '100px' }}
           />
           <button
             onClick={saveChanges}
@@ -351,15 +370,15 @@ const ProfilePage: React.FC = () => {
         <h2>@{nickname}</h2>
         <Tags>
           <Institution>
-            <p style={{ color: 'white' }}>{userInstituicao}</p>
+            <p style={{ color: 'white', textAlign: 'center' }}>{userInstituicao}</p>
           </Institution>
           <Course>
-            <p style={{ color: 'white' }}>{capitalizeFirstLetter(userCurso)}</p>
+            <p style={{ color: 'white', textAlign: 'center' }}>{capitalizeFirstLetter(userCurso)}</p>
           </Course>
         </Tags>
       </ProfileData>
       <Feed avatarUrl={newAvatar} />
-    </Container>
+    </Container >
   );
 };
 

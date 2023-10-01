@@ -18,6 +18,17 @@ export const Container = styled.div`
   }
 `;
 
+export const ContainerTopo = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: min(601px, 100%);
+
+  @media (min-width: 500px) {
+    border-left: 1px solid #4763E4;
+    border-right: 1px solid #4763E4;
+  }
+`;
+
 export const Header = styled.div`
   z-index: 2;
   position: sticky;

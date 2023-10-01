@@ -32,7 +32,7 @@ export function Login() {
         email,
         password
       );
-      const user = userCredential.user;
+      const user = userCredential.user; 
       alert("Usuário logado!");
       navigate("/timeline");
     } catch (error) {
