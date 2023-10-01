@@ -31,10 +31,11 @@ import {
     HeaderName,
     HeaderNameMentioned,
     Postdays,
+    Footer,
 } from "../Post/styles";
 import { parseISO, formatDistanceToNow } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { faArrowDown } from "@fortawesome/fontawesome-free-solid";
 
 const firebaseConfig = {
@@ -72,6 +73,8 @@ const PostagensUsuario: React.FC = () => {
     const [userId, setUserId] = useState<string | null>(null);
 
     const [isUserSent, setUsersent] = useState<string | null>(null);
+    const [likes, setLikes] = useState(null);
+    const [deslikes, setDesLikes] = useState<string | null>(null);
 
     const [userLoggedData, setUserLoggedData] = useState<any>(null); // Adjust the type accordingly
     const [selectedProfile, setSelectedProfile] = useState<any>(null); // Adjust the type accordingly
@@ -251,88 +254,180 @@ const PostagensUsuario: React.FC = () => {
         "https://media.discordapp.net/attachments/871728576972615680/1148261217840926770/logoanon.png?width=473&height=473";
 
     const combinedData = posts.map((post) => {
+        // console.log({posts}); 
         const matchedUser = isMetionedDataAndPropsPosts.find(
             (user) => user.id === post.userMentioned
         );
+        // setLikes(post.likes);
         return {
             ...post,
             userMentionedData: matchedUser || null,
         };
     });
 
+    const handleLikeClick = async (itemLike, IdPost) => {
+        const postLikes = posts.map((post) => {
+            const { likes, deslikes, postId } = post;
+
+            return {
+                likes,
+                deslikes,
+                postId,
+            };
+        });
+
+        const filterLike = postLikes.filter((post) => post.postId === IdPost);
+
+        const sumeLikes = filterLike.map((post) => {
+            const { postId } = post;
+
+            let sumLikes = post.likes + 1;
+
+            return { sumLikes, postId };
+        });
+
+        const q = query(
+            collection(db, "timeline"),
+            where("postId", "==", sumeLikes[0].postId)
+        );
+
+        try {
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                const postDoc = querySnapshot.docs[0];
+
+                await updateDoc(doc(db, "timeline", postDoc.id), {
+                    likes: sumeLikes[0].sumLikes,
+                });
+
+                console.log("Likes atualizados no Firebase com sucesso!");
+            } else {
+                console.error("Post não encontrado no Firebase.");
+                setLikes(likes);
+            }
+        } catch (error) {
+            console.error("Erro ao atualizar likes no Firebase: ", error);
+            setLikes(likes);
+        }
+    };
+
+
+    const handleDeslikes = async (itemLike, IdPost) => {
+
+        console.log({ posts });
+
+        const postLikes = posts.map((post) => {
+            const { likes, deslikes, postId } = post;
+
+            return {
+                likes,
+                deslikes,
+                postId,
+            };
+        });
+
+        const filterLike = postLikes.filter((post) => post.postId === IdPost);
+
+        const sumeDeslikes = filterLike.map((post) => {
+            const { postId } = post;
+
+            let sumDeslikes = post.deslikes + 1;
+
+            return { sumDeslikes, postId };
+        });
+
+        const q = query(
+            collection(db, "timeline"),
+            where("postId", "==", sumeDeslikes[0].postId)
+        );
+
+        try {
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                const postDoc = querySnapshot.docs[0];
+
+                await updateDoc(doc(db, "timeline", postDoc.id), {
+                    deslikes: sumeDeslikes[0].sumDeslikes,
+                });
+
+                console.log("Deslikes atualizados no Firebase com sucesso!");
+            } else {
+                console.error("Post não encontrado no Firebase.");
+                setDesLikes(deslikes);
+            }
+        } catch (error) {
+            console.error("Erro ao atualizar Deslikes no Firebase: ", error);
+            setDesLikes(deslikes);
+        }
+    };
     // Renderize o array combinado
     return (
         <div>
-            {timelineItems.length === 0 ? (
+            {combinedData.length === 0 ? (
                 <div>{/* Renderize a mensagem de "Nada Encontrado" aqui */}</div>
             ) : (
                 combinedData.map((item) => (
                     <Container key={item.id}>
                         <Body>
-                            {/* Renderize os componentes com base em item */}
-                            <Avatar as="img" src={newAvatar || ""} alt="Novo Avatar" />
                             <Icons>
                                 <Header>
+                                    <Avatar as="img" src={newAvatar || ""} alt="Novo Avatar" />
                                     <HeaderName>
                                         <div>{userName}</div>
                                         <div>@{nickname}</div>
+                                        <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                                        {item.userMentionedData && (
+                                            <div>
+                                                <HeaderNameMentioned>
+                                                <Avatar as="img" src={item.userMentionedData.imageUrl || ""} alt="Novo Avatar" />
+                                                    <div>{item.userMentionedData.nome}</div>
+                                                    <div className="tl-ps-userReceived">
+                                                        @{item.userMentionedData.usuario}
+                                                    </div>
+                                                </HeaderNameMentioned>
+                                            </div>
+                                        )}
+                                        {item.userMentioned && !item.userMentionedData && (
+                                            // Renderize algo se o usuário mencionado não for encontrado
+                                            <span>Usuário mencionado não encontrado</span>
+                                        )}
                                     </HeaderName>
-                                    <FontAwesomeIcon className="arrow" icon={faArrowDown} />
-                                    {item.userMentionedData && (
-                                        <div>
-                                            {item.userMentionedData.avatar ? (
-                                                <ImgConteiner
-                                                    src={item.userMentionedData.avatar}
-                                                    alt=""
-                                                />
-                                            ) : (
-                                                <ImgConteiner src={defaultUserImageURL} alt="" />
-                                            )}
-                                            <HeaderNameMentioned>
-                                                <div>{item.userMentionedData.nome}</div>
-                                                <div className="tl-ps-userReceived">
-                                                    @{item.userMentionedData.usuario}
-                                                </div>
-                                            </HeaderNameMentioned>
-                                            <Posts>
-                                                <span>
-                                                    O usuario {item.userMentionedData.nome} disse{" "}
-                                                    {item.text}
-                                                </span>
-                                            </Posts>
-                                        </div>
-                                    )}
-                                    {item.userMentioned && !item.userMentionedData && (
-                                        // Renderize algo se o usuário mencionado não for encontrado
-                                        <span>Usuário mencionado não encontrado</span>
-                                    )}
                                 </Header>
-                                <Status>
-                                    <CommentIcon />
-                                    {item.replysCount}
-                                </Status>
-                                <Status>
-                                    <RepublicationIcon />
-                                    Likes: {item.likes}
-                                </Status>
-                                <Status>
-                                    <LikeIcon />
-                                    Deslikes: {item.deslikes}
-                                </Status>
-                                <Status>
-                                    <Postdays>
-                                        <div>
-                                            {item.time
-                                                ? `Postado há ${formatDistanceToNow(
-                                                    parseISO(item.time),
-                                                    {
-                                                        addSuffix: true,
-                                                    }
-                                                )}`
-                                                : "Tempo não disponível"}
-                                        </div>
-                                    </Postdays>
-                                </Status>
+                                <Posts>
+                                    <div>
+                                        {item.text}
+                                    </div>
+                                </Posts>
+                                <Footer>
+                                    <Status>
+                                        <CommentIcon />
+                                        {item.replysCount}
+                                    </Status>
+                                    <Status>
+                                        <FontAwesomeIcon icon={faThumbsUp} onClick={() => handleLikeClick(item.likes, item.postId)} />
+                                        {item.likes}
+                                    </Status>
+                                    <Status>
+                                        <FontAwesomeIcon icon={faThumbsDown} onClick={() => handleDeslikes(item.deslikes, item.postId)} />
+                                        {item.deslikes}
+                                    </Status>
+                                    <Status>
+                                        <Postdays>
+                                            <div>
+                                                {item.time
+                                                    ? `${formatDistanceToNow(
+                                                        parseISO(item.time),
+                                                        {
+                                                            addSuffix: true,
+                                                        }
+                                                    )}`
+                                                    : "Tempo não disponível"}
+                                            </div>
+                                        </Postdays>
+                                    </Status>
+                                </Footer>
                             </Icons>
                         </Body>
                     </Container>

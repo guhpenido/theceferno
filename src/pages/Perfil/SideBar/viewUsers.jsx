@@ -3,7 +3,7 @@ import { Container } from './styles';
 
 const ViewUsers = ({ searchResults }) => {
 
-    console.log(searchResults); 
+    // console.log(searchResults);
     return (
         <Container>
         </Container >

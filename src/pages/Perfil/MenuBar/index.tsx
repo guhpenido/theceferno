@@ -153,11 +153,9 @@ const MenuBar: React.FC = () => {
     return (
         <Container>
             <TopSide>
-                <Logo as="img" src={newAvatar} alt="Novo Avatar" style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} />
-                <MenuButton>
-                    <SearchIcon />
-                    <span >Pesquisa</span>
-                </MenuButton>
+                <Link to="/timeline">
+                    <Logo as="img" src={newAvatar} alt="Novo Avatar" style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                </Link>
                 <MenuButton>
                     <IconWhisper />
                     <span>Sussurro</span>
@@ -166,11 +164,9 @@ const MenuBar: React.FC = () => {
                     <IconBell />
                     <span>Notificações</span>
                 </MenuButton>
-                <Link to="/dm">
+                <Link to="/dm" style={{ textDecoration: 'none' }}>
                     <MenuButton>
-                        <Link to="/dm">
-                            <EmailIcon />
-                        </Link>
+                        <EmailIcon />
                         <span>Mensagens</span>
                     </MenuButton>
                 </Link>

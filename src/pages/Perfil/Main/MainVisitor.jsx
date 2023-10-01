@@ -14,7 +14,7 @@ const MainVisitor = ({ objetoUsuario }) => {
         const auth = getAuth();
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log('Usuário atual:', user);
+                // console.log('Usuário atual:', user);
                 setCurrentUser(user);
             } else {
                 console.log('Nenhum usuário autenticado.');
@@ -23,7 +23,7 @@ const MainVisitor = ({ objetoUsuario }) => {
     }, []);
 
     const handleButtonClick = () => {
-        window.location.href = "/timeline";
+        window.location.href = "/perfil";
     };
 
 

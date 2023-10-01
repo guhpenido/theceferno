@@ -116,7 +116,6 @@ const WhispersUsuario: React.FC = () => {
     const postsQuery = query(
       postsCollectionRef,
       orderBy("time", "desc"),
-      limit(10)
     );
 
     const fetchData = async () => {
@@ -159,7 +158,7 @@ const WhispersUsuario: React.FC = () => {
       postsData.push(postData);
     });
 
-    console.log(postsData);
+    // console.log(postsData);
 
     return postsData;
   };

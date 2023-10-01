@@ -50,13 +50,12 @@ import {
   isYesterday,
   differenceInDays,
 } from "date-fns";
-import "./stylesDenuncia.css";
+// import "./stylesDenuncia.css";
 import ReplyDisplay from "./reply";
 import VisitorPage from "../Perfil/ProfilePage/VisitorPage";
 import { AppRoutes } from "../../routes/AppRoutes";
 
 function PostDisplay({ post, userSentData, userMentionedData, userId }) {
-  console.log({post}); 
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
   const [likes, setLikes] = useState(post.likes);
   const postDate = new Date(post.time);
@@ -64,7 +63,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
   let timeAgo;
   {/*function PostDisplay({ post, userSentData, userMentionedData }) {
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
-  const [likes, setLikes] = useState(post.likes); // Estado para controlar o número de likes
+  const [likes, setLikes] = useState(post.likes); // Estado fpara controlar o número de likes
 
   // Função para verificar se o usuário já curtiu o post
   const checkIfUserLikedPost = async () => {
@@ -184,7 +183,6 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
 
     const newDenunciaId = denuncia.id;
     await updateDoc(denuncia, { denunciaId: newDenunciaId });
-    console.log(denuncia);
     toggleh1Visibility();
   }
 
@@ -212,7 +210,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
 
   //deixa e tira a visibilidade dos h1s
   const toggleh1Visibility = () => {
-    console.log("entrou")
+    // console.log("entrou")
     setH1Visible(!h1Visible);
     setBox1Visible(false);
     setBox2Visible(false);
@@ -317,7 +315,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
 
     try {
       const response = await addDoc(collection(db, "replys"), newReplyData);;
-      console.log("Resposta enviada com sucesso com ID: ", response.id);
+      // console.log("Resposta enviada com sucesso com ID: ", response.id);
       setIsReplying(false);
       setReplyText("");
     } catch (error) {

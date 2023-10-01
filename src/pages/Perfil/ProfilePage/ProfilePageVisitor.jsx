@@ -37,7 +37,7 @@ ModalReact.setAppElement('#root');
 
 const ProfilePageVisitor = ({ objetoUsuario }) => {
 
-    console.log(objetoUsuario); 
+    // console.log(objetoUsuario); 
     const navigate = useNavigate();
     const auth = getAuth(app);
     const [currentUser, setCurrentUser] = useState(null);

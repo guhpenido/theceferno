@@ -147,7 +147,7 @@ const ProfilePage: React.FC = () => {
 
           if (!newAvatarValue) {
             setNewAvatar(userData['imageUrl'] || '');
-            console.log(userData['banner']);
+            // console.log(userData['banner']);
           } else {
             setNewAvatar(newAvatarValue);
           }

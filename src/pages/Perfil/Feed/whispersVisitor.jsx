@@ -43,7 +43,7 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 
-const WhispersVisitor = ({objetoUsuario}) => {
+const WhispersVisitor = ({ objetoUsuario }) => {
   const navigate = useNavigate();
   const auth = getAuth(app);
   const [userName, setUserName] = useState(null);
@@ -106,7 +106,6 @@ const WhispersVisitor = ({objetoUsuario}) => {
     const postsQuery = query(
       postsCollectionRef,
       orderBy("time", "desc"),
-      limit(10)
     );
 
     const fetchData = async () => {
@@ -149,7 +148,7 @@ const WhispersVisitor = ({objetoUsuario}) => {
       postsData.push(postData);
     });
 
-    console.log(postsData);
+    // console.log(postsData);
 
     return postsData;
   };
@@ -192,17 +191,17 @@ const WhispersVisitor = ({objetoUsuario}) => {
         </div>
       ) : (
         <div>
-            {posts
-              .filter((item) => item.post.userMentioned === currentUser)
-              .map(({ post, userSentData, userMentionedData }) => (
-                <PostDisplay
-                  key={post.id}
-                  post={post}
-                  userSentData={userSentData}
-                  userMentionedData={userMentionedData}
-                  setRendState={true}
-                />
-              ))}
+          {posts
+            .filter((item) => item.post.userMentioned === currentUser)
+            .map(({ post, userSentData, userMentionedData }) => (
+              <PostDisplay
+                key={post.id}
+                post={post}
+                userSentData={userSentData}
+                userMentionedData={userMentionedData}
+                setRendState={true}
+              />
+            ))}
         </div>
       )}
     </div>

@@ -17,6 +17,7 @@ import {
   Avatar,
   Body,
   Container,
+  Footer,
   Header,
   HeaderName,
   HeaderNameMentioned,
@@ -34,17 +35,34 @@ import {
   isYesterday,
   differenceInDays,
 } from "date-fns";
+import { collection, doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
+  authDomain: "auth-ceferno.firebaseapp.com",
+  projectId: "auth-ceferno",
+  storageBucket: "auth-ceferno.appspot.com",
+  messagingSenderId: "388861107940",
+  appId: "1:388861107940:web:0bf718602145d96cc9d6f1",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
 function PostDisplay({ post, userSentData, userMentionedData, setRendState }) {
   const [isRendStateCss, setRendStateCss] = useState(false);
-
-  console.log(setRendState);
+  const [likes, setLikes] = useState(post.likes);
+  const [deslikes, setDesLikes] = useState<string | null>(null);
+  // console.log(setRendState);
 
   useEffect(() => {
     if (setRendState) {
       setRendStateCss(true);
     }
-  }, [isRendStateCss]);
+  }, [isRendStateCss, likes, db]);
 
   if (!post) {
     return null; // Ou outra ação apropriada, como exibir uma mensagem de erro
@@ -83,6 +101,41 @@ function PostDisplay({ post, userSentData, userMentionedData, setRendState }) {
     userEnvio = userSentData.usuario;
   }
 
+  const handleLikeClick = async (itemLike, IdPost) => {
+
+    const { likes, deslikes } = post;
+
+    let sumLikes = likes + 1;
+
+    const sumeLikes = { sumLikes, IdPost };
+    setLikes(sumLikes);
+
+    const q = query(
+      collection(db, "timeline"),
+      where("postId", "==", sumeLikes.IdPost)
+    );
+
+    try {
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const postDoc = querySnapshot.docs[0];
+
+        await updateDoc(doc(db, "timeline", postDoc.id), {
+          likes: sumeLikes.sumLikes,
+        });
+
+        console.log("Likes atualizados no Firebase com sucesso!");
+      } else {
+        console.error("Post não encontrado no Firebase.");
+        setLikes(sumeLikes.sumLikes);
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar likes no Firebase: ", error);
+      setLikes(sumeLikes.sumLikes);
+    }
+  };
+
   const defaultUserImageURL =
     "https://media.discordapp.net/attachments/871728576972615680/1148261217840926770/logoanon.png?width=473&height=473";
 
@@ -107,51 +160,55 @@ function PostDisplay({ post, userSentData, userMentionedData, setRendState }) {
                   <HeaderName>
                     <div>{nomeEnvio}</div>
                     <div>@{userEnvio}</div>
+                    <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                    {userMentionedData && (
+                      <div>
+                        <HeaderNameMentioned>
+                          <Avatar>
+                            {userMentionedData.imageUrl ? (
+                              <ImgConteiner src={userMentionedData.imageUrl} alt="" />
+                            ) : (
+                              <ImgConteiner src={defaultUserImageURL} alt="" />
+                            )}
+                          </Avatar>
+                          <div>{userMentionedData.nome}</div>
+                          <div className="tl-ps-userReceived">
+                            @{userMentionedData.usuario}
+                          </div>
+                        </HeaderNameMentioned>
+                      </div>
+                    )}
+
+                    {userMentionedData && !userMentionedData && (
+                      <span>Usuário mencionado não encontrado</span>
+                    )}
                   </HeaderName>
-                  <FontAwesomeIcon className="arrow" icon={faArrowDown} />
-
-                  {userMentionedData && (
-                    <div>
-                      {userMentionedData.avatar ? (
-                        <ImgConteiner src={userMentionedData.avatar} alt="" />
-                      ) : (
-                        <ImgConteiner src={defaultUserImageURL} alt="" />
-                      )}
-                      <HeaderNameMentioned>
-                        <div>{userMentionedData.nome}</div>
-                        <div className="tl-ps-userReceived">
-                          @{userMentionedData.usuario}
-                        </div>
-                      </HeaderNameMentioned>
-                      <Posts>
-                        <span>
-                          O usuario {nomeEnvio} disse {post.text}
-                        </span>
-                      </Posts>
-                    </div>
-                  )}
-
-                  {userMentionedData && !userMentionedData && (
-                    <span>Usuário mencionado não encontrado</span>
-                  )}
                 </Header>
-                <Status>
-                  <FontAwesomeIcon icon={faComment} /> {post.replyCount}
-                </Status>
-                <Status>
-                  <FontAwesomeIcon icon={faThumbsUp} />
-                  {post.likes}
-                </Status>
-                <Status>
-                  <FontAwesomeIcon icon={faThumbsUp} /> {post.deslikes}
-                </Status>
+                <Posts>
+                  <span>
+                    {post.text}
+                  </span>
+                </Posts>
+                <Footer>
+                  <Status>
+                    <FontAwesomeIcon icon={faComment} /> {post.replyCount}
+                  </Status>
+                  <Status>
+                    <FontAwesomeIcon icon={faThumbsUp} onClick={() => handleLikeClick(post.likes, post.postId)} />
+                    {likes}
+                  </Status>
+                  <Status>
+                    <FontAwesomeIcon icon={faThumbsDown} /> {post.deslikes}
+                  </Status>
+                  <Status>
+                    <Postdays>
+                      <div>{timeAgo}</div>
+                    </Postdays>
+                  </Status>
+                </Footer>
               </Icons>
             )}
-            <Status>
-              <Postdays>
-                <div>Postado há {timeAgo}</div>
-              </Postdays>
-            </Status>
+
           </div>
         </Container>
       ) : (
