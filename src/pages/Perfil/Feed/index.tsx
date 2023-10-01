@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Container, Tab, Whispers, TabContainer } from "./styles";
 import Post from "../Post";
-import WhispersUsuario from "./whispersUsuario";
 import PerfilUsuario from "./perfilUsuario";
+import WhispersUsuario from "./whispersUsuario";
 import PostagensUsuario from "./postagensUsuario";
 
 interface FeedProps {
@@ -12,42 +12,40 @@ interface FeedProps {
 const Feed: React.FC<FeedProps> = ({ avatarUrl }) => {
 
   // const [mostrarComponente, setMostrarComponente] = useState(false);
-  const [visibilityPerfil, setVisibilityPerfil] = useState(true);
-  const [visibilityPostagens, setVisibilityPostagens] = useState(false);
+  const [visibilityPerfil, setVisibilityPerfil] = useState(false);
+  const [visibilityPostagens, setVisibilityPostagens] = useState(true);
   const [visibilityWhispers, setVisibilityWhispers] = useState(false);
 
   const handleWhisper = () => {
-    // setMostrarComponente(!mostrarComponente);
-    setVisibilityPerfil(false); // Fechar o componente de Perfil ao clicar em Whispers
+    setVisibilityPerfil(false);
     setVisibilityPostagens(false);
     setVisibilityWhispers(true);
   }
 
   const handlePostagens = () => {
-    // setMostrarComponente(!mostrarComponente);
-    setVisibilityPerfil(false); // Fechar o componente de Perfil ao clicar em Postagens
+    setVisibilityPerfil(false);
     setVisibilityWhispers(false);
     setVisibilityPostagens(true);
   }
 
-  const handlePerfil = () => {
-    setVisibilityPerfil(true); // Manter o componente de Perfil sempre visível
-    setVisibilityPostagens(false);
-    setVisibilityWhispers(false);
-  }
+  // const handlePerfil = () => {
+  //   setVisibilityPostagens(false);
+  //   setVisibilityPerfil(true);
+  //   setVisibilityWhispers(false);
+  // }
 
   return (
     <Container>
       <TabContainer>
         <Tab onClick={handlePostagens}>Postagens</Tab>
-        <Tab onClick={handlePerfil}>Perfil</Tab>
+        {/* <Tab onClick={handlePerfil}>Perfil</Tab> */}
         <Tab onClick={handleWhisper}>Whispers</Tab>
       </TabContainer>
       <Whispers>
         {/* Passando avatarUrl como avatarUrl para o componente Post */}
         {visibilityPostagens && <PostagensUsuario />}
-        {visibilityPerfil && <PerfilUsuario />}
         {visibilityWhispers && <WhispersUsuario />}
+        {/* {visibilityPerfil && <PerfilUsuario />} */}
         {/* <Post avatarUrl={avatarUrl} />   */}
       </Whispers>
     </Container>

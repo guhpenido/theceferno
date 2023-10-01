@@ -1,144 +1,221 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc, updateDoc, onSnapshot, collection } from 'firebase/firestore';
-import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
-import PerfilUsuario from "../Feed/perfilUsuario";
-import PostagensUsuario from "../Feed/postagensUsuario";
-import './styles';
-import { ConteudoPostagens } from "./styles";
-import WhispersUsuario from "../Feed/whispersUsuario";
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowDown, faComment } from "@fortawesome/fontawesome-free-solid";
+import { faThumbsUp } from "@fortawesome/fontawesome-free-solid";
+import { faThumbsDown } from "@fortawesome/fontawesome-free-solid";
+import { faCaretDown } from "@fortawesome/fontawesome-free-solid";
+import { faArrowRight } from "@fortawesome/fontawesome-free-solid";
+import { useState, useEffect } from "react";
+import { faEnvelope } from "@fortawesome/fontawesome-free-solid";
+//import { faMagnifyingGlassArrowRight } from "@fortawesome/fontawesome-free-solid";
+import { faBell } from "@fortawesome/fontawesome-free-solid";
+import { faQuestion } from "@fortawesome/fontawesome-free-solid";
+import { faPaperPlane } from "@fortawesome/fontawesome-free-solid";
+//import { faXmark } from "@fortawesome/fontawesome-free-solid";
 
-//configuração do firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
-  authDomain: "auth-ceferno.firebaseapp.com",
-  projectId: "auth-ceferno",
-  storageBucket: "auth-ceferno.appspot.com",
-  messagingSenderId: "388861107940",
-  appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
-};
+import {
+  Avatar,
+  Body,
+  Container,
+  Header,
+  HeaderName,
+  HeaderNameMentioned,
+  Icons,
+  ImgConteiner,
+  NomeHeaderTw,
+  Postdays,
+  Posts,
+  Status,
+} from "./styles";
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
+import {
+  formatDistanceToNow,
+  isToday,
+  isYesterday,
+  differenceInDays,
+} from "date-fns";
 
-interface PostProps {
-  avatarUrl: string | null;
-}
+function PostDisplay({ post, userSentData, userMentionedData, setRendState }) {
+  const [isRendStateCss, setRendStateCss] = useState(false);
 
-const Post: React.FC<PostProps> = ({ avatarUrl }) => {
-  const [currentUser, setCurrentUser] = useState<any | null>(null);
-  const navigate = useNavigate();
-  const auth = getAuth(app);
-
-  //pegar nome e o @
-  const [userName, setUserName] = useState<string | null>(null);
-  const [nickname, setNickname] = useState<string | null>(null);
-
-  const [userId, setUserId] = useState<string | null>(null);
-
-  const [userLoggedData, setUserLoggedData] = useState<any>(null); // Adjust the type accordingly
-  const [selectedProfile, setSelectedProfile] = useState<any>(null); // Adjust the type accordingly
-  const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
-  const [posts, setPosts] = useState<any[]>([]); // Adjust the type accordingly
+  console.log(setRendState);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserId(user.uid);
-        fetchUserDataAndSetState(user.uid);
-        searchUserFields(user.uid);
-      } else {
-        navigate('/login');
-      }
-    });
-
-    return () => unsubscribe();
-  }, [auth, navigate]);
-
-  useEffect(() => {
-    const unsubscribe = getPostsFromFirestore();
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (userId) {
-      fetchUserDataAndSetState(userId);
+    if (setRendState) {
+      setRendStateCss(true);
     }
-  }, [userId]);
+  }, [isRendStateCss]);
 
-  const fetchUserDataAndSetState = async (userId: string) => {
-    try {
-      if (userId) {
-        const userLoggedDataResponse = await fetchUserData(userId);
-        if (userLoggedDataResponse) {
-          setUserLoggedData(userLoggedDataResponse);
-          setSelectedProfile(userLoggedDataResponse.usuario);
-          setIsLoadingUser(false); // Data has been fetched, no longer loading
-        } else {
-          alert("User data not found!"); // Show an alert when userLoggedDataResponse is null
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error.message);
-    }
-  };
+  if (!post) {
+    return null; // Ou outra ação apropriada, como exibir uma mensagem de erro
+  }
+  const postDate = new Date(post.time ?? new Date());
+  const now = new Date();
+  let timeAgo;
+  // Calcule a diferença em segundos entre as datas
+  const secondsAgo = Math.floor((now - postDate) / 1000);
 
+  if (secondsAgo < 60) {
+    timeAgo = `${secondsAgo} segundo${secondsAgo !== 1 ? "s" : ""} atrás`;
+  } else if (secondsAgo < 3600) {
+    const minutesAgo = Math.floor(secondsAgo / 60);
+    timeAgo = `${minutesAgo} minuto${minutesAgo !== 1 ? "s" : ""} atrás`;
+  } else if (isToday(postDate)) {
+    const hoursAgo = Math.floor(secondsAgo / 3600);
+    timeAgo = `${hoursAgo} hora${hoursAgo !== 1 ? "s" : ""} atrás`;
+  } else if (isYesterday(postDate)) {
+    timeAgo = "Ontem";
+  } else {
+    const daysAgo = differenceInDays(now, postDate);
+    timeAgo = `${daysAgo} dia${daysAgo !== 1 ? "s" : ""} atrás`;
+  }
+  let imageSent = null;
+  let nomeEnvio = null;
+  let userEnvio = null;
+  if (post.mode == "anon") {
+    imageSent =
+      "https://media.discordapp.net/attachments/871728576972615680/1148261217840926770/logoanon.png?width=473&height=473";
+    nomeEnvio = userSentData.pseudonimo;
+    userEnvio = "ceferno 😈";
+  } else {
+    nomeEnvio = userSentData.nome;
+    imageSent = userSentData.imageUrl;
+    userEnvio = userSentData.usuario;
+  }
 
-  const getPostsFromFirestore = () => {
-    return onSnapshot(collection(db, 'timeline'), (snapshot) => {
-      const postsData: any[] = [];
-      snapshot.forEach((doc) => {
-        const postData = {
-          id: doc.id,
-          ...doc.data(),
-        };
-        postsData.push(postData);
-      });
-      setPosts(postsData);
-    });
-  };
-
-  const fetchUserData = async (userId: string) => {
-    const userDoc = await getDoc(doc(db, 'users', userId));
-    if (userDoc.exists()) {
-      return userDoc.data();
-    } else {
-      console.log('User not found');
-      return null;
-    }
-  };
-
-  // Função para pesquisar os campos "curso" e "instituição" com base no ID do usuário logado
-  const searchUserFields = async (userId) => {
-    try {
-      if (userId) {
-        // console.log('acessou');
-        const userDoc = await getDoc(doc(db, 'users', userId));
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          // const bannerUrlValue = userData['avatar'] || ''; 
-          // const newAvatarValue = userData['imageUrl'] || ''; 
-          const nicknameValue = userData['usuario'] || '';
-          const userNameValue = userData['nome'] || '';
-          setNickname(nicknameValue);
-          setUserName(userNameValue);
-          // console.log(userNameValue);
-        } else {
-          console.log('User not found');
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error.message);
-    }
-  };
+  const defaultUserImageURL =
+    "https://media.discordapp.net/attachments/871728576972615680/1148261217840926770/logoanon.png?width=473&height=473";
 
   return (
-    <ConteudoPostagens>
-    </ConteudoPostagens>
-  );
-};
+    <div>
+      {isRendStateCss ? (
+        <Container className="">
+          <Body className="">
+            {imageSent && (
+              <Avatar
+                as="img"
+                height="60px"
+                src={imageSent}
+                alt="Novo Avatar"
+              />
+            )}
+          </Body>
+          <div>
+            {post.userMentioned !== null && (
+              <Icons>
+                <Header className="">
+                  <HeaderName>
+                    <div>{nomeEnvio}</div>
+                    <div>@{userEnvio}</div>
+                  </HeaderName>
+                  <FontAwesomeIcon className="arrow" icon={faArrowDown} />
 
-export default Post;
+                  {userMentionedData && (
+                    <div>
+                      {userMentionedData.avatar ? (
+                        <ImgConteiner src={userMentionedData.avatar} alt="" />
+                      ) : (
+                        <ImgConteiner src={defaultUserImageURL} alt="" />
+                      )}
+                      <HeaderNameMentioned>
+                        <div>{userMentionedData.nome}</div>
+                        <div className="tl-ps-userReceived">
+                          @{userMentionedData.usuario}
+                        </div>
+                      </HeaderNameMentioned>
+                      <Posts>
+                        <span>
+                          O usuario {nomeEnvio} disse {post.text}
+                        </span>
+                      </Posts>
+                    </div>
+                  )}
+
+                  {userMentionedData && !userMentionedData && (
+                    <span>Usuário mencionado não encontrado</span>
+                  )}
+                </Header>
+                <Status>
+                  <FontAwesomeIcon icon={faComment} /> {post.replyCount}
+                </Status>
+                <Status>
+                  <FontAwesomeIcon icon={faThumbsUp} />
+                  {post.likes}
+                </Status>
+                <Status>
+                  <FontAwesomeIcon icon={faThumbsUp} /> {post.deslikes}
+                </Status>
+              </Icons>
+            )}
+            <Status>
+              <Postdays>
+                <div>Postado há {timeAgo}</div>
+              </Postdays>
+            </Status>
+          </div>
+        </Container>
+      ) : (
+        <div className="tl-box" key={post.id}>
+          <div className="tl-post">
+            <div className="tl-ps-header">
+              <div className="tl-ps-foto">
+                {imageSent && <img src={imageSent} alt="" />}
+              </div>
+              {post.userMentioned !== null ? (
+                <div className="tl-ps-nomes">
+                  <p className="tl-ps-nome">
+                    {nomeEnvio}{" "}
+                    <span className="tl-ps-user">@{userEnvio} </span>
+                    <span className="tl-ps-tempo">• {timeAgo}</span>
+                    <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                    {userMentionedData && (
+                      <img src={userMentionedData.imageUrl} alt="" />
+                    )}
+                    {userMentionedData && (
+                      <>
+                        {" "}
+                        {userMentionedData.nome}{" "}
+                        <span className="tl-ps-userReceived">
+                          @{userMentionedData.usuario}{" "}
+                        </span>
+                      </>
+                    )}
+                  </p>
+                </div>
+              ) : (
+                <div className="tl-ps-nomes">
+                  <p className="tl-ps-nome">
+                    {nomeEnvio}{" "}
+                    <span className="tl-ps-user">@{userEnvio} </span>
+                    <span className="tl-ps-tempo">• {timeAgo}</span>
+                  </p>
+                </div>
+              )}
+            </div>
+            <div className="tl-ps-texto">
+              <p>{post.text}</p>
+            </div>
+            <div className="tl-ps-footer">
+              <div className="tl-ps-opcoes">
+                <div className="tl-ps-reply">
+                  <FontAwesomeIcon icon={faComment} />
+                  <span>{post.replyCount}</span>
+                </div>
+                <div className="tl-ps-like">
+                  <FontAwesomeIcon icon={faThumbsUp} />{" "}
+                  <span>{post.likes}</span>
+                </div>
+                <div className="tl-ps-deslike">
+                  <FontAwesomeIcon icon={faThumbsDown} />{" "}
+                  <span>{post.deslikes}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default PostDisplay;

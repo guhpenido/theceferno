@@ -87,40 +87,53 @@ export const EditButton = styled(Button)`
 
 export const Tags = styled.div`
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   margin: 0;
   color: whitesmoke;
   width: 50%; 
+  text-align:center; 
 `;
 
-const responsiveWidth = '5vw'; // Adjust this value as needed
+// const responsiveWidth = '5vw'; // Adjust this value as needed
 
-const ResponsiveTag = styled.div`
-  border: 3px solid rgb(71, 99, 228);
-  background-color: rgba(71, 99, 228, 0.2);
-  height: 5vh;
-  width: ${responsiveWidth};
+// const ResponsiveTag = styled.div`
+//   border: 3px solid rgb(71, 99, 228);
+//   background-color: rgba(71, 99, 228, 0.2);
+//   height: 5vh;
+//   width: ${responsiveWidth};
+//   text-align: center;
+//   border-radius: 10px;
+
+//   @media (max-width: 900px) {
+//     width: 70%; // Take up full width on smaller screens
+//     margin-bottom: 2px; // Add some spacing between tags
+//   }
+
+//   @media (min-width: 901px) {
+//     width: 70%
+//   }
+// `;
+
+export const Institution = styled.div`
   text-align: center;
+  padding: 1px;
+  background-color: rgba(71, 99, 228, 0.2);
+  border: 3px solid rgb(71, 99, 228);
   border-radius: 10px;
-
-  @media (max-width: 900px) {
-    width: 70%; // Take up full width on smaller screens
-    margin-bottom: 2px; // Add some spacing between tags
-  }
-
-  @media (min-width: 901px) {
-    width: 70%
-  }
+  padding: 2px; 
+  margin: 2px;
 `;
 
-export const Institution = styled(ResponsiveTag)`
-  /* Add any specific styles for Institution tag here */
-`;
-
-export const Course = styled(ResponsiveTag)`
-  margin-left: 2vw; /* Adjust margin if needed */
-  /* Add any specific styles for Course tag here */
+export const Course = styled.div`
+  margin: 2vw;   
+  text-align: center;
+  background-color: rgba(71, 99, 228, 0.2);
+  border: 3px solid rgb(71, 99, 228);
+  border-radius: 10px;
+  padding: 2px; 
+  margin: 2px;
 `;
 
 
