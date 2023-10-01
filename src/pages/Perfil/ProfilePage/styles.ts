@@ -136,8 +136,30 @@ export const Course = styled.div`
   margin: 2px;
 `;
 
+export const Cabecalho = styled.div`
+  z-index: 2;
+  position: sticky;
+  top: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  padding: 8px 0 9px 13px;
+  border-bottom: 1px solid #4763E4;
+  flex-direction: column; 
 
+  > button {
+    padding: 8px;
+    border-radius: 50%;
+    outline: 0;
+    cursor: pointer;
+    background: #000;
+    border: 0;
 
-
+    &:hover {
+      background: #00003d;
+    }
+  }
+`
 
 

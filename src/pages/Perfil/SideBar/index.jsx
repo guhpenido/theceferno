@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Container, SearchWrapper, SearchInput, SearchIcon } from './styles';
+import React, { useEffect, useState, useRef } from "react";
+import { Container, SearchWrapper, SearchInput, SearchIcon } from "./styles";
 import { initializeApp } from "firebase/app";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { getFirestore } from "firebase/firestore";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import {
   doc,
   getDocs,
@@ -14,7 +14,7 @@ import {
   or,
   orderBy,
 } from "firebase/firestore";
-import ViewUsers from './viewUsers';
+import ViewUsers from "./viewUsers";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
@@ -25,12 +25,13 @@ const firebaseConfig = {
   appId: "1:388861107940:web:0bf718602145d96cc9d6f1",
 };
 
+import './'
+
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-const SideBar = () => {
-
+const SideBar = ({ objetoUsuario }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const nodeRef = useRef(null);
@@ -38,9 +39,8 @@ const SideBar = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [loadedPosts, setLoadedPosts] = useState([]);
 
-
   useEffect(() => {
-    console.log('cheguei'); 
+    // console.log("cheguei");
     if (isFetching) {
       carregaTml().then(() => {
         setIsFetching(false);
@@ -120,7 +120,7 @@ const SideBar = () => {
     let postsQuery;
 
     if (lastLoadedPostId) {
-      console.log("Latest post:" + lastLoadedPostId);
+      // console.log("Latest post:" + lastLoadedPostId);
       // Se houver um último post carregado, use startAfter para obter os próximos posts
       postsQuery = query(
         postsCollectionRef,
@@ -139,15 +139,15 @@ const SideBar = () => {
 
     try {
       const postsData = await getPostsFromFirestore(postsQuery);
-      console.log({ postsData });
+      // console.log({ postsData });
       if (postsData.length === 0) {
-        console.log("Você já chegou ao fim");
+        // console.log("Você já chegou ao fim");
       } else {
         const postsWithUserData = [];
 
         // Aqui, substitua todo o estado de loadedPosts com os novos posts carregados
         setLoadedPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
-        console.log("Novos posts carregados!");
+        // console.log("Novos posts carregados!");
       }
     } catch (error) {
       console.error("Erro ao obter os posts:", error);
@@ -158,20 +158,51 @@ const SideBar = () => {
 
   return (
     <Container>
-      <SearchWrapper>
-        <div id="blocoPesquisaDm" className="centralizarDm">
+      <SearchWrapper style={{ display: "block", marginTop: "1em" }}>
+        <div style={{ flexDirection: 'column', padding: '2%' }}>
           <input
-            className="inputPesquisaDm"
+            style={{
+              display: "block", marginBottom: "2em", padding: '0.7rem 2rem 0.7rem 2rem',
+              borderRadius: '15px',
+              textAlign: 'center',
+              backgroundColor: 'rgba(255, 255, 255, 0)',
+              border: '1px solid #4763E4',
+              color: '#ffffff',
+              outlineColor: '#4763E4'
+            }}
             type="search"
             placeholder="Procure no CEFERNO"
             value={searchTerm}
             onChange={handleSearchInputChange}
           ></input>
-          <TransitionGroup component="ul" className="ulDm">
-            <div style={{ textAlign: 'center', marginBottom: '2px' }}>
-              {
-                searchTerm
-              }
+          <TransitionGroup component="ul" className="ulDm" style={{
+            padding: '0',
+            margin: '0!important',
+            /*width: '90%',*/
+            backgroundColor: '#3d3c3c',
+            borderRadius: '0 0 10px 10px'
+          }}>
+            <div
+              style={{
+                marginBottom: '1em',
+                marginTop: '1em',
+                padding: '5px',
+                borderRadius: '10px',
+              }}
+            >
+              <Link
+                to="/SeachPage"
+                state={{ searchTerm: searchTerm, modo: "public" }}
+                style={{
+                  color: "white",
+                  display: "block",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "15px",
+                }}
+              >
+                <div>Pesquisar por: {searchTerm}</div>
+              </Link>
             </div>
             {searchResults.map((user) => (
               <CSSTransition
@@ -180,16 +211,31 @@ const SideBar = () => {
                 classNames="my-node"
                 key={user.id ? user.id : user.uid + "1"}
               >
-                <Link to="/VisitorPage" state={{ objetoUsuario: user, modo: 'public' }} style={{ color: 'white' }}>
+                <Link
+                  to="/VisitorPage"
+                  state={{ objetoUsuario: user, modo: "public" }}
+                  style={{ color: "white" }}
+                >
                   <li
-                    className="listaResultadosPesquisaDm"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '10px'
+                    }}
                     key={user.id ? user.id : user.uid}
                     noderef={nodeRef}
                   >
-                    <img className="profilePicDm" src={user.imageUrl}></img>
-                    <div className="dadosPessoaisDm">
-                      <p className="nomeUserDm boldDm">{user.nome}</p>
-                      <p className="userDm lightDm">@{user.usuario}</p>
+                    <img style={{
+                      width: '50px',
+                      borderRadius: '50%'
+                    }} src={user.imageUrl}></img>
+                    <div style={{
+                      width: '100%',
+                      display: 'flex',
+                      gap: '5%'
+                    }}>
+                      <p style={{paddingLeft: '5%', fontWeight: 'bolder'}}>{user.nome}</p>
+                      <p style={{paddingLeft: '5%', fontWeight: 'lighter'}}>@{user.usuario}</p>
                     </div>
                   </li>
                 </Link>
@@ -198,9 +244,8 @@ const SideBar = () => {
           </TransitionGroup>
         </div>
       </SearchWrapper>
-
-    </Container >
+    </Container>
   );
-}
+};
 
 export default SideBar;

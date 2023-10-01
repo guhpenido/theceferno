@@ -17,20 +17,23 @@ export const Container = styled.div`
 `;
 
 export const ImgConteiner = styled.img`
-  margin-top: 4px;
-  margin-bottom: 4px;
-  height: 30px;
+  width: 49px;
+  height: 49px;
   border-radius: 50%;
-  align-items: center;
-  display: flex;
-  position: relative;
-  left: 43%;
+  flex-shrink: 0;
+  background: #7a7a7a;
+  top: 10px;
+  left: 10px;
+  margin-right: 1em;
+  align-items: left; 
 `;
 export const Body = styled.div`
   display: flex;
   margin-top: 3px;
   position: relative;
   flex-direction: column;
+  text-align: center;
+  align-items: center; 
 `;
 
 export const Avatar = styled.div`
@@ -39,10 +42,10 @@ export const Avatar = styled.div`
   border-radius: 50%;
   flex-shrink: 0;
   background: #7a7a7a;
-  position: absolute;
   top: 10px;
   left: 10px;
-  border: solid red 4px;
+  margin-right: 1em;
+  align-items: left; 
 `;
 export const Content = styled.div`
   display: flex;
@@ -54,10 +57,39 @@ export const Content = styled.div`
 
 export const Header = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: flex-end;
+  height: fit-content;
+  font-size: 15px;
+  color: #fff;
+
+  > div:nth-child(5) {
+    margin: 3px;
+  }
+
+  > strong {
+    margin-left: 50px;
+    color: #d9d9d9;
+  }
+
+  > span {
+    color: #7a7a7a;
+  }
+
+  > strong,
+  span {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: 2px;
+  }
+`;
+
+export const Footer = styled.div`
+  display: flex;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  height: 150px;
+  height: 10vh;
   font-size: 15px;
   color: #fff;
 
@@ -86,15 +118,15 @@ export const Posts = styled.div`
   margin-top: 4px;
   color: #d9d9d9;
   width: 300px;
+  text-align: center; 
 `;
 
 export const Postdays = styled.div`
   display: flex;
-  align-items: center;
   justify-content: space-between;
 
   > div:nth-child(1) {
-    color: red;
+    color: white;
     left: 3em;
     position: relative;
   }
@@ -123,6 +155,11 @@ export const Icons = styled.div`
 
 export const Status = styled.div`
   color: #d9d9d9;
+  margin-left: 3em;
+  align-items: center; 
+  display: flex;
+  flex-direction: row; 
+  width: fit-content; 
 `;
 
 const IconCSS = css`
@@ -152,9 +189,10 @@ export const HeaderName = styled.div`
   justify-content: space-around;
   align-items: flex-start;
   align-content: center;
+  height: fit-content; 
 
   > div:nth-child(1) {
-    font-size: 18px;
+    font-size: 15px;
     margin-right: 1em;
     color: with;
     margin-bottom: 6px;
@@ -162,31 +200,31 @@ export const HeaderName = styled.div`
 
   > div:nth-child(2) {
     margin-left:: 1em;
-    color: red;
+    color: white;
   }
 `;
 
 export const HeaderNameMentioned = styled.div`
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
   justify-content: center;
-  align-items: flex-start;
   align-content: center;
+  width: fit-content; 
+  height: fit-content; 
 
   > div:nth-child(1) {
     margin-right: 5px;
     font-size: 15px;
-    color: Blue;
+    color: white;
   }
   > div:nth-child(2) {
-    color: red;
+    color: white;
     font-size: 13px;
   }
 `;
 
 export const NomeHeaderTw = styled.div`
-  color: red;
+  color: white;
   font-size: 15px;
   border: solid 1px black;
   width: 10%;

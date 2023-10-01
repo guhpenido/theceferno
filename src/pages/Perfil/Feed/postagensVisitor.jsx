@@ -31,11 +31,12 @@ import {
     HeaderName,
     HeaderNameMentioned,
     Postdays,
+    Footer,
 } from "../Post/styles";
 import { parseISO, formatDistanceToNow } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { faArrowDown } from "@fortawesome/fontawesome-free-solid";
+import { faArrowDown, faThumbsDown, faThumbsUp } from "@fortawesome/fontawesome-free-solid";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
@@ -62,6 +63,8 @@ const PostagensVisitor = ({ objetoUsuario }) => {
     const [userId, setUserId] = useState(null);
 
     const [isUserSent, setUsersent] = useState(null);
+    const [likes, setLikes] = useState(null);
+    const [deslikes, setDesLikes] = useState([]);
 
     const [userLoggedData, setUserLoggedData] = useState(null); // Adjust the type accordingly
     const [selectedProfile, setSelectedProfile] = useState(null); // Adjust the type accordingly
@@ -145,7 +148,7 @@ const PostagensVisitor = ({ objetoUsuario }) => {
         const postsQuery = query(
             postsCollectionRef,
             orderBy("time", "desc"),
-            limit(10)
+            //limit(10)
         );
 
         const fetchData = async () => {
@@ -213,7 +216,7 @@ const PostagensVisitor = ({ objetoUsuario }) => {
             );
             const querySnapshot = await getDocs(q);
 
-            const timelineItems  = [];
+            const timelineItems = [];
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 timelineItems.push({
@@ -248,79 +251,180 @@ const PostagensVisitor = ({ objetoUsuario }) => {
         };
     });
 
+    const handleLikeClick = async (itemLike, IdPost) => {
+        const postLikes = posts.map((post) => {
+            const { likes, deslikes, postId } = post;
+
+            return {
+                likes,
+                deslikes,
+                postId,
+            };
+        });
+
+        const filterLike = postLikes.filter((post) => post.postId === IdPost);
+
+        const sumeLikes = filterLike.map((post) => {
+            const { postId } = post;
+
+            let sumLikes = post.likes + 1;
+
+            return { sumLikes, postId };
+        });
+
+        const q = query(
+            collection(db, "timeline"),
+            where("postId", "==", sumeLikes[0].postId)
+        );
+
+        try {
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                const postDoc = querySnapshot.docs[0];
+
+                await updateDoc(doc(db, "timeline", postDoc.id), {
+                    likes: sumeLikes[0].sumLikes,
+                });
+
+                console.log("Likes atualizados no Firebase com sucesso!");
+            } else {
+                console.error("Post não encontrado no Firebase.");
+                setLikes(likes);
+            }
+        } catch (error) {
+            console.error("Erro ao atualizar likes no Firebase: ", error);
+            setLikes(likes);
+        }
+    };
+
+
+    const handleDeslikes = async (itemLike, IdPost) => {
+
+        console.log({ posts });
+
+        const postLikes = posts.map((post) => {
+            const { likes, deslikes, postId } = post;
+
+            return {
+                likes,
+                deslikes,
+                postId,
+            };
+        });
+
+        const filterLike = postLikes.filter((post) => post.postId === IdPost);
+
+        const sumeDeslikes = filterLike.map((post) => {
+            const { postId } = post;
+
+            let sumDeslikes = post.deslikes + 1;
+
+            return { sumDeslikes, postId };
+        });
+
+        const q = query(
+            collection(db, "timeline"),
+            where("postId", "==", sumeDeslikes[0].postId)
+        );
+
+        try {
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                const postDoc = querySnapshot.docs[0];
+
+                await updateDoc(doc(db, "timeline", postDoc.id), {
+                    deslikes: sumeDeslikes[0].sumDeslikes,
+                });
+
+                console.log("Deslikes atualizados no Firebase com sucesso!");
+            } else {
+                console.error("Post não encontrado no Firebase.");
+                setDesLikes(deslikes);
+            }
+        } catch (error) {
+            console.error("Erro ao atualizar Deslikes no Firebase: ", error);
+            setDesLikes(deslikes);
+        }
+    };
+
     // Renderize o array combinado
     return (
         <div>
-            {timelineItems.length === 0 ? (
+            {combinedData.length === 0 ? (
                 <div>{/* Renderize a mensagem de "Nada Encontrado" aqui */}</div>
             ) : (
                 combinedData.map((item) => (
                     <Container key={item.id}>
                         <Body>
-                            {/* Renderize os componentes com base em item */}
-                            <Avatar as="img" src={newAvatar || ""} alt="Novo Avatar" />
                             <Icons>
                                 <Header>
+                                    <Avatar as="img" src={newAvatar || ""} alt="Novo Avatar" />
                                     <HeaderName>
                                         <div>{userName}</div>
                                         <div>@{nickname}</div>
+                                        <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                                        {item.userMentionedData && (
+                                            <div>
+
+                                                <HeaderNameMentioned>
+                                                    <Avatar>
+                                                        {item.userMentionedData.avatar ? (
+                                                            <ImgConteiner
+                                                                src={item.userMentionedData.avatar}
+                                                                alt=""
+                                                            />
+                                                        ) : (
+                                                            <ImgConteiner src={defaultUserImageURL} alt="" />
+                                                        )}
+                                                    </Avatar>
+                                                    <div>{item.userMentionedData.nome}</div>
+                                                    <div className="tl-ps-userReceived">
+                                                        @{item.userMentionedData.usuario}
+                                                    </div>
+                                                </HeaderNameMentioned>
+                                            </div>
+                                        )}
+                                        {item.userMentioned && !item.userMentionedData && (
+                                            // Renderize algo se o usuário mencionado não for encontrado
+                                            <span>Usuário mencionado não encontrado</span>
+                                        )}
                                     </HeaderName>
-                                    <FontAwesomeIcon className="arrow" icon={faArrowDown} />
-                                    {item.userMentionedData && (
-                                        <div>
-                                            {item.userMentionedData.avatar ? (
-                                                <ImgConteiner
-                                                    src={item.userMentionedData.avatar}
-                                                    alt=""
-                                                />
-                                            ) : (
-                                                <ImgConteiner src={defaultUserImageURL} alt="" />
-                                            )}
-                                            <HeaderNameMentioned>
-                                                <div>{item.userMentionedData.nome}</div>
-                                                <div className="tl-ps-userReceived">
-                                                    @{item.userMentionedData.usuario}
-                                                </div>
-                                            </HeaderNameMentioned>
-                                            <Posts>
-                                                <span>
-                                                    O usuario {item.userMentionedData.nome} disse{" "}
-                                                    {item.text}
-                                                </span>
-                                            </Posts>
-                                        </div>
-                                    )}
-                                    {item.userMentioned && !item.userMentionedData && (
-                                        // Renderize algo se o usuário mencionado não for encontrado
-                                        <span>Usuário mencionado não encontrado</span>
-                                    )}
                                 </Header>
-                                <Status>
-                                    <CommentIcon />
-                                    {item.replysCount}
-                                </Status>
-                                <Status>
-                                    <RepublicationIcon />
-                                    Likes: {item.likes}
-                                </Status>
-                                <Status>
-                                    <LikeIcon />
-                                    Deslikes: {item.deslikes}
-                                </Status>
-                                <Status>
-                                    <Postdays>
-                                        <div>
-                                            {item.time
-                                                ? `Postado há ${formatDistanceToNow(
-                                                    parseISO(item.time),
-                                                    {
-                                                        addSuffix: true,
-                                                    }
-                                                )}`
-                                                : "Tempo não disponível"}
-                                        </div>
-                                    </Postdays>
-                                </Status>
+                                <Posts>
+                                    <div>
+                                        {item.text}
+                                    </div>
+                                </Posts>
+                                <Footer>
+                                    <Status>
+                                        <CommentIcon />
+                                        {item.replysCount}
+                                    </Status>
+                                    <Status>
+                                        <FontAwesomeIcon icon={faThumbsUp} onClick={() => handleLikeClick(item.likes, item.postId)} />
+                                        {item.likes}
+                                    </Status>
+                                    <Status>
+                                        <FontAwesomeIcon icon={faThumbsDown} onClick={() => handleDeslikes(item.deslikes, item.postId)} />
+                                        {item.deslikes}
+                                    </Status>
+                                    <Status>
+                                        <Postdays>
+                                            <div>
+                                                {item.time
+                                                    ? `${formatDistanceToNow(
+                                                        parseISO(item.time),
+                                                        {
+                                                            addSuffix: true,
+                                                        }
+                                                    )}`
+                                                    : "Tempo não disponível"}
+                                            </div>
+                                        </Postdays>
+                                    </Status>
+                                </Footer>
                             </Icons>
                         </Body>
                     </Container>
