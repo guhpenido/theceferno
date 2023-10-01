@@ -355,7 +355,7 @@ body{
 .tl-addPost-clear-icon:hover {
   color: #d43f3f; /* Cor vermelha mais escura no hover */
 }
-.tl-ps-reply,.tl-ps-like,.tl-ps-deslike {
+.tl-ps-reply,.tl-ps-like,.tl-ps-deslike, .tl-ps-salvar {
   color:#4763e4;
 }
 

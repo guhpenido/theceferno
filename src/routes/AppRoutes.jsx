@@ -11,6 +11,7 @@ import   Chat   from "../pages/Chat";
 import Layout from '../pages/Perfil/Layout';
 import Whisper from "../pages/Whisper";
 import {Timeline} from "../pages/Timeline/index";
+import PostPage from "../pages/Timeline/PostPage";
 //
 export function AppRoutes() {
   return (
@@ -27,6 +28,7 @@ export function AppRoutes() {
         <Route path="/perfil" element={<Layout/>} />
         <Route path="/whisper" element={<Whisper />} /> 
         <Route path="/timeline" element={<Timeline />} /> 
+        <Route path="/timeline/:postId" element={<PostPage />} />
       </Routes>
     </BrowserRouter>
   );

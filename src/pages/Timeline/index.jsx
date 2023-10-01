@@ -521,6 +521,30 @@ export function Timeline() {
   //     carregaTml();
   // };
 
+  const handleSavePost = async (postId) => {
+    try {
+      // Obtém o usuário atualmente autenticado
+      const user = auth.currentUser;
+  
+      if (user) {
+        // Obtém a referência do documento do usuário no banco de dados
+        const userDocRef = doc(db, "users", user.uid);
+  
+        // Atualiza o campo savedPosts no documento do usuário
+        await updateDoc(userDocRef, {
+          savedPosts: arrayUnion(postId) // Adiciona postId ao array savedPosts
+        });
+  
+        console.log("Post salvo com sucesso!");
+      } else {
+        console.log("Usuário não autenticado.");
+      }
+    } catch (error) {
+      console.error("Erro ao salvar o post: ", error);
+    }
+  };
+  
+
 
   return (
     <>

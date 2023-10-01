@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComment } from "@fortawesome/fontawesome-free-solid";
+import { faBookmark, faComment } from "@fortawesome/fontawesome-free-solid";
 import { faThumbsUp } from "@fortawesome/fontawesome-free-solid";
 import { faThumbsDown } from "@fortawesome/fontawesome-free-solid";
 import { faCaretDown } from "@fortawesome/fontawesome-free-solid";
@@ -321,10 +321,40 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
       console.error("Erro ao enviar a resposta: ", error);
     }
   };
+
+  const handleSavePost = async (postId) => {
+    try {
+      // Obtém o usuário atualmente autenticado
+      const user = userId;
+  
+      if (user) {
+        // Obtém a referência do documento do usuário no banco de dados
+        const userDocRef = doc(db, "users", user);
+  
+        // Atualiza o campo savedPosts no documento do usuário
+        await updateDoc(userDocRef, {
+          savedPosts: arrayUnion(postId) // Adiciona postId ao array savedPosts
+        });
+  
+        console.log("Post salvo com sucesso!");
+      } else {
+        console.log("Usuário não autenticado.");
+      }
+    } catch (error) {
+      console.error("Erro ao salvar o post: ", error);
+    }
+  };
+
+  const linkStyle = {
+    textDecoration: "none", 
+    color: "inherit", 
+
+  };
   
   return (
     <>
-      <div className="tl-box" key={post.id} onClick={toggleReplies}>
+      <div className="tl-box" key={post.id}>
+      <Link style={linkStyle} to={`/timeline/${post.id}`}>
         <div className="tl-post">
           <div className="tl-ps-header">
             <div className="tl-ps-foto">
@@ -379,35 +409,14 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
                 <FontAwesomeIcon icon={faThumbsDown} />{" "}
                 <span>{post.deslikes}</span>
               </div>
+              <div className="tl-ps-salvar" onClick={handleSavePost}>
+                <FontAwesomeIcon icon={faBookmark} />{" "}
+              </div>
             </div>
-          </div>
-          {isReplying && (
-            <div className="tl-reply">
-              <textarea
-                placeholder="Escreva sua resposta..."
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-              ></textarea>
-              <button onClick={handleReply}>Responder</button>
-            </div>
-          )}
-
-          
-
+          </div>   
         </div>
+        </Link>
       </div>
-      {showReplies && (
-        <div className="replies-container">
-          {replies.map((reply) => (
-            <ReplyDisplay
-            key={reply.id}
-            reply={reply}
-          />
-          ))}
-          
-          <button onClick={toggleReplies}>Voltar para a timeline</button>
-        </div>
-      )}
     </>
   );
 }
