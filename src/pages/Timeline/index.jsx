@@ -13,7 +13,7 @@ import { faQuestion } from "@fortawesome/fontawesome-free-solid";
 import { faPaperPlane } from "@fortawesome/fontawesome-free-solid";
 //import { faXmark } from "@fortawesome/fontawesome-free-solid";
 import { app } from "../../services/firebaseConfig";
-import { getFirestore, startAfter } from "firebase/firestore";
+import { getFirestore, startAfter } from "firebase/firest oore";
 //import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import homeIcon from "../../assets/home-icon.svg";
 import dmIcon from "../../assets/dm-icon.svg";
