@@ -49,6 +49,7 @@ body{
   width: 100%;
   display: flex;
   justify-content: center;
+  margin-left: 3vw;
 }
 .tl-titulo h1 {
   align-items: center;
@@ -56,6 +57,7 @@ body{
   color: #4763e4;
   font-size: 12px;
   border-bottom: solid 1px #4763e4;
+  margin-right: 2vw;
 }
 .tl-box {
   width: 100%;

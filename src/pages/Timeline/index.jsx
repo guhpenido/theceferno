@@ -49,6 +49,8 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import "./stylesTimeline.css";
 
+import Trending from "./Trending"
+
 export function Timeline() {
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedId, setSelectedId] = useState("");
@@ -500,7 +502,9 @@ export function Timeline() {
     return `tl-addPost ${classe}`;
   }
 
-
+    const handleTrendingClick = () => {
+      <Trending></Trending>
+    };
 
 
 
@@ -686,6 +690,8 @@ export function Timeline() {
             </div>
             <div className="tl-titulo">
               <h1>Timeline</h1>
+              <h1>|</h1>
+              <h1 onClick={handleTrendingClick}>Trending Topics</h1>
             </div>
           </div>
           <div className="tl-main">
