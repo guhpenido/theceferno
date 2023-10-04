@@ -323,6 +323,36 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
     }
   };
 
+
+
+  useEffect(() => {
+    const trendingTimeLine = async () => {
+      try {
+        const db = getFirestore(app);
+        const trendingTimelineCollectionRef = collection(db, "timeline");
+
+        // Criar uma consulta que ordena os documentos por "deslikes" em ordem decrescente
+        const q = query(trendingTimelineCollectionRef, orderBy("deslikes", "desc"));
+
+        const snapshot = await getDocs(q);
+
+        // Processar os documentos da coleção "timeline"
+        const timelineData = [];
+        snapshot.forEach((doc) => {
+          timelineData.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Agora você tem os documentos da coleção "timeline" ordenados por "deslikes"
+        console.log("Documentos da coleção 'timeline' ordenados por 'deslikes':", timelineData);
+      } catch (error) {
+        console.error("Erro ao buscar documentos da coleção 'timeline':", error);
+      }
+    };
+
+    trendingTimeLine();
+  }, []);
+
+
   return (
     <>
       <div className="tl-box" key={post.id} onClick={toggleReplies}>

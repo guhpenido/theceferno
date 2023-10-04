@@ -502,9 +502,6 @@ export function Timeline() {
     return `tl-addPost ${classe}`;
   }
 
-    const handleTrendingClick = () => {
-      <Trending></Trending>
-    };
 
 
 
@@ -691,7 +688,7 @@ export function Timeline() {
             <div className="tl-titulo">
               <h1>Timeline</h1>
               <h1>|</h1>
-              <h1 onClick={handleTrendingClick}>Trending Topics</h1>
+              <h1>Trending Topics</h1>
             </div>
           </div>
           <div className="tl-main">
