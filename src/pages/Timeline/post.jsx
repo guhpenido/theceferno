@@ -36,7 +36,7 @@ import {
   collection,
   where,
   query,
-  orderBy,updateDoc,
+  orderBy, updateDoc,
   limit,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -52,6 +52,8 @@ import {
 } from "date-fns";
 import "./stylesDenuncia.css";
 import ReplyDisplay from "./reply";
+import VisitorPage from "../Perfil/ProfilePage/VisitorPage";
+import { AppRoutes } from "../../routes/AppRoutes";
 
 function PostDisplay({ post, userSentData, userMentionedData, userId }) {
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
@@ -61,7 +63,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
   let timeAgo;
   {/*function PostDisplay({ post, userSentData, userMentionedData }) {
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
-  const [likes, setLikes] = useState(post.likes); // Estado para controlar o número de likes
+  const [likes, setLikes] = useState(post.likes); // Estado fpara controlar o número de likes
 
   // Função para verificar se o usuário já curtiu o post
   const checkIfUserLikedPost = async () => {
@@ -102,10 +104,10 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
 
     try {
       const querySnapshot = await getDocs(q);
-  
+
       if (!querySnapshot.empty) {
         const postDoc = querySnapshot.docs[0]; // Supondo que haja apenas um documento correspondente
-  
+
         // Atualizar o campo "likes" no documento
         await updateDoc(doc(db, "timeline", postDoc.id), { likes: newLikes });
         console.log("Likes atualizados no Firebase com sucesso!");
@@ -172,28 +174,27 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
     const currentTime = new Date();
 
     const denuncia = await addDoc(denunciaCollectionRef, {
-        messageReportedId: post.postId,
-        motive,
-        time: currentTime.toString(),
-        userReported: userSentData.id,
-        userReporting: userId
-      });
+      messageReportedId: post.postId,
+      motive,
+      time: currentTime.toString(),
+      userReported: userSentData.id,
+      userReporting: userId
+    });
 
-      const newDenunciaId = denuncia.id;
-      await updateDoc(denuncia, { denunciaId: newDenunciaId });
-      console.log(denuncia);
-      toggleh1Visibility();
+    const newDenunciaId = denuncia.id;
+    await updateDoc(denuncia, { denunciaId: newDenunciaId });
+    toggleh1Visibility();
   }
 
 
 
   useEffect(() => {
     const getDenuncia = async () => {
-      const data = await getDocs(denunciaCollectionRef);  
-      setDenuncias(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
+      const data = await getDocs(denunciaCollectionRef);
+      setDenuncias(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getDenuncia();
-  }, []); 
+  }, []);
 
   //deixa e tira a visibilidade da div denuncia conteudo indevido
   const toggleBox1Visibility = () => {
@@ -209,7 +210,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
 
   //deixa e tira a visibilidade dos h1s
   const toggleh1Visibility = () => {
-    console.log("entrou")
+    // console.log("entrou")
     setH1Visible(!h1Visible);
     setBox1Visible(false);
     setBox2Visible(false);
@@ -222,9 +223,9 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
 
   const renderDivStructure = () => {
     return (
-      <div className={`denuncia ${h1Visible ? 'visible' : 'DenunciaInvisible'}`}> 
+      <div className={`denuncia ${h1Visible ? 'visible' : 'DenunciaInvisible'}`}>
         <h1>Denúncia <button onClick={toggleh1Visibility}>X</button></h1>
-        <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box1'> Está publicando conteúdo que não deveria estar no Ceferno  <button className="alternaOpcao" onClick={toggleBox1Visibility}> <img src="src\pages\Timeline\assets\icone.png"/> </button></label>
+        <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box1'> Está publicando conteúdo que não deveria estar no Ceferno  <button className="alternaOpcao" onClick={toggleBox1Visibility}> <img src="src\pages\Timeline\assets\icone.png" /> </button></label>
         <select className={`opcoesDenuncia box1 ${box1Visible ? 'visible' : 'DenunciaInvisible'}`} id="box1" name="box1" value={motive} onChange={handleMotiveChange}>
           <option></option>
           <option value="Eh_Spam"> É spam </option>
@@ -241,8 +242,8 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
         </select>
 
         <br></br>
-        <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box2'> Está fingindo ser outra pessoa  <button className="alternaOpcao" onClick={toggleBox2Visibility}> <img src="src\pages\Timeline\assets\icone.png"/> </button></label>       
-         <select className={`opcoesDenuncia box2 ${box2Visible ? 'visible' : 'DenunciaInvisible'}`} id="box2" name="box2" value={motive} onChange={handleMotiveChange}>
+        <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box2'> Está fingindo ser outra pessoa  <button className="alternaOpcao" onClick={toggleBox2Visibility}> <img src="src\pages\Timeline\assets\icone.png" /> </button></label>
+        <select className={`opcoesDenuncia box2 ${box2Visible ? 'visible' : 'DenunciaInvisible'}`} id="box2" name="box2" value={motive} onChange={handleMotiveChange}>
           <option></option>
           <option value="fingindo_Ser_Eu"> Eu </option>
           <option value="fingindo_Ser_Alguem_que_Sigo"> Alguém que sigo </option>
@@ -314,14 +315,14 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
 
     try {
       const response = await addDoc(collection(db, "replys"), newReplyData);;
-      console.log("Resposta enviada com sucesso com ID: ", response.id);
+      // console.log("Resposta enviada com sucesso com ID: ", response.id);
       setIsReplying(false);
       setReplyText("");
     } catch (error) {
       console.error("Erro ao enviar a resposta: ", error);
     }
   };
-  
+
   return (
     <>
       <div className="tl-box" key={post.id} onClick={toggleReplies}>
@@ -333,26 +334,28 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
               )}
             </div>
             {post.userMentioned !== null ? (
-              <div className="tl-ps-nomes">
-                <p className="tl-ps-nome">
-                  {nomeEnvio}{" "}
-                  <span className="tl-ps-user">@{userEnvio} </span>
-                  <span className="tl-ps-tempo">• {timeAgo}</span>
-                  <FontAwesomeIcon className="arrow" icon={faArrowRight} />
-                  {userMentionedData && (
-                    <img src={userMentionedData.imageUrl} alt="" />
-                  )}
-                  {userMentionedData && (
-                    <>
-                      {" "}
-                      {userMentionedData.nome}{" "}
-                      <span className="tl-ps-userReceived">
-                        @{userMentionedData.usuario}{" "}
-                      </span>
-                    </>
-                  )}
-                </p>
-              </div>
+                <Link to="/VisitorPage" state={{ objetoUsuario: userSentData, modo: post.mode }} style={{ color: 'white' }}>
+                  <div className="tl-ps-nomes">
+                    <p className="tl-ps-nome">
+                      {nomeEnvio}{" "}
+                      <span className="tl-ps-user">@{userEnvio} </span>
+                      <span className="tl-ps-tempo">• {timeAgo}</span>
+                      <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                      {userMentionedData && (
+                        <img src={userMentionedData.imageUrl} alt="" />
+                      )}
+                      {userMentionedData && (
+                        <>
+                          {" "}
+                          {userMentionedData.nome}{" "}
+                          <span className="tl-ps-userReceived">
+                            @{userMentionedData.usuario}{" "}
+                          </span>
+                        </>
+                      )}
+                    </p>
+                  </div>
+                </Link> 
             ) : (
               <div className="tl-ps-nomes">
                 <p className="tl-ps-nome">
@@ -392,7 +395,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
             </div>
           )}
 
-          
+
 
         </div>
         <div className="tl-ps-texto">
@@ -412,22 +415,23 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
               <span>{post.deslikes}</span>
             </div>
             <img className='iconeDenuncia' onClick={toggleh1Visibility} src="src\pages\Timeline\assets\alerta.png" alt="imagem de um ícone de denúncia" />
-              {renderDivStructure()}
+            {renderDivStructure()}
           </div>
         </div>
-      </div>
+      </div >
       {showReplies && (
         <div className="replies-container">
           {replies.map((reply) => (
             <ReplyDisplay
-            key={reply.id}
-            reply={reply}
-          />
+              key={reply.id}
+              reply={reply}
+            />
           ))}
-          
+
           <button onClick={toggleReplies}>Voltar para a timeline</button>
         </div>
-      )}
+      )
+      }
     </>
   );
 }

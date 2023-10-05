@@ -79,7 +79,7 @@ header .header-items-home .header-item-home .item-title-home {
 header .header-items-home .header-item-home .item-title-home .title-text-home {
   font-size: 0.85rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.785);
+  color: rgba(255, 255, 255, 0.785) !important;
 }
 
 header .header-items-home .header-item-home .item-title-home .title-icon-home {
@@ -182,6 +182,10 @@ main .home-section .home-button:hover {
   transform: translateY(-0.25rem);
 }
 
+.logo-text-home {
+  color: rgba(255, 255, 255, 0.785);;
+}
+
 
 @media (max-width: 550px) {
 
@@ -195,8 +199,9 @@ main .home-section .home-button:hover {
   }
   header .header-items {
     flex-direction: column;
-    margin-top: 2rem;
-    margin-top: -1vh;
+    margin-top: 1vh;
+    align-items: center;
+    text-align: center;
   }
 
   .header-logo {
@@ -208,16 +213,39 @@ main .home-section .home-button:hover {
     font-size: 1.5rem !important;
   }
 
+  .logo-text-home {
+    color: rgba(255, 255, 255, 0.785);
+    margin-top: 10px;
+    font-size: 3vh;
+  }
 
+  .title-text-home {
+    /* font-size: 0.85rem; */
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.785) !important;
+  }
+
+
+  .header-logo-home {
+    margin-left: -50vw;
+  }
   header .header-items .header-item {
     margin: 0.5rem 0;
   }
 
   .header-link {
-    font-size: 0.85rem;
+    /* font-size: 0.85rem; */
     font-weight: 500;
     color: rgba(255, 255, 255, 0.785) !important;
   }
+
+  .titulo-home {
+    color: rgba(255, 255, 255, 0.785);
+    font-size: 10vh !important;
+    margin-left: -25vw;
+    margin-bottom: 4vh;
+  }
+    
 
   main {
     margin-top: -13vh;

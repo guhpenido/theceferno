@@ -175,7 +175,7 @@ const PerfilUsuario: React.FC = () => {
                     background: 'rgba(71, 99, 228, 0.2)',
                     marginBottom: '15px',
                     color: 'whitesmoke',
-                    textAlign: 'center', 
+                    textAlign: 'center',
                 }}>
                     Nada Encontrado
                 </div>
@@ -190,7 +190,7 @@ const PerfilUsuario: React.FC = () => {
                                     <span>@{nickname}</span>
                                 </Header>
                                 <Posts>
-                                    <p>{item.text}</p> 
+                                    <p>{item.text}</p>
                                 </Posts>
                                 <Icons>
                                     <Status>
