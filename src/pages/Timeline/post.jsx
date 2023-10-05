@@ -50,7 +50,7 @@ import {
   isYesterday,
   differenceInDays,
 } from "date-fns";
-// import "./stylesDenuncia.css";
+import "./stylesDenuncia.css";
 import ReplyDisplay from "./reply";
 
 function PostDisplay({ post, userSentData, userMentionedData, userId }) {
@@ -254,7 +254,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
       </div>
     );
   };
-  
+
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [showReplies, setShowReplies] = useState(false);
