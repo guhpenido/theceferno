@@ -13,6 +13,7 @@ import Whisper from "../pages/Whisper";
 import {Timeline} from "../pages/Timeline/index";
 import VisitorPage from "../pages/Perfil/ProfilePage/VisitorPage";
 import SeachPage from "../pages/Perfil/ProfilePage/SearchPage";
+import Trending from "../pages/Timeline/Trending";
 //
 export function AppRoutes() {
   return (
@@ -31,6 +32,7 @@ export function AppRoutes() {
         <Route path="/timeline" element={<Timeline />} />
         <Route path="/VisitorPage" element={<VisitorPage />} />
         <Route path="/SeachPage" element={<SeachPage />} />
+        <Route path="/trending" component={<Trending />} />
       </Routes>
     </BrowserRouter>
   );

@@ -13,7 +13,7 @@ import { faQuestion } from "@fortawesome/fontawesome-free-solid";
 import { faPaperPlane } from "@fortawesome/fontawesome-free-solid";
 //import { faXmark } from "@fortawesome/fontawesome-free-solid";
 import { app } from "../../services/firebaseConfig";
-import { getFirestore, startAfter } from "firebase/firest oore";
+import { getFirestore, startAfter } from "firebase/firestore";
 //import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import homeIcon from "../../assets/home-icon.svg";
 import dmIcon from "../../assets/dm-icon.svg";
@@ -48,6 +48,8 @@ import { addDoc } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import "./stylesTimeline.css";
+import Trending from "./Trending";
+
 
 export function Timeline() {
   const [selectedUser, setSelectedUser] = useState("");
@@ -71,6 +73,18 @@ export function Timeline() {
   const [loadedPosts, setLoadedPosts] = useState([]);
   const [hasLoadedPosts, setHasLoadedPosts] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
+  const [activeTab, setActiveTab] = useState('timeline');
+  const [trendingPosts, setTrendingPosts] = useState([]);
+  const [sortedTrendingPosts, setSortedTrendingPosts, sortByDislikes] = useState([]);
+
+
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab); // Função para alterar a aba ativa
+  };
+
+
+
 
   const [nextPostId, setNextPostId] = useState(0);
   const handleScroll = () => {
@@ -78,6 +92,47 @@ export function Timeline() {
     const documentHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
 
+
+    const sortByDislikes = () => {
+      const sortedPosts = [...trendingPosts];
+      sortedPosts.sort((a, b) => b.dislikes - a.dislikes);
+      setSortedTrendingPosts(sortedPosts);
+    };
+
+    useEffect(() => {
+      // Recupere os dados dos posts do Firebase (suponhamos que você tenha uma função que faça isso)
+      const fetchPostsFromFirebase = async () => {
+        try {
+          const posts = await firebase.firestore().collection('posts').get();
+          const postArray = [];
+          posts.forEach((post) => {
+            postArray.push(post.data());
+          });
+          // Ordene os posts por deslikes
+          postArray.sort((a, b) => b.dislikes - a.dislikes);
+          // Atualize o estado com os posts ordenados
+          setTrendingPosts(postArray);
+        } catch (error) {
+          console.error('Erro ao recuperar posts do Firebase', error);
+        }
+      };
+  
+      // Chame a função para recuperar e ordenar os posts
+      fetchPostsFromFirebase();
+    }, []);
+  
+
+    useEffect(() => {
+      if (activeTab === 'Trending') {
+        // Quando a guia "Trending" for ativada, ordene automaticamente os posts por deslikes
+        sortByDislikes();
+      }
+
+      const postsData = fetchPostsFromYourDataSource();
+      const sortedPosts = postsData.sort((a, b) => b.dislikes - a.dislikes);
+      setTrendingPosts(sortedPosts);
+    }, [activeTab]);
+    
     // Defina um limite inferior para acionar a busca por mais posts
     const triggerLimit = 100; // Você pode ajustar isso conforme necessário
 
@@ -87,10 +142,38 @@ export function Timeline() {
   };
 
   useEffect(() => {
+    const fetchTimelineData = async () => {
+      try {
+        const db = getFirestore(app);
+        const timelineCollectionRef = collection(db, "timeline");
+  
+        // Criar uma consulta que ordena os documentos por "deslikes" em ordem decrescente
+        const q = query(timelineCollectionRef, orderBy("deslikes", "desc"));
+  
+        const snapshot = await getDocs(q);
+  
+        // Processar os documentos da coleção "timeline"
+        const timelineData = [];
+        snapshot.forEach((doc) => {
+          timelineData.push({ id: doc.id, ...doc.data() });
+        });
+  
+        // Agora você tem os documentos da coleção "timeline" ordenados por "deslikes"
+        console.log("Documentos da coleção 'timeline' ordenados por 'deslikes':", timelineData);
+      } catch (error) {
+        console.error("Erro ao buscar documentos da coleção 'timeline':", error);
+      }
+    };
+  
+    fetchTimelineData();
+  }, []);
+
+  useEffect(() => {
     // Adicione um ouvinte de rolagem quando o componente for montado
     window.addEventListener("scroll", handleScroll);
 
     return () => {
+    
       // Remova o ouvinte de rolagem quando o componente for desmontado
       window.removeEventListener("scroll", handleScroll);
     };
@@ -114,6 +197,7 @@ export function Timeline() {
         navigate("/login");
       }
     });
+
 
     return () => unsubscribe();
   }, [auth, navigate]);
@@ -157,6 +241,8 @@ export function Timeline() {
         limit(10)
       );
     }
+
+
 
 
     // if(selectedCurso !== "" && selectedInstituicao !== ""){
@@ -500,6 +586,8 @@ export function Timeline() {
     return `tl-addPost ${classe}`;
   }
 
+  
+
 
 
 
@@ -519,6 +607,7 @@ export function Timeline() {
   // };
 
 
+
   return (
     <>
       {/* <div className="tl-filters">
@@ -534,8 +623,8 @@ export function Timeline() {
           {/* Adicione outras opções de cursos aqui */}
       {/* </select>
 
-        <select
-          className="tl-filter-select"
+        <select 
+        className="tl-filter-select"
           onChange={handleInstituicaoChange}
           value={selectedInstituicao}
         >
@@ -685,19 +774,38 @@ export function Timeline() {
               </div>
             </div>
             <div className="tl-titulo">
-              <h1>Timeline</h1>
+            <button onClick={() => handleTabChange("timeline")}>Timeline</button>
+            <button onClick={() => handleTabChange("trending")}>Trending</button>
             </div>
+          </div>
           </div>
           <div className="tl-main">
             <div className="tl-container">
-              {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
-                <PostDisplay
-                  key={post.id}
-                  post={post}
-                  userSentData={userSentData}
-                  userMentionedData={userMentionedData}
-                />
-              ))}
+            {activeTab === "timeline" && (
+                <div className="tl-posts">
+                {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
+                  <PostDisplay
+                    key={post.id}
+                    post={post}
+                    userSentData={userSentData}
+                    userMentionedData={userMentionedData}
+                  />
+                ))}
+              </div>
+            )}
+            {activeTab === "trending" && (
+                <div className="tl-trending-posts">
+                <ul>
+                  {sortedTrendingPosts.map((post) => (
+                    <li key={post.id}>
+                      <h3>{post.title}</h3>
+                      <p>{post.content}</p>
+                      <p>Deslikes: {post.dislikes}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              )}
             </div>
             {isFetching && <p>Carregando mais posts...</p>}
           </div>
@@ -732,8 +840,7 @@ export function Timeline() {
             </Link>
           </div>
         </div>
-      </div>
-      {/*<div className="tl-menu">
+      {/* <div className="tl-menu">
           <div className="tl-menu-header">
             <div className="tl-menu-header-profile">
               <div className="tl-menu-foto"></div>
@@ -761,7 +868,7 @@ export function Timeline() {
             </div>            
           </div>
           <div className="tl-menu-footer"></div>
-  </div>*/}
-    </>
-  );
-}
+              </div> */}
+</>
+  )
+};
