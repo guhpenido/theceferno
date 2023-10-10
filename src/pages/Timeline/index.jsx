@@ -75,7 +75,7 @@ export function Timeline() {
   const [isFetching, setIsFetching] = useState(false);
   const [activeTab, setActiveTab] = useState('timeline');
   const [trendingPosts, setTrendingPosts] = useState([]);
-  const [sortedTrendingPosts, setSortedTrendingPosts, sortByDislikes] = useState([]);
+  const [sortedTrendingPosts, setSortedTrendingPosts] = useState([]);
 
 
 
@@ -85,53 +85,12 @@ export function Timeline() {
 
 
 
-
   const [nextPostId, setNextPostId] = useState(0);
   const handleScroll = () => {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
 
-
-    const sortByDislikes = () => {
-      const sortedPosts = [...trendingPosts];
-      sortedPosts.sort((a, b) => b.dislikes - a.dislikes);
-      setSortedTrendingPosts(sortedPosts);
-    };
-
-    useEffect(() => {
-      // Recupere os dados dos posts do Firebase (suponhamos que você tenha uma função que faça isso)
-      const fetchPostsFromFirebase = async () => {
-        try {
-          const posts = await firebase.firestore().collection('posts').get();
-          const postArray = [];
-          posts.forEach((post) => {
-            postArray.push(post.data());
-          });
-          // Ordene os posts por deslikes
-          postArray.sort((a, b) => b.dislikes - a.dislikes);
-          // Atualize o estado com os posts ordenados
-          setTrendingPosts(postArray);
-        } catch (error) {
-          console.error('Erro ao recuperar posts do Firebase', error);
-        }
-      };
-  
-      // Chame a função para recuperar e ordenar os posts
-      fetchPostsFromFirebase();
-    }, []);
-  
-
-    useEffect(() => {
-      if (activeTab === 'Trending') {
-        // Quando a guia "Trending" for ativada, ordene automaticamente os posts por deslikes
-        sortByDislikes();
-      }
-
-      const postsData = fetchPostsFromYourDataSource();
-      const sortedPosts = postsData.sort((a, b) => b.dislikes - a.dislikes);
-      setTrendingPosts(sortedPosts);
-    }, [activeTab]);
     
     // Defina um limite inferior para acionar a busca por mais posts
     const triggerLimit = 100; // Você pode ajustar isso conforme necessário
@@ -141,32 +100,6 @@ export function Timeline() {
     }
   };
 
-  useEffect(() => {
-    const fetchTimelineData = async () => {
-      try {
-        const db = getFirestore(app);
-        const timelineCollectionRef = collection(db, "timeline");
-  
-        // Criar uma consulta que ordena os documentos por "deslikes" em ordem decrescente
-        const q = query(timelineCollectionRef, orderBy("deslikes", "desc"));
-  
-        const snapshot = await getDocs(q);
-  
-        // Processar os documentos da coleção "timeline"
-        const timelineData = [];
-        snapshot.forEach((doc) => {
-          timelineData.push({ id: doc.id, ...doc.data() });
-        });
-  
-        // Agora você tem os documentos da coleção "timeline" ordenados por "deslikes"
-        console.log("Documentos da coleção 'timeline' ordenados por 'deslikes':", timelineData);
-      } catch (error) {
-        console.error("Erro ao buscar documentos da coleção 'timeline':", error);
-      }
-    };
-  
-    fetchTimelineData();
-  }, []);
 
   useEffect(() => {
     // Adicione um ouvinte de rolagem quando o componente for montado
@@ -804,6 +737,7 @@ export function Timeline() {
                     </li>
                   ))}
                 </ul>
+                <Trending />
               </div>
               )}
             </div>

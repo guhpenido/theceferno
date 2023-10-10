@@ -125,20 +125,20 @@ const SeachPost = ({ searchTerm }) => {
             borderBottom: "1px solid #4763E4",
             maxWidth: "100%",
             flexShrink: 0,
-            borderRadius: "5px",
+            borderRadius: "10px",
             border: "2px solid #4763e4",
             background: "rgba(71, 99, 228, 0.2)",
             marginBottom: "15px",
             color: "whitesmoke",
             textAlign: "center",
+            marginTop: "14px",
           }}
         >
           carregando...
         </div>
       ) : (
         <div>
-          {loadedPosts
-            .filter(({ post }) => {
+          {loadedPosts.filter(({ post }) => {
               const similarity = stringSimilarity.compareTwoStrings(
                 searchTerm.toLowerCase(),
                 post.text.toLowerCase()
@@ -155,12 +155,16 @@ const SeachPost = ({ searchTerm }) => {
               />
             ))}
           {loadedPosts.filter(({ post }) => {
+
             const similarity = stringSimilarity.compareTwoStrings(
               searchTerm.toLowerCase(),
               post.text.toLowerCase()
             );
             return similarity > 0.5;
-          }).length === 0 && <div style={{textAlign: "center"}}>Nenhum resultado encontrado.</div>}
+          }).length === 0 && <div 
+          style={{
+          textAlign: "center",
+        }}>Nenhum resultado encontrado.</div>}
         </div>
       )}
     </div>

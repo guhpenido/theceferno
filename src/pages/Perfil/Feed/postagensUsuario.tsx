@@ -373,11 +373,11 @@ const PostagensUsuario: React.FC = () => {
                         <Body>
                             <Icons>
                                 <Header>
-                                    <Avatar as="img" src={newAvatar || ""} alt="Novo Avatar" />
+                                    <Avatar as="img" src={newAvatar || ""} alt="Novo Avatar" style={{ marginLeft:"-100px", marginTop: "-20px"}}  />
                                     <HeaderName>
-                                        <div>{userName}</div>
-                                        <div>@{nickname}</div>
-                                        <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                                        <div style={{marginLeft:"-5px", marginTop:"-10px" }} >{userName}</div>
+                                        <div style={{marginLeft:"10px", marginTop:"-10px" }} >@{nickname}</div>
+                                        <FontAwesomeIcon className="arrow" style={{marginLeft:"10px", marginTop:"-6px" }}  icon={faArrowRight} />
                                         {item.userMentionedData && (
                                             <div>
                                                 <HeaderNameMentioned>
@@ -396,7 +396,7 @@ const PostagensUsuario: React.FC = () => {
                                     </HeaderName>
                                 </Header>
                                 <Posts>
-                                    <div>
+                                    <div style={{textAlign:"left",  }}>
                                         {item.text}
                                     </div>
                                 </Posts>
@@ -406,11 +406,11 @@ const PostagensUsuario: React.FC = () => {
                                         {item.replysCount}
                                     </Status>
                                     <Status>
-                                        <FontAwesomeIcon icon={faThumbsUp} onClick={() => handleLikeClick(item.likes, item.postId)} />
+                                        <FontAwesomeIcon icon={faThumbsUp} style={{marginLeft:"-70px", marginRight:"5px", }} onClick={() => handleLikeClick(item.likes, item.postId)} />
                                         {item.likes}
                                     </Status>
                                     <Status>
-                                        <FontAwesomeIcon icon={faThumbsDown} onClick={() => handleDeslikes(item.deslikes, item.postId)} />
+                                        <FontAwesomeIcon icon={faThumbsDown} style={{ marginRight:"5px", }} onClick={() => handleDeslikes(item.deslikes, item.postId)} />
                                         {item.deslikes}
                                     </Status>
                                     <Status>

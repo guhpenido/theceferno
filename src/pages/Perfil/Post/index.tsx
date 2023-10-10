@@ -27,6 +27,7 @@ import {
   Postdays,
   Posts,
   Status,
+  arrow,
 } from "./styles";
 
 import {
@@ -160,7 +161,7 @@ function PostDisplay({ post, userSentData, userMentionedData, setRendState }) {
                   <HeaderName>
                     <div>{nomeEnvio}</div>
                     <div>@{userEnvio}</div>
-                    <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                    <FontAwesomeIcon className="arrow" icon={faArrowRight} style={{ marginTop:'-47px', marginLeft:"50px" }}/>
                     {userMentionedData && (
                       <div>
                         <HeaderNameMentioned>
@@ -172,7 +173,7 @@ function PostDisplay({ post, userSentData, userMentionedData, setRendState }) {
                             )}
                           </Avatar>
                           <div>{userMentionedData.nome}</div>
-                          <div className="tl-ps-userReceived">
+                          <div className="tl-ps-userReceived" style={{marginTop:"8px", }}>
                             @{userMentionedData.usuario}
                           </div>
                         </HeaderNameMentioned>
@@ -191,14 +192,14 @@ function PostDisplay({ post, userSentData, userMentionedData, setRendState }) {
                 </Posts>
                 <Footer>
                   <Status>
-                    <FontAwesomeIcon icon={faComment} /> {post.replyCount}
+                    <FontAwesomeIcon icon={faComment} style={{marginRight:"20px", }}/> {post.replyCount}
                   </Status>
                   <Status>
-                    <FontAwesomeIcon icon={faThumbsUp} onClick={() => handleLikeClick(post.likes, post.postId)} />
+                    <FontAwesomeIcon icon={faThumbsUp} style={{marginRight:"5px", marginLeft:"15px" }} onClick={() => handleLikeClick(post.likes, post.postId)} />
                     {likes}
                   </Status>
                   <Status>
-                    <FontAwesomeIcon icon={faThumbsDown} /> {post.deslikes}
+                    <FontAwesomeIcon icon={faThumbsDown} style={{marginRight:"5px", marginLeft:"15px" }}  /> {post.deslikes}
                   </Status>
                   <Status>
                     <Postdays>

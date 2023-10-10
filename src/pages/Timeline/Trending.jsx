@@ -2,9 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { app } from '../../services/firebaseConfig';
 import { getFirestore, collection, query, orderBy, getDocs } from 'firebase/firestore';
 
-function Trending() {
-  const [trendingData, setTrendingData] = useState([]);
 
+function Trending() {
+  const [sortedTrendingPosts, setSortedTrendingPosts] = useState([]);
+
+  const sortByDislikes = () => {
+    const sortedPosts = [...sortedTrendingPosts]; // Faça uma cópia dos posts para não alterar o estado diretamente
+    sortedPosts.sort((a, b) => b.dislikes - a.dislikes); // Ordene os posts por deslikes em ordem decrescente
+    setSortedTrendingPosts(sortedPosts); // Atualize o estado com os posts ordenados
+  };
+  
   useEffect(() => {
     const fetchTrendingData = async () => {
       try {
@@ -16,27 +23,33 @@ function Trending() {
         snapshot.forEach((doc) => {
           timelineData.push({ id: doc.id, ...doc.data() });
         });
-        setTrendingData(timelineData);
+        setSortedTrendingPosts(timelineData); // Atualize sortedTrendingPosts com os posts ordenados
+        sortByDislikes(); // Chame a função para garantir que os posts estejam inicialmente ordenados
       } catch (error) {
         console.error("Erro ao buscar documentos da coleção 'timeline':", error);
       }
     };
-
+  
     fetchTrendingData();
   }, []);
+  
+
+  useEffect(() => {
+    // Chame a função sortByDislikes para ordenar os posts quando necessário
+    sortByDislikes();
+  }, [sortedTrendingPosts]); // Chame quando sortedTrendingPosts mudar
 
   return (
     <div>
-      <h1>Trending</h1>
       <ul>
-        {trendingData.map((post) => (
-          <li key={post.id}>
-            <h3>{post.title}</h3>
-            <p>{post.content}</p>
-            <p>Deslikes: {post.dislikes}</p>
-          </li>
-        ))}
-      </ul>
+      {sortedTrendingPosts.map((post) => (
+        <li key={post.id}>
+          <h3>{post.title}</h3>
+          <p>{post.content}</p>
+          <p>Deslikes: {post.dislikes}</p>
+        </li>
+      ))}
+    </ul>
     </div>
   );
 }
