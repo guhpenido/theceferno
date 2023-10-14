@@ -2,6 +2,7 @@ import React from "react";
 import "./stylesTutorial.css";
 import { Link } from "react-router-dom";
 import cefernoTextoImg from "../../assets/ceferno_texto.png";
+import VLibras from "@djpfs/react-vlibras";
 
 export function Tutorial() {
   return (
@@ -147,6 +148,7 @@ export function Tutorial() {
             </div>
         </main>
       </div>
+      <VLibras forceOnload={true} />
     </>
   );
 }

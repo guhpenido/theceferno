@@ -2,6 +2,7 @@ import React from "react";
 import "./stylesSobre.css";
 import { Link } from "react-router-dom";
 import cefernoTextoImg from "../../assets/ceferno_texto.png";
+import VLibras from "@djpfs/react-vlibras";
 
 export function Sobre() {
   return (
@@ -108,6 +109,7 @@ export function Sobre() {
           </div>
         </main>
       </div>
+      <VLibras forceOnload={true} />
     </>
   );
 }

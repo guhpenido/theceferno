@@ -15,20 +15,21 @@
   position: fixed;
   right: 0;
   bottom: 0;
-  overflow-y: scroll;
+  overflow-y: hidden;
   overflow-x: hidden;
   background-color: #0c0c00;
 }
 
 .container {
   background-color: #0c0c00;
-  max-width: 100vw ;
+  max-width: 100% ;
   height: 100vh;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   color: white;
   font-family: 'Inter', sans-serif;
+  padding: 30px;
 }
 
 h2 {
@@ -113,6 +114,20 @@ h2 {
   color: #ffffff !important;
 }
 
+.etapa03{
+  width: 100%;
+}
+
+.container form .etapa03{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: none;
+}
 
 /* Media queries para celular */
 /* @media only screen and (max-width: 480px) {
@@ -203,6 +218,9 @@ h2 {
   display: flex;
   align-items: center;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
 }
 
 .container form  .inputContainer {
@@ -258,6 +276,10 @@ h2 {
   align-items: center;
   justify-content: center;
   gap: 15px;
+}
+
+.profile-pic img{
+  width: 60%;
 }
 
 .container form .button:hover {
@@ -319,7 +341,7 @@ li{
 
 .registro-cefernoFullImg{
   width: 100%;
-  height: 100%;
+  height: 100vh;
   object-fit: contain;
   padding: 100px;
 }
@@ -405,9 +427,11 @@ li{
   }
 
   #output {
-    width: 27vw;
-    height: 10vh;
     margin-bottom: 1.3vh;
+  }
+
+  .profile-pic img{
+    width: 60%;
   }
 
   .mudaImagem {
@@ -508,6 +532,7 @@ li{
 @media screen and (min-width:1000px) and (max-width:1320px) {
   .container {
     height: 100vh; 
+    padding: 20px;
   }
   .login {
     width: 100vw;
@@ -516,6 +541,28 @@ li{
     align-items: center;
     justify-content: center;
     flex-direction: column;
+  }
+
+  .container form{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+  }
+
+    .container form .etapa03{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: none;
   }
 
   .container .inputContainer span {
@@ -557,5 +604,7 @@ li{
     display: none!important;
   }
 
-  
+  .etapa03{
+    width: 100%;
+  }
 } 

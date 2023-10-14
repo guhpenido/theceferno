@@ -25,6 +25,7 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import VLibras from "@djpfs/react-vlibras";
 
 // import "./stylesTimeline.css";
 
@@ -410,6 +411,7 @@ export function Timeline() {
           <div className="tl-menu-footer"></div>
   </div>*/}
       </div>
+      <VLibras forceOnload={true} />
     </>
   );
 }

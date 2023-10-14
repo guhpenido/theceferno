@@ -2,6 +2,7 @@ import React from "react";
 import "./stylesContato.css";
 import { Link } from "react-router-dom";
 import cefernoTextoImg from "../../assets/ceferno_texto.png";
+import VLibras from "@djpfs/react-vlibras";
 
 export function Contato() {
   return (
@@ -67,6 +68,7 @@ export function Contato() {
 
         </main>
       </div>
+      <VLibras forceOnload={true} />
     </>
   );
 }

@@ -22,6 +22,7 @@ import {
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {  doc, setDoc } from "firebase/firestore"; // Import the doc function
 import cefernoFullImg from "../../assets/ceferno_icon_full.png";
+import VLibras from "@djpfs/react-vlibras";
 
 const db = getFirestore(app);
 
@@ -567,7 +568,7 @@ export function Register() {
           >
             <span>
               <a onClick={retrocederEtapa} href="#">
-                - Voltar
+              &lt;- Voltar
               </a>
             </span>
             <h2>Etapa 02/04</h2>
@@ -650,7 +651,7 @@ export function Register() {
           >
             <span>
               <a onClick={retrocederEtapa} href="#">
-                - Voltar
+              &lt;- Voltar
               </a>
             </span>
             <h2>Etapa 03/04</h2>
@@ -738,7 +739,7 @@ export function Register() {
           >
             <span>
               <a onClick={retrocederEtapa} href="#">
-                - Voltar
+              &lt;- Voltar
               </a>
             </span>
             <h2>Etapa 04/04</h2>
@@ -776,7 +777,9 @@ export function Register() {
         </form>
       </div>
       </div>
+      <VLibras forceOnload={true} />
     </div>
+    
   </div>
   );
 }

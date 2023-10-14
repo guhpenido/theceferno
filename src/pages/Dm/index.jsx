@@ -21,6 +21,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
+import VLibras from "@djpfs/react-vlibras";
 
 
 // Conexao com o firebase
@@ -382,6 +383,7 @@ function Dm() {
           <img id="dm" src={dmIcon}></img>
         </div>
         </Link>
+        <VLibras forceOnload={true} />
       </div>
     </>
   );

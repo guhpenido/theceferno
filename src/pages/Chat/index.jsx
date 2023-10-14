@@ -9,6 +9,7 @@ import { doc, getDoc, onSnapshot, updateDoc, arrayUnion , setDoc } from "firebas
 import { Link, useParams } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import VLibras from "@djpfs/react-vlibras";
 
 // Conexão com o Firebase
 const firebaseConfig = {
@@ -259,6 +260,7 @@ function Chat() {
           <img id="enviarChat" className="iconDm" src={enviarIcon}  onKeyDown={handleKeyDown} tabIndex="0" alt="Enviar" onClick={enviarMensagem} />
         </div>
       </div>
+      <VLibras forceOnload={true} />
     </>
   );
 }
