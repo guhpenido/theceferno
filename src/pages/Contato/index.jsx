@@ -3,11 +3,15 @@ import "./stylesContato.css";
 import { Link } from "react-router-dom";
 import cefernoTextoImg from "../../assets/ceferno_texto.png";
 import VLibras from "@djpfs/react-vlibras";
+import { diminuir} from './fonte';
+import { aumentar } from './fonte';
 
 export function Contato() {
   return (
     <>
       <div className="contato-screen">
+      <button className="botao-fonte" onClick={diminuir}>Diminuir Fonte</button>
+        <button className="botao-fonte" onClick={aumentar}>Aumentar Fonte</button>
         <header className="header-sobre" id="header">
             <div className="div-img-logo-sobre"><img className="sobre-cefernoTextoImg" src={cefernoTextoImg} alt="logo ceferno"></img></div>
             <div className="sobre-botao-acesse-itens-header"><div className="div-botao-acesse-sobre">
