@@ -392,6 +392,21 @@ body{
   overflow: visible;
 }
 
-.footerDm div:hover img{
+.footerDm div:hover img {
   filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%) drop-shadow(0px 0px 5px #4763E4) drop-shadow(0px 0px 15px #4763E4);
+}
+
+.tlBotaoTroca { 
+  background: none;
+  border: none;
+  color: white;
+}
+
+.tlBotaoTroca:hover {
+  border-bottom: #193cd8 5px solid;
+  border-radius: 5%;
+}
+
+.tlBotaoTroca::selection {
+  color: #193cd8;
 }

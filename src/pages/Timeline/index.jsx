@@ -707,8 +707,9 @@ export function Timeline() {
               </div>
             </div>
             <div className="tl-titulo">
-            <button onClick={() => handleTabChange("timeline")}>Timeline</button>
-            <button onClick={() => handleTabChange("trending")}>Trending</button>
+            <button className="tlBotaoTroca" onClick={() => handleTabChange("timeline")}>Timeline</button>
+            <p style={{color: '#193cd8'}}>|</p>
+            <button className="tlBotaoTroca" onClick={() => handleTabChange("trending")}>Trending</button>
             </div>
           </div>
           </div>
@@ -727,18 +728,9 @@ export function Timeline() {
               </div>
             )}
             {activeTab === "trending" && (
-                <div className="tl-trending-posts">
-                <ul>
-                  {sortedTrendingPosts.map((post) => (
-                    <li key={post.id}>
-                      <h3>{post.title}</h3>
-                      <p>{post.content}</p>
-                      <p>Deslikes: {post.dislikes}</p>
-                    </li>
-                  ))}
-                </ul>
+              
                 <Trending />
-              </div>
+              
               )}
             </div>
             {isFetching && <p>Carregando mais posts...</p>}
