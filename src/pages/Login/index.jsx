@@ -51,12 +51,12 @@ export function Login() {
     <div className="login">
       <div className="registro-full-screen">
         <div className="div-registro-cefernoFullImg">
-          <img className="registro-cefernoFullImg" src={cefernoFullImg}></img>
+          <img className="registro-cefernoFullImg" src={cefernoFullImg} alt="Logo Ceferno"></img>
         </div>
         <div className="login-border">
           <div className="container">
             <header className="header">
-              <img src={logoImg} alt="CEFERNO" className="login-logoImg" />
+              <img src={logoImg} alt="Logo Ceferno" className="login-logoImg" />
               <span>Por favor digite suas informações de login</span>
             </header>
 
@@ -87,7 +87,7 @@ export function Login() {
               </a>
 
               <button className="button" onClick={handleSignIn}>
-                Entrar <img src={arrowImg} alt="->" />
+                Entrar <img src={arrowImg} alt="seta entrar" />
               </button>
               <div className="footer">
                 <p>Você não tem uma conta?</p>

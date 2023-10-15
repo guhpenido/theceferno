@@ -123,9 +123,9 @@ function Chat() {
             key={index}
           >
             {userUid === elemento.idUserSent ? (
-              <img className="profilePicDm" src={currentUserProfilePic} alt="Profile Pic" />
+              <img className="profilePicDm" src={currentUserProfilePic} alt="Imagem de perfil" />
             ) : (
-              <img className="profilePicDm" src={chatPartnerProfilePic} alt="Profile Pic" />
+              <img className="profilePicDm" src={chatPartnerProfilePic} alt="Imagem de perfil" />
             )}
             <p className='mensagemChatPv'>{elemento.text}</p>
           </div>
@@ -251,7 +251,7 @@ function Chat() {
       <div>
         <div className="headerDm">
           <Link to={`/dm`}><img id="voltarChat" className="iconDm" src={voltarIcon} alt="Voltar" /></Link>
-          <img className="profilePicDm" src={chatPartnerProfilePic} alt="Profile Pic" />
+          <img className="profilePicDm" src={chatPartnerProfilePic} alt="Imagem de perfil" />
           <p className="nomeUserDm boldDm">{chatPartnerName}</p>
         </div>
         <AtualizaChat currentUserProfilePic={currentUserProfilePic} chatPartnerProfilePic={chatPartnerProfilePic} />

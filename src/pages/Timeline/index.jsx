@@ -26,8 +26,7 @@ import {
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import VLibras from "@djpfs/react-vlibras";
-
-// import "./stylesTimeline.css";
+import "./stylesTimeline.css";
 
 export function Timeline() {
   const [isLoadingUser, setIsLoadingUser] = useState(true);
@@ -208,7 +207,7 @@ export function Timeline() {
               <div className="tl-logo">
                 <img
                   src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png"
-                  alt=""
+                  alt="Logo Ceferno"
                 />
               </div>
             </div>
@@ -290,7 +289,7 @@ export function Timeline() {
                   <div className="tl-ps-foto">
                     <img
                       src="https://cdn.discordapp.com/attachments/871728576972615680/1142349089133047868/image.png"
-                      alt=""
+                      alt="Imagem perfil"
                     />
                   </div>
                   <div className="tl-ps-nomes">
@@ -300,7 +299,7 @@ export function Timeline() {
                       <FontAwesomeIcon className="arrow" icon={faArrowRight} />
                       <img
                         src="https://cdn.discordapp.com/attachments/871728576972615680/1142348920949833829/image.png"
-                        alt=""
+                        alt="Imagem perfil"
                       />{" "}
                       Kettles{" "}
                       <span className="tl-ps-userReceived">@eokettles </span>
@@ -331,7 +330,7 @@ export function Timeline() {
                   <div className="tl-ps-foto">
                     <img
                       src="https://cdn.discordapp.com/attachments/871728576972615680/1142349089133047868/image.png"
-                      alt=""
+                      alt="Imagem perfil"
                     />
                   </div>
                   <div className="tl-ps-nomes">
@@ -363,7 +362,7 @@ export function Timeline() {
           <div className="tl-addpost" onClick={toggleVisibility}>
             <img
               src="https://cdn.discordapp.com/attachments/871728576972615680/1142352433352294482/asa.png"
-              alt=""
+              alt="Imagem perfil"
             />
           </div>
           <div className="tl-footer">

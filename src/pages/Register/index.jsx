@@ -486,12 +486,12 @@ export function Register() {
     
     <div className="login">
     <div className="registro-full-screen">
-    <div className="div-registro-cefernoFullImg"><img className="registro-cefernoFullImg" src={cefernoFullImg}></img></div>
+    <div className="div-registro-cefernoFullImg"><img className="registro-cefernoFullImg" src={cefernoFullImg} alt="Logo Ceferno"></img></div>
       <div className="registr-borda">
       <div className="container">
       <br></br><br></br>
         <header className="header">
-          <img src={logoImg} alt="CEFERNO" className="registro-logoImg" />
+          <img src={logoImg} alt="Logo Ceferno" className="registro-logoImg" />
           <span>Por favor digite suas informações de cadastro</span>
         </header>
         <form>
@@ -554,7 +554,7 @@ export function Register() {
                 backgroundColor: !isEtapa1Valid() ? "#24054C" : "green",
               }}
             >
-              Continuar <img src={arrowImg} alt="->" />
+              Continuar <img src={arrowImg} alt="Botão continuar" />
             </h1>
 
             <div className="footer">
@@ -642,7 +642,7 @@ export function Register() {
                 backgroundColor: !isEtapa2Valid() ? "red" : "green",
               }}
             >
-              Continuar <img src={arrowImg} alt="->" />
+              Continuar <img src={arrowImg} alt="Botão continuar" />
             </h1>
           </div>
           <div
@@ -730,7 +730,7 @@ export function Register() {
                 backgroundColor: !isEtapa3Valid() ? "red" : "green",
               }}
             >
-              Continuar <img src={arrowImg} alt="->" />
+              Continuar <img src={arrowImg} alt="Botão continuar" />
             </h1>
           </div>
           <div

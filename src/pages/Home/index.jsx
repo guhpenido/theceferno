@@ -13,14 +13,14 @@ export function Home() {
     <>
       <div className="home-super-screen">
         <div className="div-home-cefernoFullImg">
-          <img className="home-cefernoFullImg" src={cefernoFullImg}></img>
+          <img className="home-cefernoFullImg" src={cefernoFullImg} alt="Logo Ceferno"></img>
         </div>
         <div className="home-screen">
           <header className="header-home" id="header">
             <div className="header-logo-home">
               <img
                 src={logoImg}
-                alt="CEFERNO"
+                alt="Logo Ceferno"
                 className="home-logo"
                 id="home-logo-Tlpequena"
               ></img>
@@ -32,6 +32,7 @@ export function Home() {
                 <img
                   className="home-cefernoTextoImg"
                   src={cefernoTextoImg}
+                  alt="Logo Ceferno"
                 ></img>
               </div>
               <div>
@@ -61,7 +62,7 @@ export function Home() {
                   </Link>
                   <p className="home-p-Tlgrande">
                     Ao se inscrever você concorda com os{" "}
-                    <Link className="span-home" to="/register">
+                    <Link className="span-home" to="/sobre">
                       Termos de condição
                     </Link>
                   </p>

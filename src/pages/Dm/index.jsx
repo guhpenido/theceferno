@@ -3,7 +3,7 @@ import homeIcon from "../../assets/home-icon.svg";
 import dmIcon from "../../assets/dm-icon.svg";
 import notificacaoIcon from "../../assets/notificacao-icon.svg";
 import pesquisaIcon from "../../assets/pesquisa-icon.svg";
-//import "./dmStyles.css"; 
+import "./dmStyles.css"; 
 //import "./stylesDm.css"; 
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
@@ -22,10 +22,10 @@ import {
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import VLibras from "@djpfs/react-vlibras";
+// import { Container, Header} from '../../pages/Perfil/styles/Icons';
 
 
 // Conexao com o firebase
-
 const firebaseConfig = {
   apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
   authDomain: "auth-ceferno.firebaseapp.com",
@@ -36,9 +36,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
-
 
 /*function AbrirChat(id){
     return <Link to={`/Chat/${id}`}></Link>;
@@ -207,7 +205,7 @@ function Dm() {
                 <img
                   className="profilePicDm"
                   src={partnerImg?partnerImg:cefernoIcon}
-                  alt="Profile Pic"
+                  alt="Imagem de perfil"
                 />
               </div>
               <div className="tudoMenosImg">
@@ -314,6 +312,9 @@ function Dm() {
   };
   return (
     <>
+    <div className="full-dm-screen">
+      <div className="lateral-estatica-dm"></div>
+      <div className="screen-dm-usavel">
       <div className="headerDm">
         <img
           className="profilePicDm"
@@ -323,6 +324,7 @@ function Dm() {
           //src={userLoggedData.imageUrl}
           //src={userId.imageUrl}
           //src={user.imageUrl}
+          alt="Imagem de perfil"
         ></img>
         <p id="msg">Mensagens</p>
       </div>
@@ -348,7 +350,7 @@ function Dm() {
                   key={user.id?user.id:user.uid}
                   noderef={nodeRef}
                 >
-                  <img className="profilePicDm" src={user.imageUrl}></img>
+                  <img className="profilePicDm" src={user.imageUrl} alt="Imagem de perfil"></img>
                   <div className="dadosPessoaisDm">
                     <p className="nomeUserDm boldDm">{user.nome}</p>
                     <p className="userDm lightDm">@{user.usuario}</p>
@@ -366,24 +368,26 @@ function Dm() {
       </div>
       <div className="footerDm">
       <Link className="botaoAcessar" to="/timeline"><div>
-          <img id="home" src={homeIcon}></img>
+          <img id="home" src={homeIcon} alt="Botão ir para Home"></img>
         </div>
         </Link>
         <Link className="botaoAcessar" to="/timeline">
         <div>
-          <img id="pesquisa" src={pesquisaIcon}></img>
+          <img id="pesquisa" src={pesquisaIcon} alt="Botão para pesquisa"></img>
         </div>
         </Link>
         <Link className="botaoAcessar" to="/timeline">
         <div>
-          <img id="notificacao" src={notificacaoIcon}></img>
+          <img id="notificacao" src={notificacaoIcon} alt="Botão ver notificações"></img>
         </div>
         </Link>
         <Link className="botaoAcessar" to="/dm"><div>
-          <img id="dm" src={dmIcon}></img>
+          <img id="dm" src={dmIcon} alt="Botão ir para DM, chat conversas privadas"></img>
         </div>
         </Link>
         <VLibras forceOnload={true} />
+      </div>
+      </div>
       </div>
     </>
   );

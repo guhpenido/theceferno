@@ -9,7 +9,7 @@ export function Contato() {
     <>
       <div className="contato-screen">
         <header className="header-sobre" id="header">
-            <div className="div-img-logo-sobre"><img className="sobre-cefernoTextoImg" src={cefernoTextoImg}></img></div>
+            <div className="div-img-logo-sobre"><img className="sobre-cefernoTextoImg" src={cefernoTextoImg} alt="logo ceferno"></img></div>
             <div className="sobre-botao-acesse-itens-header"><div className="div-botao-acesse-sobre">
             <Link style={{ textDecoration: 'none' }} to="/register">
               <p href="" className="header-link-sobre">
