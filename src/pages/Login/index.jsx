@@ -5,6 +5,8 @@ import logoImg from "../../assets/logo.png";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { app } from "../../services/firebaseConfig"; // Import your Firebase configuration
 import { useNavigate } from "react-router-dom";
+import cefernoFullImg from "../../assets/ceferno_icon_full.png";
+import "./stylesLogin.css";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -43,9 +45,12 @@ export function Login() {
   };
   return (
     <div className="login">
+      <div className="registro-full-screen">
+      <div className="div-registro-cefernoFullImg"><img className="registro-cefernoFullImg" src={cefernoFullImg}></img></div>
+      <div className="login-border">
       <div className="container">
         <header className="header">
-          <img src={logoImg} alt="CEFERNO" className="logoImg" />
+          <img src={logoImg} alt="CEFERNO" className="login-logoImg" />
           <span>Por favor digite suas informações de login</span>
         </header>
 
@@ -71,7 +76,7 @@ export function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <a href="#">Esqueceu sua senha ?</a>
+          <a href="#" className="login-a-esqueceu">Esqueceu sua senha ?</a>
 
           <button className="button" onClick={handleSignIn}>
             Entrar <img src={arrowImg} alt="->" />
@@ -81,6 +86,8 @@ export function Login() {
             <Link to="/register">Crie a sua conta aqui</Link>
           </div>
         </form>
+      </div>
+      </div>
       </div>
     </div>
   );
