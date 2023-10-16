@@ -1,12 +1,12 @@
 import React from "react";
 import { initializeApp } from "firebase/app";
-import { getFirestore, orderBy } from 'firebase/firestore';
+import { getDoc, getFirestore, orderBy } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import ModalReact from 'react-modal';
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { onSnapshot, collection, query, where } from 'firebase/firestore';
+import { onSnapshot, collection, query, where, doc } from 'firebase/firestore';
 import {
     Container,
     Body,
@@ -37,6 +37,10 @@ const storage = getStorage(app);
 // Definindo uma interface para os itens da timeline
 interface TimelineItem {
     postId: string;
+    userSent: string;
+    userName: string | null;
+    nickname: string | null;
+    newAvatar: string | null;
     userMentioned: string;
     text: string;
     time: string;
@@ -76,14 +80,28 @@ const WhispersUsuario: React.FC = () => {
 
     //pegar os whispers (mensagens que aquela pessoa postou/direcionou na página de alguém.)
     useEffect(() => {
-        const q = query(collection(db, 'timeline'), where('userSent', '==', currentUser), orderBy('time', 'desc'));
+        const q = query(collection(db, 'timeline'), where('userMentioned', '==', currentUser), orderBy('time', 'desc'));
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const items: TimelineItem[] = [];
-            snapshot.forEach((doc) => {
-                const data = doc.data();
+            snapshot.forEach((documento) => {
+                const data = documento.data();
+                const ref = doc(db, "users", data.userSent);
+                const docSnap =  getDoc(ref);
+                    if (docSnap.exists()) {
+                     const usr = docSnap.data();
+                     setUserName(usr.nome);
+                     setNickname(usr.usuario);
+                     setNewAvatar(usr.imageUrl);
+                     console.log(usr);
+                    }
+                    
                 items.push({
-                    postId: doc.id,
+                    postId: documento.id,
+                    userSent: data.userSent,
+                    userName: userName,
+                    nickname: nickname,
+                    newAvatar: newAvatar,
                     userMentioned: data.userMentioned,
                     text: data.text,
                     time: data.time,
@@ -121,11 +139,11 @@ const WhispersUsuario: React.FC = () => {
                 timelineItems.map((item) => (
                     <Container key={item.postId}>
                         {<Body>
-                            <Avatar as="img" src={newAvatar || ''} alt="Novo Avatar" />
+                            <Avatar as="img" src={item.newAvatar || " "} alt="Novo Avatar" />
                             <Content>
                                 <Header>
-                                    <strong>{userName}</strong>
-                                    <span>@{nickname}</span>
+                                    <strong>{item.userName}</strong>
+                                    <span>@{item.nickname}</span>
                                 </Header>
                                 <Posts>
                                     <p>{item.text}</p> {/* Adjust this according to your needs */}
@@ -158,4 +176,3 @@ export default WhispersUsuario;
 function fetchUserDataAndSetState(uid: string) {
     throw new Error("Function not implemented.");
 }
-

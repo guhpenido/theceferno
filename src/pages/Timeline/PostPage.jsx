@@ -5,6 +5,7 @@ import { faBookmark, faComment } from "@fortawesome/fontawesome-free-solid";
 import { faThumbsUp } from "@fortawesome/fontawesome-free-solid";
 import { faThumbsDown } from "@fortawesome/fontawesome-free-solid";
 import { faArrowRight } from "@fortawesome/fontawesome-free-solid";
+import { faShare } from "@fortawesome/fontawesome-free-solid";
 //import { faMagnifyingGlassArrowRight } from "@fortawesome/fontawesome-free-solid";
 
 //import { faXmark } from "@fortawesome/fontawesome-free-solid";
@@ -35,9 +36,11 @@ import "./stylesDenuncia.css";
 import ReplyDisplay from "./reply";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
- function PostPage() {
-    
+function PostPage() {
+    const location = useLocation();
+    const { userSentData, userMentionedData, userLoggedData } = location.state;
     const { postId } = useParams();
     const postIdInt = parseInt(postId, 10);
     const [post, setPost] = useState(null);
@@ -53,6 +56,7 @@ import { useNavigate } from "react-router-dom";
     const [userSent, setUserSent] = useState(null);
     const [userMentioned, setUserMentioned] = useState(null);
     const [time, setTime] = useState(null);
+    const [modoResposta, setModoResposta] = useState("public");
     const navigate = useNavigate();
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -80,78 +84,50 @@ import { useNavigate } from "react-router-dom";
         return () => unsubscribe();
     }, [auth, navigate]);
 
-        const fetchPostAndComments = async () => {
-            if (!postIdInt) {
-                console.log("postId não está definido.");
-                return;
-            }
-            const q = query(collection(db, "timeline"), where("postId", "==", postIdInt));
-            try {
-                const querySnapshot = await getDocs(q);
-                
-                if (!querySnapshot.empty) {
-                    const postDoc = querySnapshot.docs[0];
-                    
-                    const postData = postDoc.data();
-    
-                    console.log("Dados do post:", postData);
-                    setLikes(postData.likes);
-                    setDeslikes(postData.deslikes);
-                    setText(postData.text);
-                    setMode(postData.mode);
-                    setUserSent(postData.userSent);
-                    setUserMentioned(postData.userMentioned);
-                    setTime(postData.time);
-                } else {
-                    console.log("Post não encontrado.");
-                    setPost(null);
-                }
-    
-            } catch (error) {
-                console.error("Erro ao obter o post e os comentários: ", error);
-            }
-        };
-        fetchPostAndComments();
-
-    async function getUserByUserId(userId) {
-        const usersCollectionRef = collection(db, "users");
-        const q = query(usersCollectionRef, where("id", "==", userId));
-
+    const fetchPostAndComments = async () => {
+        if (!postIdInt) {
+            console.log("postId não está definido.");
+            return;
+        }
+        const q = query(collection(db, "timeline"), where("postId", "==", postIdInt));
         try {
-            // Execute a consulta
             const querySnapshot = await getDocs(q);
 
-            // Verifique se há documentos correspondentes
             if (!querySnapshot.empty) {
-                // Obtenha o primeiro documento correspondente (assumindo que há apenas um, já que userId deve ser único)
-                const userDoc = querySnapshot.docs[0];
+                const postDoc = querySnapshot.docs[0];
 
-                // Obtenha os dados do usuário
-                const userData = userDoc.data();
+                const postData = postDoc.data();
 
-                // userData contém os dados do usuário com base no userId
-                console.log("Dados do usuário:", userData);
-                return userData;
+                console.log("Dados do post:", postData);
+                setLikes(postData.likes);
+                setDeslikes(postData.deslikes);
+                setText(postData.text);
+                setMode(postData.mode);
+                setUserSent(postData.userSent);
+                setUserMentioned(postData.userMentioned);
+                setTime(postData.time);
             } else {
-                console.log("Usuário não encontrado com o userId fornecido.");
+                console.log("Post não encontrado.");
+                setPost(null);
             }
-        } catch (error) {
-            console.error("Erro ao obter usuário por userId:", error);
-            return null;
-        }
-    }
 
-    
+        } catch (error) {
+            console.error("Erro ao obter o post e os comentários: ", error);
+        }
+    };
+    fetchPostAndComments();
+
     const postDate = new Date(time);
     const now = new Date();
     let timeAgo;
 
+    const copyToClipboard = () => {
+        const postLink = window.location.href; // Obtém o URL da página
+        navigator.clipboard.writeText(postLink); // Copia o URL para a área de transferência
+        alert("Link copiado para a área de transferência: " + postLink); // Exibe um alerta informando que o link foi copiado
+    };
 
-    const userSentData = getUserByUserId(userSent);
-    const userMentionedData = getUserByUserId(userMentioned);
-    const userAtual = getUserByUserId(userId);
-
-    const handleLikeClick = async () => {
+    const handleLikeClick = async (e) => {
         // Incrementar o número de likes localmente
         const newLikes = likes + 1;
         setLikes(newLikes);
@@ -196,6 +172,7 @@ import { useNavigate } from "react-router-dom";
         const daysAgo = differenceInDays(now, postDate);
         timeAgo = `${daysAgo} dia${daysAgo !== 1 ? "s" : ""} atrás`;
     }
+
     let imageSent = null;
     let nomeEnvio = null;
     let userEnvio = null;
@@ -209,6 +186,8 @@ import { useNavigate } from "react-router-dom";
         imageSent = userSentData.imageUrl;
         userEnvio = userSentData.usuario;
     }
+
+
 
     const [selectedOption, setSelectedOption] = useState(null);
     const [box1Visible, setBox1Visible] = useState(false); //para mostrar a div denuncia conteudo indevido
@@ -316,7 +295,32 @@ import { useNavigate } from "react-router-dom";
     const [replyText, setReplyText] = useState("");
     const [showReplies, setShowReplies] = useState(true);
     const [replies, setReplies] = useState([]);
-    const [showDetails, setShowDetails] = useState(false); // Estado para rastrear a exibição do post em detalhes
+    const [nextReplyId, setNextReplyId] = useState(0);
+
+    const fetchLatestReplyId = async () => {
+        try {
+            const postsRef = collection(db, "timeline");
+            const querySnapshot = await getDocs(
+                query(postsRef, orderBy("replyId", "desc"), limit(1))
+            ); // Obtém o último reply com o ID mais alto
+            if (!querySnapshot.empty) {
+                const latestReply = querySnapshot.docs[0].data();
+                const replyIdAsNumber = parseInt(latestReply.replyId, 10);
+                console.log(replyIdAsNumber);
+                setNextReplyId(replyIdAsNumber + 1); // Define o próximo ID disponível com base no último ID
+            }
+        } catch (error) {
+            console.error("Error fetching latest post ID:", error.message);
+        }
+    };
+
+    useEffect(() => {
+        fetchLatestReplyId();
+    }, []);
+
+    const handleModoRespostaChange = (modo) => {
+        setModoResposta(modo);
+    };
 
 
     // Função para buscar e definir as respostas do post
@@ -355,13 +359,13 @@ import { useNavigate } from "react-router-dom";
         const newReplyData = {
             deslikes: 0,
             likes: 0,
-            mode: "anon",
+            mode: modoResposta,
             time: timestamp,
             messageReplyed: postIdInt,
-            replyId: 1,
+            replyId: nextReplyId,
             text: replyText, // O texto da resposta
-            userReplyed: userMentionedData !== null ? userMentionedData.id : userSentData.id,
-            userSent: userSentData.id,
+            userReplyed: userSentData.id,
+            userSent: userLoggedData.id,
         };
 
         try {
@@ -374,21 +378,43 @@ import { useNavigate } from "react-router-dom";
         }
     };
 
-    const handleSavePost = async (postId) => {
+    const handleSavePost = async (e, postId) => {
         try {
             // Obtém o usuário atualmente autenticado
             const user = userId;
-
+            console.log(user);
             if (user) {
                 // Obtém a referência do documento do usuário no banco de dados
                 const userDocRef = doc(db, "users", user);
 
-                // Atualiza o campo savedPosts no documento do usuário
-                await updateDoc(userDocRef, {
-                    savedPosts: arrayUnion(postId) // Adiciona postId ao array savedPosts
-                });
+                // Obtém o documento do usuário
+                const userDoc = await getDoc(userDocRef);
+                const userData = userDoc.data();
 
-                console.log("Post salvo com sucesso!");
+                // Verifica se o savedPosts existe no documento do usuário
+                if (userData.savedPosts) {
+                    // Verifica se o postId já existe no array savedPosts
+                    if (!userData.savedPosts.includes(postId)) {
+                        // Cria uma nova array com o postId adicionado
+                        const updatedSavedPosts = [...userData.savedPosts, postId];
+
+                        // Atualiza o documento do usuário com o novo array savedPosts
+                        await updateDoc(userDocRef, {
+                            savedPosts: updatedSavedPosts
+                        });
+
+                        console.log("Post salvo com sucesso!");
+                    } else {
+                        console.log("Post já está salvo.");
+                    }
+                } else {
+                    // Se savedPosts não existe, cria um novo array com o postId
+                    await updateDoc(userDocRef, {
+                        savedPosts: [postId]
+                    });
+
+                    console.log("Post salvo com sucesso!");
+                }
             } else {
                 console.log("Usuário não autenticado.");
             }
@@ -396,7 +422,9 @@ import { useNavigate } from "react-router-dom";
             console.error("Erro ao salvar o post: ", error);
         }
     };
-    
+
+
+
     return (
         <>
             <div className="tl-screen">
@@ -405,7 +433,7 @@ import { useNavigate } from "react-router-dom";
                         <div className="tl-header1">
                             <Link className="tl-foto" to="/perfil">
                                 <div>
-                                    <img src={userAtual.imageUrl} alt="Perfil" />
+                                    <img src={userLoggedData.imageUrl} alt="Perfil" />
                                 </div>
                             </Link>
                             <div className="tl-logo">
@@ -469,27 +497,40 @@ import { useNavigate } from "react-router-dom";
                                                 <FontAwesomeIcon icon={faComment} onClick={toggleReply} />
                                                 <span></span>
                                             </div>
-                                            <div className="tl-ps-like" onClick={handleLikeClick}>
+                                            <div className="tl-ps-like" onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleLikeClick(e);
+                                            }}>
                                                 <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes}</span>
                                             </div>
                                             <div className="tl-ps-deslike">
                                                 <FontAwesomeIcon icon={faThumbsDown} />{" "}
                                                 <span>{deslikes}</span>
                                             </div>
-                                            <div className="tl-ps-salvar" onClick={handleSavePost}>
+                                            <div className="tl-ps-salvar" onClick={(e) => { handleSavePost(e, postIdInt) }}>
                                                 <FontAwesomeIcon icon={faBookmark} />{" "}
+                                            </div>
+                                            <div className="tl-ps-share" onClick={copyToClipboard}>
+                                                <FontAwesomeIcon icon={faShare} />{" "}
                                             </div>
                                         </div>
                                     </div>
                                     {isReplying && (
-                                        <div className="tl-reply">
-                                            <textarea
-                                                placeholder="Escreva sua resposta..."
-                                                value={replyText}
-                                                onChange={(e) => setReplyText(e.target.value)}
-                                            ></textarea>
-                                            <button onClick={handleReply}>Responder</button>
+                                        <div className="tl-reply-section">
+                                            <div className="tl-modo-resposta">
+                                                <label className="tl-modo-resposta-label">
+                                                    <input type="radio" value="publico" checked={modoResposta === "public"} onChange={() => handleModoRespostaChange("public")} />
+                                                    Público
+                                                </label>
+                                                <label className="tl-modo-resposta-label">
+                                                    <input type="radio" value="anonimo" checked={modoResposta === "anon"} onChange={() => handleModoRespostaChange("anon")} />
+                                                    Anônimo
+                                                </label>
+                                            </div>
+                                            <textarea className="tl-reply-textarea" placeholder="Escreva sua resposta..." value={replyText} onChange={(e) => setReplyText(e.target.value)}></textarea>
+                                            <button className="tl-reply-button" onClick={handleReply}>Responder</button>
                                         </div>
+
                                     )}
 
                                 </div>
@@ -500,6 +541,8 @@ import { useNavigate } from "react-router-dom";
                                         <ReplyDisplay
                                             key={reply.id}
                                             reply={reply}
+                                            user={userLoggedData}
+                                            mode={modoResposta}
                                         />
                                     ))}
                                 </div>

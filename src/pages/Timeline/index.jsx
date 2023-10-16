@@ -71,8 +71,8 @@ export function Timeline() {
   const [loadedPosts, setLoadedPosts] = useState([]);
   const [hasLoadedPosts, setHasLoadedPosts] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
-  const [selectedCurso, setSelectedCurso] = useState("");
-  const [selectedInstituicao, setSelectedInstituicao] = useState("");
+  const [selectedCurso] = useState("");
+  const [selectedInstituicao] = useState("");
   const [nextPostId, setNextPostId] = useState(0);
 
   const handleScroll = () => {
@@ -520,29 +520,6 @@ export function Timeline() {
   //     console.log(instituicao);
   //     carregaTml();
   // };
-
-  const handleSavePost = async (postId) => {
-    try {
-      // Obtém o usuário atualmente autenticado
-      const user = auth.currentUser;
-  
-      if (user) {
-        // Obtém a referência do documento do usuário no banco de dados
-        const userDocRef = doc(db, "users", user.uid);
-  
-        // Atualiza o campo savedPosts no documento do usuário
-        await updateDoc(userDocRef, {
-          savedPosts: arrayUnion(postId) // Adiciona postId ao array savedPosts
-        });
-  
-        console.log("Post salvo com sucesso!");
-      } else {
-        console.log("Usuário não autenticado.");
-      }
-    } catch (error) {
-      console.error("Erro ao salvar o post: ", error);
-    }
-  };
   
 
 
@@ -718,12 +695,14 @@ export function Timeline() {
           <div className="tl-main">
             <div className="tl-container">
               {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
+                
                 <PostDisplay
                   key={post.id}
                   post={post}
                   userSentData={userSentData}
                   userId = {userId}
                   userMentionedData={userMentionedData}
+                  userLoggedData={userLoggedData}
                 />
               ))}
             </div>

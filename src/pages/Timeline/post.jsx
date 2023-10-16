@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark, faComment } from "@fortawesome/fontawesome-free-solid";
 import { faThumbsUp } from "@fortawesome/fontawesome-free-solid";
+import { faShare } from "@fortawesome/fontawesome-free-solid";
 import { faThumbsDown } from "@fortawesome/fontawesome-free-solid";
 import { faCaretDown } from "@fortawesome/fontawesome-free-solid";
 import { faArrowRight } from "@fortawesome/fontawesome-free-solid";
@@ -36,7 +37,7 @@ import {
   collection,
   where,
   query,
-  orderBy,updateDoc,
+  orderBy, updateDoc,
   limit,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -52,16 +53,19 @@ import {
 } from "date-fns";
 import "./stylesDenuncia.css";
 import ReplyDisplay from "./reply";
+import VisitorPage from "../Perfil/ProfilePage/VisitorPage";
+import { AppRoutes } from "../../routes/AppRoutes";
 
-function PostDisplay({ post, userSentData, userMentionedData, userId }) {
+function PostDisplay({ post, userSentData, userMentionedData, userId, userLoggedData }) {
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
   const [likes, setLikes] = useState(post.likes);
   const postDate = new Date(post.time);
   const now = new Date();
   let timeAgo;
+
   {/*function PostDisplay({ post, userSentData, userMentionedData }) {
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
-  const [likes, setLikes] = useState(post.likes); // Estado para controlar o número de likes
+  const [likes, setLikes] = useState(post.likes); // Estado fpara controlar o número de likes
 
   // Função para verificar se o usuário já curtiu o post
   const checkIfUserLikedPost = async () => {
@@ -91,7 +95,9 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
     // Seu código restante...
   );
 }*/}
-  const handleLikeClick = async () => {
+  const handleLikeClick = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
     // Incrementar o número de likes localmente
     const newLikes = likes + 1;
     setLikes(newLikes);
@@ -102,10 +108,10 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
 
     try {
       const querySnapshot = await getDocs(q);
-  
+
       if (!querySnapshot.empty) {
         const postDoc = querySnapshot.docs[0]; // Supondo que haja apenas um documento correspondente
-  
+
         // Atualizar o campo "likes" no documento
         await updateDoc(doc(db, "timeline", postDoc.id), { likes: newLikes });
         console.log("Likes atualizados no Firebase com sucesso!");
@@ -120,6 +126,15 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
       setLikes(likes);
     }
   };
+
+  const copyToClipboard = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const postLink = window.location.href + "/" + post.id; // Obtém o URL da página
+    navigator.clipboard.writeText(postLink); // Copia o URL para a área de transferência
+    alert("Link copiado para a área de transferência: " + postLink); // Exibe um alerta informando que o link foi copiado
+  };
+
   // Calcule a diferença em segundos entre as datas
   const secondsAgo = Math.floor((now - postDate) / 1000);
 
@@ -172,28 +187,27 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
     const currentTime = new Date();
 
     const denuncia = await addDoc(denunciaCollectionRef, {
-        messageReportedId: post.postId,
-        motive,
-        time: currentTime.toString(),
-        userReported: userSentData.id,
-        userReporting: userId
-      });
+      messageReportedId: post.postId,
+      motive,
+      time: currentTime.toString(),
+      userReported: userSentData.id,
+      userReporting: userId
+    });
 
-      const newDenunciaId = denuncia.id;
-      await updateDoc(denuncia, { denunciaId: newDenunciaId });
-      console.log(denuncia);
-      toggleh1Visibility();
+    const newDenunciaId = denuncia.id;
+    await updateDoc(denuncia, { denunciaId: newDenunciaId });
+    toggleh1Visibility();
   }
 
 
 
   useEffect(() => {
     const getDenuncia = async () => {
-      const data = await getDocs(denunciaCollectionRef);  
-      setDenuncias(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
+      const data = await getDocs(denunciaCollectionRef);
+      setDenuncias(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getDenuncia();
-  }, []); 
+  }, []);
 
   //deixa e tira a visibilidade da div denuncia conteudo indevido
   const toggleBox1Visibility = () => {
@@ -209,7 +223,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
 
   //deixa e tira a visibilidade dos h1s
   const toggleh1Visibility = () => {
-    console.log("entrou")
+    // console.log("entrou")
     setH1Visible(!h1Visible);
     setBox1Visible(false);
     setBox2Visible(false);
@@ -222,9 +236,9 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
 
   const renderDivStructure = () => {
     return (
-      <div className={`denuncia ${h1Visible ? 'visible' : 'DenunciaInvisible'}`}> 
+      <div className={`denuncia ${h1Visible ? 'visible' : 'DenunciaInvisible'}`}>
         <h1>Denúncia <button onClick={toggleh1Visibility}>X</button></h1>
-        <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box1'> Está publicando conteúdo que não deveria estar no Ceferno  <button className="alternaOpcao" onClick={toggleBox1Visibility}> <img src="src\pages\Timeline\assets\icone.png"/> </button></label>
+        <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box1'> Está publicando conteúdo que não deveria estar no Ceferno  <button className="alternaOpcao" onClick={toggleBox1Visibility}> <img src="src\pages\Timeline\assets\icone.png" /> </button></label>
         <select className={`opcoesDenuncia box1 ${box1Visible ? 'visible' : 'DenunciaInvisible'}`} id="box1" name="box1" value={motive} onChange={handleMotiveChange}>
           <option></option>
           <option value="Eh_Spam"> É spam </option>
@@ -241,8 +255,8 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
         </select>
 
         <br></br>
-        <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box2'> Está fingindo ser outra pessoa  <button className="alternaOpcao" onClick={toggleBox2Visibility}> <img src="src\pages\Timeline\assets\icone.png"/> </button></label>       
-         <select className={`opcoesDenuncia box2 ${box2Visible ? 'visible' : 'DenunciaInvisible'}`} id="box2" name="box2" value={motive} onChange={handleMotiveChange}>
+        <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box2'> Está fingindo ser outra pessoa  <button className="alternaOpcao" onClick={toggleBox2Visibility}> <img src="src\pages\Timeline\assets\icone.png" /> </button></label>
+        <select className={`opcoesDenuncia box2 ${box2Visible ? 'visible' : 'DenunciaInvisible'}`} id="box2" name="box2" value={motive} onChange={handleMotiveChange}>
           <option></option>
           <option value="fingindo_Ser_Eu"> Eu </option>
           <option value="fingindo_Ser_Alguem_que_Sigo"> Alguém que sigo </option>
@@ -254,7 +268,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
       </div>
     );
   };
-  
+
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [showReplies, setShowReplies] = useState(false);
@@ -314,7 +328,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
 
     try {
       const response = await addDoc(collection(db, "replys"), newReplyData);;
-      console.log("Resposta enviada com sucesso com ID: ", response.id);
+      // console.log("Resposta enviada com sucesso com ID: ", response.id);
       setIsReplying(false);
       setReplyText("");
     } catch (error) {
@@ -322,21 +336,45 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
     }
   };
 
-  const handleSavePost = async (postId) => {
+  const handleSavePost = async (e, postId) => {
+    e.stopPropagation();
+    e.preventDefault();
     try {
       // Obtém o usuário atualmente autenticado
       const user = userId;
-  
+      console.log(user);
       if (user) {
         // Obtém a referência do documento do usuário no banco de dados
         const userDocRef = doc(db, "users", user);
-  
-        // Atualiza o campo savedPosts no documento do usuário
-        await updateDoc(userDocRef, {
-          savedPosts: arrayUnion(postId) // Adiciona postId ao array savedPosts
-        });
-  
-        console.log("Post salvo com sucesso!");
+
+        // Obtém o documento do usuário
+        const userDoc = await getDoc(userDocRef);
+        const userData = userDoc.data();
+
+        // Verifica se o savedPosts existe no documento do usuário
+        if (userData.savedPosts) {
+          // Verifica se o postId já existe no array savedPosts
+          if (!userData.savedPosts.includes(postId)) {
+            // Cria uma nova array com o postId adicionado
+            const updatedSavedPosts = [...userData.savedPosts, postId];
+
+            // Atualiza o documento do usuário com o novo array savedPosts
+            await updateDoc(userDocRef, {
+              savedPosts: updatedSavedPosts
+            });
+
+            console.log("Post salvo com sucesso!");
+          } else {
+            console.log("Post já está salvo.");
+          }
+        } else {
+          // Se savedPosts não existe, cria um novo array com o postId
+          await updateDoc(userDocRef, {
+            savedPosts: [postId]
+          });
+
+          console.log("Post salvo com sucesso!");
+        }
       } else {
         console.log("Usuário não autenticado.");
       }
@@ -345,77 +383,85 @@ function PostDisplay({ post, userSentData, userMentionedData, userId }) {
     }
   };
 
+
   const linkStyle = {
-    textDecoration: "none", 
-    color: "inherit", 
+    textDecoration: "none",
+    color: "inherit",
 
   };
-  
+
   return (
     <>
       <div className="tl-box" key={post.id}>
-      <Link style={linkStyle} to={`/timeline/${post.id}`}>
         <div className="tl-post">
-          <div className="tl-ps-header">
-            <div className="tl-ps-foto">
-              {imageSent && (
-                <img src={imageSent} alt="" />
+          <Link style={linkStyle} state={{ userSentData: userSentData, userMentionedData: userMentionedData, userLoggedData: userLoggedData }} to={`/timeline/${post.id}`}>
+            <div className="tl-ps-header">
+              <div className="tl-ps-foto">
+                {imageSent && (
+                  <img src={imageSent} alt="" />
+                )}
+              </div>
+              {post.userMentioned !== null ? (
+                <Link to="/VisitorPage" state={{ objetoUsuario: userSentData, modo: post.mode }} style={{ color: 'white' }}>
+                  <div className="tl-ps-nomes">
+                    <p className="tl-ps-nome">
+                      {nomeEnvio}{" "}
+                      <span className="tl-ps-user">@{userEnvio} </span>
+                      <span className="tl-ps-tempo">• {timeAgo}</span>
+                      <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                      {userMentionedData && (
+                        <img src={userMentionedData.imageUrl} alt="" />
+                      )}
+                      {userMentionedData && (
+                        <>
+                          {" "}
+                          {userMentionedData.nome}{" "}
+                          <span className="tl-ps-userReceived">
+                            @{userMentionedData.usuario}{" "}
+                          </span>
+                        </>
+                      )}
+                    </p>
+                  </div>
+                </Link>
+              ) : (
+                <div className="tl-ps-nomes">
+                  <p className="tl-ps-nome">
+                    {nomeEnvio}{" "}
+                    <span className="tl-ps-user">@{userEnvio} </span>
+                    <span className="tl-ps-tempo">• {timeAgo}</span>
+                  </p>
+                </div>
               )}
             </div>
-            {post.userMentioned !== null ? (
-              <div className="tl-ps-nomes">
-                <p className="tl-ps-nome">
-                  {nomeEnvio}{" "}
-                  <span className="tl-ps-user">@{userEnvio} </span>
-                  <span className="tl-ps-tempo">• {timeAgo}</span>
-                  <FontAwesomeIcon className="arrow" icon={faArrowRight} />
-                  {userMentionedData && (
-                    <img src={userMentionedData.imageUrl} alt="" />
-                  )}
-                  {userMentionedData && (
-                    <>
-                      {" "}
-                      {userMentionedData.nome}{" "}
-                      <span className="tl-ps-userReceived">
-                        @{userMentionedData.usuario}{" "}
-                      </span>
-                    </>
-                  )}
-                </p>
-              </div>
-            ) : (
-              <div className="tl-ps-nomes">
-                <p className="tl-ps-nome">
-                  {nomeEnvio}{" "}
-                  <span className="tl-ps-user">@{userEnvio} </span>
-                  <span className="tl-ps-tempo">• {timeAgo}</span>
-                </p>
-              </div>
-            )}
-          </div>
-          <div className="tl-ps-texto">
-            <p>{post.text}</p>
-          </div>
-          <div className="tl-ps-footer">
-            <div className="tl-ps-opcoes">
-              <div className="tl-ps-reply">
-                <FontAwesomeIcon icon={faComment} onClick={toggleReply} />
-                <span>{post.replyCount}</span>
-              </div>
-              <div className="tl-ps-like" onClick={handleLikeClick}>
-                <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes}</span>
-              </div>
-              <div className="tl-ps-deslike">
-                <FontAwesomeIcon icon={faThumbsDown} />{" "}
-                <span>{post.deslikes}</span>
-              </div>
-              <div className="tl-ps-salvar" onClick={handleSavePost}>
-                <FontAwesomeIcon icon={faBookmark} />{" "}
+            <div className="tl-ps-texto">
+              <p>{post.text}</p>
+            </div>
+            <div className="tl-ps-footer">
+              <div className="tl-ps-opcoes">
+                <div className="tl-ps-reply">
+                  <FontAwesomeIcon icon={faComment} onClick={toggleReply} />
+                  <span>{post.replyCount}</span>
+                </div>
+                <div className="tl-ps-like" onClick={(e) => {
+                  handleLikeClick(e);
+                }}>
+                  <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes}</span>
+                </div>
+                <div className="tl-ps-deslike">
+                  <FontAwesomeIcon icon={faThumbsDown} />{" "}
+                  <span>{post.deslikes}</span>
+                </div>
+                <div className="tl-ps-salvar" onClick={(e) => {handleSavePost(e, post.id)}}>
+                  <FontAwesomeIcon icon={faBookmark} />{" "}
+                </div>
+                <div className="tl-ps-share" onClick={(e) => {copyToClipboard(e)}}>
+                  <FontAwesomeIcon icon={faShare} />{" "}
+                </div>
               </div>
             </div>
-          </div>   
+          </Link>
         </div>
-        </Link>
       </div>
     </>
   );
