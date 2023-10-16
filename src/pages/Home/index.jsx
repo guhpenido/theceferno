@@ -5,6 +5,7 @@ import logoImg from "../../assets/logo.png";
 import cefernoTextoImg from "../../assets/ceferno_texto.png";
 import cefernoFullImg from "../../assets/ceferno_icon_full.png";
 import VLibras from "@djpfs/react-vlibras";
+import { Acessibilidade } from "../Acessibilidade/index";
 
 export function Home() {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -103,6 +104,7 @@ export function Home() {
           </main>
         </div>
         <VLibras forceOnload={true} />
+        <Acessibilidade />
       </div>
     </>
   );

@@ -14,6 +14,7 @@ import {Timeline} from "../pages/Timeline/index";
 import PostPage from "../pages/Timeline/PostPage";
 import VisitorPage from "../pages/Perfil/ProfilePage/VisitorPage";
 import SeachPage from "../pages/Perfil/ProfilePage/SearchPage";
+import { Acessibilidade } from "../pages/Acessibilidade/index";
 //
 export function AppRoutes() {
   return (
@@ -34,6 +35,7 @@ export function AppRoutes() {
         <Route path="/timeline" element={<Timeline />} />
         <Route path="/VisitorPage" element={<VisitorPage />} />
         <Route path="/SeachPage" element={<SeachPage />} />
+        <Route path="/acc" element={<Acessibilidade />} />
       </Routes>
     </BrowserRouter>
   );

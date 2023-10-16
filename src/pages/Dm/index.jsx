@@ -22,6 +22,7 @@ import {
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import VLibras from "@djpfs/react-vlibras";
+import { Acessibilidade } from "../Acessibilidade/index";
 // import { Container, Header} from '../../pages/Perfil/styles/Icons';
 
 // Conexao com o firebase
@@ -194,7 +195,7 @@ function Dm() {
           const horaEMinutos = `${horaFormatada}:${minutosFormatados}`;
 
           // Create the chat div and add it to the array
-          chatDivs.push(
+          chatDivs.push( 
             <Link to={`/Chat/${chatPartnerID}`}>
             <div className="chatDm" key={num}>
               {/* Replace the following lines with appropriate data */}
@@ -224,6 +225,7 @@ function Dm() {
                   </div>
                 </div>
               </div>
+              </div>
             </Link>
           );
           num++;
@@ -236,7 +238,7 @@ function Dm() {
     });
   }
 
-  // useEffect(() => {
+//useEffect(() => {
 
   //   RenderUserChats();
   // }, []);
@@ -388,10 +390,10 @@ function Dm() {
           <img id="dm" src={dmIcon} alt="Botão ir para DM, chat conversas privadas"></img>
         </div>
         </Link>
-        <VLibras forceOnload={true} />
       </div>
       </div>
       </div>
+      <Acessibilidade />
     </>
   );
 }

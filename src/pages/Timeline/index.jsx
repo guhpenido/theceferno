@@ -19,6 +19,7 @@ import homeIcon from "../../assets/home-icon.svg";
 import dmIcon from "../../assets/dm-icon.svg";
 import notificacaoIcon from "../../assets/notificacao-icon.svg";
 import pesquisaIcon from "../../assets/pesquisa-icon.svg";
+import { Acessibilidade } from "../Acessibilidade/index";
 import {
   getDatabase,
   ref,
@@ -932,7 +933,7 @@ export function Timeline() {
           <div className="tl-menu-footer"></div>
   </div>*/}
       </div>
-      <VLibras forceOnload={true} />
+      <Acessibilidade />
     </>
   );
 }
