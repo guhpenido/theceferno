@@ -89,6 +89,48 @@ body, html{
     transition: all 0.7s ease-in-out;
 }
 
+.diminuir-fonte p {
+  font-size: 12px;
+}
+
+.diminuir-fonte .main-sobre p{
+  font-size: 12px;
+}
+
+.diminuir-fonte #titulo-termos-condicoes{
+  font-size: 24px;
+}
+
+.diminuir-fonte h3{
+  font-size: 19px;
+}
+
+.aumentar-fonte p {
+  font-size: 21px;
+}
+
+.aumentar-fonte .main-sobre p{
+  font-size: 21px;
+}
+
+.aumentar-fonte #titulo-termos-condicoes{
+  font-size: 31px;
+}
+
+.aumentar-fonte h3{
+  font-size: 28px;
+}
+
+.botao-fonte{
+    color: #f9f9f9;
+    border: 3px solid #4763E4;
+    border-radius: 20px;
+    padding: 6px;
+    background-color: #4763e4;
+    /* align-items: center; */
+    text-align: center;
+    margin: 10px;
+}
 
 @media screen and (max-width:768px) and (min-width: 481px){
 
