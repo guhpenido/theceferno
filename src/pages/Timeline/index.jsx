@@ -71,8 +71,10 @@ export function Timeline() {
   const [loadedPosts, setLoadedPosts] = useState([]);
   const [hasLoadedPosts, setHasLoadedPosts] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
-
+  const [selectedCurso] = useState("");
+  const [selectedInstituicao] = useState("");
   const [nextPostId, setNextPostId] = useState(0);
+
   const handleScroll = () => {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
@@ -108,12 +110,14 @@ export function Timeline() {
       if (user) {
         console.log(user);
         setUserId(user.uid);
+        console.log(user);
         fetchUserDataAndSetState(user.uid);
         carregaTml();
       } else {
         navigate("/login");
       }
     });
+    
 
     return () => unsubscribe();
   }, [auth, navigate]);
@@ -129,7 +133,7 @@ export function Timeline() {
   });
 
   const carregaTml = async () => {
-    if (isFetching) {
+    if(isFetching){
       return;
     }
 
@@ -138,7 +142,10 @@ export function Timeline() {
     const lastLoadedPost =
       loadedPosts.length > 0 ? loadedPosts[loadedPosts.length - 1].post : null;
     const lastLoadedPostId = lastLoadedPost ? lastLoadedPost.id : "";
-    let postsQuery;
+    let postsQuery = null;
+    console.log(selectedInstituicao);
+    console.log(selectedCurso);
+
 
     if (lastLoadedPostId) {
       console.log("Latest post:" + lastLoadedPostId);
@@ -157,7 +164,6 @@ export function Timeline() {
         limit(10)
       );
     }
-
 
     // if(selectedCurso !== "" && selectedInstituicao !== ""){
     //   console.log(selectedInstituicao); 
@@ -238,41 +244,42 @@ export function Timeline() {
     //     console.error("Erro ao buscar posts por instituição:", error);
     //   }
     //   }
-
-    try {
-      const postsData = await getPostsFromFirestore(postsQuery);
-
-      if (postsData.length === 0) {
-        console.log("Você já chegou ao fim");
-      } else {
-        const postsWithUserData = [];
-
-        for (const post of postsData) {
-          const userSentData = await fetchUserData(post.userSent);
-          let userMentionedData = null;
-
-          if (post.userMentioned !== null) {
-            userMentionedData = await fetchUserData(post.userMentioned);
+    
+      try {
+        const postsData = await getPostsFromFirestore(postsQuery);
+    
+        if (postsData.length === 0) {
+          console.log("Você já chegou ao fim");
+        } else {
+          const postsWithUserData = [];
+    
+          for (const post of postsData) {
+            const userSentData = await fetchUserData(post.userSent);
+            let userMentionedData = null;
+    
+            if (post.userMentioned !== null) {
+              userMentionedData = await fetchUserData(post.userMentioned);
+            }
+    
+            postsWithUserData.push({
+              post,
+              userSentData,
+              userMentionedData,
+            });
           }
-
-          postsWithUserData.push({
-            post,
-            userSentData,
-            userMentionedData,
-          });
-        }
-
-        // Aqui, substitua todo o estado de loadedPosts com os novos posts carregados
-        setLoadedPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
+    
+          // Aqui, substitua todo o estado de loadedPosts com os novos posts carregados
+          setLoadedPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
         console.log("Novos posts carregados!");
-      }
+        }
+      
     } catch (error) {
       console.error("Erro ao obter os posts:", error);
-    } finally {
+    }finally{
       setIsFetching(false);
     }
   };
-
+  
 
   useEffect(() => {
     if (userId) {
@@ -422,7 +429,7 @@ export function Timeline() {
       window.location.reload();
     } catch (error) {
       console.error("Erro ao adicionar o post: ", error);
-    }
+    } 
   };
 
   // Function to handle search input change
@@ -500,11 +507,7 @@ export function Timeline() {
     return `tl-addPost ${classe}`;
   }
 
-
-
-
-
-
+  
   // const handleCursoChange = async (e) => {
   //     const curso = e.target.value;
   //     setSelectedCurso(curso);
@@ -517,11 +520,12 @@ export function Timeline() {
   //     console.log(instituicao);
   //     carregaTml();
   // };
+  
 
 
   return (
     <>
-      {/* <div className="tl-filters">
+    {/* <div className="tl-filters">
         <select
           className="tl-filter-select"
           onChange={handleCursoChange}
@@ -532,7 +536,7 @@ export function Timeline() {
           <option value="Eletrônica">Eletrônica</option>
           <option value="Meio Ambiente">Meio Ambiente</option>
           {/* Adicione outras opções de cursos aqui */}
-      {/* </select>
+        {/* </select>
 
         <select
           className="tl-filter-select"
@@ -543,7 +547,7 @@ export function Timeline() {
           <option value="CEFET-MG">CEFET-MG</option>
           <option value="UFMG">UFMG</option>
           {/* Adicione outras opções de instituições aqui */}
-      {/* </select>
+        {/* </select>
         <button onClick={() => carregaTml()}>Aplicar Filtro</button>
       </div> */}
       <div className="tl-screen">
@@ -691,11 +695,14 @@ export function Timeline() {
           <div className="tl-main">
             <div className="tl-container">
               {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
+                
                 <PostDisplay
                   key={post.id}
                   post={post}
                   userSentData={userSentData}
+                  userId = {userId}
                   userMentionedData={userMentionedData}
+                  userLoggedData={userLoggedData}
                 />
               ))}
             </div>

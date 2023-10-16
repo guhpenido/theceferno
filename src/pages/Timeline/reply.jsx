@@ -38,44 +38,87 @@ const db = getFirestore(app);
 
 
 
-function ReplyDisplay({ reply}) {
+function ReplyDisplay({ reply, userLoggedData, mode }) {
     const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
     const [likes, setLikes] = useState(reply.likes);
     const postDate = new Date(reply.time);
     console.log(postDate)
     const now = new Date();
     let timeAgo;
+    const [imageSent, setImageSent] = useState(null);
+    const [nomeEnvio, setNomeEnvio] = useState(null);
+    const [userEnvio, setUserEnvio] = useState(null);
+    const [modo, setModo] = useState(mode);
+    const [modoResposta, setModoResposta] = useState("publico");
 
+    // const handleModoRespostaChange = (modo) => {
+    //     setModoResposta(modo);
+    // };
+
+    const getUserData = async () => {
+        try {
+            const db = getFirestore(); // Obtenha a instância do Firestore do seu arquivo de configuração do Firebase
+            const userDocRef = doc(db, "users", reply.userSent); // Referência para o documento do usuário com base no ID
+
+            const userDocSnapshot = await getDoc(userDocRef);
+            if (userDocSnapshot.exists()) {
+                const userData = userDocSnapshot.data();
+
+                if (reply.mode == "anon") {
+                    setImageSent("https://media.discordapp.net/attachments/871728576972615680/1148261217840926770/logoanon.png?width=473&height=473");
+                    setNomeEnvio(userData.pseudonimo);
+                    setUserEnvio("ceferno 😈");
+                } else {
+                    setImageSent(userData.imageUrl);
+                    setNomeEnvio(userData.nome);
+                    setUserEnvio(userData.usuario);
+                }
+                return userData;
+            } else {
+                // O usuário não foi encontrado
+                return null;
+            }
+        } catch (error) {
+            console.error("Erro ao obter dados do usuário:", error);
+            throw error; // Você pode optar por tratar o erro aqui ou lançá-lo para ser tratado onde a função for chamada
+        }
+    };
+
+    useEffect(() => {
+        getUserData();
+    }, []);
 
     const handleLikeClick = async () => {
         // Incrementar o número de likes localmente
         const newLikes = likes + 1;
         setLikes(newLikes);
-    
+
         // Atualizar o número de likes no Firebase
-        const q = query(collection(db, "timeline"), where("postId", "==", post.id));
-    
+        const q = query(collection(db, "replys"), where("replyId", "==", reply.id));
+
         try {
-          const querySnapshot = await getDocs(q);
-      
-          if (!querySnapshot.empty) {
-            const postDoc = querySnapshot.docs[0]; // Supondo que haja apenas um documento correspondente
-      
-            // Atualizar o campo "likes" no documento
-            await updateDoc(doc(db, "timeline", postDoc.id), { likes: newLikes });
-            console.log("Likes atualizados no Firebase com sucesso!");
-          } else {
-            console.error("Post não encontrado no Firebase.");
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                const postDoc = querySnapshot.docs[0]; // Supondo que haja apenas um documento correspondente
+
+                // Atualizar o campo "likes" no documento
+                await updateDoc(doc(db, "timeline", postDoc.id), { likes: newLikes });
+                console.log("Likes atualizados no Firebase com sucesso!");
+            } else {
+                console.error("Post não encontrado no Firebase.");
+                // Reverter a contagem local de likes em caso de erro
+                setLikes(likes);
+            }
+        } catch (error) {
+            console.error("Erro ao atualizar likes no Firebase: ", error);
             // Reverter a contagem local de likes em caso de erro
             setLikes(likes);
-          }
-        } catch (error) {
-          console.error("Erro ao atualizar likes no Firebase: ", error);
-          // Reverter a contagem local de likes em caso de erro
-          setLikes(likes);
         }
-      };
-      
+    };
+
+
+
     // Calcule a diferença em segundos entre as datas
     const secondsAgo = Math.floor((now - postDate) / 1000);
 
@@ -94,88 +137,76 @@ function ReplyDisplay({ reply}) {
         timeAgo = `${daysAgo} dia${daysAgo !== 1 ? "s" : ""} atrás`;
     }
 
-    let imageSent = null;
-    let nomeEnvio = null;
-    let userEnvio = null;
-    if (reply.mode == "anon") {
-        imageSent =
-            "https://media.discordapp.net/attachments/871728576972615680/1148261217840926770/logoanon.png?width=473&height=473";
-        nomeEnvio = reply.userSent.pseudonimo;
-        userEnvio = "ceferno 😈";
-    } else {
-        nomeEnvio = reply.userSent.nome;
-        imageSent = reply.userSent.imageUrl;
-        userEnvio = reply.userSent.usuario;
-    }
-
-    const [isReplying, setIsReplying] = useState(false);
-    const [replyText, setReplyText] = useState("");
-    const [showReplies, setShowReplies] = useState(false);
-    const [replies, setReplies] = useState([]);
-
-    // Função para buscar e definir as respostas do post
-    const fetchReplies = async () => {
-        const repliesQuery = query(
-            collection(db, "replys"),
-            where("messageReplyed", "==", post.id)
-        );
-        const repliesSnapshot = await getDocs(repliesQuery);
-        const repliesData = [];
-
-        repliesSnapshot.forEach((doc) => {
-            repliesData.push({ id: doc.id, ...doc.data() });
-        });
-
-        setReplies(repliesData);
-    };
-
-    // UseEffect para buscar as respostas quando showReplies mudar
-    useEffect(() => {
-        if (showReplies) {
-            fetchReplies();
-        }
-    }, [showReplies]);
-
-    // Função para mostrar/ocultar as respostas
-    const toggleReplies = () => {
-        setShowReplies(!showReplies);
-    };
 
 
-    const toggleReply = () => {
-        setIsReplying(!isReplying);
-    };
+    // const [isReplying, setIsReplying] = useState(false);
+    // const [replyText, setReplyText] = useState("");
+    // const [showReplies, setShowReplies] = useState(false);
+    // const [replies, setReplies] = useState([]);
 
-    const handleReply = async () => {
-        const date = new Date();
-        const timestamp = date.getTime();
-        const newReplyData = {
-            deslikes: 0,
-            likes: 0,
-            mode: "anon",
-            time: timestamp,
-            messageReplyed: reply.messageReplyed,
-            replyId: 1,
-            text: replyText, // O texto da resposta
-            userReplyed: reply.UserMentioned !== null ? reply.UserMentioned.id: reply.UserSent.id,
-            userSent: reply.UserSent.id,
-        };
+    // // Função para buscar e definir as respostas do post
+    // const fetchReplies = async () => {
+    //     const repliesQuery = query(
+    //         collection(db, "replys"),
+    //         where("messageReplyed", "==", post.id)
+    //     );
+    //     const repliesSnapshot = await getDocs(repliesQuery);
+    //     const repliesData = [];
 
-        try {
-            const response = await addDoc(collection(db, "replys"), newReplyData);;
-            console.log("Resposta enviada com sucesso com ID: ", response.id);
-            setIsReplying(false);
-            setReplyText("");
-        } catch (error) {
-            console.error("Erro ao enviar a resposta: ", error);
-        }
-    };
+    //     repliesSnapshot.forEach((doc) => {
+    //         repliesData.push({ id: doc.id, ...doc.data() });
+    //     });
 
-    
+    //     setReplies(repliesData);
+    // };
+
+    // // UseEffect para buscar as respostas quando showReplies mudar
+    // useEffect(() => {
+    //     if (showReplies) {
+    //         fetchReplies();
+    //     }
+    // }, [showReplies]);
+
+    // // Função para mostrar/ocultar as respostas
+    // const toggleReplies = () => {
+    //     setShowReplies(!showReplies);
+    // };
+
+
+    // const toggleReply = () => {
+    //     setIsReplying(!isReplying);
+    // };
+
+    // const handleReply = async () => {
+    //     const date = new Date();
+    //     const timestamp = date.getTime();
+    //     const newReplyData = {
+    //         deslikes: 0,
+    //         likes: 0,
+    //         mode: modoResposta,
+    //         time: timestamp,
+    //         messageReplyed: reply.messageReplyed,
+    //         replyId: 1,
+    //         text: replyText, // O texto da resposta
+    //         userReplyed: reply.userSent,
+    //         userSent: userLoggedData.id,
+    //     };
+
+    //     try {
+    //         const response = await addDoc(collection(db, "replys"), newReplyData);;
+    //         console.log("Resposta enviada com sucesso com ID: ", response.id);
+    //         setIsReplying(false);
+    //         setReplyText("");
+    //     } catch (error) {
+    //         console.error("Erro ao enviar a resposta: ", error);
+    //     }
+    // };
+
+
 
     return (
         <>
-            <div className="reply tl-box" key={reply.id} onClick={toggleReplies}>
+            <div className="reply tl-box" key={reply.id}>
                 <div className="tl-post">
                     <div className="tl-ps-header">
                         <div className="tl-ps-foto">
@@ -183,26 +214,13 @@ function ReplyDisplay({ reply}) {
                                 <img src={imageSent} alt="" />
                             )}
                         </div>
-                            <div className="tl-ps-nomes">
-                                <p className="tl-ps-nome">
-                                    {nomeEnvio}{" "}
-                                    <span className="tl-ps-user">@{userEnvio} </span>
-                                    <span className="tl-ps-tempo">• {timeAgo}</span>]
-                                    <FontAwesomeIcon className="arrow" icon={faArrowRight} />
-                                    {reply.UserMentioned && (
-                                        <img src={reply.UserMentioned.imageUrl} alt="" />
-                                    )}
-                                    {reply.UserMentioned && (
-                                        <>
-                                            {" "}
-                                            {reply.UserMentioned.nome}{" "}
-                                            <span className="tl-ps-userReceived">
-                                                @{reply.UserMentioned.usuario}{" "}
-                                            </span>
-                                        </>
-                                    )}
-                                </p>
-                            </div>
+                        <div className="tl-ps-nomes">
+                            <p className="tl-ps-nome">
+                                {nomeEnvio}{" "}
+                                <span className="tl-ps-user">@{userEnvio} </span>
+                                <span className="tl-ps-tempo">• {timeAgo}</span>
+                            </p>
+                        </div>
                     </div>
                     <div className="tl-ps-texto">
                         <p>{reply.text}</p>
@@ -210,7 +228,7 @@ function ReplyDisplay({ reply}) {
                     <div className="tl-ps-footer">
                         <div className="tl-ps-opcoes">
                             <div className="tl-ps-reply">
-                                <FontAwesomeIcon icon={faComment} onClick={toggleReply} />
+                                <FontAwesomeIcon icon={faComment}/>
                                 <span>{reply.replyCount}</span>
                             </div>
                             <div className="tl-ps-like" onClick={handleLikeClick}>
@@ -222,7 +240,7 @@ function ReplyDisplay({ reply}) {
                             </div>
                         </div>
                     </div>
-                    {isReplying && (
+                    {/* {isReplying && (
                         <div className="tl-reply">
                             <textarea
                                 placeholder="Escreva sua resposta..."
@@ -231,7 +249,7 @@ function ReplyDisplay({ reply}) {
                             ></textarea>
                             <button onClick={handleReply}>Responder</button>
                         </div>
-                    )}
+                    )} */}
                 </div>
             </div>
         </>
