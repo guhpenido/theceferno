@@ -1,12 +1,11 @@
-import React from "react";
-import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc, updateDoc, orderBy, getDocs } from 'firebase/firestore';
-import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import React, { useEffect, useState } from 'react';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, query, orderBy, limit, getDocs, DocumentData, QuerySnapshot, where, getDoc, doc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import ModalReact from 'react-modal';
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { onSnapshot, collection, query, where } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import PostDisplay from '../../Timeline/post';
 import {
     Container,
     Body,
@@ -19,7 +18,7 @@ import {
     CommentIcon,
     RepublicationIcon,
     LikeIcon,
-} from "../Post/styles";
+} from '../Post/styles';
 
 const firebaseConfig = {
     apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
@@ -35,16 +34,16 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 // Definindo uma interface para os itens da timeline
-type TimelineItem = {
+interface TimelineItem {
     postId: string;
     userMentioned: string;
+    userSent: string; // Adicione esta linha se 'userSent' existir
     text: string;
     time: string;
     replysCount: number;
     likes: number;
     dislikes: number;
-};
-
+}
 
 const PerfilUsuario: React.FC = () => {
     const navigate = useNavigate();
@@ -52,18 +51,19 @@ const PerfilUsuario: React.FC = () => {
 
     const [currentUser, setCurrentUser] = useState<any | null>(null);
 
-    const [timelineItems, setTimelineItems] = useState<TimelineItem[]>([]); // Corrigido o tipo
+    const [timelineItems, setTimelineItems] = useState<TimelineItem[]>([]);
 
     const [userId, setUserId] = useState<string | null>(null);
 
-    const [userLoggedData, setUserLoggedData] = useState<any>(null); // Adjust the type accordingly
-    const [selectedProfile, setSelectedProfile] = useState<any>(null); // Adjust the type accordingly
+    const [userLoggedData, setUserLoggedData] = useState<any | null>(null);
+    const [selectedProfile, setSelectedProfile] = useState<any | null>(null);
     const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
-    const [posts, setPosts] = useState<any[]>([]); // Adjust the type accordingly
+    const [posts, setPosts] = useState<any[]>([]);
     const [userName, setUserName] = useState<string | null>(null);
     const [nickname, setNickname] = useState<string | null>(null);
     const [newAvatar, setNewAvatar] = useState<string | null>(null);
     const [noItemsFound, setNoItemsFound] = useState<boolean>(false);
+    const [nextPostId, setNextPostId] = useState<number>(0);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -71,6 +71,7 @@ const PerfilUsuario: React.FC = () => {
                 setUserId(user.uid);
                 fetchUserDataAndSetState(user.uid);
                 fetchTimelineItemsForUser(user.uid);
+                searchUserFields(user.uid);
             } else {
                 navigate('/login');
             }
@@ -80,15 +81,30 @@ const PerfilUsuario: React.FC = () => {
     }, [auth, navigate]);
 
     useEffect(() => {
-        const unsubscribe = getPostsFromFirestore();
-        return () => unsubscribe();
+        fetchLatestPostId();
     }, []);
 
-    useEffect(() => {
-        if (userId) {
-            fetchUserDataAndSetState(userId);
+    const searchUserFields = async (userId) => {
+        try {
+            if (userId) {
+                const userDoc = await getDoc(doc(db, 'users', userId));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    const newAvatarValue = userData['avatar'] || ''; // Campo avatar
+                    const nicknameValue = userData['usuario'] || '';
+                    const userNameValue = userData['nome'] || '';
+
+                    setNickname(nicknameValue);
+                    setUserName(userNameValue);
+                    setNewAvatar(newAvatarValue);
+                } else {
+                    console.log('User not found');
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error.message);
         }
-    }, [userId]);
+    };
 
     const fetchUserDataAndSetState = async (userId: string) => {
         try {
@@ -97,45 +113,123 @@ const PerfilUsuario: React.FC = () => {
                 if (userLoggedDataResponse) {
                     setUserLoggedData(userLoggedDataResponse);
                     setSelectedProfile(userLoggedDataResponse.usuario);
-                    setIsLoadingUser(false); // Data has been fetched, no longer loading
+                    setIsLoadingUser(false);
                 } else {
-                    alert("User data not found!"); // Show an alert when userLoggedDataResponse is null
+                    alert('Dados do usuário não encontrados!');
                 }
             }
         } catch (error) {
-            console.error('Error fetching user data:', error.message);
+            console.error('Erro ao buscar dados do usuário:', error.message);
         }
     };
 
+    const getPostsFromFirestore = async () => {
+        try {
+            const postsCollectionRef = collection(db, 'timeline');
+            const postsQuery = query(
+                postsCollectionRef,
+                orderBy('time', 'desc'),
+                limit(10)
+            );
 
-    const getPostsFromFirestore = () => {
-        return onSnapshot(collection(db, 'timeline'), (snapshot) => {
-            const postsData: any[] = [];
-            snapshot.forEach((doc) => {
+            const querySnapshot = await getDocs(postsQuery);
+            const postsData: TimelineItem[] = [];
+
+            querySnapshot.forEach((doc) => {
                 const postData = {
-                    id: doc.id,
+                    postId: doc.id,
                     ...doc.data(),
                 };
-                postsData.push(postData);
+                postsData.push(postData as TimelineItem);
             });
-            setPosts(postsData);
-        });
+
+            return postsData;
+        } catch (error) {
+            throw error;
+        }
     };
 
     const fetchUserData = async (userId: string) => {
-        const userDoc = await getDoc(doc(db, 'users', userId));
-        if (userDoc.exists()) {
-            return userDoc.data();
-        } else {
-            console.log('User not found');
+        try {
+            const userDoc = await getDoc(doc(db, 'users', userId));
+            if (userDoc.exists()) {
+                return userDoc.data();
+            } else {
+                console.log('Usuário não encontrado');
+                return null;
+            }
+        } catch (error) {
+            console.error('Erro ao buscar dados do usuário:', error.message);
             return null;
         }
     };
 
-    //pegar os whispers (mensagens que aquela pessoa foi direcionada)
-    const fetchTimelineItemsForUser = async (userId: string): Promise<TimelineItem[]> => {
+    const fetchLatestPostId = async () => {
         try {
-            const q = query(collection(db, 'timeline'), where('userMentioned', '==', userId), orderBy('time', 'desc'));
+            const postsRef = collection(db, 'timeline');
+            const querySnapshot = await getDocs(
+                query(postsRef, orderBy('postId', 'desc'), limit(1))
+            );
+            if (!querySnapshot.empty) {
+                const latestPost = querySnapshot.docs[0].data();
+                const postIdAsNumber = parseInt(latestPost.postId, 10);
+                console.log(postIdAsNumber);
+                setNextPostId(postIdAsNumber + 1);
+            }
+        } catch (error) {
+            console.error('Erro ao buscar o último ID do post:', error.message);
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const postsData: TimelineItem[] = await getPostsFromFirestore();
+                const postsWithUserData: any[] = [];
+
+                for (const post of postsData) {
+                    const userSentData = post.userSent
+                        ? await fetchUserData(post.userSent)
+                        : null;
+                    const userMentionedData = post.userMentioned
+                        ? await fetchUserData(post.userMentioned)
+                        : null;
+
+                    postsWithUserData.push({
+                        post,
+                        userSentData,
+                        userMentionedData,
+                    });
+                }
+
+                setPosts(postsWithUserData);
+
+                if (userLoggedData) {
+                    const { photoURL, userName, nickname } = userLoggedData;
+                    setNewAvatar(photoURL);
+                    setUserName(userName);
+                    setNickname(nickname);
+                }
+            } catch (error) {
+                console.error('Erro ao obter os posts:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    //na qual o usuario logado foi quem mandou pra alguem
+    const fetchTimelineItemsForUser = async (
+        userId: string
+    ): Promise<TimelineItem[]> => {
+        try {
+            const q = query(
+                collection(db, 'timeline'),
+                where('userSent', '==', userId),
+                where('userMentioned', '!=', null), 
+                orderBy('userMentioned'), 
+                orderBy('time', 'desc')
+            );
             const querySnapshot = await getDocs(q);
 
             const timelineItems: TimelineItem[] = [];
@@ -149,34 +243,39 @@ const PerfilUsuario: React.FC = () => {
                     replysCount: data.replysCount,
                     likes: data.likes,
                     dislikes: data.dislikes,
+                    userSent: data.userSent,
                 });
             });
 
+            setTimelineItems(timelineItems);
+
             return timelineItems;
         } catch (error) {
-            console.error('Error fetching timeline items:', error.message);
-            return [];
+            console.error('Erro ao buscar itens da linha do tempo:', error.message);
+            throw error;
         }
     };
 
-    // console.log(timelineItems); 
+
     return (
         <div>
             {timelineItems.length === 0 ? (
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    padding: '14px 16px',
-                    borderBottom: '1px solid #4763E4',
-                    maxWidth: '100%',
-                    flexShrink: 0,
-                    borderRadius: '5px',
-                    border: '2px solid #4763e4',
-                    background: 'rgba(71, 99, 228, 0.2)',
-                    marginBottom: '15px',
-                    color: 'whitesmoke',
-                    textAlign: 'center', 
-                }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        padding: '14px 16px',
+                        borderBottom: '1px solid #4763E4',
+                        maxWidth: '100%',
+                        flexShrink: '0',
+                        borderRadius: '5px',
+                        border: '2px solid #4763e4',
+                        background: 'rgba(71, 99, 228, 0.2)',
+                        marginBottom: '15px',
+                        color: 'whitesmoke',
+                        textAlign: 'center',
+                    }}
+                >
                     Nada Encontrado
                 </div>
             ) : (
@@ -190,7 +289,7 @@ const PerfilUsuario: React.FC = () => {
                                     <span>@{nickname}</span>
                                 </Header>
                                 <Posts>
-                                    <p>{item.text}</p> 
+                                    <p>{item.text}</p>
                                 </Posts>
                                 <Icons>
                                     <Status>
@@ -216,4 +315,3 @@ const PerfilUsuario: React.FC = () => {
 };
 
 export default PerfilUsuario;
-

@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-//import "./stylesRegister.scss";
-//import "./stylesRegister.css"; //descomentar apenas esse
+// import "./stylesRegister.scss";
+import "./stylesRegister.css"; //descomentar apenas esse
 import { useNavigate } from 'react-router-dom';
 import { app } from "../../services/firebaseConfig";
 import {
@@ -21,11 +21,12 @@ import {
 } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {  doc, setDoc } from "firebase/firestore"; // Import the doc function
+import cefernoFullImg from "../../assets/ceferno_icon_full.png";
 
 const db = getFirestore(app);
 
 export function Register() {
-  const history = useNavigate();
+  const navigate = useNavigate();
   // Estado inicial do formulário
   const [state, setState] = useState({
     email: "",
@@ -232,10 +233,10 @@ export function Register() {
 
   const renderPasswordRules = () => {
     return (
-      <ul>
-        <li>Deve ter ao menos um número ou caractere especial</li>
-        <li>Deve conter pelo menos uma letra maiúscula</li>
-        <li>Deve ter no mínimo 8 caracteres</li>
+      <ul className="regrasSenha">
+        <li>Deve ter ao menos um número ou caractere especial.</li>
+        <li>Deve conter pelo menos uma letra maiúscula.</li>
+        <li>Deve ter no mínimo 8 caracteres.</li>
       </ul>
     );
   };
@@ -471,22 +472,25 @@ export function Register() {
         });
 
         alert("Usuario cadastrado!");
-        history.push('/login');
+        navigate("/login");
       } catch (error) {
         alert("Erro ao cadastrar usuário: " + error.message);
-        history.push('/register');
+        navigate("/register");
       }
     }
   };
 
   return (
 
+    
     <div className="login">
-      
+    <div className="registro-full-screen">
+    <div className="div-registro-cefernoFullImg"><img className="registro-cefernoFullImg" src={cefernoFullImg}></img></div>
+      <div className="registr-borda">
       <div className="container">
       <br></br><br></br>
         <header className="header">
-          <img src={logoImg} alt="CEFERNO" className="logoImg" />
+          <img src={logoImg} alt="CEFERNO" className="registro-logoImg" />
           <span>Por favor digite suas informações de cadastro</span>
         </header>
         <form>
@@ -497,7 +501,7 @@ export function Register() {
             <h2>Etapa 01/04</h2>
             <br></br>
             <div className="inputContainer">
-              <label htmlFor="email">E-mail</label>
+              <label className="label-registro" htmlFor="email">E-mail</label>
               <input
                 type="text"
                 name="email"
@@ -584,7 +588,7 @@ export function Register() {
               {!isValidCelular() && (
                 <p style={{ color: "red" }}>Celular inválido</p>
               )}
-            </div>
+            </div> 
             <div className="inputContainer">
               <label htmlFor="instituicao">Instituição de Ensino</label>
               <input
@@ -681,9 +685,9 @@ export function Register() {
                 <p style={{ color: "red" }}>Usuário inválido</p>
               )}
             </div>
+            <div className="mudaImagem">
             <h3>Foto</h3>
             <br></br>
-            <div>
               <div className="profile-pic">
                 <label className="-label" htmlFor="file">
                   <span className="glyphicon glyphicon-camera"></span>
@@ -732,7 +736,7 @@ export function Register() {
             className="etapa04"
             style={{ display: state.etapa === 4 ? "block" : "none" }}
           >
-            <span>
+            <span className="voltarEtapa04">
               <a onClick={retrocederEtapa} href="#">
                 - Voltar
               </a>
@@ -771,6 +775,8 @@ export function Register() {
           </div>
         </form>
       </div>
+      </div>
     </div>
+  </div>
   );
 }

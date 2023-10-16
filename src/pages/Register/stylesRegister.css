@@ -1,3 +1,9 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .login {
   display: flex;
   background-color: none;
@@ -9,18 +15,20 @@
   position: fixed;
   right: 0;
   bottom: 0;
-  /* border-left: #210034 solid 5px; */
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: #0c0c00;
 }
 
 .container {
-  background: linear-gradient(64deg, #772fcf 0%, #6e0ee48c 100%) !important;
-  box-shadow: -54.3667984008789px 75.1484375px 93.86666870117188px 0px rgb(120, 19, 251) inset, 84.3667984008789px -41.1484375px 93.86666870117188px 0px rgba(86, 45, 136, 0.232) inset !important;
-  max-width: 100vw !important;
+  background-color: #0c0c00;
+  max-width: 100vw ;
   height: 100vh;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   color: white;
+  font-family: 'Inter', sans-serif;
 }
 
 h2 {
@@ -86,8 +94,8 @@ h2 {
   opacity: 0.8;
 }
 .container form .button:disabled {
-  opacity: 0.6; /* Exemplo de redução da opacidade */
-  cursor: not-allowed; /* Exemplo de cursor não permitido */
+  opacity: 0.6; 
+  cursor: not-allowed; 
 }
 
 .container form .footer p {
@@ -105,13 +113,9 @@ h2 {
   color: #ffffff !important;
 }
 
-html {
-  background-size: 64px 112px;
-  background-position: 0 0, 0 0, 32px 56px, 32px 56px, 0 0, 32px 56px;
-}
 
 /* Media queries para celular */
-@media only screen and (max-width: 480px) {
+/* @media only screen and (max-width: 480px) {
   .login {
     width: 100vw;
     height: 100vh;
@@ -128,7 +132,7 @@ html {
   }
 
   .container form .inputContainer label {
-    font-size: 8vw;
+    font-size: 2vw;
   }
 
   .container form .inputContainer input {
@@ -146,7 +150,9 @@ html {
   .container form .footer a {
     font-size: 12px;
   }
-}
+
+} */
+
 .imagemPerfil{
   background-color: #000000;
   width: 10vw;
@@ -160,6 +166,7 @@ html {
 #pseudonimo{
   margin-bottom: 9vh;
 }
+
 * {
   margin: 0;
   padding: 0;
@@ -167,22 +174,17 @@ html {
   box-sizing: border-box;
 }
 
-html, body {
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(64deg, #772fcf 0%, #6e0ee48c 100%) !important;
-  box-shadow: -54.3667984008789px 75.1484375px 93.86666870117188px 0px rgb(120, 19, 251) inset, 84.3667984008789px -41.1484375px 93.86666870117188px 0px rgba(86, 45, 136, 0.232) inset !important;
-}
-
 .container {
-  width: 100vw;
-  height: auto; /* Ajusta a altura com base no conteúdo */
-  max-height: 100vh; /* Define uma altura máxima para evitar que a div cresça indefinidamente */
+  width: 100%;
+  height: 100vh;
+  max-height: 100vh; 
   overflow-y: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
+
 .container .header {
   display: flex;
   align-items: center;
@@ -214,6 +216,7 @@ html, body {
   font-size: 16px;
   line-height: 19px;
   margin-bottom: 8px;
+  font-family: 'Inter';
 }
 
 .container form  .inputContainer input {
@@ -223,7 +226,7 @@ html, body {
   padding: 16px;
   width: 520px;
   height: 49px;
-  border: 1px solid #5C73DB;
+  border: 1px solid #4763E4;
   border-radius: 12px;
   margin-bottom: 12px;
 
@@ -256,6 +259,7 @@ html, body {
   justify-content: center;
   gap: 15px;
 }
+
 .container form .button:hover {
   cursor: pointer;
   opacity: 0.8;
@@ -283,10 +287,51 @@ html, body {
   color: #0e0e0e;
 }
 
+.container form .button:disabled {
+  opacity: 0.6; 
+  cursor: not-allowed; 
+}
+
+.profile-pic input{
+  width: 100%;
+  background-color: #000000;
+}
+
+li{
+  font-size:13px;
+  padding-bottom: 5px;
+  list-style-type: none;
+}
+
+.registr-borda{
+  width: 60%;
+}
+
+.registro-full-screen{
+  display: flex;
+  background-color: #4763E4;
+  width: 100%;
+}
+
+.div-registro-cefernoFullImg{
+  width: 40%;
+}
+
+.registro-cefernoFullImg{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 100px;
+}
+
+.registro-logoImg{
+  display: none;
+}
+
 @media only screen and (max-width: 480px) {
 
   .container {
-    height: 100vh; /* Ajusta a altura com base no conteúdo */
+    height: 100vh; 
   }
   .login {
     width: 100vw;
@@ -299,46 +344,110 @@ html, body {
 
   .container .header span {
     font-size: 3vw;
-    line-height: 8vw;
-    padding-top: 10vw;
+    line-height: 8vh;
+    padding-top: 10vh;
   }
 
   .container form .inputContainer label {
-    font-size: 8vw;
+    font-size: 20px;
     padding: 1vh;
   }
 
   .container form .inputContainer input {
     width: 80vw;
-    height: 8vw;
+    height: 5vh;
     align-items: center;
   }
 
   .container form .button {
     width: 80vw;
-    height: 8vw;
-    font-size: 10px;
+    height: 5vh;
+    font-size: 14px;
   }
 
   .container form .footer p,
   .container form .footer a {
     font-size: 12px;
   }
-}
 
-.container form .button:disabled {
-  opacity: 0.6; /* Exemplo de redução da opacidade */
-  cursor: not-allowed; /* Exemplo de cursor não permitido */
-}
-.profile-pic input{
-  width: 100%;
-  background-color: #000000;
-}
-
-/*Media queries para tablet*/
-@media screen and (min-width: 481px) and (max-width: 767px) {
   .container {
-    height: 100vh; /* Ajusta a altura com base no conteúdo */
+    height: 100vh; 
+    padding-left: 3vw;
+  }
+
+  .inputContainer p {
+    margin: -2vh 0 1vh 1vh;
+    color: #16032c !important;
+  }
+
+  .regrasSenha {
+    margin-left: 5.5vw;
+    margin-bottom: 1vh;
+  }
+  
+  .regrasSenha li{
+    margin-bottom: 1vh;
+  }
+
+  header span {
+    margin-top: -5vh;
+  }
+
+  .etapa03 input[type=file] {
+    width: 100%;
+    height: auto;
+    background-color: #4763E4;
+    padding: 1.5vw 1vw 1.5vw 1.5vw;
+  }
+
+  .etapa03 {
+    height: 80vh;
+  }
+
+  #output {
+    width: 27vw;
+    height: 10vh;
+    margin-bottom: 1.3vh;
+  }
+
+  .mudaImagem {
+    margin-left: 2vw
+  }
+
+  li{
+    font-size:13px;
+    padding-bottom: 5px;
+  }
+
+  .container form a {
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 19px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    color: #fff;
+  }
+
+  .div-registro-cefernoFullImg, .registro-cefernoFullImg{
+    display: none!important;
+  }
+
+  .registr-borda {
+    width: 100%;
+  }
+
+  .registro-logoImg{
+    display: flex!important;
+  }
+}
+
+.registr-borda{
+  background-color:#0c0c00;
+}
+
+@media screen and (min-width: 481px) and (max-width: 1000px) {
+  .container {
+    height: 100vh;
   }
   .login {
     width: 100vw;
@@ -356,32 +465,49 @@ html, body {
   }
 
   .container form .inputContainer label {
-    font-size: 5vw;
-    padding: 1vh;
+    font-size: 20px;
+    padding: 1vh 1vh 0 1vh;
   }
 
   .container form .inputContainer input {
     width: 80vw;
-    height: 8vw;
+    height: 5vh;
     align-items: center;
   }
 
   .container form .button {
     width: 80vw;
-    height: 8vw;
-    font-size: 10px;
+    height: 5vh;
+    font-size: 17px;
   }
 
   .container form .footer p,
   .container form .footer a {
     font-size: 15px;
   }
+
+  li{
+    font-size:12px;
+    padding-bottom: 7px;
+  }
+
+  .div-registro-cefernoFullImg, .registro-cefernoFullImg{
+    display: none!important;
+  }
+
+  .registr-borda {
+    width: 100%;
+  }
+
+  .registro-logoImg{
+    display: flex!important;
+  }
 }
 
-/*Media queries para tablets maiores*/
-@media screen and (min-width:768px) and (max-width:1320px) {
+
+@media screen and (min-width:1000px) and (max-width:1320px) {
   .container {
-    height: 100vh; /* Ajusta a altura com base no conteúdo */
+    height: 100vh; 
   }
   .login {
     width: 100vw;
@@ -399,19 +525,18 @@ html, body {
   }
 
   .container form .inputContainer label {
-    font-size: 4vw;
-    padding: 2vh;
+    font-size: 24px;
+    padding: 2vh 2vh 0vh 0vh;
   }
 
   .container form .inputContainer input {
-    width: 90vw;
-    height: 6vw;
+    
+    height: 5vh;
     align-items: center;
   }
 
   .container form .button {
-    width: 90vw;
-    height: 6vw;
+    height: 5vh;
     font-size: 20px;
   }
 
@@ -419,4 +544,18 @@ html, body {
   .container form .footer a {
     font-size: 20px;
   }
-}
+
+  .div-registro-cefernoFullImg, .registro-cefernoFullImg{
+    display: flex!important;
+  }
+
+  .registr-borda {
+    width: 60%;
+  }
+
+  .registro-logoImg{
+    display: none!important;
+  }
+
+  
+} 

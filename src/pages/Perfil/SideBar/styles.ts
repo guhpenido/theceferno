@@ -20,7 +20,7 @@ export const SearchWrapper = styled.div`
     max-height: 57px;
 `;
 
-    export const SearchInput = styled.input`
+export const SearchInput = styled.input`
     width: 100%;
     height: 39px;
     font-size: 14px;
@@ -58,3 +58,10 @@ export const SearchIcon = styled(IconSearch)`
     height: 27px;
     fill: #4763E4;
 `;
+
+export const ContainerLoadedPost = styled.div`
+::-webkit-scrollbar {
+    display: none;
+  }
+`
+

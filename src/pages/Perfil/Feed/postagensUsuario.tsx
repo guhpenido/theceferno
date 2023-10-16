@@ -1,12 +1,12 @@
 import React from "react";
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc, updateDoc, orderBy, getDocs } from 'firebase/firestore';
+import { getDoc, getFirestore, orderBy } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import ModalReact from 'react-modal';
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { onSnapshot, collection, query, where } from 'firebase/firestore';
+import { onSnapshot, collection, query, where, doc } from 'firebase/firestore';
 import {
     Container,
     Body,
@@ -37,6 +37,7 @@ const storage = getStorage(app);
 // Definindo uma interface para os itens da timeline
 interface TimelineItem {
     postId: string;
+    userSent: string;
     userMentioned: string;
     text: string;
     time: string;
@@ -48,102 +49,53 @@ interface TimelineItem {
 const PostagensUsuario: React.FC = () => {
     const navigate = useNavigate();
     const auth = getAuth(app);
+    const [userName, setUserName] = useState<string | null>(null);
+    const [nickname, setNickname] = useState<string | null>(null);
+    const [newAvatar, setNewAvatar] = useState<string | null>(null);
 
     const [currentUser, setCurrentUser] = useState<any | null>(null);
 
     const [timelineItems, setTimelineItems] = useState<TimelineItem[]>([]); // Corrigido o tipo
-
-    const [userId, setUserId] = useState<string | null>(null);
-
     const [userLoggedData, setUserLoggedData] = useState<any>(null); // Adjust the type accordingly
     const [selectedProfile, setSelectedProfile] = useState<any>(null); // Adjust the type accordingly
     const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
-    const [posts, setPosts] = useState<any[]>([]); // Adjust the type accordingly
-    const [userName, setUserName] = useState<string | null>(null);
-    const [nickname, setNickname] = useState<string | null>(null);
-    const [newAvatar, setNewAvatar] = useState<string | null>(null);
     const [noItemsFound, setNoItemsFound] = useState<boolean>(false);
 
+    //pegar o id do usuario de outra página
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                setUserId(user.uid);
+                setCurrentUser(user.uid);
                 fetchUserDataAndSetState(user.uid);
-                pegarPostagensUsuario(user.uid);
             } else {
-                navigate('/login');
+                navigate("/login");
             }
         });
 
         return () => unsubscribe();
     }, [auth, navigate]);
 
-
+    //pegar os whispers (mensagens que aquela pessoa postou/direcionou na página de alguém.)
     useEffect(() => {
-        const unsubscribe = getPostsFromFirestore();
-        return () => unsubscribe();
-    }, []);
+        const q = query(collection(db, 'timeline'), where('userSent', '==', currentUser), orderBy('time', 'desc'));
 
-    useEffect(() => {
-        if (userId) {
-            fetchUserDataAndSetState(userId);
-        }
-    }, [userId]);
-
-    const fetchUserDataAndSetState = async (userId: string) => {
-        try {
-            if (userId) {
-                const userLoggedDataResponse = await fetchUserData(userId);
-                if (userLoggedDataResponse) {
-                    setUserLoggedData(userLoggedDataResponse);
-                    setSelectedProfile(userLoggedDataResponse.usuario);
-                    setIsLoadingUser(false); // Data has been fetched, no longer loading
-                } else {
-                    alert("User data not found!"); // Show an alert when userLoggedDataResponse is null
-                }
-            }
-        } catch (error) {
-            console.error('Error fetching user data:', error.message);
-        }
-    };
-
-
-    const getPostsFromFirestore = () => {
-        return onSnapshot(collection(db, 'timeline'), (snapshot) => {
-            const postsData: any[] = [];
-            snapshot.forEach((doc) => {
-                const postData = {
-                    id: doc.id,
-                    ...doc.data(),
-                };
-                postsData.push(postData);
-            });
-            setPosts(postsData);
-        });
-    };
-
-    const fetchUserData = async (userId: string) => {
-        const userDoc = await getDoc(doc(db, 'users', userId));
-        if (userDoc.exists()) {
-            return userDoc.data();
-        } else {
-            console.log('User not found');
-            return null;
-        }
-    };
-
-    //pegar os whispers (mensagens que aquela pessoa postou sem ser direcionada)
-    const pegarPostagensUsuario = async (userId: string): Promise<TimelineItem[]> => {
-        try {
-            const q = query(collection(db, 'timeline'), where('userSent', '==', userId), where('userMentioned', '==', null));
-            console.log(q); 
-            const querySnapshot = await getDocs(q);
-            console.log(querySnapshot); 
-            const timelineItems: TimelineItem[] = [];
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                timelineItems.push({
-                    postId: doc.id,
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const items: TimelineItem[] = [];
+            snapshot.forEach(async (documento) => {
+                const data = documento.data();
+                const ref = doc(db, "users", data.userSent);
+                const docSnap = await getDoc(ref);
+                    if (docSnap.exists()) {
+                     const usr = docSnap.data();
+                     setUserName(usr.nome);
+                     setNickname(usr.usuario);
+                     setNewAvatar(usr.imageUrl);
+                     console.log(usr);
+                    }
+                    
+                items.push({
+                    postId: documento.id,
+                    userSent: data.userSent,
                     userMentioned: data.userMentioned,
                     text: data.text,
                     time: data.time,
@@ -152,12 +104,11 @@ const PostagensUsuario: React.FC = () => {
                     dislikes: data.dislikes,
                 });
             });
-            return timelineItems;
-        } catch (error) {
-            console.error('Error fetching timeline items:', error.message);
-            return [];
-        }
-    };
+            setTimelineItems(items);
+        });
+
+        return () => unsubscribe();
+    }, [currentUser]);
 
     return (
         <div>
@@ -182,7 +133,7 @@ const PostagensUsuario: React.FC = () => {
                 timelineItems.map((item) => (
                     <Container key={item.postId}>
                         {<Body>
-                            <Avatar as="img" src={newAvatar || ''} alt="Novo Avatar" />
+                            <Avatar as="img" src={newAvatar || " "} alt="Novo Avatar" />
                             <Content>
                                 <Header>
                                     <strong>{userName}</strong>
@@ -214,6 +165,8 @@ const PostagensUsuario: React.FC = () => {
     );
 };
 
-export default PostagensUsuario; 
+export default PostagensUsuario;
 
-
+function fetchUserDataAndSetState(uid: string) {
+    throw new Error("Function not implemented.");
+}

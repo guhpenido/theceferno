@@ -6,6 +6,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenti
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import React, { useState, useEffect } from 'react';
 import ModalReact from 'react-modal';
+import { Link } from 'react-router-dom';
 
 import { useNavigate } from "react-router-dom";
 
@@ -135,11 +136,11 @@ const MenuBar: React.FC = () => {
 
                     if (!newAvatarValue) {
                         setNewAvatar(userData['imageUrl'] || '');
-                    } 
+                    }
                     else {
                         setNewAvatar(newAvatarValue);
                     }
-                    
+
                 } else {
                     console.log('User not found');
                 }
@@ -152,11 +153,9 @@ const MenuBar: React.FC = () => {
     return (
         <Container>
             <TopSide>
-                <Logo as="img" src={newAvatar} alt="Novo Avatar" style={{backgroundSize: 'cover', backgroundPosition: 'center'}} />
-                <MenuButton>
-                    <SearchIcon />
-                    <span>Pesquisa</span>
-                </MenuButton>
+                <Link to="/timeline">
+                    <Logo as="img" src={newAvatar} alt="Novo Avatar" style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                </Link>
                 <MenuButton>
                     <IconWhisper />
                     <span>Sussurro</span>
@@ -165,15 +164,17 @@ const MenuBar: React.FC = () => {
                     <IconBell />
                     <span>Notificações</span>
                 </MenuButton>
-                <MenuButton>
-                    <EmailIcon />
-                    <span>Mensagens</span>
-                </MenuButton>
+                <Link to="/dm" style={{ textDecoration: 'none' }}>
+                    <MenuButton>
+                        <EmailIcon />
+                        <span>Mensagens</span>
+                    </MenuButton>
+                </Link>
                 <MenuButton>
                     <IconConfig />
                     <span>Configurações</span>
                 </MenuButton>
-                <Button onClick={OpenWhisperPage}>
+                <Button >
                     <span>Postar</span>
                 </Button>
             </TopSide>
