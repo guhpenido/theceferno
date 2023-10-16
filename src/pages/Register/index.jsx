@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-//import "./stylesRegister.scss";
+// import "./stylesRegister.scss";
 import "./stylesRegister.css"; //descomentar apenas esse
 import { useNavigate } from 'react-router-dom';
 import { app } from "../../services/firebaseConfig";
@@ -27,7 +27,7 @@ import VLibras from "@djpfs/react-vlibras";
 const db = getFirestore(app);
 
 export function Register() {
-  const history = useNavigate();
+  const navigate = useNavigate();
   // Estado inicial do formulário
   const [state, setState] = useState({
     email: "",
@@ -234,10 +234,10 @@ export function Register() {
 
   const renderPasswordRules = () => {
     return (
-      <ul>
-        <li>Deve ter ao menos um número ou caractere especial</li>
-        <li>Deve conter pelo menos uma letra maiúscula</li>
-        <li>Deve ter no mínimo 8 caracteres</li>
+      <ul className="regrasSenha">
+        <li>Deve ter ao menos um número ou caractere especial.</li>
+        <li>Deve conter pelo menos uma letra maiúscula.</li>
+        <li>Deve ter no mínimo 8 caracteres.</li>
       </ul>
     );
   };
@@ -473,10 +473,10 @@ export function Register() {
         });
 
         alert("Usuario cadastrado!");
-        history.push('/login');
+        navigate("/login");
       } catch (error) {
         alert("Erro ao cadastrar usuário: " + error.message);
-        history.push('/register');
+        navigate("/register");
       }
     }
   };
@@ -589,7 +589,7 @@ export function Register() {
               {!isValidCelular() && (
                 <p style={{ color: "red" }}>Celular inválido</p>
               )}
-            </div>
+            </div> 
             <div className="inputContainer">
               <label htmlFor="instituicao">Instituição de Ensino</label>
               <input
@@ -686,9 +686,9 @@ export function Register() {
                 <p style={{ color: "red" }}>Usuário inválido</p>
               )}
             </div>
+            <div className="mudaImagem">
             <h3>Foto</h3>
             <br></br>
-            <div>
               <div className="profile-pic">
                 <label className="-label" htmlFor="file">
                   <span className="glyphicon glyphicon-camera"></span>
@@ -737,7 +737,7 @@ export function Register() {
             className="etapa04"
             style={{ display: state.etapa === 4 ? "block" : "none" }}
           >
-            <span>
+            <span className="voltarEtapa04">
               <a onClick={retrocederEtapa} href="#">
               &lt;- Voltar
               </a>

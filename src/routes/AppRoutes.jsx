@@ -10,7 +10,10 @@ import   Dm  from "../pages/Dm";
 import   Chat   from "../pages/Chat"; 
 import Layout from '../pages/Perfil/Layout';
 import Whisper from "../pages/Whisper";
-import {Timeline} from "../pages/Timeline";
+import {Timeline} from "../pages/Timeline/index";
+import PostPage from "../pages/Timeline/PostPage";
+import VisitorPage from "../pages/Perfil/ProfilePage/VisitorPage";
+import SeachPage from "../pages/Perfil/ProfilePage/SearchPage";
 //
 export function AppRoutes() {
   return (
@@ -27,6 +30,10 @@ export function AppRoutes() {
         <Route path="/perfil" element={<Layout/>} />
         <Route path="/whisper" element={<Whisper />} /> 
         <Route path="/timeline" element={<Timeline />} /> 
+        <Route path="/timeline/:postId" element={<PostPage />} />
+        <Route path="/timeline" element={<Timeline />} />
+        <Route path="/VisitorPage" element={<VisitorPage />} />
+        <Route path="/SeachPage" element={<SeachPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -3,8 +3,8 @@ import homeIcon from "../../assets/home-icon.svg";
 import dmIcon from "../../assets/dm-icon.svg";
 import notificacaoIcon from "../../assets/notificacao-icon.svg";
 import pesquisaIcon from "../../assets/pesquisa-icon.svg";
-import "./dmStyles.css"; 
-//import "./stylesDm.css"; 
+ import "./dmStyles.css";
+import "./stylesDm.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
@@ -23,7 +23,6 @@ import {
 import { Link } from "react-router-dom";
 import VLibras from "@djpfs/react-vlibras";
 // import { Container, Header} from '../../pages/Perfil/styles/Icons';
-
 
 // Conexao com o firebase
 const firebaseConfig = {
@@ -72,7 +71,7 @@ function Dm() {
     if (userId) {
       fetchUserDataAndSetState(userId);
       RenderUserChats();
-    } 
+    }
   }, [userId]);
 
   const fetchUserDataAndSetState = async (userId) => {
@@ -80,7 +79,6 @@ function Dm() {
       const userLoggedDataResponse = await fetchUserData(userId);
       setUserLoggedData(userLoggedDataResponse);
       console.log(userLoggedData);
-      
     } catch (error) {
       console.error("Error fetching user data:", error.message);
       setIsLoading(false); // Even if there's an error, stop loading
@@ -98,7 +96,6 @@ function Dm() {
       return null;
     }
   };
-
 
   function RenderUserChats() {
     // Firestore collection reference for the "chat" collection
@@ -215,11 +212,19 @@ function Dm() {
                   <p className="lightDm">•</p>
                   <p className="horaUltimaMensagem lightDm">{horaEMinutos}</p>
                 </div>
-                <div className="mensagemDm">
-                  <p className="ultimaMensagem lightDm">{lastMessage.text}</p>
+                <div className="tudoMenosImg">
+                  <div className="dadosPessoaisDm">
+                    <p className="boldDm">{partnerNome.split(" ")[0]}</p>
+                    <p className="userDm lightDm">@{partnerUsuario}</p>
+                    <p className="lightDm">•</p>
+                    <p className="horaUltimaMensagem lightDm">{horaEMinutos}</p>
+                  </div>
+                  <div className="mensagemDm">
+                    <p className="ultimaMensagem lightDm">{lastMessage.text}</p>
+                  </div>
                 </div>
               </div>
-            </div></Link>
+            </Link>
           );
           num++;
           setIsLoading(false);
@@ -265,10 +270,10 @@ function Dm() {
 
   // Function to handle search input change
   const handleSearchInputChange = (event) => {
-    const searchValue = event.target.value
+    const searchValue = event.target.value;
     console.log("1");
     setSearchTerm(searchValue);
-    if(searchValue > ""){
+    if (searchValue > "") {
       setSearchTerm(searchValue);
 
       // Create a Firestore query to search for users by name
@@ -304,11 +309,9 @@ function Dm() {
         console.log(results2);
         setSearchResults((prevResults) => prevResults.concat(results2));
       });
+    } else {
+      setSearchResults([]);
     }
-    else {
-      setSearchResults([])
-    }
-    
   };
   return (
     <>
