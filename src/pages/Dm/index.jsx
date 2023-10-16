@@ -3,7 +3,7 @@ import homeIcon from "../../assets/home-icon.svg";
 import dmIcon from "../../assets/dm-icon.svg";
 import notificacaoIcon from "../../assets/notificacao-icon.svg";
 import pesquisaIcon from "../../assets/pesquisa-icon.svg";
- import "./dmStyles.css";
+// import "./dmStyles.css";
 import "./stylesDm.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
@@ -24,6 +24,8 @@ import { Link } from "react-router-dom";
 import VLibras from "@djpfs/react-vlibras";
 import { Acessibilidade } from "../Acessibilidade/index";
 // import { Container, Header} from '../../pages/Perfil/styles/Icons';
+
+import cefernoFullImg from "../../assets/ceferno_icon_full.png";
 
 // Conexao com o firebase
 const firebaseConfig = {
@@ -52,6 +54,7 @@ function Dm() {
   const navigate = useNavigate();
   const [userLoggedData, setUserLoggedData] = useState(null);
   const imageref = useRef(null);
+  const imageref1 = useRef(null);
 
   const nodeRef = useRef(null);
 
@@ -91,6 +94,7 @@ function Dm() {
     if (userDoc.exists()) {
       console.log(userDoc.data().imageUrl);
       imageref.current.src = userDoc.data().imageUrl;
+      imageref1.current.src = userDoc.data().imageUrl;
       return userDoc.data();
     } else {
       console.log("User not found");
@@ -213,18 +217,10 @@ function Dm() {
                   <p className="lightDm">•</p>
                   <p className="horaUltimaMensagem lightDm">{horaEMinutos}</p>
                 </div>
-                <div className="tudoMenosImg">
-                  <div className="dadosPessoaisDm">
-                    <p className="boldDm">{partnerNome.split(" ")[0]}</p>
-                    <p className="userDm lightDm">@{partnerUsuario}</p>
-                    <p className="lightDm">•</p>
-                    <p className="horaUltimaMensagem lightDm">{horaEMinutos}</p>
-                  </div>
                   <div className="mensagemDm">
                     <p className="ultimaMensagem lightDm">{lastMessage.text}</p>
                   </div>
                 </div>
-              </div>
               </div>
             </Link>
           );
@@ -318,17 +314,40 @@ function Dm() {
   return (
     <>
     <div className="full-dm-screen">
-      <div className="lateral-estatica-dm"></div>
+
+      <div className="lateral-estatica-dm">
+        <div className="imgProfilePic">
+          <img className="profilePicDm" ref={imageref1} alt="Imagem de perfil"></img>
+        </div>
+          <div className="menu-lateral-dm">
+            <Link className="botaoAcessar iconDm" to="/timeline"><div className="cada-icone-img-nome-dm">
+            <img id="home" src={homeIcon} alt="Botão ir para Home"></img>
+            <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">Home</p></div>
+            </div>
+          </Link>
+          <Link className="botaoAcessar iconDm" to="/timeline">
+          <div>
+            <img id="pesquisa" src={pesquisaIcon} alt="Botão para pesquisa"></img>
+          </div>
+          </Link>
+          <Link className="botaoAcessar iconDm" to="/timeline">
+          <div>
+            <img id="notificacao" src={notificacaoIcon} alt="Botão ver notificações"></img>
+          </div>
+          </Link>
+          <Link className="botaoAcessar iconDm" to="/dm"><div>
+            <img id="dm" src={dmIcon} alt="Botão ir para DM, chat conversas privadas"></img>
+          </div>
+          </Link>
+        </div>
+      </div>
+
       <div className="screen-dm-usavel">
       <div className="headerDm">
         <img
+          id="img-perfil-dm-telaP"
           className="profilePicDm"
           ref={imageref}
-          //src={userLoggedData.imageUrl?userLoggedData.imageUrl:cefernoIcon}
-          //src="https://pbs.twimg.com/profile_images/1653051776298360833/bUymYMlt_400x400.jpg"
-          //src={userLoggedData.imageUrl}
-          //src={userId.imageUrl}
-          //src={user.imageUrl}
           alt="Imagem de perfil"
         ></img>
         <p id="msg">Mensagens</p>
@@ -391,6 +410,11 @@ function Dm() {
         </div>
         </Link>
       </div>
+      </div>
+      <div className="tela-logo-lateral-dm">
+        <div className="div-home-cefernoFullImg">
+          <img className="home-cefernoFullImg" src={cefernoFullImg} alt="Logo Ceferno"></img>
+        </div>
       </div>
       </div>
       <Acessibilidade />
