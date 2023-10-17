@@ -68,7 +68,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 2%;
+  padding: 20px;
 }
 
 .inputPesquisaDm {
@@ -109,7 +109,7 @@
 .dadosPessoaisDm{
   width: 100%;
   display: flex;
-  gap: 5%;
+  gap: 10px;
 }
 
 #body{
@@ -253,12 +253,8 @@ link, a{
 }
 
 .fullDmMessages > div{
-  padding: 2%;
-  transition: background-color 200ms;
-}
 
-.fullDmMessages > div:hover{
-  background-color: rgba(0, 0, 0, 0.15);
+  transition: background-color 200ms;
 }
 
 .listaResultadosPesquisaDm{

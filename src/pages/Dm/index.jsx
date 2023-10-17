@@ -314,7 +314,7 @@ function Dm() {
   return (
     <>
     <div className="full-dm-screen">
-
+    <div className="lateral-wrapper">
       <div className="lateral-estatica-dm">
         <div className="imgProfilePic">
           <img className="profilePicDm" ref={imageref1} alt="Imagem de perfil"></img>
@@ -344,7 +344,7 @@ function Dm() {
           </Link>
         </div>
       </div>
-
+      </div>
       <div className="screen-dm-usavel">
       <div className="headerDm">
         <img
