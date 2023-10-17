@@ -1,6 +1,11 @@
 *{
   box-sizing: border-box;
 }
+
+body, html, :root{
+  background-color: #0c0c0c;
+}
+
 .profilePicDm{
   width: 50px;
   border-radius: 50%;
@@ -27,7 +32,7 @@
   left: 0;
   width: 100%;
   overflow: visible;
-  background-color: #242424;
+  background-color: #111111;
 }
 
 .footerDm img{
@@ -76,7 +81,7 @@
   border-radius: 15px;
   text-align: center;
   background-color: rgba(255, 255, 255, 0);
-  border: 1px solid #4763E4;
+  border: 2px solid #4763E4;
   color: #ffffff;
   outline-color: #4763E4;
 }
@@ -98,7 +103,7 @@
 
 .chatDm{
   display: flex;
-  padding: 4% 0% 4% 0%;
+  padding: 12px 0 12px 0; 
   
 }
 
@@ -106,6 +111,7 @@
   box-shadow: 0px 0px 10px #4763E4;
 }
 */
+
 .chatDm p {
   margin: 0
 }
@@ -125,6 +131,7 @@
 }
 
 
+
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -142,23 +149,6 @@
   position: relative;
   height: 100%;
 } */
-
-
-
-@media (prefers-color-scheme: lightDm) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-
 
 .enviarMensagem{
   display: flex;
@@ -262,10 +252,18 @@ link, a{
 .fullDmMessages > div{
   padding: 2%;
   transition: background-color 200ms;
+  
 }
 
 .fullDmMessages > div:hover{
   background-color: rgba(0, 0, 0, 0.15);
+}
+
+.fullDmMessages{
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  text-align: justify;
 }
 
 .listaResultadosPesquisaDm{
@@ -299,8 +297,12 @@ link, a{
 
 .full-dm-screen{
   display: flex;
-  height: 100vh;
+  height: 100%;
   background-color: #0c0c0c;
+  /* overflow: scroll; */
+  height: calc(100vh - 56px);
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .lateral-estatica-dm{
@@ -310,6 +312,8 @@ link, a{
   align-items: center;
   height: 100vh;
   padding-top: 20px;
+  align-items: flex-start;
+  background-color: #111111;
 }
 
   /* .iconDm div:hover {
@@ -328,6 +332,7 @@ link, a{
   flex-direction: column;
   justify-content: space-evenly;
   height: 40%;
+  
 }
 
 .screen-dm-usavel{
@@ -342,13 +347,32 @@ link, a{
 }
 
 .cada-icone-img-nome-dm p{
-  font-size: 20px;
+  font-size: 18px;
+  margin-left: 15px;
+  /* font-weight: 600; */
 }
 
 .escrita-lateral-dm{
-  color: #4763E4;
+  color: #ffffff; 
 }
 
+#msg{
+  font-size: 20px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.div-dm-cefernoFullImg{
+  display: none;
+}
+
+.tela-logo-lateral-dm{
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  width: 270px;
+}
 
 @media screen and (max-width:924px) and (min-width: 720px){
 
@@ -377,10 +401,35 @@ link, a{
 
   .lateral-estatica-dm{
     display: flex;
+    align-items: center;
+    position: fixed;
+    width: 100px;
+    left: 0;
+    top: 0;
   }
 
   .escrita-lateral-dm{
     display: none;
+  }
+
+  #msg{
+    font-size: 22px;
+    color: #ffffff;
+    font-weight: 600;
+    margin-left: 0% !important;
+  }
+
+  .headerDm{
+    justify-content: flex-start;
+  }
+
+  .full-dm-screen{
+    height: 100% !important;
+  }
+
+  .screen-dm-usavel{
+    width: 100vw;
+    margin-left: 20%;
   }
 }
 
@@ -428,28 +477,121 @@ link, a{
 
   .lateral-estatica-dm{
     display: flex;
+    align-items: flex-start;
+    position: fixed;
+    width: 240px;
+    left: 0;
+    top: 0;
   }
 
   .escrita-lateral-dm{
     display: flex !important;
   }
+
+  #msg{
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 600;
+    margin-left: 0% !important;
+  }
+
+  .headerDm{
+    justify-content: flex-start;
+  }
+
+  .menu-lateral-dm{
+    align-items: flex-start;
+  }
+
+  .full-dm-screen{
+    height: 100% !important;
+  }
+
+  .screen-dm-usavel{
+    width: 100vw;
+    margin-left: 260px;
+    margin-right: 22%;
+  }
 }
 
-@media (min-width:1150px){
+@media screen and (min-width: 1279px) and (max-width: 1416px){
 
   .mensagem {
     padding: 10px;
-    height: 76vh;
+    height: 80vh;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
   }
-  ::-webkit-scrollbar{
-    width: 10px;
+
+  .footerDm{
+    display: none !important; 
   }
-  
-  ::-webkit-scrollbar-thumb{
-    background-color: #4763E4;
+
+  #img-perfil-dm-telaP{
+    display: none !important;
+  }
+
+  .lateral-estatica-dm{
+    display: flex;
+    align-items: flex-start;
+    position: fixed;
+    width: 240px;
+    left: 0;
+    top: 0;
+  }
+
+  .escrita-lateral-dm{
+    display: flex !important;
+  }
+
+  #msg{
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 600;
+    margin-left: 0% !important;
+  }
+
+  .headerDm{
+    justify-content: flex-start;
+  }
+
+  .menu-lateral-dm{
+    align-items: flex-start;
+  }
+
+  .div-dm-cefernoFullImg{
+    background-color: #4763e4;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .dm-cefernoFullImg{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding-left: 20px;
+    padding-right: 15px;
+  }
+
+  .tela-logo-lateral-dm{
+    background-color: #4763e4;
+    display: flex;
+    align-items: center;
+    width: 300px;
+    height: 100vh;
+  }
+
+  .full-dm-screen{
+    height: 100% !important;
+  }
+
+  .screen-dm-usavel{
+    width: 100vw;
+    margin-left: 20%;
+    margin-right: 33%;
   }
 }
 
@@ -457,7 +599,7 @@ link, a{
 
   .mensagem {
     padding: 10px;
-    height: 74vh;
+    height: 80vh;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
@@ -468,5 +610,75 @@ link, a{
   
   ::-webkit-scrollbar-thumb{
     background-color: #4763E4;
+  }
+
+  .footerDm{
+    display: none !important; 
+  }
+
+  #img-perfil-dm-telaP{
+    display: none !important;
+  }
+
+  .lateral-estatica-dm{
+    display: flex;
+    align-items: flex-start;
+    position: fixed;
+    width: 240px;
+    left: 0;
+    top: 0; 
+  }
+
+  .escrita-lateral-dm{
+    display: flex !important;
+  }
+
+  #msg{
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 600;
+    margin-left: 0% !important;
+  }
+
+  .headerDm{
+    justify-content: flex-start;
+  }
+
+  .menu-lateral-dm{
+    align-items: flex-start;
+  }
+
+  .div-dm-cefernoFullImg{
+    background-color: #4763e4;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .dm-cefernoFullImg{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding-left: 20px;
+    padding-right: 15px;
+  }
+
+  .tela-logo-lateral-dm{
+    background-color: #4763e4;
+    display: flex;
+    align-items: center;
+    width: 350px;
+    height: 100vh;
+  }
+
+  .full-dm-screen{
+    height: 100% !important;
+  }
+
+  .screen-dm-usavel{
+    width: 100vw;
+    margin-left: 290px;
+    margin-right: 400px;
   }
 }

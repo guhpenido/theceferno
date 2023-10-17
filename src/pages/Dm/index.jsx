@@ -326,17 +326,20 @@ function Dm() {
             </div>
           </Link>
           <Link className="botaoAcessar iconDm" to="/timeline">
-          <div>
+          <div className="cada-icone-img-nome-dm">
             <img id="pesquisa" src={pesquisaIcon} alt="Botão para pesquisa"></img>
+            <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">Pesquisa</p></div>
           </div>
           </Link>
           <Link className="botaoAcessar iconDm" to="/timeline">
-          <div>
+          <div className="cada-icone-img-nome-dm">
             <img id="notificacao" src={notificacaoIcon} alt="Botão ver notificações"></img>
+            <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">Notificações</p></div>
           </div>
           </Link>
-          <Link className="botaoAcessar iconDm" to="/dm"><div>
+          <Link className="botaoAcessar iconDm" to="/dm"><div className="cada-icone-img-nome-dm">
             <img id="dm" src={dmIcon} alt="Botão ir para DM, chat conversas privadas"></img>
+            <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">DM</p></div>
           </div>
           </Link>
         </div>
@@ -412,8 +415,8 @@ function Dm() {
       </div>
       </div>
       <div className="tela-logo-lateral-dm">
-        <div className="div-home-cefernoFullImg">
-          <img className="home-cefernoFullImg" src={cefernoFullImg} alt="Logo Ceferno"></img>
+        <div className="div-dm-cefernoFullImg">
+          <img className="dm-cefernoFullImg" src={cefernoFullImg} alt="Logo Ceferno"></img>
         </div>
       </div>
       </div>
