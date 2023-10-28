@@ -259,7 +259,7 @@ function Chat() {
         <div className="lateral-wrapper">
           <div className="lateral-estatica-dm">
               <div className="imgProfilePic">
-                <img className="profilePicDm" src={currentUserProfilePic} alt="Imagem de perfil"></img>
+                <Link to="/perfil"><img className="profilePicDm" src={currentUserProfilePic} alt="Imagem de perfil"></img></Link>
               </div>
               <div className="menu-lateral-dm">
                 <Link className="botaoAcessar iconDm" to="/timeline"><div className="cada-icone-img-nome-dm">
@@ -267,7 +267,7 @@ function Chat() {
                 <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">Timeline</p></div>
               </div>
               </Link>  
-              <Link className="botaoAcessar iconDm" to="/dm">
+              <Link className="botaoAcessar iconDm" to="/perfil">
                 <div className="cada-icone-img-nome-dm">
                   <img id="dm" src={perfilIcon} alt="Botão ir para o perfil"></img>
                   <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">Perfil</p></div>

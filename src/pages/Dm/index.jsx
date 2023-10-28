@@ -319,7 +319,7 @@ function Dm() {
     <div className="lateral-wrapper">
       <div className="lateral-estatica-dm">
         <div className="imgProfilePic">
-          <img className="profilePicDm" ref={imageref1} alt="Imagem de perfil"></img>
+          <Link to="/perfil"><img className="profilePicDm" ref={imageref1} alt="Imagem de perfil"></img></Link>
         </div>
           <div className="menu-lateral-dm">
           <Link className="botaoAcessar iconDm" to="/timeline"><div className="cada-icone-img-nome-dm">
@@ -327,7 +327,7 @@ function Dm() {
                 <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">Timeline</p></div>
               </div>
               </Link>  
-              <Link className="botaoAcessar iconDm" to="/dm">
+              <Link className="botaoAcessar iconDm" to="/perfil">
                 <div className="cada-icone-img-nome-dm">
                   <img id="dm" src={perfilIcon} alt="Botão ir para o perfil"></img>
                   <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">Perfil</p></div>
@@ -352,12 +352,12 @@ function Dm() {
       </div>
       <div className="screen-dm-usavel">
       <div className="headerDm">
-        <img
+        <Link to="/perfil"><img
           id="img-perfil-dm-telaP"
           className="profilePicDm"
           ref={imageref}
           alt="Imagem de perfil"
-        ></img>
+        ></img></Link>
         <p id="msg">Mensagens</p>
       </div>
       <div id="blocoPesquisaDm" className="centralizarDm">
@@ -403,7 +403,7 @@ function Dm() {
           <img id="home" src={homeIcon} alt="Botão ir para Home"></img>
         </div>
         </Link>
-        <Link className="botaoAcessar" to="/timeline">
+        <Link className="botaoAcessar" to="/perfil">
         <div>
           <img id="pesquisa" src={perfilIcon} alt="Botão para pesquisa"></img>
         </div>
