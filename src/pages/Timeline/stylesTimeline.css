@@ -511,7 +511,6 @@ width: 40%;
   cursor: pointer;
 }
 .tl-ladoEsquerdo{
-  background-color: #d43f3f;
   width: 25%;
   position: fixed;
   height: 100%;
@@ -591,5 +590,58 @@ align-items: center;
 }
 .tl-ladoDireito-doar button:hover{
   cursor: pointer;
-  background-color: #294be4;
+}
+.imagem-perfil-menu, .imgProfilePic{
+  width: 50px;
+}
+.logoCeferno{
+  position: absolute;
+  bottom: 0;
+  margin-left: 30px;
+  width: 120px;
+  height: 50px;
+}
+
+.logoCeferno img{
+  width: 100%;
+}
+@media (max-width: 767px) {
+  .tl-ladoDireito-doar{
+    margin-top: 50px;
+    background-color: #111111;
+    border-radius: 30px;
+    width: 80%;
+    height: 200px;
+    padding: 20px;
+  }
+  .tl-ladoDireito-doar h1{
+    font-size: 12px;
+  }
+  .tl-ladoDireito-doar p{
+    color: #fff;
+    margin-top: 2px;
+    font-weight: 500;
+    font-size: 10px;
+  }
+  .tl-ladoDireito-doar button{
+    background-color: #4763E4;
+    width: 100px;
+    height: 30px;
+    border-radius: 20px;
+    border: none;
+    color: #fff;
+    font-weight: 900;
+    margin-top: 10px;
+  }
+}
+@media (max-width: 713px) {
+  .tl-ladoDireito{
+    display: none;
+  }
+  .tl-ladoEsquerdo{
+    display: none;
+  }
+  .tl-header{
+    display: none;
+  }
 }

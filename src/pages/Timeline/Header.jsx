@@ -28,6 +28,7 @@ function Header() {
   }, []);
 
   return (
+    <>
     <div className="tl-header">
       <div className="tl-header-div1 header-active">
         <h1>Para Você</h1>
@@ -45,6 +46,29 @@ function Header() {
         </div>
       </div>
     </div>
+    <div className="mobile-tl-header">
+      <div className="mobile-tl-header-header">
+        <div className="mobile-tl-header-header-foto">
+            <img src="" alt="" />
+        </div>
+        <div className="mobile-tl-header-header-logo">
+            <img src="" alt="" />
+        </div>
+        <div className="mobile-tl-header-header-config">
+            <img src="" alt="" />
+        </div>
+      </div>
+      <div className="mobile-tl-header-down">
+        <div className="mobile-tl-header-div1 active-mobile-role">
+            <h1>Para você</h1>
+            <div className="active-mobile-div-in"></div>
+        </div>
+        <div className="mobile-tl-header-div2 ">
+            <h1>Seguindo</h1>
+        </div>
+      </div>
+    </div>
+    </>
   );
 }
 

@@ -30,6 +30,8 @@ import {
   onChildAdded,
 } from "firebase/database";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import perfilIcon from "../../assets/perfil-icon.svg";
+import setaPostar from "../../assets/seta-postar.svg";
 
 import {
   doc,
@@ -326,6 +328,15 @@ export function Timeline() {
   if (isLoadingUser) {
     return <p>Carregando...</p>;
   }
+  function ProfileImage() {
+    // Determine qual perfil está selecionado e use o URL da imagem correspondente
+    const profileImageUrl =
+      selectedProfile === userLoggedData.usuario
+        ? userLoggedData.imageUrl
+        : profile.photoURL;
+
+    return <img src={profileImageUrl} alt="Perfil" />;
+  }
 
   const profile = {
     username: userLoggedData.pseudonimo,
@@ -338,7 +349,77 @@ export function Timeline() {
       <div className="tl-screen">
         <div className="tl-container">
           <Header />
-          <div className="tl-ladoEsquerdo"></div>
+          <div className="tl-ladoEsquerdo">
+            <div className="lateral-wrapper">
+              <div className="lateral-estatica-dm">
+                <div className="lateral-header">
+                  <div className="imgProfilePic">
+                    <Link className="tl-foto" to="/perfil">
+                      <div>
+                        <ProfileImage selectedProfile={selectedProfile} />
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+                <div className="menu-lateral-dm">
+                  <Link className="botaoAcessar iconDm" to="/timeline">
+                    <div className="cada-icone-img-nome-dm">
+                      <img
+                        id="home"
+                        src={homeIcon}
+                        alt="Botão ir para Home"
+                      ></img>
+                      <div className="escrita-lateral-dm">
+                        <p className="escrita-lateral-dm">Timeline</p>
+                      </div>
+                    </div>
+                  </Link>
+                  <Link className="botaoAcessar iconDm" to="/perfil">
+                    <div className="cada-icone-img-nome-dm">
+                      <img
+                        id="dm"
+                        src={perfilIcon}
+                        alt="Botão ir para o perfil"
+                      ></img>
+                      <div className="escrita-lateral-dm">
+                        <p className="escrita-lateral-dm">Perfil</p>
+                      </div>
+                    </div>
+                  </Link>
+                  <Link className="botaoAcessar iconDm" to="/dm">
+                    <div className="cada-icone-img-nome-dm">
+                      <img
+                        id="dm"
+                        src={dmIcon}
+                        alt="Botão ir para DM, chat conversas privadas"
+                      ></img>
+                      <div className="escrita-lateral-dm">
+                        <p className="escrita-lateral-dm">DM</p>
+                      </div>
+                    </div>
+                  </Link>
+                  <Link className="botaoAcessar a-postar-menu-lateral" to="/dm">
+                    <div className="botao-buscar-menu">
+                      <div className="postar-menu-lateral">
+                        <img
+                          id="img-postar-menu-lateral-medio"
+                          src={setaPostar}
+                          alt="Botão ir para DM, chat conversas privadas"
+                        ></img>
+                        <p id="p-postar-menu-lateral">Postar</p>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+                <div className="logoCeferno">
+                <img
+                  src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png?ex=654f16a6&is=653ca1a6&hm=47f7d679b329ecf5cc49ea053019ef5d019999ddb77a0ba1a3dda31532ab55da&"
+                  alt=""
+                />
+              </div>
+              </div>
+            </div>
+          </div>
           <div className="tl-main">
             <div className="tl-box">
               {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
@@ -365,13 +446,16 @@ export function Timeline() {
                   </div>
                 </div>
                 <div className="procurar-box-input">
-                <input type="text" placeholder="Procurar" />
+                  <input type="text" placeholder="Procurar" />
                 </div>
               </div>
             </div>
             <div className="tl-ladoDireito-doar">
               <h1>Deseja doar para o CEFERNO?</h1>
-              <p>O CEFERNO é um projeto estudantil, e para mantermos ele online precisamos das doações.</p>
+              <p>
+                O CEFERNO é um projeto estudantil, e para mantermos ele online
+                precisamos das doações.
+              </p>
               <button>Doar</button>
             </div>
           </div>
