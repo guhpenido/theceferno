@@ -401,7 +401,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId, userLogged
                   <img src={imageSent} alt="" />
                 )}
               </div>
-              {post.userMentioned !== null ? (
+              {post.userMentioned !== ""? (
                 <Link to="/VisitorPage" state={{ objetoUsuario: userSentData, modo: post.mode }} style={{ color: 'white' }}>
                   <div className="tl-ps-nomes">
                     <p className="tl-ps-nome">
