@@ -19,6 +19,7 @@ import homeIcon from "../../assets/home-icon.svg";
 import dmIcon from "../../assets/dm-icon.svg";
 import notificacaoIcon from "../../assets/notificacao-icon.svg";
 import pesquisaIcon from "../../assets/pesquisa-icon.svg";
+import { Acessibilidade } from "../Acessibilidade/index";
 import {
   getDatabase,
   ref,
@@ -41,6 +42,7 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import VLibras from "@djpfs/react-vlibras";
 
 import PostDisplay from "./post";
 
@@ -86,6 +88,7 @@ export function Timeline() {
 
 
   const [nextPostId, setNextPostId] = useState(0);
+
   const handleScroll = () => {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
@@ -124,12 +127,14 @@ export function Timeline() {
       if (user) {
         console.log(user);
         setUserId(user.uid);
+        console.log(user);
         fetchUserDataAndSetState(user.uid);
         carregaTml();
       } else {
         navigate("/login");
       }
     });
+    
 
 
     return () => unsubscribe();
@@ -146,7 +151,7 @@ export function Timeline() {
   });
 
   const carregaTml = async () => {
-    if (isFetching) {
+    if(isFetching){
       return;
     }
 
@@ -155,7 +160,10 @@ export function Timeline() {
     const lastLoadedPost =
       loadedPosts.length > 0 ? loadedPosts[loadedPosts.length - 1].post : null;
     const lastLoadedPostId = lastLoadedPost ? lastLoadedPost.id : "";
-    let postsQuery;
+    let postsQuery = null;
+    console.log(selectedInstituicao);
+    console.log(selectedCurso);
+
 
     if (lastLoadedPostId) {
       console.log("Latest post:" + lastLoadedPostId);
@@ -257,41 +265,42 @@ export function Timeline() {
     //     console.error("Erro ao buscar posts por instituição:", error);
     //   }
     //   }
-
-    try {
-      const postsData = await getPostsFromFirestore(postsQuery);
-
-      if (postsData.length === 0) {
-        console.log("Você já chegou ao fim");
-      } else {
-        const postsWithUserData = [];
-
-        for (const post of postsData) {
-          const userSentData = await fetchUserData(post.userSent);
-          let userMentionedData = null;
-
-          if (post.userMentioned !== null) {
-            userMentionedData = await fetchUserData(post.userMentioned);
+    
+      try {
+        const postsData = await getPostsFromFirestore(postsQuery);
+    
+        if (postsData.length === 0) {
+          console.log("Você já chegou ao fim");
+        } else {
+          const postsWithUserData = [];
+    
+          for (const post of postsData) {
+            const userSentData = await fetchUserData(post.userSent);
+            let userMentionedData = null;
+    
+            if (post.userMentioned !== null) {
+              userMentionedData = await fetchUserData(post.userMentioned);
+            }
+    
+            postsWithUserData.push({
+              post,
+              userSentData,
+              userMentionedData,
+            });
           }
-
-          postsWithUserData.push({
-            post,
-            userSentData,
-            userMentionedData,
-          });
-        }
-
-        // Aqui, substitua todo o estado de loadedPosts com os novos posts carregados
-        setLoadedPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
+    
+          // Aqui, substitua todo o estado de loadedPosts com os novos posts carregados
+          setLoadedPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
         console.log("Novos posts carregados!");
-      }
+        }
+      
     } catch (error) {
       console.error("Erro ao obter os posts:", error);
-    } finally {
+    }finally{
       setIsFetching(false);
     }
   };
-
+  
 
   useEffect(() => {
     if (userId) {
@@ -441,7 +450,7 @@ export function Timeline() {
       window.location.reload();
     } catch (error) {
       console.error("Erro ao adicionar o post: ", error);
-    }
+    } 
   };
 
   // Function to handle search input change
@@ -538,12 +547,13 @@ export function Timeline() {
   //     console.log(instituicao);
   //     carregaTml();
   // };
+  
 
 
 
   return (
     <>
-      {/* <div className="tl-filters">
+    {/* <div className="tl-filters">
         <select
           className="tl-filter-select"
           onChange={handleCursoChange}
@@ -554,7 +564,7 @@ export function Timeline() {
           <option value="Eletrônica">Eletrônica</option>
           <option value="Meio Ambiente">Meio Ambiente</option>
           {/* Adicione outras opções de cursos aqui */}
-      {/* </select>
+        {/* </select>
 
         <select 
         className="tl-filter-select"
@@ -565,7 +575,7 @@ export function Timeline() {
           <option value="CEFET-MG">CEFET-MG</option>
           <option value="UFMG">UFMG</option>
           {/* Adicione outras opções de instituições aqui */}
-      {/* </select>
+        {/* </select>
         <button onClick={() => carregaTml()}>Aplicar Filtro</button>
       </div> */}
       <div className="tl-screen">
@@ -702,7 +712,7 @@ export function Timeline() {
               <div className="tl-logo">
                 <img
                   src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png"
-                  alt=""
+                  alt="Logo Ceferno"
                 />
               </div>
             </div>
@@ -714,12 +724,174 @@ export function Timeline() {
           </div>
           </div>
           <div className="tl-main">
+            <div className="tl-box">
+              {/*{posts.map(async (post) => {
+                const userSentData = await fetchUserData(post.userSent);
+                const userMentionedData = await fetchUserData(
+                  post.userMentioned
+                );
+
+                const userSentImage = await fetchUserImage(userSentData);
+                const userMentionedImage = await fetchUserImage(
+                  userMentionedData
+                );
+
+                return (
+                  <div className="tl-box" key={post.id}>
+                    <div className="tl-post">
+                      <div className="tl-ps-header">
+                        <div className="tl-ps-foto">
+                          {userSentImage && <img src={userSentImage} alt="" />}
+                        </div>
+                        <div className="tl-ps-nomes">
+                          <p className="tl-ps-nome">
+                            {userSentData.nome}{" "}
+                            <span className="tl-ps-user">
+                              @{userSentData.usuario}{" "}
+                            </span>
+                            <span className="tl-ps-tempo">• {post.time}</span>
+                            <FontAwesomeIcon
+                              className="arrow"
+                              icon={faArrowRight}
+                            />
+                            {post.userMentioned !== null && (
+                              <div>
+                                {userMentionedImage && (
+                                  <img src={userMentionedImage} alt="" />
+                                )}
+                                {userMentionedData.nome}{" "}
+                                <span className="tl-ps-userReceived">
+                                  @{userMentionedData.usuario}{" "}
+                                </span>
+                              </div>
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="tl-ps-texto">
+                        <p>{post.text}</p>
+                      </div>
+                      <div className="tl-ps-footer">
+                        <div className="tl-ps-opcoes">
+                          <div className="tl-ps-reply">
+                            <FontAwesomeIcon icon={faComment} />
+                            <span>{post.replyCount}</span>
+                          </div>
+                          <div className="tl-ps-like">
+                            <FontAwesomeIcon icon={faThumbsUp} />{" "}
+                            <span>{post.likes}</span>
+                          </div>
+                          <div className="tl-ps-deslike">
+                            <FontAwesomeIcon icon={faThumbsDown} />{" "}
+                            <span>{post.deslikes}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}*/}
+
+              <div className="tl-post">
+                <div className="tl-ps-header">
+                  <div className="tl-ps-foto">
+                    <img
+                      src="https://cdn.discordapp.com/attachments/871728576972615680/1142349089133047868/image.png"
+                      alt="Imagem perfil"
+                    />
+                  </div>
+                  <div className="tl-ps-nomes">
+                    <p className="tl-ps-nome">
+                      Stella <span className="tl-ps-user">@tellaswift </span>
+                      <span className="tl-ps-tempo">• 42s</span>
+                      <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                      <img
+                        src="https://cdn.discordapp.com/attachments/871728576972615680/1142348920949833829/image.png"
+                        alt="Imagem perfil"
+                      />{" "}
+                      Kettles{" "}
+                      <span className="tl-ps-userReceived">@eokettles </span>
+                    </p>
+                  </div>
+                </div>
+                <div className="tl-ps-texto">
+                  <p>Ain apelaummmm!</p>
+                </div>
+                <div className="tl-ps-footer">
+                  <div className="tl-ps-opcoes">
+                    <div className="tl-ps-reply">
+                      <FontAwesomeIcon icon={faComment} />
+                      <span>10</span>
+                    </div>
+                    <div className="tl-ps-like">
+                      <FontAwesomeIcon icon={faThumbsUp} /> <span>10</span>
+                    </div>
+                    <div className="tl-ps-deslike">
+                      <FontAwesomeIcon icon={faThumbsDown} />
+                      <span>10</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="tl-post">
+                <div className="tl-ps-header">
+                  <div className="tl-ps-foto">
+                    <img
+                      src="https://cdn.discordapp.com/attachments/871728576972615680/1142349089133047868/image.png"
+                      alt="Imagem perfil"
+                    />
+                  </div>
+                  <div className="tl-ps-nomes">
+                    <p className="tl-ps-nome">
+                      Stella <span className="tl-ps-user">@tellaswift </span>
+                      <span className="tl-ps-tempo">• 1h</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="tl-ps-texto">Esse é meu primeiro post.</div>
+                <div className="tl-ps-footer">
+                  <div className="tl-ps-opcoes">
+                    <div className="tl-ps-reply">
+                      <FontAwesomeIcon icon={faComment} />
+                      <span>10</span>
+                    </div>
+                    <div className="tl-ps-like">
+                      <FontAwesomeIcon icon={faThumbsUp} /> <span>10</span>
+                    </div>
+                    <div className="tl-ps-deslike">
+                      <FontAwesomeIcon icon={faThumbsDown} />
+                      <span>10</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="tl-addpost" onClick={toggleVisibility}>
+            <img
+              src="https://cdn.discordapp.com/attachments/871728576972615680/1142352433352294482/asa.png"
+              alt="Imagem perfil"
+            />
+          </div>
+          <div className="tl-footer">
+            <div>
+              <FontAwesomeIcon icon={faEnvelope} />
+            </div>
+            <div>
+              <FontAwesomeIcon icon={faBell} />
+            </div>
+            <div>
+              <FontAwesomeIcon icon={faQuestion} />
+            </div>
+            <div>
+              <FontAwesomeIcon icon={faQuestion} />
             <div className="tl-container">
             {activeTab === "timeline" && (
                 <div className="tl-posts">
                 {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
                   <PostDisplay
                     key={post.id}
+                    userId = {userId}
                     post={post}
                     userSentData={userSentData}
                     userMentionedData={userMentionedData}
@@ -794,7 +966,9 @@ export function Timeline() {
             </div>            
           </div>
           <div className="tl-menu-footer"></div>
-              </div> */}
-</>
-  )
-};
+  </div>*/}
+      </div>
+      <Acessibilidade />
+    </>
+  );
+}

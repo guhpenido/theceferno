@@ -1,14 +1,16 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import voltarIcon from "../../assets/voltar-icon.svg";
 import enviarIcon from "../../assets/enviar-icon.svg";
-// import "./chatStyles.css";
-// import "./stylesChat.css";
+import "./chatStyles.css";
+import "./stylesChat.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
 import { doc, getDoc, onSnapshot, updateDoc, arrayUnion , setDoc } from "firebase/firestore";
 import { Link, useParams } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import VLibras from "@djpfs/react-vlibras";
+import { Acessibilidade } from "../Acessibilidade/index";
 
 // Conexão com o Firebase
 const firebaseConfig = {
@@ -122,9 +124,9 @@ function Chat() {
             key={index}
           >
             {userUid === elemento.idUserSent ? (
-              <img className="profilePicDm" src={currentUserProfilePic} alt="Profile Pic" />
+              <img className="profilePicDm" src={currentUserProfilePic} alt="Imagem de perfil" />
             ) : (
-              <img className="profilePicDm" src={chatPartnerProfilePic} alt="Profile Pic" />
+              <img className="profilePicDm" src={chatPartnerProfilePic} alt="Imagem de perfil" />
             )}
             <p className='mensagemChatPv'>{elemento.text}</p>
           </div>
@@ -250,7 +252,7 @@ function Chat() {
       <div>
         <div className="headerDm">
           <Link to={`/dm`}><img id="voltarChat" className="iconDm" src={voltarIcon} alt="Voltar" /></Link>
-          <img className="profilePicDm" src={chatPartnerProfilePic} alt="Profile Pic" />
+          <img className="profilePicDm" src={chatPartnerProfilePic} alt="Imagem de perfil" />
           <p className="nomeUserDm boldDm">{chatPartnerName}</p>
         </div>
         <AtualizaChat currentUserProfilePic={currentUserProfilePic} chatPartnerProfilePic={chatPartnerProfilePic} />
@@ -259,6 +261,7 @@ function Chat() {
           <img id="enviarChat" className="iconDm" src={enviarIcon}  onKeyDown={handleKeyDown} tabIndex="0" alt="Enviar" onClick={enviarMensagem} />
         </div>
       </div>
+      <Acessibilidade />
     </>
   );
 }
