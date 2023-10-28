@@ -116,15 +116,15 @@ export const Tags = styled.div`
 // `;
 
 export const Institution = styled.div`
-  padding: 5px 15px;
-  display: inline-block;
-  flex: 1 0 auto;
-  width: max-content;
-  box-sizing: border-box;
-  border-radius: 15px;
-  border: 2px solid #4763e4;
+  text-align: center;
   background-color: rgba(71, 99, 228, 0.2);
-  margin-right: 15px;
+  border: 3px solid rgb(71, 99, 228);
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-top: 2px;
+  padding-right: 10px;
+  margin-left:15px; 
+  font-size: 12px;
 `;
 
 export const Course = styled.div`
@@ -136,36 +136,14 @@ export const Course = styled.div`
   border-radius: 15px;
   border: 2px solid #4763e4;
   background-color: rgba(71, 99, 228, 0.2);
-`;
-
-export const Following = styled.div`
-  
-  color: rgba(255, 255, 255, 0.757);
-
-  span{
-    color: whitesmoke;
-    display: inline-block;
-    flex: 1 0 auto;
-    width: max-content;
-    box-sizing: border-box;
-    font-weight: bolder;
-    margin-right: 5px;
-  }
-  
-`;
-
-export const Followers = styled.div`
-  color: rgba(255, 255, 255, 0.757);
-
-  span{
-    color: whitesmoke;
-    display: inline-block;
-    flex: 1 0 auto;
-    width: max-content;
-    box-sizing: border-box;
-    font-weight: bolder;
-    margin-right: 5px;
-  }
+  border: 3px solid rgb(71, 99, 228);
+  border-radius: 10px; 
+  padding-left: 10px;
+  padding-top: 2px;
+  padding-right: 10px;
+  margin: 2px;
+  font-size: 12px;
+  margin-right:70px;
 `;
 
 export const Cabecalho = styled.div`
