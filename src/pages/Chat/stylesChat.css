@@ -120,17 +120,9 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: lightDm dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-
   position: relative;
   height: 100%;
 }
@@ -177,6 +169,7 @@
 #voltarChat{
   padding-right: 4px;
   width: 28px;
+  filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%);
 }
 
 link, a{
@@ -186,10 +179,12 @@ link, a{
 
 #enviarChat{
   width: 32px;
+  filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%);
 }
 
 .nomeUserDm{
   padding-left: 5%;
+  color:#ffffff; 
 }
 
 .mensagem {
