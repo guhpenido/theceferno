@@ -146,6 +146,36 @@ export const Course = styled.div`
   margin-right:70px;
 `;
 
+export const Following = styled.div`
+  
+  color: rgba(255, 255, 255, 0.757);
+
+  span{
+    color: whitesmoke;
+    display: inline-block;
+    flex: 1 0 auto;
+    width: max-content;
+    box-sizing: border-box;
+    font-weight: bolder;
+    margin-right: 5px;
+  }
+  
+`;
+
+export const Followers = styled.div`
+  color: rgba(255, 255, 255, 0.757);
+
+  span{
+    color: whitesmoke;
+    display: inline-block;
+    flex: 1 0 auto;
+    width: max-content;
+    box-sizing: border-box;
+    font-weight: bolder;
+    margin-right: 5px;
+  }
+`;
+
 export const Cabecalho = styled.div`
   z-index: 2;
   position: sticky;
