@@ -1,8 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import voltarIcon from "../../assets/voltar-icon.svg";
 import enviarIcon from "../../assets/enviar-icon.svg";
-//import "./chatStyles.css";
-//import "./stylesChat.css";
+import homeIcon from "../../assets/home-icon.svg";
+import dmIcon from "../../assets/dm-icon.svg";
+import perfilIcon from "../../assets/perfil-icon.svg";
+import cefernoFullImg from "../../assets/ceferno_icon_full.png";
+import setaPostar from "../../assets/seta-postar.svg";
+import notificacaoIcon from "../../assets/notificacao-icon.svg";
+// import "./chatStyles.css";
+import "./stylesChat.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
 import { doc, getDoc, onSnapshot, updateDoc, arrayUnion , setDoc } from "firebase/firestore";
