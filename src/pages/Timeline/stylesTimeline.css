@@ -355,7 +355,7 @@ body{
 .tl-addPost-clear-icon:hover {
   color: #d43f3f; /* Cor vermelha mais escura no hover */
 }
-.tl-ps-reply,.tl-ps-like,.tl-ps-deslike {
+.tl-ps-reply,.tl-ps-like,.tl-ps-deslike, .tl-ps-salvar, .tl-ps-share {
   color:#4763e4;
 }
 
@@ -394,4 +394,53 @@ body{
 
 .footerDm div:hover img{
   filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%) drop-shadow(0px 0px 5px #4763E4) drop-shadow(0px 0px 15px #4763E4);
+}
+
+.tl-reply-section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #000;
+  border-radius: 10px;
+}
+
+.tl-modo-resposta {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.tl-modo-resposta-label {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.tl-reply-textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+.tl-reply-button {
+  background-color: #4562e2;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tl-reply-button:hover {
+  background-color: #000;
 }

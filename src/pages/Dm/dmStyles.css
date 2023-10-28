@@ -1,6 +1,25 @@
 *{
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
+
+.screen-dm-usavel{
+  background-color: #0c0c0c;
+  font-family: 'Inter';
+  height:100vh;
+  width: 100vw;
+  padding: 30px;
+  position: relative;
+  overflow: auto;
+}
+
+
+
+.full-dm-screen{
+  display: flex;
+}
+
 .profilePicDm{
   width: 50px;
   border-radius: 50%;
@@ -21,13 +40,12 @@
 
 .footerDm{
   justify-content: space-around;
-  display: flex;
+  display: none;
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   overflow: visible;
-  background-color: #242424
 }
 
 .footerDm img{
@@ -123,25 +141,6 @@ body{
   margin: 0;
 }
 
-
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: lightDm dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-
-  position: relative;
-  height: 100%;
-}
 
 
 
@@ -354,6 +353,7 @@ link, a{
 
 @media (min-width:1400px){
 
+  
   .mensagem {
     padding: 10px;
     height: 74vh;

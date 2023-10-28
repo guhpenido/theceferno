@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
 // import "./stylesRegister.scss";
-// import "./stylesRegister.css"; //descomentar apenas esse
+import "./stylesRegister.css"; //descomentar apenas esse
 import { useNavigate } from 'react-router-dom';
 import { app } from "../../services/firebaseConfig";
 import {
@@ -21,6 +21,8 @@ import {
 } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {  doc, setDoc } from "firebase/firestore"; // Import the doc function
+import cefernoFullImg from "../../assets/ceferno_icon_full.png";
+import VLibras from "@djpfs/react-vlibras";
 
 const db = getFirestore(app);
 
@@ -481,12 +483,15 @@ export function Register() {
 
   return (
 
+    
     <div className="login">
-      
+    <div className="registro-full-screen">
+    <div className="div-registro-cefernoFullImg"><img className="registro-cefernoFullImg" src={cefernoFullImg} alt="Logo Ceferno"></img></div>
+      <div className="registr-borda">
       <div className="container">
       <br></br><br></br>
         <header className="header">
-          <img src={logoImg} alt="CEFERNO" className="logoImg" />
+          <img src={logoImg} alt="Logo Ceferno" className="registro-logoImg" />
           <span>Por favor digite suas informações de cadastro</span>
         </header>
         <form>
@@ -497,7 +502,7 @@ export function Register() {
             <h2>Etapa 01/04</h2>
             <br></br>
             <div className="inputContainer">
-              <label htmlFor="email">E-mail</label>
+              <label className="label-registro" htmlFor="email">E-mail</label>
               <input
                 type="text"
                 name="email"
@@ -549,7 +554,7 @@ export function Register() {
                 backgroundColor: !isEtapa1Valid() ? "#24054C" : "green",
               }}
             >
-              Continuar <img src={arrowImg} alt="->" />
+              Continuar <img src={arrowImg} alt="Botão continuar" />
             </h1>
 
             <div className="footer">
@@ -563,7 +568,7 @@ export function Register() {
           >
             <span>
               <a onClick={retrocederEtapa} href="#">
-                - Voltar
+              &lt;- Voltar
               </a>
             </span>
             <h2>Etapa 02/04</h2>
@@ -637,7 +642,7 @@ export function Register() {
                 backgroundColor: !isEtapa2Valid() ? "red" : "green",
               }}
             >
-              Continuar <img src={arrowImg} alt="->" />
+              Continuar <img src={arrowImg} alt="Botão continuar" />
             </h1>
           </div>
           <div
@@ -646,7 +651,7 @@ export function Register() {
           >
             <span>
               <a onClick={retrocederEtapa} href="#">
-                - Voltar
+              &lt;- Voltar
               </a>
             </span>
             <h2>Etapa 03/04</h2>
@@ -725,7 +730,7 @@ export function Register() {
                 backgroundColor: !isEtapa3Valid() ? "red" : "green",
               }}
             >
-              Continuar <img src={arrowImg} alt="->" />
+              Continuar <img src={arrowImg} alt="Botão continuar" />
             </h1>
           </div>
           <div
@@ -734,7 +739,7 @@ export function Register() {
           >
             <span className="voltarEtapa04">
               <a onClick={retrocederEtapa} href="#">
-                - Voltar
+              &lt;- Voltar
               </a>
             </span>
             <h2>Etapa 04/04</h2>
@@ -771,6 +776,10 @@ export function Register() {
           </div>
         </form>
       </div>
+      </div>
+      <VLibras forceOnload={true} />
     </div>
+    
+  </div>
   );
 }

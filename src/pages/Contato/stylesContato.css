@@ -1,438 +1,419 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
-* {
-  padding: 0;
+*{
   margin: 0;
+  padding: 0;
   box-sizing: border-box;
-  list-style: none;
-  border: none;
-  outline: none;
 }
 
-
-body {
-  /* background: #25064a9e; */
-  background-size: cover; 
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 100vw;
-  color: #d9d9d9;
+body, html{
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
 }
 
-
-header {
-  background: #4d08a1c8;
-    display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 3rem;
-  font-family: "Poppins", sans-serif;
-}
-<<<<<<< HEAD
-
-header .header-logo {
-=======
-header .header-logo-contato {
->>>>>>> production
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-<<<<<<< HEAD
-
-header .header-logo svg {
-=======
-header .header-logo-contato svg {
->>>>>>> production
-  height: 1.5rem;
-  width: 1.5rem;
-}
-
-<<<<<<< HEAD
-
-header .header-logo svg path:first-child {
-  fill: white;
-} 
-
-header .header-logo svg path:last-child {
-  fill: #7813FB;
-}
-
-header .header-logo .logo-text {
-=======
-header .header-logo-contato svg path:first-child {
-  fill: white;
-} 
-header .header-logo-contato svg path:last-child {
-  fill: #7813FB;
-}
-header .header-logo-contato .logo-text {
->>>>>>> production
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin-left: 1rem;
-  color: white;
-}
-<<<<<<< HEAD
-
-header .header-items {
-=======
-header .header-items-contato {
->>>>>>> production
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-<<<<<<< HEAD
-
-header .header-items .header-item {
-=======
-header .header-items-contato .header-item-contato {
->>>>>>> production
-  margin: 0 1rem;
-  position: relative;
-  cursor: pointer;
-}
-<<<<<<< HEAD
-
-header .header-items .header-item:first-child {
-  margin-left: 0;
-}
-
-header .header-items .header-item:last-child {
-  margin-right: 0;
-}
-
-header .header-items .header-item .item-title {
-  display: flex;
-  align-items: center;
-}
-
-header .header-items .header-item .item-title .title-text {
-=======
-header .header-items-contato .header-item-contato:first-child {
-  margin-left: 0;
-}
-header .header-items-contato .header-item-contato:last-child {
-  margin-right: 0;
-}
-header .header-items-contato .header-item-contato .item-title-contato {
-  display: flex;
-  align-items: center;
-}
-header .header-items-contato .header-item-contato .item-title-contato .title-text-contato {
->>>>>>> production
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #d9d9d9;
-}
-<<<<<<< HEAD
-
-header .header-items .header-item .item-title .title-text:hover {
-  color:#4763E4;
-}
-
-header .header-items .header-item .item-title .title-icon {
-  display: flex;
-  align-items: center;
-}
-
-header .header-items .header-item .item-title .title-icon svg {
-  height: 1rem;
-  width: 1rem;
-}
-
-header .header-items .header-item .item-title .title-icon svg path {
-  fill: #4763E4;
-}
-
-header .header-items .header-item ::before {
-=======
-header .header-items-contato .header-item-contato .item-title-contato .title-text-contato:hover {
-  color:#4763E4;
-}
-header .header-items-contato .header-item-contato .item-title-contato .title-icon-contato {
-  display: flex;
-  align-items: center;
-}
-header .header-items-contato .header-item-contato .item-title-contato .title-icon-contato svg {
-  height: 1rem;
-  width: 1rem;
-}
-header .header-items-contato .header-item-contato .item-title-contato .title-icon-contato svg path {
-  fill: #4763E4;
-}
-header .header-items-contato .header-item-contato ::before {
->>>>>>> production
-  content: "";
-  position: absolute;
-  bottom: -0.35rem;
+.contato-screen{
+  background-color: #0c0c0c;
+  font-family: 'Inter';
+  height: 100vh;
   width: 100%;
-  height: 0;
-  background-color: rgba(255, 255, 255, 0.763);
-  transition: height 125ms ease-in-out;
-}
-<<<<<<< HEAD
-
-header .header-items .header-item .contato::before {
-  height: 0.125rem;
+  padding: 30px;
+  position: relative;
 }
 
-header .header-link {
-=======
-header .header-items-contato .header-item-contato .contato::before {
-  height: 0.125rem;
-}
-header .header-link-contato {
->>>>>>> production
-  padding: 0.5rem 1rem;
-  border-radius: 1.5rem;
-  border: 0.1rem solid rgba(255, 255, 255, 0.681);
-  font-size: 0.85rem;
-  font-weight: 300;
-  color: white;
-  transition: border 250ms ease-in-out;
-  margin-left: 1rem;
-}
-<<<<<<< HEAD
-
-header .header-link:hover {
-=======
-header .header-link-contato:hover {
->>>>>>> production
-  border: 0.15rem solid #4763E4;
-  background: #00003d;
-}
-
-
-main {
-  padding: 5rem 10rem;
-  background: #4d08a1c8;
-
-}
-<<<<<<< HEAD
-
-main .home-section {
-=======
-main .home-section-contato {
->>>>>>> production
+.header-sobre{
   display: flex;
   flex-direction: column;
+}
+
+.header-items{
+  display: flex;
+  color: #f9f9f9;
   justify-content: center;
-  padding: 5rem;
-}
-<<<<<<< HEAD
-
-main .home-section .home-title {
-=======
-main .home-section-contato .home-title-contato {
->>>>>>> production
-  width: 40rem;
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  margin-bottom: 2rem;
-  color: rgba(0, 0, 0, 0.65);
-}
-<<<<<<< HEAD
-
-main .home-section .home-button {
-=======
-main .home-section-contato .home-button-contato {
->>>>>>> production
-  width: max-content;
-  background-color: #4763E4;
-  font-family: "Poppins", sans-serif;
-  padding: 0.5rem 1rem;
-  color: white;
-  border-radius: 1rem;
-  font-weight: 500;
-  transition: transform 250ms ease-in-out;
-  cursor: pointer;
-}
-<<<<<<< HEAD
-
-main .home-section .home-button:hover {
-  transform: translateY(-0.25rem);
+  margin-top:5px;
 }
 
-
-.container{
-=======
-main .home-section-contato .home-button-contato:hover {
-  transform: translateY(-0.25rem);
-}
-
-.container {
->>>>>>> production
-  width: 100%;
+.sobre-cefernoTextoImg{
+  width: 60%;
   height: 100%;
+  object-fit: contain;
+  padding: 0 0 20px 0;
 }
 
-
-.contact .form {
-  width: 100%;
-  height: 100%;
-  background: #e5ede5;
-  box-shadow: 0px 2px 25px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  border-radius: 25px;
+.div-img-logo-sobre{
+  display: flex;
+  justify-content: center;
 }
 
-.contact  .form .form-group {
-  padding-bottom: 8px;
+.title-text-sobre{
+  padding: 10px;
+  font-size: 22px;
 }
 
-.contact  .form input,
-.contact .form textarea {
-  border-radius: 25px;
-  box-shadow: #000;
+.main-sobre p, h1, h3, li{
+  color: #f9f9f9;
+}
+
+.header-link-sobre{
+  color: #f9f9f9;
+  border: 3px solid #4763E4;
+  border-radius: 20px;
+  padding: 6px;
+  background-color: #4763e4;
+  /* align-items: center; */
+  text-align: center;
+}
+
+.underline-text{
+  text-decoration: underline;
+}
+
+.main-sobre p{
   font-size: 14px;
 }
 
-.contact .form input[type=text],
-.contact .form input[type=email],
-.contact .form textarea {
-  padding: 12px 15px;
-  background-color: #d7e3d7;
-  border-color: #cadaca;
+.centralizar{
+  display: flex;
+  justify-content: center;
 }
 
-.contact .form input[type=text]:focus,
-.contact .form input[type=email]:focus,
-.contact .form textarea:focus {
-  border-color: #4763E4;
+.margin0Top{
+  margin-top: 0;
 }
 
-.contact .form textarea {
-  padding: 10px 12px;
+div.contato h1{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-<<<<<<< HEAD
-=======
-.mensagem-contato{
-  width: 100%;
+div.contato h2{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  TEXT-ALIGN: center;
 }
 
->>>>>>> production
-.contact .form button[type=submit] {
-  background: #4763E4;
-  border: 0;
-  padding: 14px 45px;
-  color: #fff;
-  transition: 0.4s;
-  border-radius: 50px;
+div.boxContato{
+  width: 80%;
+  align-content: center;
+  flex-wrap: wrap;
 }
 
-.contact .form button[type=submit]:hover {
-  background: #00276c;
+div.linkedinGithub {
+  display: flex;
+  /* text-align: center; */
+  justify-content: center;
 }
 
-.mensagem{
-  width: 100%;
-}
-
-/* 
-@media (max-width: 768px) {
-  .header-link{
-    margin-top: 15px;
-  }
-
-  .form {
-    Centralizar os campos do formulário verticalmente
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-} */
-
-@media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-  }
-<<<<<<< HEAD
+.faleCmg{
+  align-items: center;
+  text-align: center;
+  margin-bottom: 10px;
   
-  header .header-items {
-    flex-direction: column;
-    margin-top: 2rem;
-  }
+}
 
-  header .header-link {
-=======
-  header .header-items-contato {
-    flex-direction: column;
-    margin-top: 2rem;
-  }
-  header .header-link-contato {
->>>>>>> production
-    font-size: 14px;
-    margin: 5px;
-  }
+div.mandaMsg{
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
 
-  main {
-    padding: 20px;
-    height: 60vh;
-  }
+.botao-manda-msg-contato{
+  box-sizing: border-box;
+  all: unset;
+  background-color: #4763E4;
+  color:#f0f0f0;
+  font-weight: bold;
+  border-radius: 5px;
+  width: 100%;
+  height: 20%;
+  margin-top: 10px;
+  color: #f0f0f0;
+  font-size: 20px;
+  font-family: 'Lato', sans-serif;
+  outline: none;
+  text-align: center;
+  padding: 4% 0 4% 2%;
+  box-shadow: 0.3s;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+  border: 1px solid transparent;
+}
 
-  .contact .form {
-    padding: 20px;
-  }
+.boxContato{
+  width: 60%;
+  display: flex;
+  width: 40%;
+  text-align: justify;
+  padding: 5%;
+  background-color: #16161a;
+  border-radius: 20px;
+  margin-right: 1%;
+  border: 3px solid #4763E4;
+}
 
-  .contact .form input[type=text],
-  .contact .form input[type=email],
-  .contact .form textarea {
-    padding: 10px 12px;
-    width: 80vw;
-  }
+.boxContato p{
+  color:#f0f0f0;
+}
 
-  .contact .form button[type=submit] {
-    padding: 12px 40px;
-  }
-<<<<<<< HEAD
-
-  header .header-logo {
-=======
-  header .header-logo-contato {
->>>>>>> production
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 10px;
-  }
-<<<<<<< HEAD
-
-  header .header-logo svg {
-    height: 40px;
-    width: 40px;
-  }
-
-  header .header-logo .logo-text {
-=======
-  header .header-logo-contato svg {
-    height: 40px;
-    width: 40px;
-  }
-  header .header-logo-contato .logo-text {
->>>>>>> production
-    font-size: 18px;
-    margin-top: 5px;
-    margin-left: -0.4vw;
-  }
-
-  .sobre {
-    margin-left: 3.3vw;    
-  }
-
-  .section-header {
-    text-align: center;
-    margin-bottom: 1vh;
-  }
-
-  .text-center {
-    text-align: center;
-  }
+.botao-manda-msg-contato:hover{
+    box-shadow: 0 0 0 0.3125rem #7f5af010;
+    cursor: pointer;
+    transform: scale(1.08);
+    transition: all 0.7s ease-in-out;
 }
 
 
+#nome-contato-page, #email-contato-page{
+  margin-bottom: 6px;
+  height: 40px;
+  width: 100%;
+  border-radius: 5px;
+}
+
+#mensagem-contato-page{
+  height: 60px;
+  width: 100%;
+  border-radius: 5px;
+}
+
+#contato{
+  height: 100vh;
+}
+
+.contato-page-main{
+  height: 100%;
+  align-items: center;
+}
+
+.main-contato-page{
+  height: 80%;
+}
+
+
+@media screen and (max-width:768px) and (min-width: 481px){
+
+  .header-link-sobre{
+    color: #f9f9f9;
+    border: 3px solid #4763E4;
+    border-radius: 20px;
+    padding: 6px;
+    background-color: #4763e4;
+    text-align: center;
+    
+    display: flex;
+    justify-content: center;
+  }
+
+  .div-botao-acesse-sobre{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  .div-botao-acesse-sobre a{
+    width: 60%;
+  }
+}
+
+<<<<<<< HEAD
+
+=======
+@media screen and (max-width:1279px) and (min-width: 769px){
+  .div-img-logo-sobre{
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .header-sobre{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .div-botao-acesse-sobre{
+    display: flex;
+    width: 200px;
+    justify-content: center;
+  }
+
+  .title-text-sobre{
+    padding: 0 10px 0 10px;
+    font-size: 22px;
+  }
+
+  .sobre-botao-acesse-itens-header{
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  div.boxContato{
+    width: 80%;
+    align-content: center;
+    flex-wrap: nowrap;
+  }
+}
+
+@media screen and (min-width: 1280px){
+  .div-img-logo-sobre{
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .header-sobre{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .div-botao-acesse-sobre{
+    display: flex;
+    width: 200px;
+    justify-content: center;
+  }
+
+  .title-text-sobre{
+    padding: 0 10px 0 10px;
+    font-size: 22px;
+  }
+
+  .sobre-botao-acesse-itens-header{
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  .sobre-cefernoTextoImg {
+    width: 50%;
+  }
+
+  .contato-screen{
+    background-color: #0c0c0c;
+    font-family: 'Inter';
+    height: 100vh;
+    width: 100vw;
+    padding: 30px;
+    position: relative;
+  }
+
+  .nomeEmail{
+    display: flex;
+  
+  }
+  
+  .faleCmg{
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .linkedinGithub{
+    display: flex;
+    
+  }
+  
+  .gitLink{
+    padding:  0 10px 0 0;
+    margin: 0 0 0 0;
+  }   
+  
+  .faleCmg p{
+    margin: 4px 0 3px 0;
+  }
+  
+  .mandaMsg{
+    margin-left: 10%;
+    padding: 4% 4% 4% 4%;
+    background-color: #201f24;
+    border: 1px solid #4763E4;
+    border-radius: 5px;
+    
+  }
+
+  .botao-manda-msg-contato{
+    box-sizing: border-box;
+    all: unset;
+    background-color: #4763E4;
+    color:#f0f0f0;
+    font-weight: bold;
+    border-radius: 5px;
+    width: 100%;
+    height: 20%;
+    margin-top: 10px;
+    color: #f0f0f0;
+    font-size: 20px;
+    font-family: 'Lato', sans-serif;
+    outline: none;
+    text-align: center;
+    padding: 4% 0 4% 2%;
+    box-shadow: 0.3s;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    border: 1px solid transparent;
+  }
+  
+  botao-manda-msg-contato:focus {
+    outline: revert;
+  }
+  
+  #nome-contato-page, #email-contato-page{
+    margin-bottom: 6px;
+    height: 40px;
+  }
+  
+  #mensagem-contato-page{
+    height: 60px;
+  }
+  
+  #contato{
+    height: 100vh;
+  }
+  
+  .contato h1{
+    color: #f0f0f0;
+    font-size: 70px;
+    font-family: 'Lato', sans-serif;
+    font-weight: bold;
+  }
+  
+  .contato h2{
+    color: #f0f0f0;
+    font-size: 50px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+  }
+  
+  .contato h3{
+    color: #f0f0f0;
+    font-size: 35px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    margin: 0 0 9px 0;
+  }
+  .contato h4{
+    color: #f0f0f0;
+    font-size: 25px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    margin: 0 0 25px 0;
+    text-align: center;
+  }
+
+  .boxContato{
+    width: 60%;
+    display: flex;
+    width: 40%;
+    text-align: justify;
+    padding: 2%;
+    background-color: #16161a;
+    border-radius: 20px;
+    margin-right: 1%;
+    border: 3px solid #4763E4;
+  }
+
+  div.boxContato{
+    width: 50%;
+    align-content: center;
+    flex-wrap: nowrap;
+  }
+}
+>>>>>>> production
