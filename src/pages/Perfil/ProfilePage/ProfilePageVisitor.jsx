@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc, updateDoc, onSnapshot, collection } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc, onSnapshot, collection, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ModalReact from 'react-modal';
 
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,9 @@ import {
     Tags,
     Institution,
     Course,
+    Botao,
+    Following,
+    Followers
 } from "./styles";
 
 import Feed from "../Feed";
@@ -51,6 +54,11 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
     const [userCurso, setUserCurso] = useState('');
     const [isVisible, setIsVisible] = useState(false);
     const [userId, setUserId] = useState(null);
+    const [userSeguidores, setUserSeguidores] = useState(null);
+    const [userSeguindo, setUserSeguindo] = useState(null);
+    const buttonFollowRef = useRef(null);
+    const followingRef = useRef(null);
+    const followersRef = useRef(null);
 
     const [userLoggedData, setUserLoggedData] = useState(null); // Adjust the type accordingly
     const [selectedProfile, setSelectedProfile] = useState(null); // Adjust the type accordingly
@@ -58,8 +66,22 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
     const [posts, setPosts] = useState([]); // Adjust the type accordingly
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
+                
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+                if(userDoc.exists()){
+                    setCurrentUser(userDoc.data());
+
+                    if(userDoc.data().seguindo.includes(objetoUsuario.id)){
+                        buttonFollowRef.current.innerHTML = "Deixar de Seguir"
+                        buttonFollowRef.current.setAttribute('data-follow', 'true');
+                    } else {
+                        buttonFollowRef.current.innerHTML = "Seguir";
+                        buttonFollowRef.current.setAttribute('data-follow', 'false');
+                    }
+                } 
                 setUserId(objetoUsuario.id);
                 fetchUserDataAndSetState(objetoUsuario.id);
                 searchUserFields(objetoUsuario.id);
@@ -137,7 +159,6 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
                     const newAvatarValue = userData['avatar'] || ''; // Campo avatar
                     const nicknameValue = userData['usuario'] || '';
                     const userNameValue = userData['userName'] || '';
-
                     // Verifique e defina o valor padrão para bannerUrl e newAvatarValue
                     if (!bannerUrlValue) {
                         setNewBanner(userData['bannerUrl'] || '');
@@ -156,6 +177,9 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
                     setUserName(objetoUsuario.nome);
                     setUserCurso(objetoUsuario.curso);
                     setUserInstituicao(objetoUsuario.instituicao);
+                    setUserSeguidores(userData.seguidores?userData.seguidores.length:"0");
+                    setUserSeguindo(userData.seguindo?userData.seguindo.length:"0");
+
                 } else {
                     console.log('User not found');
                 }
@@ -169,12 +193,11 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
         const auth = getAuth();
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                setCurrentUser(objetoUsuario);
 
-                const userDocRef = doc(db, 'users', objetoUsuario.id);
-                const userDoc = await getDoc(userDocRef);
-                if (userDoc.exists()) {
-                    setBio(userDoc.data().bio || '');
+                const userDocSelRef = doc(db, 'users', objetoUsuario.id);
+                const userSelDoc = await getDoc(userDocSelRef);
+                if (userSelDoc.exists()) {
+                    setBio(userSelDoc.data().bio || '');
                 }
             } else {
                 setCurrentUser(null);
@@ -184,6 +207,42 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
 
     function capitalizeFirstLetter(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    async function handleFollow() {
+        const userRef = doc(db, 'users', currentUser.id);
+        const userProfileRef = doc(db, 'users', objetoUsuario.id);
+
+        // Deixa de seguir
+        if(currentUser.seguindo.includes(objetoUsuario.id)){
+            await updateDoc(userRef, {
+                seguindo: arrayRemove(objetoUsuario.id)
+            });
+            await updateDoc(userProfileRef, {
+                seguidores: arrayRemove(currentUser.id)
+            });
+            setUserSeguidores(userSeguidores - 1)
+            buttonFollowRef.current.innerHTML = "Seguir";
+            buttonFollowRef.current.setAttribute('data-follow', 'false');
+        // Começa a Seguir
+        } else {
+            await updateDoc(userRef, {
+                seguindo: arrayUnion(objetoUsuario.id)
+            });
+            await updateDoc(userProfileRef, {
+                seguidores: arrayUnion(currentUser.id)
+            });
+            setUserSeguidores(userSeguidores + 1)
+            buttonFollowRef.current.innerHTML = "Deixar de Seguir";
+            buttonFollowRef.current.setAttribute('data-follow', 'true');
+        }   
+
+        // Atualiza o Documento de 'CurrentUser'
+        const userDocRef = doc(db, 'users', currentUser.id);
+        const userDoc = await getDoc(userDocRef);
+        if(userDoc.exists()){
+            setCurrentUser(userDoc.data());
+        }
     }
 
     return (
@@ -208,10 +267,17 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
                     <Course>
                         <p style={{ color: 'white', textAlign: 'center' }}>{capitalizeFirstLetter(userCurso)}</p>
                     </Course>
+                    <Followers>
+                        <p><span ref={followersRef}>{userSeguidores}</span>Seguidores</p>
+                    </Followers>
+                    <Following>
+                        <p><span ref={followingRef}>{userSeguindo}</span>Seguindo</p>
+                    </Following>
                 </Tags>
+                <Botao onClick={handleFollow} ref={buttonFollowRef}>Seguir</Botao>
             </ProfileData>
             <FeedVisitor objetoUsuario={objetoUsuario}/>
-        </Container >
+        </Container>
     );
 };
 

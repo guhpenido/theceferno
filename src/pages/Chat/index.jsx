@@ -1,8 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import voltarIcon from "../../assets/voltar-icon.svg";
 import enviarIcon from "../../assets/enviar-icon.svg";
-//import "./chatStyles.css";
-//import "./stylesChat.css";
+import homeIcon from "../../assets/home-icon.svg";
+import dmIcon from "../../assets/dm-icon.svg";
+import perfilIcon from "../../assets/perfil-icon.svg";
+import cefernoFullImg from "../../assets/ceferno_icon_full.png";
+import setaPostar from "../../assets/seta-postar.svg";
+import notificacaoIcon from "../../assets/notificacao-icon.svg";
+// import "./chatStyles.css";
+import "./stylesChat.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
 import { doc, getDoc, onSnapshot, updateDoc, arrayUnion , setDoc } from "firebase/firestore";
@@ -249,19 +255,60 @@ function Chat() {
 
   return (
     <>
-      <div>
-        <div className="headerDm">
-          <Link to={`/dm`}><img id="voltarChat" className="iconDm" src={voltarIcon} alt="Voltar" /></Link>
-          <img className="profilePicDm" src={chatPartnerProfilePic} alt="Imagem de perfil" />
-          <p className="nomeUserDm boldDm">{chatPartnerName}</p>
+      <div className="full-dm-screen">
+        <div className="lateral-wrapper">
+          <div className="lateral-estatica-dm">
+              <div className="imgProfilePic">
+                <Link to="/perfil"><img className="profilePicDm" src={currentUserProfilePic} alt="Imagem de perfil"></img></Link>
+              </div>
+              <div className="menu-lateral-dm">
+                <Link className="botaoAcessar iconDm" to="/timeline"><div className="cada-icone-img-nome-dm">
+                <img id="home" src={homeIcon} alt="Botão ir para Home"></img>
+                <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">Timeline</p></div>
+              </div>
+              </Link>  
+              <Link className="botaoAcessar iconDm" to="/perfil">
+                <div className="cada-icone-img-nome-dm">
+                  <img id="dm" src={perfilIcon} alt="Botão ir para o perfil"></img>
+                  <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">Perfil</p></div>
+                </div>
+              </Link>            
+              <Link className="botaoAcessar iconDm" to="/dm">
+                <div className="cada-icone-img-nome-dm">
+                  <img id="dm" src={dmIcon} alt="Botão ir para DM, chat conversas privadas"></img>
+                  <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">DM</p></div>
+                </div>
+              </Link>
+              <Link className="botaoAcessar a-postar-menu-lateral" to="/dm" >
+                <div className="botao-buscar-menu">
+                  <div className='postar-menu-lateral'>
+                    <img id="img-postar-menu-lateral-medio" src={setaPostar} alt="Botão ir para DM, chat conversas privadas"></img>
+                    <p id='p-postar-menu-lateral'>Postar</p>
+                    </div>
+                </div>
+              </Link> 
+            </div>
+          </div>
         </div>
-        <AtualizaChat currentUserProfilePic={currentUserProfilePic} chatPartnerProfilePic={chatPartnerProfilePic} />
-        <div className="enviarMensagem">
-          <input className="inputPesquisaDm" onKeyDown={handleKeyDown} ref={inputRef} />
-          <img id="enviarChat" className="iconDm" src={enviarIcon}  onKeyDown={handleKeyDown} tabIndex="0" alt="Enviar" onClick={enviarMensagem} />
+        <div className="screen-dm-usavel">
+          <div className="headerDm">
+            <Link to={`/dm`}><img id="voltarChat" className="iconDm" src={voltarIcon} alt="Voltar" /></Link>
+            <img className="profilePicDm" src={chatPartnerProfilePic} alt="Imagem de perfil" />
+            <p className="nomeUserDm boldDm">{chatPartnerName}</p>
+          </div>
+          <AtualizaChat currentUserProfilePic={currentUserProfilePic} chatPartnerProfilePic={chatPartnerProfilePic} />
+          <div className="enviarMensagem">
+            <input className="inputPesquisaDm" onKeyDown={handleKeyDown} ref={inputRef} />
+            <img id="enviarChat" className="iconDm" src={enviarIcon}  onKeyDown={handleKeyDown} tabIndex="0" alt="Enviar" onClick={enviarMensagem} />
+          </div>
         </div>
+        <div className="tela-logo-lateral-dm">
+          <div className="div-dm-cefernoFullImg">
+            <img className="dm-cefernoFullImg" src={cefernoFullImg} alt="Logo Ceferno"></img>
+          </div>
       </div>
       <Acessibilidade />
+      </div>
     </>
   );
 }

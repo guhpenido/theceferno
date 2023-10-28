@@ -86,14 +86,13 @@ export const EditButton = styled(Button)`
 `;
 
 export const Tags = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: auto auto;
+  justify-content: left;
+  margin: 10px 0 0 0;
   color: whitesmoke;
-  width: 50%; 
-  text-align:center; 
+  text-align: left; 
 `;
 
 // const responsiveWidth = '5vw'; // Adjust this value as needed
@@ -118,22 +117,63 @@ export const Tags = styled.div`
 
 export const Institution = styled.div`
   text-align: center;
-  padding: 1px;
   background-color: rgba(71, 99, 228, 0.2);
   border: 3px solid rgb(71, 99, 228);
   border-radius: 10px;
-  padding: 2px; 
-  margin: 2px;
+  padding-left: 10px;
+  padding-top: 2px;
+  padding-right: 10px;
+  margin-left:15px; 
+  font-size: 12px;
 `;
 
 export const Course = styled.div`
-  margin: 2vw;   
-  text-align: center;
+  padding: 5px 15px;
+  display: inline-block;
+  flex: 1 0 auto;
+  width: max-content;
+  box-sizing: border-box;
+  border-radius: 15px;
+  border: 2px solid #4763e4;
   background-color: rgba(71, 99, 228, 0.2);
   border: 3px solid rgb(71, 99, 228);
-  border-radius: 10px;
-  padding: 2px; 
+  border-radius: 10px; 
+  padding-left: 10px;
+  padding-top: 2px;
+  padding-right: 10px;
   margin: 2px;
+  font-size: 12px;
+  margin-right:70px;
+`;
+
+export const Following = styled.div`
+  
+  color: rgba(255, 255, 255, 0.757);
+
+  span{
+    color: whitesmoke;
+    display: inline-block;
+    flex: 1 0 auto;
+    width: max-content;
+    box-sizing: border-box;
+    font-weight: bolder;
+    margin-right: 5px;
+  }
+  
+`;
+
+export const Followers = styled.div`
+  color: rgba(255, 255, 255, 0.757);
+
+  span{
+    color: whitesmoke;
+    display: inline-block;
+    flex: 1 0 auto;
+    width: max-content;
+    box-sizing: border-box;
+    font-weight: bolder;
+    margin-right: 5px;
+  }
 `;
 
 export const Cabecalho = styled.div`
@@ -160,6 +200,47 @@ export const Cabecalho = styled.div`
       background: #00003d;
     }
   }
+`
+
+export const Botao = styled.button`
+    
+    
+    &[data-follow='true']{
+      all: unset;
+      padding: 5px 15px;
+      display: inline-block;
+      flex: 1 0 auto;
+      width: max-content;
+      box-sizing: border-box;
+      border-radius: 15px;
+      border: 2px solid #4763e4;
+      margin-left: auto;
+    }
+
+    &[data-follow='false']{
+      all: unset;
+      padding: 5px 15px;
+      display: inline-block;
+      flex: 1 0 auto;
+      width: max-content;
+      box-sizing: border-box;
+      border-radius: 15px;
+      border: 2px solid #4763e4;
+      background-color: rgba(71, 99, 228, 0.2);
+      margin-left: auto;
+    }
+
+    &[data-follow='false']:hover {
+      background-color: rgba(71, 99, 228, 0.5);
+      cursor: pointer;
+    }
+
+    &[data-follow='true']:hover {
+      background-color: rgba(255, 0, 0, 0.2);
+      border: 2px solid #ff0000;
+      cursor: pointer;
+    }
+
 `
 
 
