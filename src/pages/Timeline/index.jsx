@@ -50,6 +50,8 @@ import { addDoc } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import "./stylesTimeline.css";
+import Trending from "./Trending";
+
 
 export function Timeline() {
   const [selectedUser, setSelectedUser] = useState("");
@@ -73,8 +75,18 @@ export function Timeline() {
   const [loadedPosts, setLoadedPosts] = useState([]);
   const [hasLoadedPosts, setHasLoadedPosts] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
-  const [selectedCurso] = useState("");
-  const [selectedInstituicao] = useState("");
+  const [activeTab, setActiveTab] = useState('timeline');
+  const [trendingPosts, setTrendingPosts] = useState([]);
+  const [sortedTrendingPosts, setSortedTrendingPosts] = useState([]);
+
+
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab); // Função para alterar a aba ativa
+  };
+
+
+
   const [nextPostId, setNextPostId] = useState(0);
 
   const handleScroll = () => {
@@ -82,6 +94,7 @@ export function Timeline() {
     const documentHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
 
+    
     // Defina um limite inferior para acionar a busca por mais posts
     const triggerLimit = 100; // Você pode ajustar isso conforme necessário
 
@@ -90,11 +103,13 @@ export function Timeline() {
     }
   };
 
+
   useEffect(() => {
     // Adicione um ouvinte de rolagem quando o componente for montado
     window.addEventListener("scroll", handleScroll);
 
     return () => {
+    
       // Remova o ouvinte de rolagem quando o componente for desmontado
       window.removeEventListener("scroll", handleScroll);
     };
@@ -120,6 +135,7 @@ export function Timeline() {
       }
     });
     
+
 
     return () => unsubscribe();
   }, [auth, navigate]);
@@ -166,6 +182,9 @@ export function Timeline() {
         limit(10)
       );
     }
+
+
+
 
     // if(selectedCurso !== "" && selectedInstituicao !== ""){
     //   console.log(selectedInstituicao); 
@@ -510,6 +529,12 @@ export function Timeline() {
   }
 
   
+
+
+
+
+
+
   // const handleCursoChange = async (e) => {
   //     const curso = e.target.value;
   //     setSelectedCurso(curso);
@@ -523,6 +548,7 @@ export function Timeline() {
   //     carregaTml();
   // };
   
+
 
 
   return (
@@ -540,8 +566,8 @@ export function Timeline() {
           {/* Adicione outras opções de cursos aqui */}
         {/* </select>
 
-        <select
-          className="tl-filter-select"
+        <select 
+        className="tl-filter-select"
           onChange={handleInstituicaoChange}
           value={selectedInstituicao}
         >
@@ -691,8 +717,10 @@ export function Timeline() {
               </div>
             </div>
             <div className="tl-titulo">
-              <h1>Timeline</h1>
+            <button onClick={() => handleTabChange("timeline")}>Timeline</button>
+            <button onClick={() => handleTabChange("trending")}>Trending</button>
             </div>
+          </div>
           </div>
           <div className="tl-main">
             <div className="tl-box">
@@ -902,8 +930,7 @@ export function Timeline() {
             </Link>
           </div>
         </div>
-      </div>
-      {/*<div className="tl-menu">
+      {/* <div className="tl-menu">
           <div className="tl-menu-header">
             <div className="tl-menu-header-profile">
               <div className="tl-menu-foto"></div>

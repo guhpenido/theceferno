@@ -214,6 +214,9 @@ div.mandaMsg{
   }
 }
 
+<<<<<<< HEAD
+
+=======
 @media screen and (max-width:1279px) and (min-width: 769px){
   .div-img-logo-sobre{
     display: flex;
@@ -413,3 +416,4 @@ div.mandaMsg{
     flex-wrap: nowrap;
   }
 }
+>>>>>>> production

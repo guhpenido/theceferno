@@ -86,11 +86,11 @@ const PostagensUsuario: React.FC = () => {
                 const ref = doc(db, "users", data.userSent);
                 const docSnap = await getDoc(ref);
                     if (docSnap.exists()) {
-                     const usr = docSnap.data();
-                     setUserName(usr.nome);
-                     setNickname(usr.usuario);
-                     setNewAvatar(usr.imageUrl);
-                     console.log(usr);
+                        const usr = docSnap.data();
+                        setUserName(usr.nome);
+                        setNickname(usr.usuario);
+                        setNewAvatar(usr.imageUrl);
+                        console.log(usr);
                     }
                     
                 items.push({

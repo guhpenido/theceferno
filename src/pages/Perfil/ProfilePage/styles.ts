@@ -118,12 +118,14 @@ export const Tags = styled.div`
 
 export const Institution = styled.div`
   text-align: center;
-  padding: 1px;
   background-color: rgba(71, 99, 228, 0.2);
   border: 3px solid rgb(71, 99, 228);
   border-radius: 10px;
-  padding: 2px; 
-  margin: 2px;
+  padding-left: 10px;
+  padding-top: 2px;
+  padding-right: 10px;
+  margin-left:15px; 
+  font-size: 12px;
 `;
 
 export const Course = styled.div`
@@ -131,9 +133,13 @@ export const Course = styled.div`
   text-align: center;
   background-color: rgba(71, 99, 228, 0.2);
   border: 3px solid rgb(71, 99, 228);
-  border-radius: 10px;
-  padding: 2px; 
+  border-radius: 10px; 
+  padding-left: 10px;
+  padding-top: 2px;
+  padding-right: 10px;
   margin: 2px;
+  font-size: 12px;
+  margin-right:70px;
 `;
 
 export const Cabecalho = styled.div`

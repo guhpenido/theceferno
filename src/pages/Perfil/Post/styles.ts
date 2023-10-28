@@ -14,15 +14,14 @@ export const Container = styled.div`
   margin-bottom: 15px;
   align-items: flex-start;
   box-sizing: border-box;
+  margin-top: 15px;
 `;
 
 export const ImgConteiner = styled.img`
   width: 49px;
   height: 49px;
   border-radius: 50%;
-  flex-shrink: 0;
   background: #7a7a7a;
-  top: 10px;
   left: 10px;
   margin-right: 1em;
   align-items: left; 
@@ -81,6 +80,7 @@ export const Header = styled.div`
     text-overflow: ellipsis;
     overflow: hidden;
     padding: 2px;
+    
   }
 `;
 
@@ -118,7 +118,6 @@ export const Posts = styled.div`
   margin-top: 4px;
   color: #d9d9d9;
   width: 300px;
-  text-align: center; 
 `;
 
 export const Postdays = styled.div`
@@ -184,6 +183,7 @@ export const ConteudoPostagens = styled.div`
 
 export const HeaderName = styled.div`
   display: flex;
+
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-around;
@@ -193,13 +193,15 @@ export const HeaderName = styled.div`
 
   > div:nth-child(1) {
     font-size: 15px;
-    margin-right: 1em;
-    color: with;
+    margin-left: -40px;
+    color: white;
+    margin-top: -50px;
     margin-bottom: 6px;
   }
 
   > div:nth-child(2) {
-    margin-left:: 1em;
+    margin-left: 10px;
+    margin-top: -50px;
     color: white;
   }
 `;
@@ -211,6 +213,8 @@ export const HeaderNameMentioned = styled.div`
   align-content: center;
   width: fit-content; 
   height: fit-content; 
+  margin-top: -60px;
+  margin-left: 50px;
 
   > div:nth-child(1) {
     margin-right: 5px;
@@ -220,6 +224,9 @@ export const HeaderNameMentioned = styled.div`
   > div:nth-child(2) {
     color: white;
     font-size: 13px;
+    margin-top: 8px;
+    margin-left: 12px;
+    margin-right: 13px;
   }
 `;
 
@@ -229,3 +236,5 @@ export const NomeHeaderTw = styled.div`
   border: solid 1px black;
   width: 10%;
 `;
+
+
