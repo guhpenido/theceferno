@@ -1,6 +1,11 @@
 *{
   box-sizing: border-box;
 }
+
+body, html, :root{
+  background-color: #0c0c0c;
+}
+
 .profilePicDm{
   width: 50px;
   border-radius: 50%;
@@ -13,6 +18,7 @@
 
 .mensagemDm{
   display: flex;
+  margin-top: 8px;
 }
 
 #msg{
@@ -27,7 +33,7 @@
   left: 0;
   width: 100%;
   overflow: visible;
-  background-color: #242424
+  background-color: #111111;
 }
 
 .footerDm img{
@@ -68,7 +74,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 2%;
+  padding: 20px;
 }
 
 .inputPesquisaDm {
@@ -76,14 +82,14 @@
   border-radius: 15px;
   text-align: center;
   background-color: rgba(255, 255, 255, 0);
-  border: 1px solid #4763E4;
+  border: 2px solid #4763E4;
   color: #ffffff;
   outline-color: #4763E4;
 }
 .inputPesquisaDm:focus,
 .inputPesquisaDm:active{
   outline: none;
-  outline: 2px solid #4763E4!important;
+  outline: 3px solid #4763E4!important;
 }
 
 .centralizarDm{
@@ -93,19 +99,21 @@
 
 .tudoMenosImg{
   width: 100%;
-  margin-left:4%;
+  margin-left: 15px;
 }
 
 .chatDm{
+  background-color: #111111;
+  border-radius: 15px;
   display: flex;
-  padding: 4% 0% 4% 0%;
-  
+  padding: 15px;
 }
 
 /*.chatDm:hover{
   box-shadow: 0px 0px 10px #4763E4;
 }
 */
+
 .chatDm p {
   margin: 0
 }
@@ -113,7 +121,7 @@
 .dadosPessoaisDm{
   width: 100%;
   display: flex;
-  gap: 5%;
+  gap: 10px;
 }
 
 .dm-screen{
@@ -124,6 +132,29 @@
     background-color: #242424;
 }
 
+.botao-buscar-menu, .a-postar-menu-lateral, .menu-lateral-dm{
+  width: 100%;
+}
+
+.postar-menu-lateral{
+  background-color: #4763E4;
+  padding: 10px 10px 10px 10px;
+  border-radius: 50px;
+}
+
+.postar-menu-lateral p{
+  text-align: center;
+}
+
+
+#p-postar-menu-lateral{
+  display: none;
+}
+
+#img-postar-menu-lateral-medio{
+  width: 32px;
+  filter: invert(100%);
+}
 
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -143,23 +174,6 @@
   height: 100%;
 } */
 
-
-
-@media (prefers-color-scheme: lightDm) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-
-
 .enviarMensagem{
   display: flex;
   justify-content: space-around;
@@ -177,9 +191,9 @@
   padding: 0.4rem 0rem 0.4rem 0rem;
 }
 
-.iconDm{
+.iconDm img {
   filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%);
-}
+} 
 
 #voltarChat{
   padding-right: 4px;
@@ -260,12 +274,14 @@ link, a{
 }
 
 .fullDmMessages > div{
-  padding: 2%;
+  padding: 5px;
   transition: background-color 200ms;
 }
 
-.fullDmMessages > div:hover{
-  background-color: rgba(0, 0, 0, 0.15);
+.fullDmMessages{
+  display: flex;
+  flex-direction: column;
+  text-align: justify;
 }
 
 .listaResultadosPesquisaDm{
@@ -278,7 +294,7 @@ link, a{
   padding:  0;
   margin: 0!important;
   /*width: 90%;*/
-  background-color: #3d3c3c;
+  background-color: #0c0c0c;
   border-radius: 0 0 10px 10px;
 }
 
@@ -297,8 +313,94 @@ link, a{
   transition: opacity 200ms;
 }
 
+.full-dm-screen{
+  display: flex;
+  height: 100%;
+  background-color: #0c0c0c;
+  /* overflow: scroll; */
+  height: calc(100vh - 56px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
 
-@media (min-width:600px){
+.lateral-estatica-dm{
+  display: none;
+  flex-direction: column;
+  padding: 0px 15px 0px 15px;
+  align-items: center;
+  height: 100vh;
+  padding-top: 20px;
+  align-items: flex-start;
+  background-color: #111111;
+}
+
+.lateral-estatica-dm{
+  display: none;
+  padding: 20px;
+  height: 100vh;
+  background-color: #111111;
+  border-radius: 0 30px 30px 0;
+}
+
+  /* .iconDm div:hover {
+    filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%) drop-shadow(0px 0px 5px #4763E4) drop-shadow(0px 0px 15px #4763E4);
+  } */
+
+.iconDm img{
+  overflow: visible;
+  width: 32px;
+  transition: all 300ms;
+  margin: 10px 0px 10px 0px;
+}
+
+.menu-lateral-dm{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 40%;
+  
+}
+
+.screen-dm-usavel{
+  width: 100vw;
+}
+
+
+.cada-icone-img-nome-dm{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cada-icone-img-nome-dm p{
+  font-size: 18px;
+  margin-left: 15px;
+  /* font-weight: 600; */
+}
+
+.escrita-lateral-dm{
+  color: #ffffff; 
+}
+
+#msg{
+  font-size: 20px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.div-dm-cefernoFullImg{
+  display: none;
+}
+
+.tela-logo-lateral-dm{
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  width: 270px;
+}
+
+@media screen and (max-width:924px) and (min-width: 720px){
 
   .mensagem {
     padding: 10px;
@@ -314,9 +416,56 @@ link, a{
   ::-webkit-scrollbar-thumb{
     background-color: #4763E4;
   }
+
+  .footerDm{
+    display: none !important; 
+  }
+
+  #img-perfil-dm-telaP{
+    display: none !important;
+  }
+
+  .lateral-estatica-dm{
+    display: flex;
+    align-items: center;
+    position: fixed;
+    width: 100px;
+    left: 0;
+    top: 0;
+  }
+
+  .escrita-lateral-dm{
+    display: none;
+  }
+
+  #msg{
+    font-size: 22px;
+    color: #ffffff;
+    font-weight: 600;
+    margin-left: 0% !important;
+  }
+
+  .headerDm{
+    justify-content: flex-start;
+  }
+
+  .full-dm-screen{
+    height: 100% !important;
+  }
+
+  .screen-dm-usavel{
+    width: 100vw;
+    margin-left: 104px;
+    position: relative;
+    height: 100vh;
+  }
+
+  .botao-buscar-menu, .a-postar-menu-lateral{
+    width: fit-content;
+  }
 }
 
-@media (min-width:850px){
+/* @media (min-width:850px){
 
   .mensagem {
     padding: 10px;
@@ -332,13 +481,12 @@ link, a{
   ::-webkit-scrollbar-thumb{
     background-color: #4763E4;
   }
-}
+} */
 
-@media (min-width:1150px){
-
+@media screen and (max-width:1279px) and (min-width: 924px){
   .mensagem {
     padding: 10px;
-    height: 76vh;
+    height: 80vh;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
@@ -349,6 +497,155 @@ link, a{
   
   ::-webkit-scrollbar-thumb{
     background-color: #4763E4;
+  }
+
+  .footerDm{
+    display: none !important; 
+  }
+
+  #img-perfil-dm-telaP{
+    display: none !important;
+  }
+
+  .lateral-estatica-dm{
+    display: flex;
+    align-items: flex-start;
+    position: fixed;
+    width: 240px;
+    left: 0;
+    top: 0;
+  }
+
+  .escrita-lateral-dm{
+    display: flex !important;
+  }
+
+  #msg{
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 600;
+    margin-left: 0% !important;
+  }
+
+  .headerDm{
+    justify-content: flex-start;
+  }
+
+  .menu-lateral-dm{
+    align-items: flex-start;
+  }
+
+  .full-dm-screen{
+    height: 100% !important;
+  }
+
+  .screen-dm-usavel{
+    width: 50vw;
+    margin-left: 244px;
+    position: relative;
+    height: 100vh;
+  }
+
+  #img-postar-menu-lateral-medio{
+    display: none !important;
+  }
+
+  #p-postar-menu-lateral{
+    display: block !important;
+  }
+
+  
+}
+
+@media screen and (min-width: 1279px) and (max-width: 1416px){
+
+  .mensagem {
+    padding: 10px;
+    height: 80vh;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footerDm{
+    display: none !important; 
+  }
+
+  #img-perfil-dm-telaP{
+    display: none !important;
+  }
+
+  .lateral-estatica-dm{
+    display: flex;
+    align-items: flex-start;
+    position: fixed;
+    width: 240px;
+    left: 0;
+    top: 0;
+  }
+
+  .escrita-lateral-dm{
+    display: flex !important;
+  }
+
+  #msg{
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 600;
+    margin-left: 0% !important;
+  }
+
+  .headerDm{
+    justify-content: flex-start;
+  }
+
+  .menu-lateral-dm{
+    align-items: flex-start;
+  }
+
+  .div-dm-cefernoFullImg{
+    background-color: #4763e4;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px 0 0 30px;
+  }
+
+  .dm-cefernoFullImg{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 50px;
+  }
+
+  .tela-logo-lateral-dm{
+    background-color: #4763e4;
+    display: flex;
+    align-items: center;
+    width: 33%;
+    height: 100vh;
+    border-radius: 30px 0 0 30px;
+  }
+
+  .full-dm-screen{
+    height: 100% !important;
+  }
+
+  .screen-dm-usavel{
+    width: 100vw;
+    margin-left: 244px;
+    margin-right: 33%;
+    position: relative;
+    height: 100vh;
+  }
+
+  #img-postar-menu-lateral-medio{
+    display: none !important;
+  }
+
+  #p-postar-menu-lateral{
+    display: block !important;
   }
 }
 
@@ -356,7 +653,7 @@ link, a{
 
   .mensagem {
     padding: 10px;
-    height: 74vh;
+    height: 80vh;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
@@ -368,4 +665,85 @@ link, a{
   ::-webkit-scrollbar-thumb{
     background-color: #4763E4;
   }
-}
+
+  .footerDm{
+    display: none !important; 
+  }
+
+  #img-perfil-dm-telaP{
+    display: none !important;
+  }
+
+  .lateral-estatica-dm{
+    display: flex;
+    align-items: flex-start;
+    position: fixed;
+    width: 240px;
+    left: 0;
+    top: 0; 
+  }
+
+  .escrita-lateral-dm{
+    display: flex !important;
+  }
+
+  #msg{
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 600;
+    margin-left: 0% !important;
+  }
+
+  .headerDm{
+    justify-content: flex-start;
+  }
+
+  .menu-lateral-dm{
+    align-items: flex-start;
+  }
+
+  .div-dm-cefernoFullImg{
+    background-color: #4763e4;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px 0 0 30px;
+  }
+
+  .dm-cefernoFullImg{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 100px;
+  }
+
+  .tela-logo-lateral-dm{
+    background-color: #4763e4;
+    display: flex;
+    align-items: center;
+    width: 33%;
+    height: 100vh;
+    border-radius: 30px 0 0 30px;
+  }
+
+  .full-dm-screen{
+    height: 100% !important;
+  }
+
+  .screen-dm-usavel{
+    width: 100vw;
+    margin-left: 244px;
+    margin-right: 33%;
+    position: relative;
+    height: 100vh;
+  }
+
+  #img-postar-menu-lateral-medio{
+    display: none !important;
+  }
+
+  #p-postar-menu-lateral{
+    display: block !important;
+  }
+} 

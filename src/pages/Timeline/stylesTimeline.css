@@ -2,7 +2,7 @@ body{
   margin: 0;
 }
 .tl-screen {
-  background-color: rgb(12, 12, 12);
+  background-color: #0c0c0c;
   margin: 0;
   width: 100%;
   height: 100%;
@@ -13,12 +13,12 @@ body{
 .tl-container {
   width: 100%;
   height: auto;
-  background-color: rgb(12, 12, 12);
+  background-color: #0c0c0c;
 }
 
 .tl-header {
   width: 100%;
-  background-color: rgb(0, 0, 0);
+  background-color: #0c0c0c;
   height: auto;
 }
 .tl-header1 {
@@ -59,7 +59,6 @@ body{
 }
 .tl-box {
   width: 100%;
-  overflow-y: scroll;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -367,7 +366,7 @@ body{
   left: 0;
   width: 100%;
   overflow: visible;
-  background-color: #242424
+  background-color: #111111;
 }
 
 .footerDm img{
@@ -444,6 +443,7 @@ body{
 .tl-reply-button:hover {
   background-color: #000;
 }
+<<<<<<< HEAD
 
 .tlBotaoTroca {
   background: none;
@@ -454,4 +454,313 @@ body{
 
 .tlBotaoTroca:hover {
   border-bottom: 1px solid #4562e2;
+=======
+.tl-main{
+  margin-top: 50px;
+  width: 51%;
+  border: 1px #111111 solid;
+}
+.tl-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.tl-header{
+  width: 50%;
+  position: fixed;
+  top: 0;
+  height: 50px;
+  display: flex;
+  border: 1px #111111 solid;
+}
+.tl-header-div1, .tl-header-div2{
+  width: 46.5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ease;
+}
+.tl-header-filter{
+  width: 8%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tl-header-filter img{
+width: 40%;
+}
+.tl-header-filter-in{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80%;
+  width: 80%;
+  border-radius: 50%;
+}
+.tl-header-filter-in:hover{
+  background-color: #111111;
+  cursor: pointer;
+}
+.tl-header-div1 h1, .tl-header-div2 h1{
+  font-size: 12px;
+  font-weight: 500;
+}
+.header-active h1{
+  font-weight: 800;
+}
+.header-active-in{
+  background-color: #193cd8;
+  width: 10%;
+  height: 3px;
+  position: absolute;
+  bottom: 0;
+  border-radius: 100000px;
+}
+.tl-header-div1:hover, .tl-header-div2:hover{
+  background-color: #111111;
+  animation: ease;
+  cursor: pointer;
+}
+.mobile-tl-header{
+  display: none;
+  margin: 5px;
+  width: 100%;
+  height: 50px;
+}
+.mobile-tl-header-header{
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.mobile-tl-header-header-foto, .mobile-tl-header-header-config{
+  width: 50px;
+  height: 50px;
+}
+.mobile-tl-header-header-logo{
+  display: flex;
+  width: 60%;
+  justify-content: center;
+}
+.mobile-tl-header-header-logo img{
+  width: 50px;
+}
+.mobile-tl-header-header-foto img{
+  width: 100%;
+  border-radius: 50%;
+}
+.mobile-tl-header-down{
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.active-mobile-div-in{
+  width: 10%;
+  height: 30px;
+  position: absolute;
+  bottom: 0;
+  border-radius: 100000px;
+}
+.mobile-tl-header-div1, .mobile-tl-header-div2{
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ease;
+}
+.mobile-tl-header-div1 h1, .mobile-tl-header-div2 h1{
+  font-weight: 300;
+  font-size: 20px;
+}
+.mobile-tl-header-header-config{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mobile-tl-header-header-config img{
+  width: 50%;
+}
+.tl-ladoEsquerdo{
+  width: 25%;
+  position: fixed;
+  height: 100%;
+  left: 0;
+}
+.tl-ladoDireito{
+
+  width: 25%;
+  position: fixed;
+  height: 100%;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tl-ladoDireito-procurar{
+  margin-top: 50px;
+background-color: #111111;
+width: 80%;
+height: 70px;
+border-radius: 25000px;
+}
+.procurar-box{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.img-procurar-box{
+  width: 20%;
+}
+.img-procurar-box-in{
+width: 100%;
+height: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.img-procurar-box-in img{
+  width: 70%;
+}
+.procurar-box-input input{
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.procurar-box-input{
+  height: 50%;
+}
+.tl-ladoDireito-doar{
+  margin-top: 50px;
+  background-color: #111111;
+  border-radius: 30px;
+  width: 80%;
+  height: 200px;
+  padding: 20px;
+}
+.tl-ladoDireito-doar h1{
+  font-size: 20px;
+}
+.tl-ladoDireito-doar p{
+  color: #fff;
+  margin-top: 2px;
+  font-weight: 500;
+}
+.tl-ladoDireito-doar button{
+  background-color: #4763E4;
+  width: 100px;
+  height: 30px;
+  border-radius: 20px;
+  border: none;
+  color: #fff;
+  font-weight: 900;
+  margin-top: 10px;
+}
+.tl-ladoDireito-doar button:hover{
+  cursor: pointer;
+}
+.imagem-perfil-menu, .imgProfilePic{
+  width: 50px;
+}
+.logoCeferno{
+  position: absolute;
+  bottom: 0;
+  margin-left: 30px;
+  width: 120px;
+  height: 50px;
+}
+.active-mobile-role h1{
+  border-bottom: #4562e2 solid 3px;
+  font-weight: 900;
+}
+
+.logoCeferno img{
+  width: 100%;
+}
+@media (max-width: 767px) {
+  .tl-ladoDireito-doar{
+    margin-top: 50px;
+    background-color: #111111;
+    border-radius: 30px;
+    width: 80%;
+    height: 200px;
+    padding: 20px;
+  }
+  .tl-ladoDireito-doar h1{
+    font-size: 12px;
+  }
+  .tl-ladoDireito-doar p{
+    color: #fff;
+    margin-top: 2px;
+    font-weight: 500;
+    font-size: 10px;
+  }
+  .tl-ladoDireito-doar button{
+    background-color: #4763E4;
+    width: 100px;
+    height: 30px;
+    border-radius: 20px;
+    border: none;
+    color: #fff;
+    font-weight: 900;
+    margin-top: 10px;
+  }
+}
+@media (max-width: 713px) {
+  .tl-ladoDireito{
+    display: none;
+  }
+  .tl-ladoEsquerdo{
+    display: none;
+  }
+  .tl-header{
+    display: none;
+  }
+  .tl-main{
+    margin-top: 50px;
+    width: 100%;
+    border: 1px #111111 solid;
+  }
+  .tl-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .mobile-tl-header{
+    display: block;
+  }
+}
+.mobile-lateral-wrapper{
+  display: block;
+  animation: ease-in-out;
+}
+.hidden {
+  display: none;
+}
+.close-mobile-menu{
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  position: absolute;
+  right: 0;
+  top: 0;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 8px;
+}
+@keyframes slideRight {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+>>>>>>> origin/prodGustavo
 }

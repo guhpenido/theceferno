@@ -27,7 +27,7 @@
   left: 0;
   width: 100%;
   overflow: visible;
-  background-color: #242424
+  background-color: #111111;
 }
 
 .footerDm img{
@@ -68,7 +68,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 2%;
+  padding: 20px;
 }
 
 .inputPesquisaDm {
@@ -76,7 +76,7 @@
   border-radius: 15px;
   text-align: center;
   background-color: rgba(255, 255, 255, 0);
-  border: 1px solid #4763E4;
+  border: 2px solid #4763E4;
   color: #ffffff;
   outline-color: #4763E4;
 }
@@ -96,11 +96,7 @@
   margin-left:4%;
 }
 
-.chatDm{
-  display: flex;
-  padding: 4% 0% 4% 0%;
-  
-}
+
 
 /*.chatDm:hover{
   box-shadow: 0px 0px 10px #4763E4;
@@ -113,7 +109,7 @@
 .dadosPessoaisDm{
   width: 100%;
   display: flex;
-  gap: 5%;
+  gap: 10px;
 }
 
 #body{
@@ -124,17 +120,9 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: lightDm dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-
   position: relative;
   height: 100%;
 }
@@ -174,13 +162,14 @@
   padding: 0.4rem 0rem 0.4rem 0rem;
 }
 
-.iconDm{
+/* .iconDm{
   filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%);
-}
+} */
 
 #voltarChat{
   padding-right: 4px;
   width: 28px;
+  filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%);
 }
 
 link, a{
@@ -190,10 +179,12 @@ link, a{
 
 #enviarChat{
   width: 32px;
+  filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%);
 }
 
 .nomeUserDm{
   padding-left: 5%;
+  color:#ffffff; 
 }
 
 .mensagem {
@@ -257,12 +248,8 @@ link, a{
 }
 
 .fullDmMessages > div{
-  padding: 2%;
-  transition: background-color 200ms;
-}
 
-.fullDmMessages > div:hover{
-  background-color: rgba(0, 0, 0, 0.15);
+  transition: background-color 200ms;
 }
 
 .listaResultadosPesquisaDm{

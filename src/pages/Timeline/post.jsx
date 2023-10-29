@@ -37,8 +37,10 @@ import {
   collection,
   where,
   query,
-  orderBy, updateDoc,
+  orderBy,
+  updateDoc,
   limit,
+  deleteDoc,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -55,74 +57,139 @@ import ReplyDisplay from "./reply";
 import VisitorPage from "../Perfil/ProfilePage/VisitorPage";
 import { AppRoutes } from "../../routes/AppRoutes";
 
-function PostDisplay({ post, userSentData, userMentionedData, userId, userLoggedData }) {
+function PostDisplay({
+  post,
+  userSentData,
+  userMentionedData,
+  userId,
+  userLoggedData,
+}) {
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
   const [likes, setLikes] = useState(post.likes);
+  const [dislikes, setDislikes] = useState(post.deslikes);
   const postDate = new Date(post.time);
   const now = new Date();
   let timeAgo;
 
-  {/*function PostDisplay({ post, userSentData, userMentionedData }) {
-  const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
-  const [likes, setLikes] = useState(post.likes); // Estado fpara controlar o número de likes
+  const handleLikeClick = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
 
-  // Função para verificar se o usuário já curtiu o post
-  const checkIfUserLikedPost = async () => {
-    const user = firebase.auth().currentUser; // Obtém o usuário autenticado (você deve ter configurado a autenticação com Firebase)
-    if (user) {
-      // Usuário autenticado
+    // Verificar se o usuário já curtiu a postagem na coleção "interactions"
+    const userAlreadyLiked = await checkUserInteraction(userId, post.id);
 
-      // Referência para a coleção de likes do post
-      const likesCollectionRef = firebase.firestore().collection(`posts/${post.id}/likes`);
+    if (!userAlreadyLiked) {
+      // Incrementar o número de likes localmente
+      const newLikes = likes + 1;
+      setLikes(newLikes);
 
-      // Query para verificar se o usuário já curtiu o post
-      const querySnapshot = await likesCollectionRef.where("userId", "==", user.uid).get();
+      // Atualizar o número de likes no Firebase na coleção "timeline"
+      const db = getFirestore(app);
+      const q = query(
+        collection(db, "timeline"),
+        where("postId", "==", post.id)
+      );
 
-      if (!querySnapshot.empty) {
-        // O usuário já curtiu o post
-        setLiked(true);
-      } else {
-        // O usuário não curtiu o post
-        setLiked(false);
+      try {
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const postDoc = querySnapshot.docs[0]; // Supondo que haja apenas um documento correspondente
+
+          // Atualizar o campo "likes" no documento
+          await updateDoc(doc(db, "timeline", postDoc.id), { likes: newLikes });
+          console.log("Likes atualizados no Firebase com sucesso!");
+
+          // Adicionar a interação na coleção "interactions"
+          await addInteraction(userId, post.id, "like");
+        } else {
+          console.error("Post não encontrado no Firebase.");
+          // Reverter a contagem local de likes em caso de erro
+          setLikes(likes);
+        }
+      } catch (error) {
+        console.error("Erro ao atualizar likes no Firebase: ", error);
+        // Reverter a contagem local de likes em caso de erro
+        setLikes(likes);
+      }
+    } else {
+      // Remover a interação da coleção "interactions"
+      const db = getFirestore(app);
+      const interactionsRef = collection(db, "interactions");
+      const queryInteraction = query(
+        interactionsRef,
+        where("userId", "==", userId),
+        where("postId", "==", post.id),
+        where("interaction", "==", "like")
+      );
+
+      try {
+        const querySnapshotInteraction = await getDocs(queryInteraction);
+
+        if (!querySnapshotInteraction.empty) {
+          const interactionDoc = querySnapshotInteraction.docs[0];
+          await deleteDoc(interactionDoc.ref);
+          console.log("Like removido com sucesso!");
+
+          // Decrementar o número de likes na coleção "timeline"
+          const newLikes = likes - 1;
+          setLikes(newLikes);
+          const qTimeline = query(
+            collection(db, "timeline"),
+            where("postId", "==", post.id)
+          );
+          const querySnapshotTimeline = await getDocs(qTimeline);
+
+          if (!querySnapshotTimeline.empty) {
+            const postDocTimeline = querySnapshotTimeline.docs[0];
+            await updateDoc(doc(db, "timeline", postDocTimeline.id), {
+              likes: newLikes,
+            });
+            console.log("Likes atualizados no Firebase com sucesso!");
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao remover like: ", error);
       }
     }
   };
 
-  // Resto do código...
-
-  return (
-    // Seu código restante...
-  );
-}*/}
-  const handleLikeClick = async (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    // Incrementar o número de likes localmente
-    const newLikes = likes + 1;
-    setLikes(newLikes);
-
-    // Atualizar o número de likes no Firebase
-    const db = getFirestore(app);
-    const q = query(collection(db, "timeline"), where("postId", "==", post.id));
-
+  // Função para verificar se o usuário já interagiu com a postagem na coleção "interactions"
+  const checkUserInteraction = async (userId, postId) => {
     try {
-      const querySnapshot = await getDocs(q);
+      const db = getFirestore(app);
+      const interactionsRef = collection(db, "interactions");
+      const queryInteraction = query(
+        interactionsRef,
+        where("userId", "==", userId),
+        where("postId", "==", postId),
+        where("interaction", "==", "like")
+      );
 
-      if (!querySnapshot.empty) {
-        const postDoc = querySnapshot.docs[0]; // Supondo que haja apenas um documento correspondente
+      const querySnapshot = await getDocs(queryInteraction);
 
-        // Atualizar o campo "likes" no documento
-        await updateDoc(doc(db, "timeline", postDoc.id), { likes: newLikes });
-        console.log("Likes atualizados no Firebase com sucesso!");
-      } else {
-        console.error("Post não encontrado no Firebase.");
-        // Reverter a contagem local de likes em caso de erro
-        setLikes(likes);
-      }
+      return !querySnapshot.empty;
     } catch (error) {
-      console.error("Erro ao atualizar likes no Firebase: ", error);
-      // Reverter a contagem local de likes em caso de erro
-      setLikes(likes);
+      console.error("Erro ao verificar interação: ", error);
+      return false;
+    }
+  };
+
+  // Função para adicionar a interação na coleção "interactions"
+  const addInteraction = async (userId, postId, interactionType) => {
+    try {
+      const db = getFirestore(app);
+      const interactionsRef = collection(db, "interactions");
+      const newInteraction = {
+        userId,
+        postId,
+        interaction: interactionType,
+      };
+
+      await addDoc(interactionsRef, newInteraction);
+      console.log("Interação registrada com sucesso.");
+    } catch (error) {
+      console.error("Erro ao registrar interação: ", error);
     }
   };
 
@@ -165,12 +232,185 @@ function PostDisplay({ post, userSentData, userMentionedData, userId, userLogged
     userEnvio = userSentData.usuario;
   }
 
+<<<<<<< HEAD
+=======
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [box1Visible, setBox1Visible] = useState(false); //para mostrar a div denuncia conteudo indevido
+  const [box2Visible, setBox2Visible] = useState(false); //para mostrar a div denuncia ser outra pessoa
+  const [h1Visible, setH1Visible] = useState(false); //mostra os h1s que chamam as divs
+  const [fundoVisible, setfundoVisible] = useState(false); //mostra os h1s que chamam as divs
+
+  const [denunciaId, setDenunciaId] = useState("");
+  const [messageReportedId, setMessageReportedId] = useState("");
+  const [motive, setMotive] = useState("");
+  const [userReported, setUserReported] = useState("");
+  const [userReporting, setUserReporting] = useState("");
+  const [denuncias, setDenuncias] = useState([]);
+
+  const db = getFirestore(app);
+  const denunciaCollectionRef = collection(db, "denuncia");
+
+  async function CriarDenuncia() {
+    const currentTime = new Date();
+
+    const denuncia = await addDoc(denunciaCollectionRef, {
+      messageReportedId: post.postId,
+      motive,
+      time: currentTime.toString(),
+      userReported: userSentData.id,
+      userReporting: userId,
+    });
+
+    const newDenunciaId = denuncia.id;
+    await updateDoc(denuncia, { denunciaId: newDenunciaId });
+    toggleh1Visibility();
+  }
+
+  useEffect(() => {
+    const getDenuncia = async () => {
+      const data = await getDocs(denunciaCollectionRef);
+      setDenuncias(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getDenuncia();
+  }, []);
+
+  //deixa e tira a visibilidade da div denuncia conteudo indevido
+  const toggleBox1Visibility = () => {
+    setBox1Visible(!box1Visible);
+    setBox2Visible(false); // Hide box2 when showing box1
+  };
+
+  //deixa e tira a visibilidade da div denuncia ser outra pessoa
+  const toggleBox2Visibility = () => {
+    setBox2Visible(!box2Visible);
+    setBox1Visible(false); // Hide box1 when showing box2
+  };
+
+  //deixa e tira a visibilidade dos h1s
+  const toggleh1Visibility = () => {
+    // console.log("entrou")
+    setH1Visible(!h1Visible);
+    setBox1Visible(false);
+    setBox2Visible(false);
+    setFundoVisible(!fundoVisible);
+  };
+
+  const handleMotiveChange = (event) => {
+    setMotive(event.target.value);
+  };
+  useEffect(() => {
+    // Use um useEffect para atualizar a UI quando o estado dislikes mudar
+    // Isso garante que a UI seja renderizada após a atualização do estado
+  }, [dislikes]);
+  const renderDivStructure = () => {
+    return (
+      <div
+        className={`denuncia ${h1Visible ? "visible" : "DenunciaInvisible"}`}
+      >
+        <h1>
+          Denúncia <button onClick={toggleh1Visibility}>X</button>
+        </h1>
+        <label
+          className={`${h1Visible ? "visible" : "DenunciaInvisible"}`}
+          htmlFor="box1"
+        >
+          {" "}
+          Está publicando conteúdo que não deveria estar no Ceferno{" "}
+          <button className="alternaOpcao" onClick={toggleBox1Visibility}>
+            {" "}
+            <img src="src\pages\Timeline\assets\icone.png" />{" "}
+          </button>
+        </label>
+        <select
+          className={`opcoesDenuncia box1 ${
+            box1Visible ? "visible" : "DenunciaInvisible"
+          }`}
+          id="box1"
+          name="box1"
+          value={motive}
+          onChange={handleMotiveChange}
+        >
+          <option></option>
+          <option value="Eh_Spam"> É spam </option>
+          <option value="Nao_Gostei"> Simplesmente não gostei </option>
+          <option value="Suicidio_Automutilacao_Disturbios">
+            {" "}
+            Suicidio, automutilação ou disturbios alimentares{" "}
+          </option>
+          <option value="Produtos_ilicitos">
+            {" "}
+            Venda de produtos ilicitos{" "}
+          </option>
+          <option value="Nudez"> Nudez ou atividade sexual </option>
+          <option value="Discurso_de_Odio">
+            {" "}
+            Símbolos ou discurso de ódio{" "}
+          </option>
+          <option value="Violencia">
+            {" "}
+            Violência ou organizações perigosas{" "}
+          </option>
+          <option value="Bullying"> Bullying ou assédio </option>
+          <option value="Violacao_Intelectual">
+            {" "}
+            Violação de propriedade intelectual{" "}
+          </option>
+          <option value="Golpe"> Golpe ou fraude </option>
+          <option value="Fake_News"> Informação falsa </option>
+        </select>
+
+        <br></br>
+        <label
+          className={`${h1Visible ? "visible" : "DenunciaInvisible"}`}
+          htmlFor="box2"
+        >
+          {" "}
+          Está fingindo ser outra pessoa{" "}
+          <button className="alternaOpcao" onClick={toggleBox2Visibility}>
+            {" "}
+            <img src="src\pages\Timeline\assets\icone.png" />{" "}
+          </button>
+        </label>
+        <select
+          className={`opcoesDenuncia box2 ${
+            box2Visible ? "visible" : "DenunciaInvisible"
+          }`}
+          id="box2"
+          name="box2"
+          value={motive}
+          onChange={handleMotiveChange}
+        >
+          <option></option>
+          <option value="fingindo_Ser_Eu"> Eu </option>
+          <option value="fingindo_Ser_Alguem_que_Sigo">
+            {" "}
+            Alguém que sigo{" "}
+          </option>
+          <option value="fingindo_Ser_Uma_Celebridade_Figura_Publica">
+            {" "}
+            Uma celebridade ou figura pública{" "}
+          </option>
+          <option value="fingindo_Ser_Empresa">
+            {" "}
+            Uma empresa ou organização{" "}
+          </option>
+        </select>
+        <button
+          className={`enviar ${h1Visible ? "visible" : "DenunciaInvisible"}`}
+          onClick={CriarDenuncia}
+        >
+          Enviar
+        </button>
+      </div>
+    );
+  };
+
+>>>>>>> origin/prodGustavo
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [showReplies, setShowReplies] = useState(false);
   const [replies, setReplies] = useState([]);
   const [showDetails, setShowDetails] = useState(false); // Estado para rastrear a exibição do post em detalhes
-
 
   // Função para buscar e definir as respostas do post
   const fetchReplies = async () => {
@@ -201,7 +441,6 @@ function PostDisplay({ post, userSentData, userMentionedData, userId, userLogged
     setShowReplies(!showReplies);
   };
 
-
   const toggleReply = () => {
     setIsReplying(!isReplying);
   };
@@ -218,12 +457,13 @@ function PostDisplay({ post, userSentData, userMentionedData, userId, userLogged
       messageReplyed: post.id,
       replyId: 1,
       text: replyText, // O texto da resposta
-      userReplyed: userMentionedData !== null ? userMentionedData.id : userSentData.id,
+      userReplyed:
+        userMentionedData !== null ? userMentionedData.id : userSentData.id,
       userSent: userSentData.id,
     };
 
     try {
-      const response = await addDoc(collection(db, "replys"), newReplyData);;
+      const response = await addDoc(collection(db, "replys"), newReplyData);
       // console.log("Resposta enviada com sucesso com ID: ", response.id);
       setIsReplying(false);
       setReplyText("");
@@ -256,7 +496,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId, userLogged
 
             // Atualiza o documento do usuário com o novo array savedPosts
             await updateDoc(userDocRef, {
-              savedPosts: updatedSavedPosts
+              savedPosts: updatedSavedPosts,
             });
 
             console.log("Post salvo com sucesso!");
@@ -266,7 +506,7 @@ function PostDisplay({ post, userSentData, userMentionedData, userId, userLogged
         } else {
           // Se savedPosts não existe, cria um novo array com o postId
           await updateDoc(userDocRef, {
-            savedPosts: [postId]
+            savedPosts: [postId],
           });
 
           console.log("Post salvo com sucesso!");
@@ -279,26 +519,151 @@ function PostDisplay({ post, userSentData, userMentionedData, userId, userLogged
     }
   };
 
-
   const linkStyle = {
     textDecoration: "none",
     color: "inherit",
+  };
+  // Função para verificar se o usuário já interagiu com a postagem na coleção "interactions"
+  const checkUserDislikeInteraction = async (userId, postId) => {
+    try {
+      const db = getFirestore(app);
+      const interactionsRef = collection(db, "interactions");
+      const queryInteraction = query(
+        interactionsRef,
+        where("userId", "==", userId),
+        where("postId", "==", postId),
+        where("interaction", "==", "dislike")
+      );
 
+      const querySnapshot = await getDocs(queryInteraction);
+
+      return !querySnapshot.empty;
+    } catch (error) {
+      console.error("Erro ao verificar interação de deslike: ", error);
+      return false;
+    }
+  };
+
+  // Função para adicionar ou remover a interação de deslike na coleção "interactions"
+  const addOrRemoveDislikeInteraction = async (
+    userId,
+    postId,
+    interactionType
+  ) => {
+    const db = getFirestore(app);
+    const interactionsRef = collection(db, "interactions");
+
+    // Verificar se o usuário já interagiu com a postagem
+    const existingDislikeInteraction = await checkUserDislikeInteraction(
+      userId,
+      postId
+    );
+
+    if (existingDislikeInteraction) {
+      // Se já houver uma interação de deslike, remova-a
+      const queryRemoveInteraction = query(
+        interactionsRef,
+        where("userId", "==", userId),
+        where("postId", "==", postId),
+        where("interaction", "==", interactionType)
+      );
+
+      const querySnapshotRemove = await getDocs(queryRemoveInteraction);
+
+      if (!querySnapshotRemove.empty) {
+        const interactionDoc = querySnapshotRemove.docs[0];
+        setDislikes(dislikes - 1);
+        await deleteDoc(interactionDoc.ref);
+
+        console.log(`Deslike removido com sucesso!`);
+      }
+    } else {
+      // Se o usuário ainda não interagiu com a postagem, adicione a interação de deslike
+      const newInteraction = {
+        userId,
+        postId,
+        interaction: interactionType,
+      };
+
+      await addDoc(interactionsRef, newInteraction);
+      console.log(`Deslike registrado com sucesso!`);
+    }
+  };
+
+  // Função para adicionar a interação de deslike na coleção "interactions"
+  const addDislikeInteraction = async (userId, postId) => {
+    addOrRemoveDislikeInteraction(userId, postId, "dislike");
+  };
+
+  // Função para lidar com o clique em "deslike"
+  const handleDislikeClick = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    // Verificar se o usuário já interagiu com a postagem na coleção "interactions"
+    const userAlreadyDisliked = await checkUserDislikeInteraction(
+      userId,
+      post.id
+    );
+
+    if (!userAlreadyDisliked) {
+      // Atualizar o número de deslikes localmente
+      const newDislikes = dislikes + 1;
+      setDislikes(newDislikes);
+
+      // Adicionar a interação de deslike na coleção "interactions"
+      addDislikeInteraction(userId, post.id);
+    } else {
+      // Remover a interação de deslike da coleção "interactions"
+      const db = getFirestore(app);
+      const interactionsRef = collection(db, "interactions");
+      const queryInteraction = query(
+        interactionsRef,
+        where("userId", "==", userId),
+        where("postId", "==", post.id),
+        where("interaction", "==", "dislike")
+      );
+
+      try {
+        const querySnapshotInteraction = await getDocs(queryInteraction);
+
+        if (!querySnapshotInteraction.empty) {
+          const interactionDoc = querySnapshotInteraction.docs[0];
+          await deleteDoc(interactionDoc.ref);
+          console.log("Deslike removido com sucesso!");
+          const newDislikes = dislikes - 1;
+          setDislikes(newDislikes);
+          console.log("Deslike removido com sucessoaaa!");
+        }
+      } catch (error) {
+        console.error("Erro ao remover deslike: ", error);
+      }
+    }
   };
 
   return (
     <>
       <div className="tl-box" key={post.id}>
         <div className="tl-post">
-          <Link style={linkStyle} state={{ userSentData: userSentData, userMentionedData: userMentionedData, userLoggedData: userLoggedData }} to={`/timeline/${post.id}`}>
+          <Link
+            style={linkStyle}
+            state={{
+              userSentData: userSentData,
+              userMentionedData: userMentionedData,
+              userLoggedData: userLoggedData,
+            }}
+            to={`/timeline/${post.id}`}
+          >
             <div className="tl-ps-header">
               <div className="tl-ps-foto">
-                {imageSent && (
-                  <img src={imageSent} alt="" />
-                )}
+                {imageSent && <img src={imageSent} alt="" />}
               </div>
-              {post.userMentioned !== null ? (
-                <Link to="/VisitorPage" state={{ objetoUsuario: userSentData, modo: post.mode }} style={{ color: 'white' }}>
+              {post.userMentioned !== "" ? (
+                <Link
+                  to="/VisitorPage"
+                  state={{ objetoUsuario: userSentData, modo: post.mode }}
+                  style={{ color: "white" }}
+                >
                   <div className="tl-ps-nomes">
                     <p className="tl-ps-nome">
                       {nomeEnvio}{" "}
@@ -339,19 +704,37 @@ function PostDisplay({ post, userSentData, userMentionedData, userId, userLogged
                   <FontAwesomeIcon icon={faComment} onClick={toggleReply} />
                   <span>{post.replyCount}</span>
                 </div>
-                <div className="tl-ps-like" onClick={(e) => {
-                  handleLikeClick(e);
-                }}>
+                <div
+                  className="tl-ps-like"
+                  onClick={(e) => {
+                    handleLikeClick(e);
+                  }}
+                >
                   <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes}</span>
                 </div>
-                <div className="tl-ps-deslike">
+                <div
+                  className="tl-ps-deslike"
+                  onClick={(e) => {
+                    handleDislikeClick(e);
+                  }}
+                >
                   <FontAwesomeIcon icon={faThumbsDown} />{" "}
-                  <span>{post.deslikes}</span>
+                  <span>{dislikes}</span>
                 </div>
-                <div className="tl-ps-salvar" onClick={(e) => {handleSavePost(e, post.id)}}>
+                <div
+                  className="tl-ps-salvar"
+                  onClick={(e) => {
+                    handleSavePost(e, post.id);
+                  }}
+                >
                   <FontAwesomeIcon icon={faBookmark} />{" "}
                 </div>
-                <div className="tl-ps-share" onClick={(e) => {copyToClipboard(e)}}>
+                <div
+                  className="tl-ps-share"
+                  onClick={(e) => {
+                    copyToClipboard(e);
+                  }}
+                >
                   <FontAwesomeIcon icon={faShare} />{" "}
                 </div>
               </div>
