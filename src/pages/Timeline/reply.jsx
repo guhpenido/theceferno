@@ -223,7 +223,9 @@ function ReplyDisplay({ reply, userLoggedData, mode }) {
                         </div>
                     </div>
                     <div className="tl-ps-texto">
+                        <br />
                         <p>{reply.text}</p>
+                        <br />
                     </div>
                     <div className="tl-ps-footer">
                         <div className="tl-ps-opcoes">

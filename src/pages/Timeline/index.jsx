@@ -361,6 +361,30 @@ export function Timeline() {
     photoURL:
       "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png",
   };
+  const userDocRef = doc(db, "users", userId);
+  async function getSavedPosts() {
+  try {
+    const userDocSnapshot = await getDoc(userDocRef);
+
+    if (userDocSnapshot.exists()) {
+      // O documento do usuário existe, agora você pode acessar o vetor 'savedPosts'
+      const userData = userDocSnapshot.data();
+      const savedPosts = userData.savedPosts;
+      console.log(savedPosts);
+      // 'savedPosts' é um vetor de inteiros que você pode usar como quiser
+    } else {
+      console.log('Documento não encontrado!');
+    }
+  } catch (error) {
+    console.error('Erro ao obter o documento do usuário:', error);
+  }
+}
+
+  const toggleMobileLateral = () => {
+    setIsMobileLateralVisible(!isMobileLateralVisible);
+    console.log("clicou");
+    console.log(isMobileLateralVisible);
+  };
 
   const toggleMobileLateral = () => {
     setIsMobileLateralVisible(!isMobileLateralVisible);
@@ -372,6 +396,7 @@ export function Timeline() {
     <>
       <div className="tl-screen">
         <div className="tl-container">
+<<<<<<< HEAD
 <<<<<<< HEAD
           <div className="tl-header">
             <div className="tl-header1">
@@ -576,6 +601,8 @@ export function Timeline() {
               
               )}
 =======
+=======
+>>>>>>> origin/prodLucas
           <Header
             userLogged={userLoggedData}
             toggleMobileLateral={toggleMobileLateral}

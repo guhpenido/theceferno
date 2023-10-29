@@ -5,6 +5,7 @@ import { faBookmark, faComment } from "@fortawesome/fontawesome-free-solid";
 import { faThumbsUp } from "@fortawesome/fontawesome-free-solid";
 import { faThumbsDown } from "@fortawesome/fontawesome-free-solid";
 import { faArrowRight } from "@fortawesome/fontawesome-free-solid";
+import { faArrowLeft } from "@fortawesome/fontawesome-free-solid";
 import { faShare } from "@fortawesome/fontawesome-free-solid";
 //import { faMagnifyingGlassArrowRight } from "@fortawesome/fontawesome-free-solid";
 
@@ -23,6 +24,7 @@ import {
     query,
     orderBy, updateDoc,
     limit,
+    deleteDoc,
 } from "firebase/firestore";
 
 import { addDoc } from "firebase/firestore";
@@ -36,20 +38,24 @@ import ReplyDisplay from "./reply";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import homeIcon from "../../assets/home-icon.svg";
+import perfilIcon from "../../assets/perfil-icon.svg";
+import setaPostar from "../../assets/seta-postar.svg";
+import dmIcon from "../../assets/dm-icon.svg";
+import { Acessibilidade } from "../Acessibilidade/index";
+
 
 function PostPage() {
     const location = useLocation();
-    const { userSentData, userMentionedData, userLoggedData } = location.state;
+    const { userSentData, userMentionedData } = location.state;
     const { postId } = useParams();
+    const [userLoggedData, setUserLoggedData] = useState(null);
     const postIdInt = parseInt(postId, 10);
     const [post, setPost] = useState(null);
     const [comments, setComments] = useState([]);
-    const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
     const [isFetching, setIsFetching] = useState(false);
     const [userId, setUserId] = useState(null);
     const [isLoadingUser, setIsLoadingUser] = useState(true);
-    const [likes, setLikes] = useState(null);
-    const [deslikes, setDeslikes] = useState(null);
     const [text, setText] = useState(null);
     const [mode, setMode] = useState(null);
     const [userSent, setUserSent] = useState(null);
@@ -59,6 +65,11 @@ function PostPage() {
     const navigate = useNavigate();
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
+    const [likes, setLikes] = useState(null);
+    const [dislikes, setDislikes] = useState(null);
+    const [profile, setProfile] = useState(null);
+    const [selectedProfile, setSelectedProfile] = useState(null);
     useEffect(() => {
         console.log("useEffect está sendo executado!");
         if (isFetching) {
@@ -73,6 +84,7 @@ function PostPage() {
                 console.log(user);
                 setUserId(user.uid);
                 console.log(user);
+                fetchUserDataAndSetState(user.uid);
                 fetchPostAndComments();
             } else {
                 navigate("/login");
@@ -82,6 +94,53 @@ function PostPage() {
 
         return () => unsubscribe();
     }, [auth, navigate]);
+
+    const fetchUserDataAndSetState = async (userId) => {
+        console.log(userId);
+        try {
+          const userLoggedDataResponse = await fetchUserData(userId);
+          setSelectedProfile(userLoggedDataResponse.usuario);
+          setUserLoggedData({
+            id: userLoggedDataResponse.id,
+            usuario: userLoggedDataResponse.usuario,
+            pseudonimo: userLoggedDataResponse.pseudonimo,
+            imageUrl: userLoggedDataResponse.imageUrl,
+            nome: userLoggedDataResponse.nome,
+          });
+          setProfile({
+            username: userLoggedDataResponse.pseudonimo,
+            photoURL:
+                "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png",
+        });
+          setIsLoadingUser(false); // Data has been fetched, no longer loading
+        } catch (error) {
+          console.error("Error fetching user data:", error.message);
+          setIsLoadingUser(false); // Even if there's an error, stop loading
+        }
+      };
+
+    const fetchUserData = async (userId) => {
+        try {
+          if (!userId) {
+            console.error("Invalid userId");
+            return null;
+          }
+    
+          const userDocRef = doc(db, "users", userId);
+    
+          const userDoc = await getDoc(userDocRef);
+    
+          if (userDoc.exists()) {
+            return userDoc.data();
+          } else {
+            console.log("User not found");
+            return null;
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error.message);
+          return null;
+        }
+      };
 
     const fetchPostAndComments = async () => {
         if (!postIdInt) {
@@ -99,7 +158,7 @@ function PostPage() {
 
                 console.log("Dados do post:", postData);
                 setLikes(postData.likes);
-                setDeslikes(postData.deslikes);
+                setDislikes(postData.deslikes);
                 setText(postData.text);
                 setMode(postData.mode);
                 setUserSent(postData.userSent);
@@ -116,9 +175,237 @@ function PostPage() {
     };
     fetchPostAndComments();
 
+
     const postDate = new Date(time);
     const now = new Date();
     let timeAgo;
+
+    const handleLikeClick = async (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        // Verificar se o usuário já curtiu a postagem na coleção "interactions"
+        const userAlreadyLiked = await checkUserInteraction(userId, postIdInt);
+
+        if (!userAlreadyLiked) {
+            // Incrementar o número de likes localmente
+            const newLikes = likes + 1;
+            setLikes(newLikes);
+
+            // Atualizar o número de likes no Firebase na coleção "timeline"
+            const db = getFirestore(app);
+            const q = query(
+                collection(db, "timeline"),
+                where("postId", "==", postIdInt)
+            );
+
+            try {
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    const postDoc = querySnapshot.docs[0]; // Supondo que haja apenas um documento correspondente
+
+                    // Atualizar o campo "likes" no documento
+                    await updateDoc(doc(db, "timeline", postDoc.id), { likes: newLikes });
+                    console.log("Likes atualizados no Firebase com sucesso!");
+
+                    // Adicionar a interação na coleção "interactions"
+                    await addInteraction(userId, postIdInt, "like");
+                } else {
+                    console.error("Post não encontrado no Firebase.");
+                    // Reverter a contagem local de likes em caso de erro
+                    setLikes(likes);
+                }
+            } catch (error) {
+                console.error("Erro ao atualizar likes no Firebase: ", error);
+                // Reverter a contagem local de likes em caso de erro
+                setLikes(likes);
+            }
+        } else {
+            // Remover a interação da coleção "interactions"
+            const db = getFirestore(app);
+            const interactionsRef = collection(db, "interactions");
+            const queryInteraction = query(
+                interactionsRef,
+                where("userId", "==", userId),
+                where("postId", "==", postIdInt),
+                where("interaction", "==", "like")
+            );
+
+            try {
+                const querySnapshotInteraction = await getDocs(queryInteraction);
+
+                if (!querySnapshotInteraction.empty) {
+                    const interactionDoc = querySnapshotInteraction.docs[0];
+                    await deleteDoc(interactionDoc.ref);
+                    console.log("Like removido com sucesso!");
+
+                    // Decrementar o número de likes na coleção "timeline"
+                    const newLikes = likes - 1;
+                    setLikes(newLikes);
+                    const qTimeline = query(
+                        collection(db, "timeline"),
+                        where("postId", "==", postIdInt)
+                    );
+                    const querySnapshotTimeline = await getDocs(qTimeline);
+
+                    if (!querySnapshotTimeline.empty) {
+                        const postDocTimeline = querySnapshotTimeline.docs[0];
+                        await updateDoc(doc(db, "timeline", postDocTimeline.id), {
+                            likes: newLikes,
+                        });
+                        console.log("Likes atualizados no Firebase com sucesso!");
+                    }
+                }
+            } catch (error) {
+                console.error("Erro ao remover like: ", error);
+            }
+        }
+    };
+
+    // Função para adicionar a interação na coleção "interactions"
+    const addInteraction = async (userId, postId, interactionType) => {
+        try {
+            const db = getFirestore(app);
+            const interactionsRef = collection(db, "interactions");
+            const newInteraction = {
+                userId,
+                postId,
+                interaction: interactionType,
+            };
+
+            await addDoc(interactionsRef, newInteraction);
+            console.log("Interação registrada com sucesso.");
+        } catch (error) {
+            console.error("Erro ao registrar interação: ", error);
+        }
+    };
+
+    // Função para verificar se o usuário já interagiu com a postagem na coleção "interactions"
+    const checkUserInteraction = async (userId, postId) => {
+        try {
+            const db = getFirestore(app);
+            const interactionsRef = collection(db, "interactions");
+            const queryInteraction = query(
+                interactionsRef,
+                where("userId", "==", userId),
+                where("postId", "==", postId),
+                where("interaction", "==", "like")
+            );
+
+            const querySnapshot = await getDocs(queryInteraction);
+
+            return !querySnapshot.empty;
+        } catch (error) {
+            console.error("Erro ao verificar interação: ", error);
+            return false;
+        }
+    };
+
+    const handleDislikeClick = async (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        // Verificar se o usuário já curtiu a postagem na coleção "interactions"
+        const userAlreadyLiked = await checkUserDislikeInteraction(userId, postIdInt);
+
+        if (!userAlreadyLiked) {
+            // Incrementar o número de likes localmente
+            const newDislikes = dislikes + 1;
+            setDislikes(newDislikes);
+
+            // Atualizar o número de likes no Firebase na coleção "timeline"
+            const db = getFirestore(app);
+            const q = query(
+                collection(db, "timeline"),
+                where("postId", "==", postIdInt)
+            );
+
+            try {
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    const postDoc = querySnapshot.docs[0]; // Supondo que haja apenas um documento correspondente
+
+                    // Atualizar o campo "likes" no documento
+                    await updateDoc(doc(db, "timeline", postDoc.id), { deslikes: newDislikes });
+                    console.log("Deslikes atualizados no Firebase com sucesso!");
+
+                    // Adicionar a interação na coleção "interactions"
+                    await addInteraction(userId, postIdInt, "dislike");
+                } else {
+                    console.error("Post não encontrado no Firebase.");
+                    // Reverter a contagem local de likes em caso de erro
+                    setDislikes(dislikes);
+                }
+            } catch (error) {
+                console.error("Erro ao atualizar likes no Firebase: ", error);
+                // Reverter a contagem local de likes em caso de erro
+                setDislikes(dislikes);
+            }
+        } else {
+            // Remover a interação da coleção "interactions"
+            const db = getFirestore(app);
+            const interactionsRef = collection(db, "interactions");
+            const queryInteraction = query(
+                interactionsRef,
+                where("userId", "==", userId),
+                where("postId", "==", postIdInt),
+                where("interaction", "==", "dislike")
+            );
+
+            try {
+                const querySnapshotInteraction = await getDocs(queryInteraction);
+
+                if (!querySnapshotInteraction.empty) {
+                    const interactionDoc = querySnapshotInteraction.docs[0];
+                    await deleteDoc(interactionDoc.ref);
+                    console.log("Deslike removido com sucesso!");
+
+                    // Decrementar o número de likes na coleção "timeline"
+                    const newDislikes = dislikes - 1;
+                    setDislikes(newDislikes);
+                    const qTimeline = query(
+                        collection(db, "timeline"),
+                        where("postId", "==", postIdInt)
+                    );
+                    const querySnapshotTimeline = await getDocs(qTimeline);
+
+                    if (!querySnapshotTimeline.empty) {
+                        const postDocTimeline = querySnapshotTimeline.docs[0];
+                        await updateDoc(doc(db, "timeline", postDocTimeline.id), {
+                            deslikes: newDislikes,
+                        });
+                        console.log("Likes atualizados no Firebase com sucesso!");
+                    }
+                }
+            } catch (error) {
+                console.error("Erro ao remover like: ", error);
+            }
+        }
+    };
+
+
+    // Função para verificar se o usuário já interagiu com a postagem na coleção "interactions"
+    const checkUserDislikeInteraction = async (userId, postId) => {
+        try {
+            const db = getFirestore(app);
+            const interactionsRef = collection(db, "interactions");
+            const queryInteraction = query(
+                interactionsRef,
+                where("userId", "==", userId),
+                where("postId", "==", postId),
+                where("interaction", "==", "dislike")
+            );
+
+            const querySnapshot = await getDocs(queryInteraction);
+
+            return !querySnapshot.empty;
+        } catch (error) {
+            console.error("Erro ao verificar interação: ", error);
+            return false;
+        }
+    };
 
     const copyToClipboard = () => {
         const postLink = window.location.href; // Obtém o URL da página
@@ -126,34 +413,6 @@ function PostPage() {
         alert("Link copiado para a área de transferência: " + postLink); // Exibe um alerta informando que o link foi copiado
     };
 
-    const handleLikeClick = async (e) => {
-        // Incrementar o número de likes localmente
-        const newLikes = likes + 1;
-        setLikes(newLikes);
-
-        // Atualizar o número de likes no Firebase
-        const q = query(collection(db, "timeline"), where("postId", "==", postIdInt));
-
-        try {
-            const querySnapshot = await getDocs(q);
-
-            if (!querySnapshot.empty) {
-                const postDoc = querySnapshot.docs[0]; // Supondo que haja apenas um documento correspondente
-
-                // Atualizar o campo "likes" no documento
-                await updateDoc(doc(db, "timeline", postDoc.id), { likes: newLikes });
-                console.log("Likes atualizados no Firebase com sucesso!");
-            } else {
-                console.error("Post não encontrado no Firebase.");
-                // Reverter a contagem local de likes em caso de erro
-                setLikes(likes);
-            }
-        } catch (error) {
-            console.error("Erro ao atualizar likes no Firebase: ", error);
-            // Reverter a contagem local de likes em caso de erro
-            setLikes(likes);
-        }
-    };
     // Calcule a diferença em segundos entre as datas
     const secondsAgo = Math.floor((now - postDate) / 1000);
 
@@ -318,28 +577,107 @@ function PostPage() {
         }
     };
 
+    function ProfileImage() {
+        // Determine qual perfil está selecionado e use o URL da imagem correspondente
+        const profileImageUrl =
+            (selectedProfile)
+                ? userLoggedData.imageUrl
+                : "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png";
+
+        return <img src={profileImageUrl} alt="Perfil" />;
+    }
+
+    const css = {
+        color: "#fff",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: "5px",
+    };
 
 
     return (
         <>
             <div className="tl-screen">
                 <div className="tl-container">
-                    <div className="tl-header">
-                        <div className="tl-header1">
-                            <Link className="tl-foto" to="/perfil">
-                                <div>
-                                    <img src={userLoggedData.imageUrl} alt="Perfil" />
-                                </div>
+                    <div className="tl-header" style={css}>
+                            <Link to="/timeline">
+                                <FontAwesomeIcon className="arrow" icon={faArrowLeft} style={css} />
                             </Link>
-                            <div className="tl-logo">
-                                <img
-                                    src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png"
-                                    alt=""
-                                />
-                            </div>
+                        <div className="tl-header-post header-active">
+                            <h1>Para Você</h1>
+                            <div className="header-active-in"></div>
                         </div>
-                        <div className="tl-titulo">
-                            <h1>Timeline</h1>
+                    </div>
+                    <div className="tl-ladoEsquerdo">
+                        <div className="lateral-wrapper">
+                            <div className="lateral-estatica-dm">
+                                <div className="lateral-header">
+                                    <div className="imgProfilePic">
+                                        <Link className="tl-foto" to="/perfil">
+                                            <div>
+                                                <ProfileImage selectedProfile={selectedProfile} />
+                                            </div>
+                                        </Link>
+                                    </div>
+                                </div>
+                                <div className="menu-lateral-dm">
+                                    <Link className="botaoAcessar iconDm" to="/timeline">
+                                        <div className="cada-icone-img-nome-dm">
+                                            <img
+                                                id="home"
+                                                src={homeIcon}
+                                                alt="Botão ir para Home"
+                                            ></img>
+                                            <div className="escrita-lateral-dm">
+                                                <p className="escrita-lateral-dm">Timeline</p>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                    <Link className="botaoAcessar iconDm" to="/perfil">
+                                        <div className="cada-icone-img-nome-dm">
+                                            <img
+                                                id="dm"
+                                                src={perfilIcon}
+                                                alt="Botão ir para o perfil"
+                                            ></img>
+                                            <div className="escrita-lateral-dm">
+                                                <p className="escrita-lateral-dm">Perfil</p>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                    <Link className="botaoAcessar iconDm" to="/dm">
+                                        <div className="cada-icone-img-nome-dm">
+                                            <img
+                                                id="dm"
+                                                src={dmIcon}
+                                                alt="Botão ir para DM, chat conversas privadas"
+                                            ></img>
+                                            <div className="escrita-lateral-dm">
+                                                <p className="escrita-lateral-dm">DM</p>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                    <Link className="botaoAcessar a-postar-menu-lateral" to="/dm">
+                                        <div className="botao-buscar-menu">
+                                            <div className="postar-menu-lateral">
+                                                <img
+                                                    id="img-postar-menu-lateral-medio"
+                                                    src={setaPostar}
+                                                    alt="Botão ir para DM, chat conversas privadas"
+                                                ></img>
+                                                <p id="p-postar-menu-lateral">Postar</p>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                </div>
+                                <div className="logoCeferno">
+                                    <img
+                                        src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png?ex=654f16a6&is=653ca1a6&hm=47f7d679b329ecf5cc49ea053019ef5d019999ddb77a0ba1a3dda31532ab55da&"
+                                        alt=""
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className="tl-main">
@@ -384,7 +722,9 @@ function PostPage() {
                                         )}
                                     </div>
                                     <div className="tl-ps-texto">
+                                        <br></br>
                                         <p>{text}</p>
+                                        <br></br>
                                     </div>
                                     <div className="tl-ps-footer">
                                         <div className="tl-ps-opcoes">
@@ -398,9 +738,12 @@ function PostPage() {
                                             }}>
                                                 <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes}</span>
                                             </div>
-                                            <div className="tl-ps-deslike">
+                                            <div className="tl-ps-deslike" onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDislikeClick(e);
+                                            }}>
                                                 <FontAwesomeIcon icon={faThumbsDown} />{" "}
-                                                <span>{deslikes}</span>
+                                                <span>{dislikes}</span>
                                             </div>
                                             <div className="tl-ps-salvar" onClick={(e) => { handleSavePost(e, postIdInt) }}>
                                                 <FontAwesomeIcon icon={faBookmark} />{" "}
@@ -429,8 +772,7 @@ function PostPage() {
                                     )}
 
                                 </div>
-                            </div>
-                            {showReplies && (
+                                {showReplies && (
                                 <div className="replies-container">
                                     {replies.map((reply) => (
                                         <ReplyDisplay
@@ -442,13 +784,38 @@ function PostPage() {
                                     ))}
                                 </div>
                             )}
+                            </div>
                         </div>
                         {isFetching && <p>Carregando mais posts...</p>}
                     </div>
+                    <div className="tl-ladoDireito">
+                        <div className="tl-ladoDireito-procurar">
+                            <div className="procurar-box">
+                                <div className="img-procurar-box">
+                                    <div className="img-procurar-box-in">
+                                        <img
+                                            src="https://cdn.discordapp.com/attachments/871728576972615680/1167934652267368488/6328608.png?ex=654feee8&is=653d79e8&hm=15078133d7bcc63b14665f301890a83cf549dba37a671c8827a8c9c6e8c50c11&"
+                                            alt=""
+                                        />
+                                    </div>
+                                </div>
+                                <div className="procurar-box-input">
+                                    <input type="text" placeholder="Procurar" />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="tl-ladoDireito-doar">
+                            <h1>Deseja doar para o CEFERNO?</h1>
+                            <p>
+                                O CEFERNO é um projeto estudantil, e para mantermos ele online
+                                precisamos das doações.
+                            </p>
+                            <button>Doar</button>
+                        </div>
+                    </div>
                 </div>
-
             </div>
-
+            <Acessibilidade />
         </>
     );
 };
