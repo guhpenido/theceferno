@@ -22,6 +22,7 @@ import pesquisaIcon from "../../assets/pesquisa-icon.svg";
 import { Acessibilidade } from "../Acessibilidade/index";
 import AddPost from "./AddPost";
 import Header from "./Header";
+import MenuLateral from "../MenuLateral/MenuLateral";
 import {
   getDatabase,
   ref,
@@ -79,6 +80,7 @@ export function Timeline() {
   const [selectedCurso] = useState("");
   const [selectedInstituicao] = useState("");
   const [nextPostId, setNextPostId] = useState(0);
+  const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
   const handleScroll = () => {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
@@ -343,83 +345,44 @@ export function Timeline() {
     photoURL:
       "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png",
   };
+  const userDocRef = doc(db, "users", userId);
+  async function getSavedPosts() {
+  try {
+    const userDocSnapshot = await getDoc(userDocRef);
+
+    if (userDocSnapshot.exists()) {
+      // O documento do usuário existe, agora você pode acessar o vetor 'savedPosts'
+      const userData = userDocSnapshot.data();
+      const savedPosts = userData.savedPosts;
+      console.log(savedPosts);
+      // 'savedPosts' é um vetor de inteiros que você pode usar como quiser
+    } else {
+      console.log('Documento não encontrado!');
+    }
+  } catch (error) {
+    console.error('Erro ao obter o documento do usuário:', error);
+  }
+}
+
+  const toggleMobileLateral = () => {
+    setIsMobileLateralVisible(!isMobileLateralVisible);
+    console.log("clicou");
+    console.log(isMobileLateralVisible);
+  };
 
   return (
     <>
       <div className="tl-screen">
         <div className="tl-container">
-          <Header />
-          <div className="tl-ladoEsquerdo">
-            <div className="lateral-wrapper">
-              <div className="lateral-estatica-dm">
-                <div className="lateral-header">
-                  <div className="imgProfilePic">
-                    <Link className="tl-foto" to="/perfil">
-                      <div>
-                        <ProfileImage selectedProfile={selectedProfile} />
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-                <div className="menu-lateral-dm">
-                  <Link className="botaoAcessar iconDm" to="/timeline">
-                    <div className="cada-icone-img-nome-dm">
-                      <img
-                        id="home"
-                        src={homeIcon}
-                        alt="Botão ir para Home"
-                      ></img>
-                      <div className="escrita-lateral-dm">
-                        <p className="escrita-lateral-dm">Timeline</p>
-                      </div>
-                    </div>
-                  </Link>
-                  <Link className="botaoAcessar iconDm" to="/perfil">
-                    <div className="cada-icone-img-nome-dm">
-                      <img
-                        id="dm"
-                        src={perfilIcon}
-                        alt="Botão ir para o perfil"
-                      ></img>
-                      <div className="escrita-lateral-dm">
-                        <p className="escrita-lateral-dm">Perfil</p>
-                      </div>
-                    </div>
-                  </Link>
-                  <Link className="botaoAcessar iconDm" to="/dm">
-                    <div className="cada-icone-img-nome-dm">
-                      <img
-                        id="dm"
-                        src={dmIcon}
-                        alt="Botão ir para DM, chat conversas privadas"
-                      ></img>
-                      <div className="escrita-lateral-dm">
-                        <p className="escrita-lateral-dm">DM</p>
-                      </div>
-                    </div>
-                  </Link>
-                  <Link className="botaoAcessar a-postar-menu-lateral" to="/dm">
-                    <div className="botao-buscar-menu">
-                      <div className="postar-menu-lateral">
-                        <img
-                          id="img-postar-menu-lateral-medio"
-                          src={setaPostar}
-                          alt="Botão ir para DM, chat conversas privadas"
-                        ></img>
-                        <p id="p-postar-menu-lateral">Postar</p>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-                <div className="logoCeferno">
-                <img
-                  src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png?ex=654f16a6&is=653ca1a6&hm=47f7d679b329ecf5cc49ea053019ef5d019999ddb77a0ba1a3dda31532ab55da&"
-                  alt=""
-                />
-              </div>
-              </div>
-            </div>
-          </div>
+          <Header
+            userLogged={userLoggedData}
+            toggleMobileLateral={toggleMobileLateral}
+          />
+          <MenuLateral
+            isMobileLateralVisible={isMobileLateralVisible}
+            toggleMobileLateral={toggleMobileLateral}
+          />
+          <div className="tl-ladoEsquerdo"></div>
           <div className="tl-main">
             <div className="tl-box">
               {loadedPosts.map(({ post, userSentData, userMentionedData }) => (

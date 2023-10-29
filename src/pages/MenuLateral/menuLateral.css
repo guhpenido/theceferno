@@ -1,0 +1,377 @@
+.botao-buscar-menu,
+.a-postar-menu-lateral,
+.menu-lateral {
+  width: 100%;
+}
+
+.postar-menu-lateral {
+  background-color: #4763e4;
+  padding: 10px 10px 10px 10px;
+  border-radius: 50px;
+}
+
+.iconMenu img {
+  filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg)
+    brightness(94%) contrast(90%);
+}
+
+#msg {
+  margin-left: 4%;
+}
+
+.iconMenu img {
+  overflow: visible;
+  width: 32px;
+  transition: all 300ms;
+  margin: 10px 0px 10px 0px;
+}
+
+.cada-icone-img-nome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cada-icone-img-nome p {
+  font-size: 18px;
+  margin-left: 15px;
+}
+
+.postar-menu-lateral p {
+  text-align: center;
+}
+
+#p-postar-menu-lateral {
+  display: none;
+}
+
+#img-postar-menu-lateral-medio {
+  width: 32px;
+  filter: invert(100%);
+}
+
+.menu-lateral-wrapper {
+  display: none;
+  flex-direction: column;
+  padding: 0px 15px 0px 15px;
+  align-items: center;
+  height: 100vh;
+  padding-top: 20px;
+  align-items: flex-start;
+  background-color: #111111;
+  border-radius: 0 30px 30px 0;
+}
+
+.menu-lateral {
+  display: none;
+  padding: 20px;
+  height: 100vh;
+  background-color: #111111;
+}
+
+.menu-lateral {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 40%;
+}
+
+.escrita-lateral {
+  color: #ffffff;
+}
+
+.tela-logo-lateral-dm {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  width: 270px;
+}
+
+@media screen and (max-width: 924px) and (min-width: 720px) {
+  .menu-lateral-wrapper {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    width: 100px;
+    left: 0;
+    top: 0;
+  }
+
+  .escrita-lateral,
+  .menu-header-infos {
+    display: none;
+  }
+
+  .botao-buscar-menu,
+  .a-postar-menu-lateral {
+    width: fit-content;
+  }
+}
+
+@media screen and (max-width: 1279px) and (min-width: 924px) {
+  .menu-lateral-wrapper {
+    display: flex;
+    align-items: flex-start;
+    position: fixed;
+    width: 240px;
+    left: 0;
+    top: 0;
+  }
+
+  .escrita-lateral {
+    display: flex !important;
+  }
+
+  .menu-lateral {
+    align-items: flex-start;
+  }
+
+  #img-postar-menu-lateral-medio {
+    display: none !important;
+  }
+
+  #p-postar-menu-lateral {
+    display: block !important;
+  }
+}
+
+@media screen and (min-width: 1279px) and (max-width: 1416px) {
+  .menu-lateral-wrapper {
+    display: flex;
+    align-items: flex-start;
+    position: fixed;
+    width: 240px;
+    left: 0;
+    top: 0;
+  }
+
+  .escrita-lateral {
+    display: flex !important;
+  }
+
+  .menu-lateral {
+    align-items: flex-start;
+  }
+
+  #img-postar-menu-lateral-medio {
+    display: none !important;
+  }
+
+  #p-postar-menu-lateral {
+    display: block !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  .menu-lateral-wrapper {
+    display: flex;
+    align-items: flex-start;
+    position: fixed;
+    width: 240px;
+    left: 0;
+    top: 0;
+  }
+  .escrita-lateral {
+    display: flex !important;
+  }
+  .menu-lateral {
+    align-items: flex-start;
+  }
+  #img-postar-menu-lateral-medio {
+    display: none !important;
+  }
+
+  #p-postar-menu-lateral {
+    display: block !important;
+  }
+}
+.imgProfilePicFoto {
+  width: 50px;
+  border-radius: 50%;
+}
+.menu-lateral-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.imgProfilePic {
+  margin-right: 10px;
+}
+.menu-header-infos {
+  width: 76%;
+}
+.menu-header-infos h1 {
+  font-size: 15px;
+}
+.menu-header-infos h2 {
+  font-size: 12px;
+  text-align: start;
+}
+.menu-footer {
+  margin-top: 100px;
+  width: 100%;
+  height: 80px;
+}
+.menu-footer img {
+  width: 100%;
+}
+
+/*----------------------------*/
+
+.mobile-botao-buscar-menu,
+.mobile-a-postar-menu-lateral,
+.mobile-menu-lateral {
+  width: 100%;
+}
+
+.mobile-postar-menu-lateral {
+  background-color: #4763e4;
+  padding: 10px 10px 10px 10px;
+  border-radius: 50px;
+}
+
+.mobile-iconMenu img {
+  filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg)
+    brightness(94%) contrast(90%);
+}
+
+#mobile-msg {
+  margin-left: 4%;
+}
+
+.mobile-iconMenu img {
+  overflow: visible;
+  width: 32px;
+  transition: all 300ms;
+  margin: 10px 0px 10px 0px;
+}
+
+.mobile-cada-icone-img-nome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-cada-icone-img-nome p {
+  font-size: 18px;
+  margin-left: 15px;
+}
+.mobile-postar-menu-lateral{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.mobile-postar-menu-lateral p {
+  text-align: center;
+}
+
+#mobile-p-postar-menu-lateral {
+  display: block;
+  font-weight: 500;
+  width: 50%;
+}
+
+#mobile-img-postar-menu-lateral-medio {
+  width: 32px;
+  filter: invert(100%);
+}
+
+.mobile-menu-lateral-wrapper {
+  display: none;
+  flex-direction: column;
+  padding: 0px 15px 0px 15px;
+  align-items: center;
+  height: 100vh;
+  padding-top: 20px;
+  align-items: flex-start;
+  background-color: #111111;
+  border-radius: 0 30px 30px 0;
+  z-index: 1;
+}
+
+.mobile-menu-lateral {
+  display: none;
+  padding: 20px;
+  height: 100vh;
+  background-color: #111111;
+}
+
+.mobile-menu-lateral {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 40%;
+}
+
+.mobile-escrita-lateral {
+  color: #ffffff;
+}
+
+.mobile-tela-logo-lateral-dm {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  width: 270px;
+}
+
+.mobile-menu-lateral-wrapper {
+  display: flex;
+  align-items: flex-start;
+  position: fixed;
+  width: 240px;
+  left: 0;
+  top: 0;
+}
+.mobile-escrita-lateral {
+  display: flex !important;
+}
+.mobile-menu-lateral {
+  align-items: flex-start;
+}
+#mobile-imgProfilePicFoto {
+  width: 50px;
+  border-radius: 50%;
+}
+.mobile-menu-lateral-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.mobile-imgProfilePic {
+  margin-right: 10px;
+}
+.mobile-menu-header-infos {
+  width: 76%;
+}
+.mobile-menu-header-infos h1 {
+  font-size: 15px;
+}
+.mobile-menu-header-infos h2 {
+  font-size: 12px;
+  text-align: start;
+}
+.mobile-menu-footer {
+  margin-top: 100px;
+  width: 100%;
+  height: 80px;
+}
+.mobile-menu-footer img {
+  width: 100%;
+}
+.mobile-imgProfilePic img{
+    width: 100%;
+    border-radius: 50%;
+}
+.mobile-menu-lateral-header{
+    height: 50px;
+ 
+}
+.mobile-imgProfilePic{
+    width: 50px;
+    height: 50px;
+}
+.mobile-lateral-wrapper{
+    display: none;
+}
