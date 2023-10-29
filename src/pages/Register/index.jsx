@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-// import "./stylesRegister.scss";
+import "./stylesRegister.scss";
 import "./stylesRegister.css"; //descomentar apenas esse
 import { useNavigate } from 'react-router-dom';
 import { app } from "../../services/firebaseConfig";
@@ -377,7 +377,7 @@ export function Register() {
       isStrongPassword(state.password) &&
       state.isPasswordMatch &&
       isEmailAvailable(state.email) &&
-      state.isEmailValid
+      state.isEmailValid && isPasswordMatch
     );
   };
 
@@ -584,9 +584,9 @@ export function Register() {
                 placeholder="(xx) xxxxx-xxxx"
                 value={state.celular}
                 onChange={handleCelularChange}
-                style={{ borderColor: isValidCelular() ? "green" : "red" }}
+                style={{ borderColor: isValidCelular(state.celular) ? "green" : "red" }}
               />
-              {!isValidCelular() && (
+              {!isValidCelular(state.celular) && (
                 <p style={{ color: "red" }}>Celular inválido</p>
               )}
             </div> 
@@ -599,9 +599,9 @@ export function Register() {
                 placeholder="Nome da instituição"
                 value={state.instituicao}
                 onChange={handleInstituicaoChange}
-                style={{ borderColor: isInstituicaoValid() ? "green" : "red" }}
+                style={{ borderColor: isInstituicaoValid(state.instituicao) ? "green" : "red" }}
               />
-              {!isInstituicaoValid() && (
+              {!isInstituicaoValid(state.instituicao) && (
                 <p style={{ color: "red" }}>Instituição inválida</p>
               )}
             </div>
@@ -614,9 +614,9 @@ export function Register() {
                 placeholder="Nome do curso"
                 value={state.curso}
                 onChange={handleCursoChange}
-                style={{ borderColor: isCursoValid() ? "green" : "red" }}
+                style={{ borderColor: isCursoValid(state.curso) ? "green" : "red" }}
               />
-              {!isCursoValid() && (
+              {!isCursoValid(state.curso) && (
                 <p style={{ color: "red" }}>Curso inválido</p>
               )}
             </div>
@@ -628,9 +628,9 @@ export function Register() {
                 id="dtNascimento"
                 value={state.dtNascimento}
                 onChange={handleDtNascimentoChange}
-                style={{ borderColor: isDtNascimentoValid() ? "green" : "red" }}
+                style={{ borderColor: isDtNascimentoValid(state.dtNascimento) ? "green" : "red" }}
               />
-              {!isDtNascimentoValid() && (
+              {!isDtNascimentoValid(state.dtNascimento) && (
                 <p style={{ color: "red" }}>Data de nascimento inválida</p>
               )}
             </div>

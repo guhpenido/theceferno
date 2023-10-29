@@ -6,7 +6,7 @@ import setaPostar from "../../assets/seta-postar.svg";
 import notificacaoIcon from "../../assets/notificacao-icon.svg";
 import pesquisaIcon from "../../assets/pesquisa-icon.svg";
 // import "./dmStyles.css";
-import "./stylesDm.css";
+//import "./stylesDm.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
