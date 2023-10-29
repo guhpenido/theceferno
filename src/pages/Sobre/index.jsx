@@ -1,11 +1,5 @@
 import React from "react";
 import "./stylesSobre.css";
-
-
-import "../bootstrap/css/bootstrap.min.css";
-import "../bootstrap/js/bootstrap.bundle.min.js";
-// import "./stylesSobre.css";
-import "./stylesSobre.css";
 import { Link } from "react-router-dom";
 import cefernoTextoImg from "../../assets/ceferno_texto.png";
 import VLibras from "@djpfs/react-vlibras";

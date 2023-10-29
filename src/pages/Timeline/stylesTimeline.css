@@ -444,3 +444,14 @@ body{
 .tl-reply-button:hover {
   background-color: #000;
 }
+
+.tlBotaoTroca {
+  background: none;
+  border: none;
+  padding: 0 1vw 0 1vw;
+
+}
+
+.tlBotaoTroca:hover {
+  border-bottom: 1px solid #4562e2;
+}

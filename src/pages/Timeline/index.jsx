@@ -51,9 +51,20 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import "./stylesTimeline.css";
 import Trending from "./Trending";
+import Denuncia from "../Denuncia/Denuncia";
 
 
 export function Timeline() {
+
+  const [mostrarComponente, setMostrarComponente] = useState(false);
+
+  const handleClick = () => {
+    setMostrarComponente(true);
+  }
+
+
+
+
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedId, setSelectedId] = useState("");
   const [isLoadingUser, setIsLoadingUser] = useState(true);
@@ -719,7 +730,7 @@ export function Timeline() {
             <div className="tl-titulo">
             <button className="tlBotaoTroca" onClick={() => handleTabChange("timeline")}>Timeline</button>
             <p style={{color: '#193cd8'}}>|</p>
-            <button className="tlBotaoTroca" onClick={() => handleTabChange("trending")}>Trending</button>
+            <button className="tlBotaoTroca" onClick={handleClick}>Trending</button> {mostrarComponente && <Denuncia />}
             </div>
           </div>
           </div>
