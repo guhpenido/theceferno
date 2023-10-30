@@ -15,7 +15,7 @@ import {
   where,
   getDocs,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 export { MenuLateral };
 
 function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
@@ -69,7 +69,7 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
       .then(() => {
         // Usuário deslogado com sucesso
         console.log("Usuário deslogado com sucesso");
-        navigate('/');
+        navigate("/");
       })
       .catch((error) => {
         // Lida com erros, se houver algum
@@ -92,6 +92,7 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
               <h2>@{userUsuario}</h2>
             </div>
           </div>
+
           <div className="menu-lateral">
             <Link className="botaoAcessar iconMenu" to="/timeline">
               <div className="cada-icone-img-nome">
@@ -155,11 +156,6 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
               <img id="logout" src={logout} alt="Botão de LogOut"></img>
               <h1>Sair</h1>
             </div>
-            <img
-              className="imagemBottom"
-              src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png?ex=654f16a6&is=653ca1a6&hm=47f7d679b329ecf5cc49ea053019ef5d019999ddb77a0ba1a3dda31532ab55da&"
-              alt=""
-            />
           </div>
         </div>
       </div>
@@ -227,18 +223,21 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
                   </div>
                 </div>
               </Link>
-              <Link className="mobile-botaoAcessar mobile-iconMenu" to="/savedPosts">
-              <div className="mobile-cada-icone-img-nome">
-                <img
-                  id="dm"
-                  src={savedIcon}
-                  alt="Botão ir para a página que mostra os posts salvos."
-                ></img>
-                <div className="mobile-escrita-lateral">
-                  <p className="mobile-escrita-lateral">Salvos</p>
+              <Link
+                className="mobile-botaoAcessar mobile-iconMenu"
+                to="/savedPosts"
+              >
+                <div className="mobile-cada-icone-img-nome">
+                  <img
+                    id="dm"
+                    src={savedIcon}
+                    alt="Botão ir para a página que mostra os posts salvos."
+                  ></img>
+                  <div className="mobile-escrita-lateral">
+                    <p className="mobile-escrita-lateral">Salvos</p>
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
               <Link
                 className="mobile-botaoAcessar mobile-a-postar-menu-lateral"
                 to="/timeline"
@@ -256,16 +255,11 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
               </Link>
             </div>
             <div className="menu-footer">
-            <div className="menu-logout" onClick={handleLogout}>
-              <img id="logout" src={logout} alt="Botão de LogOut"></img>
-              <h1>Sair</h1>
+              <div className="menu-logout" onClick={handleLogout}>
+                <img id="logout" src={logout} alt="Botão de LogOut"></img>
+                <h1>Sair</h1>
+              </div>
             </div>
-            <img
-              className="imagemBottom"
-              src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png?ex=654f16a6&is=653ca1a6&hm=47f7d679b329ecf5cc49ea053019ef5d019999ddb77a0ba1a3dda31532ab55da&"
-              alt=""
-            />
-          </div>
           </div>
         </div>
       )}

@@ -17,6 +17,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import VLibras from "@djpfs/react-vlibras";
 import { Acessibilidade } from "../Acessibilidade/index";
+import MenuLateral from '../MenuLateral/MenuLateral';
 
 // Conexão com o Firebase
 const firebaseConfig = {
@@ -256,40 +257,7 @@ function Chat() {
   return (
     <>
       <div className="full-dm-screen">
-        <div className="lateral-wrapper">
-          <div className="lateral-estatica-dm">
-              <div className="imgProfilePic">
-                <Link to="/perfil"><img className="profilePicDm" src={currentUserProfilePic} alt="Imagem de perfil"></img></Link>
-              </div>
-              <div className="menu-lateral-dm">
-                <Link className="botaoAcessar iconDm" to="/timeline"><div className="cada-icone-img-nome-dm">
-                <img id="home" src={homeIcon} alt="Botão ir para Home"></img>
-                <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">Timeline</p></div>
-              </div>
-              </Link>  
-              <Link className="botaoAcessar iconDm" to="/perfil">
-                <div className="cada-icone-img-nome-dm">
-                  <img id="dm" src={perfilIcon} alt="Botão ir para o perfil"></img>
-                  <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">Perfil</p></div>
-                </div>
-              </Link>            
-              <Link className="botaoAcessar iconDm" to="/dm">
-                <div className="cada-icone-img-nome-dm">
-                  <img id="dm" src={dmIcon} alt="Botão ir para DM, chat conversas privadas"></img>
-                  <div className="escrita-lateral-dm"><p className="escrita-lateral-dm">DM</p></div>
-                </div>
-              </Link>
-              <Link className="botaoAcessar a-postar-menu-lateral" to="/dm" >
-                <div className="botao-buscar-menu">
-                  <div className='postar-menu-lateral'>
-                    <img id="img-postar-menu-lateral-medio" src={setaPostar} alt="Botão ir para DM, chat conversas privadas"></img>
-                    <p id='p-postar-menu-lateral'>Postar</p>
-                    </div>
-                </div>
-              </Link> 
-            </div>
-          </div>
-        </div>
+        <MenuLateral/>
         <div className="screen-dm-usavel">
           <div className="headerDm">
             <Link to={`/dm`}><img id="voltarChat" className="iconDm" src={voltarIcon} alt="Voltar" /></Link>

@@ -8,6 +8,8 @@ import { faThumbsDown } from "@fortawesome/fontawesome-free-solid";
 import { faCaretDown } from "@fortawesome/fontawesome-free-solid";
 import { faArrowRight } from "@fortawesome/fontawesome-free-solid";
 import { faEnvelope } from "@fortawesome/fontawesome-free-solid";
+import { faFire } from "@fortawesome/fontawesome-free-solid";
+//import { faCircleCheck } from "@fortawesome/fontawesome-free-solid";
 //import { faMagnifyingGlassArrowRight } from "@fortawesome/fontawesome-free-solid";
 import { faBell } from "@fortawesome/fontawesome-free-solid";
 import { faQuestion } from "@fortawesome/fontawesome-free-solid";
@@ -743,7 +745,7 @@ function PostDisplay({
                     handleDislikeClick(e);
                   }}
                 >
-                  <FontAwesomeIcon icon={faThumbsDown} />{" "}
+                  <FontAwesomeIcon icon="fa-solid fa-box-archive" />
                   <span>{dislikes}</span>
                 </div>
                 <div

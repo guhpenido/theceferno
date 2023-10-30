@@ -363,7 +363,6 @@ export function SavedPosts() {
             isMobileLateralVisible={isMobileLateralVisible}
             toggleMobileLateral={toggleMobileLateral}
           />
-          <div className="tl-ladoEsquerdo"></div>
           <div className="tl-main">
             <div className="tl-box">
               {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
@@ -379,28 +378,13 @@ export function SavedPosts() {
             </div>
           </div>
           <div className="tl-ladoDireito">
-            <div className="tl-ladoDireito-procurar">
-              <div className="procurar-box">
-                <div className="img-procurar-box">
-                  <div className="img-procurar-box-in">
-                    <img
-                      src="https://cdn.discordapp.com/attachments/871728576972615680/1167934652267368488/6328608.png?ex=654feee8&is=653d79e8&hm=15078133d7bcc63b14665f301890a83cf549dba37a671c8827a8c9c6e8c50c11&"
-                      alt=""
-                    />
-                  </div>
-                </div>
-                <div className="procurar-box-input">
-                  <input type="text" placeholder="Procurar" />
-                </div>
-              </div>
-            </div>
             <div className="tl-ladoDireito-doar">
               <h1>Deseja doar para o CEFERNO?</h1>
               <p>
                 O CEFERNO é um projeto estudantil, e para mantermos ele online
                 precisamos das doações.
               </p>
-              <button>Doar</button>
+              <Link to="https://linktr.ee/theceferno" target="_blank"><button>Doar</button></Link>
             </div>
           </div>
         </div>
