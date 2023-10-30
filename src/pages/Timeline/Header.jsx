@@ -11,7 +11,6 @@ import { Link } from "react-router-dom";
 
 function Header(props) {
   const [userImageUrl, setUserImageUrl] = useState(null);
-
   useEffect(() => {
     async function getUserImageUrl() {
       const auth = getAuth();
@@ -57,14 +56,14 @@ function Header(props) {
         <div className="tl-header-div2">
           <h1> <Link to="/trending"> Trending</Link> </h1>
         </div>
-        <div className="tl-header-filter">
+        {/* <div className="tl-header-filter">
           <div className="tl-header-filter-in">
             <img
-              src="https://cdn.discordapp.com/attachments/871728576972615680/1167909847866560643/settings-17-xxl.png?ex=654fd7ce&is=653d62ce&hm=f0fda7a77e21a3e137d47b2556d96ff236cdbbbab707e8042f010a3a4c980a17&"
+              src="https://cdn.discordapp.com/attachments/812025565615882270/1168379201146077205/recurring-appointment-xxl.png?ex=65518cec&is=653f17ec&hm=5bb554d4e8f281a9ca4e2e554ab14d50d1c55cc82413fef5a1372af880dd7a07&"
               alt=""
             />
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="mobile-tl-header">
         <div className="mobile-tl-header-header">
@@ -77,7 +76,7 @@ function Header(props) {
               alt=""
             />
           </div>
-          <div className="mobile-tl-header-header-config">
+          <div className="mobile-tl-header-header-config" onClick={props.carregatml}>
             <img
               src="https://cdn.discordapp.com/attachments/871728576972615680/1167909847866560643/settings-17-xxl.png?ex=654fd7ce&is=653d62ce&hm=f0fda7a77e21a3e137d47b2556d96ff236cdbbbab707e8042f010a3a4c980a17&"
               alt=""

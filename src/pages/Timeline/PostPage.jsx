@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark, faComment } from "@fortawesome/fontawesome-free-solid";
-import { faThumbsUp } from "@fortawesome/fontawesome-free-solid";
-import { faThumbsDown } from "@fortawesome/fontawesome-free-solid";
-import { faArrowRight } from "@fortawesome/fontawesome-free-solid";
 import { faArrowLeft } from "@fortawesome/fontawesome-free-solid";
+import { faBookmark as solidBookmark } from "@fortawesome/fontawesome-free-solid";
+import { faComment } from "@fortawesome/fontawesome-free-solid";
+import { faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
+import { faThumbsUp as regularThumbsUp } from "@fortawesome/free-regular-svg-icons";
+import { faThumbsUp as solidThumbsUp } from "@fortawesome/fontawesome-free-solid";
 import { faShare } from "@fortawesome/fontawesome-free-solid";
+import { faThumbsDown as regularThumbsDown } from "@fortawesome/free-regular-svg-icons";
+import { faThumbsDown as solidThumbsDown } from "@fortawesome/fontawesome-free-solid";
+import { faCaretDown } from "@fortawesome/fontawesome-free-solid";
+import { faArrowRight } from "@fortawesome/fontawesome-free-solid";
+import { faEnvelope } from "@fortawesome/fontawesome-free-solid";
 //import { faMagnifyingGlassArrowRight } from "@fortawesome/fontawesome-free-solid";
 
 //import { faXmark } from "@fortawesome/fontawesome-free-solid";
@@ -43,13 +49,16 @@ import perfilIcon from "../../assets/perfil-icon.svg";
 import setaPostar from "../../assets/seta-postar.svg";
 import dmIcon from "../../assets/dm-icon.svg";
 import { Acessibilidade } from "../Acessibilidade/index";
+import Header from "./Header";
+import MenuLateral from "../MenuLateral/MenuLateral";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 
 
 function PostPage() {
+    const [imageSentData, setImageSentData] = useState("https://cdn.discordapp.com/attachments/871728576972615680/1133946789343531079/logo.png");
     const location = useLocation();
-    const { userSentData, userMentionedData } = location.state;
+    const { userSentData, userMentionedData, userLoggedData } = location.state;
     const { postId } = useParams();
-    const [userLoggedData, setUserLoggedData] = useState(null);
     const postIdInt = parseInt(postId, 10);
     const [post, setPost] = useState(null);
     const [comments, setComments] = useState([]);
@@ -66,10 +75,73 @@ function PostPage() {
     const auth = getAuth(app);
     const db = getFirestore(app);
     const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
+    const [disliked, setDisliked] = useState(false); // Estado para controlar se o usuário curtiu o post
     const [likes, setLikes] = useState(null);
     const [dislikes, setDislikes] = useState(null);
     const [profile, setProfile] = useState(null);
     const [selectedProfile, setSelectedProfile] = useState(null);
+    const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
+    const [saveIcon, setSaveIcon] = useState("regular");
+  const [likeIcon, setLikeIcon] = useState("regular");
+  const [dislikeIcon, setDislikeIcon] = useState("regular");
+    const [isBeatingL, setIsBeatingL] = useState(false);
+    const [isBeatingD, setIsBeatingD] = useState(false);
+    const [isBeatingB, setIsBeatingB] = useState(false);
+    const iconToUse = saveIcon === 'solid' ? solidBookmark : regularBookmark;
+    const likeToUse = likeIcon === 'solid' ? solidThumbsUp : regularThumbsUp;
+    const dislikeToUse = dislikeIcon === 'solid' ? solidThumbsDown : regularThumbsDown;
+
+    const handleIconClickB = () => {
+        setIsBeatingB(!isBeatingB);
+        setTimeout(() => {
+            setIsBeatingB(false);
+        }, 1000);
+    };
+
+    const handleIconClickD = () => {
+        setIsBeatingD(!isBeatingD);
+        setTimeout(() => {
+            setIsBeatingD(false);
+        }, 1000);
+    };
+
+    const handleIconClickL = () => {
+        setIsBeatingL(!isBeatingL);
+        setTimeout(() => {
+            setIsBeatingL(false);
+        }, 1000);
+    };
+
+    useEffect(() => {
+        if (liked) {
+          setLikeIcon('solid');
+        }
+        else
+        setLikeIcon('regular');
+      }, [liked]);
+    
+      useEffect(() => {
+        if (disliked) {
+          setDislikeIcon('solid');
+        }
+        else
+        setDislikeIcon('regular');
+      }, [disliked]);
+
+    useEffect(() => {
+        console.log(imageSentData); // Aqui, você verá o valor atualizado de imageSentData
+    }, [imageSentData]);
+
+    console.log(postIdInt);
+    useEffect(() => {
+        if (userLoggedData && userLoggedData.savedPosts.includes(postIdInt)) {
+            setSaveIcon('solid');
+        }
+        else {
+            setSaveIcon('regular');
+        }
+    }, [userLoggedData, postIdInt]);
+
     useEffect(() => {
         console.log("useEffect está sendo executado!");
         if (isFetching) {
@@ -95,52 +167,56 @@ function PostPage() {
         return () => unsubscribe();
     }, [auth, navigate]);
 
+    useEffect(() => {
+        console.log("Valor atualizado de imageSentData:", imageSentData);
+    }, [imageSentData]);
     const fetchUserDataAndSetState = async (userId) => {
         console.log(userId);
         try {
-          const userLoggedDataResponse = await fetchUserData(userId);
-          setSelectedProfile(userLoggedDataResponse.usuario);
-          setUserLoggedData({
-            id: userLoggedDataResponse.id,
-            usuario: userLoggedDataResponse.usuario,
-            pseudonimo: userLoggedDataResponse.pseudonimo,
-            imageUrl: userLoggedDataResponse.imageUrl,
-            nome: userLoggedDataResponse.nome,
-          });
-          setProfile({
-            username: userLoggedDataResponse.pseudonimo,
-            photoURL:
-                "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png",
-        });
-          setIsLoadingUser(false); // Data has been fetched, no longer loading
+            const userLoggedDataResponse = await fetchUserData(userId);
+            setSelectedProfile(userLoggedDataResponse.usuario);
+            setUserLoggedData({
+                id: userLoggedDataResponse.id,
+                usuario: userLoggedDataResponse.usuario,
+                pseudonimo: userLoggedDataResponse.pseudonimo,
+                imageUrl: userLoggedDataResponse.imageUrl,
+                nome: userLoggedDataResponse.nome,
+            });
+            setProfile({
+                username: userLoggedDataResponse.pseudonimo,
+                photoURL:
+                    "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png",
+            });
+            setIsLoadingUser(false); // Data has been fetched, no longer loading
         } catch (error) {
-          console.error("Error fetching user data:", error.message);
-          setIsLoadingUser(false); // Even if there's an error, stop loading
+            console.error("Error fetching user data:", error.message);
+            setIsLoadingUser(false); // Even if there's an error, stop loading
         }
-      };
+    };
+
 
     const fetchUserData = async (userId) => {
         try {
-          if (!userId) {
-            console.error("Invalid userId");
-            return null;
-          }
-    
-          const userDocRef = doc(db, "users", userId);
-    
-          const userDoc = await getDoc(userDocRef);
-    
-          if (userDoc.exists()) {
-            return userDoc.data();
-          } else {
-            console.log("User not found");
-            return null;
-          }
+            if (!userId) {
+                console.error("Invalid userId");
+                return null;
+            }
+
+            const userDocRef = doc(db, "users", userId);
+
+            const userDoc = await getDoc(userDocRef);
+
+            if (userDoc.exists()) {
+                return userDoc.data();
+            } else {
+                console.log("User not found");
+                return null;
+            }
         } catch (error) {
-          console.error("Error fetching user data:", error.message);
-          return null;
+            console.error("Error fetching user data:", error.message);
+            return null;
         }
-      };
+    };
 
     const fetchPostAndComments = async () => {
         if (!postIdInt) {
@@ -211,6 +287,7 @@ function PostPage() {
 
                     // Adicionar a interação na coleção "interactions"
                     await addInteraction(userId, postIdInt, "like");
+                    setLiked(true);
                 } else {
                     console.error("Post não encontrado no Firebase.");
                     // Reverter a contagem local de likes em caso de erro
@@ -255,6 +332,7 @@ function PostPage() {
                             likes: newLikes,
                         });
                         console.log("Likes atualizados no Firebase com sucesso!");
+                        setLiked(false);
                     }
                 }
             } catch (error) {
@@ -333,6 +411,7 @@ function PostPage() {
 
                     // Adicionar a interação na coleção "interactions"
                     await addInteraction(userId, postIdInt, "dislike");
+                    setDisliked(true);
                 } else {
                     console.error("Post não encontrado no Firebase.");
                     // Reverter a contagem local de likes em caso de erro
@@ -377,6 +456,7 @@ function PostPage() {
                             deslikes: newDislikes,
                         });
                         console.log("Likes atualizados no Firebase com sucesso!");
+                        setDisliked(false);
                     }
                 }
             } catch (error) {
@@ -453,7 +533,7 @@ function PostPage() {
 
     const fetchLatestReplyId = async () => {
         try {
-            const postsRef = collection(db, "timeline");
+            const postsRef = collection(db, "replys");
             const querySnapshot = await getDocs(
                 query(postsRef, orderBy("replyId", "desc"), limit(1))
             ); // Obtém o último reply com o ID mais alto
@@ -533,6 +613,8 @@ function PostPage() {
     };
 
     const handleSavePost = async (e, postId) => {
+        e.stopPropagation();
+        e.preventDefault();
         try {
             // Obtém o usuário atualmente autenticado
             const user = userId;
@@ -548,23 +630,35 @@ function PostPage() {
                 // Verifica se o savedPosts existe no documento do usuário
                 if (userData.savedPosts) {
                     // Verifica se o postId já existe no array savedPosts
-                    if (!userData.savedPosts.includes(postId)) {
-                        // Cria uma nova array com o postId adicionado
+                    if (userData.savedPosts.includes(postId)) {
+                        // Cria um novo array com o postId removido
+                        const updatedSavedPosts = userData.savedPosts.filter(savedPost => savedPost !== postId);
+
+                        // Atualiza o documento do usuário com o novo array savedPosts
+                        await updateDoc(userDocRef, {
+                            savedPosts: updatedSavedPosts,
+                        });
+
+                        setSaveIcon("regular");
+
+                        console.log("Post removido dos salvos com sucesso!");
+                    } else {
+                        // Caso contrário, o postId não está no array, então o adicionamos
                         const updatedSavedPosts = [...userData.savedPosts, postId];
 
                         // Atualiza o documento do usuário com o novo array savedPosts
                         await updateDoc(userDocRef, {
-                            savedPosts: updatedSavedPosts
+                            savedPosts: updatedSavedPosts,
                         });
 
+                        setSaveIcon("solid");
+
                         console.log("Post salvo com sucesso!");
-                    } else {
-                        console.log("Post já está salvo.");
                     }
                 } else {
                     // Se savedPosts não existe, cria um novo array com o postId
                     await updateDoc(userDocRef, {
-                        savedPosts: [postId]
+                        savedPosts: [postId],
                     });
 
                     console.log("Post salvo com sucesso!");
@@ -596,90 +690,30 @@ function PostPage() {
     };
 
 
+    const toggleMobileLateral = () => {
+        setIsMobileLateralVisible(!isMobileLateralVisible);
+        console.log("clicou");
+        console.log(isMobileLateralVisible);
+    };
+
     return (
         <>
             <div className="tl-screen">
                 <div className="tl-container">
                     <div className="tl-header" style={css}>
-                            <Link to="/timeline">
-                                <FontAwesomeIcon className="arrow" icon={faArrowLeft} style={css} />
-                            </Link>
+                        <Link to="/timeline">
+                            <FontAwesomeIcon icon={faArrowLeft} />
+                        </Link>
                         <div className="tl-header-post header-active">
                             <h1>Para Você</h1>
                             <div className="header-active-in"></div>
                         </div>
                     </div>
-                    <div className="tl-ladoEsquerdo">
-                        <div className="lateral-wrapper">
-                            <div className="lateral-estatica-dm">
-                                <div className="lateral-header">
-                                    <div className="imgProfilePic">
-                                        <Link className="tl-foto" to="/perfil">
-                                            <div>
-                                                <ProfileImage selectedProfile={selectedProfile} />
-                                            </div>
-                                        </Link>
-                                    </div>
-                                </div>
-                                <div className="menu-lateral-dm">
-                                    <Link className="botaoAcessar iconDm" to="/timeline">
-                                        <div className="cada-icone-img-nome-dm">
-                                            <img
-                                                id="home"
-                                                src={homeIcon}
-                                                alt="Botão ir para Home"
-                                            ></img>
-                                            <div className="escrita-lateral-dm">
-                                                <p className="escrita-lateral-dm">Timeline</p>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                    <Link className="botaoAcessar iconDm" to="/perfil">
-                                        <div className="cada-icone-img-nome-dm">
-                                            <img
-                                                id="dm"
-                                                src={perfilIcon}
-                                                alt="Botão ir para o perfil"
-                                            ></img>
-                                            <div className="escrita-lateral-dm">
-                                                <p className="escrita-lateral-dm">Perfil</p>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                    <Link className="botaoAcessar iconDm" to="/dm">
-                                        <div className="cada-icone-img-nome-dm">
-                                            <img
-                                                id="dm"
-                                                src={dmIcon}
-                                                alt="Botão ir para DM, chat conversas privadas"
-                                            ></img>
-                                            <div className="escrita-lateral-dm">
-                                                <p className="escrita-lateral-dm">DM</p>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                    <Link className="botaoAcessar a-postar-menu-lateral" to="/dm">
-                                        <div className="botao-buscar-menu">
-                                            <div className="postar-menu-lateral">
-                                                <img
-                                                    id="img-postar-menu-lateral-medio"
-                                                    src={setaPostar}
-                                                    alt="Botão ir para DM, chat conversas privadas"
-                                                ></img>
-                                                <p id="p-postar-menu-lateral">Postar</p>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                </div>
-                                <div className="logoCeferno">
-                                    <img
-                                        src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png?ex=654f16a6&is=653ca1a6&hm=47f7d679b329ecf5cc49ea053019ef5d019999ddb77a0ba1a3dda31532ab55da&"
-                                        alt=""
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <MenuLateral
+                        isMobileLateralVisible={isMobileLateralVisible}
+                        toggleMobileLateral={toggleMobileLateral}
+                    />
+                    <div className="tl-ladoEsquerdo"></div>
                     <div className="tl-main">
                         <div className="tl-container">
                             <div className="tl-box">
@@ -733,23 +767,23 @@ function PostPage() {
                                                 <span></span>
                                             </div>
                                             <div className="tl-ps-like" onClick={(e) => {
-                                                e.stopPropagation();
                                                 handleLikeClick(e);
+                                                handleIconClickL();
                                             }}>
-                                                <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes}</span>
+                                                <FontAwesomeIcon icon={likeToUse} beat={isBeatingL}/> <span>{likes}</span>
                                             </div>
                                             <div className="tl-ps-deslike" onClick={(e) => {
-                                                e.stopPropagation();
                                                 handleDislikeClick(e);
+                                                handleIconClickD();
                                             }}>
-                                                <FontAwesomeIcon icon={faThumbsDown} />{" "}
+                                                <FontAwesomeIcon icon={dislikeToUse} beat={isBeatingD}/>{" "}
                                                 <span>{dislikes}</span>
                                             </div>
-                                            <div className="tl-ps-salvar" onClick={(e) => { handleSavePost(e, postIdInt) }}>
-                                                <FontAwesomeIcon icon={faBookmark} />{" "}
-                                            </div>
-                                            <div className="tl-ps-share" onClick={copyToClipboard}>
-                                                <FontAwesomeIcon icon={faShare} />{" "}
+                                            <div className="tl-ps-salvar" onClick={(e) => { 
+                                                handleSavePost(e, postIdInt);
+                                                handleIconClickB();
+                                             }}>
+                                                <FontAwesomeIcon icon={iconToUse} beat={isBeatingB}/>{" "}
                                             </div>
                                         </div>
                                     </div>
@@ -773,17 +807,17 @@ function PostPage() {
 
                                 </div>
                                 {showReplies && (
-                                <div className="replies-container">
-                                    {replies.map((reply) => (
-                                        <ReplyDisplay
-                                            key={reply.id}
-                                            reply={reply}
-                                            user={userLoggedData}
-                                            mode={modoResposta}
-                                        />
-                                    ))}
-                                </div>
-                            )}
+                                    <div className="replies-container">
+                                        {replies.map((reply) => (
+                                            <ReplyDisplay
+                                                key={reply.id}
+                                                reply={reply}
+                                                userId={userLoggedData.id}
+                                                mode={modoResposta}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         {isFetching && <p>Carregando mais posts...</p>}

@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark, faComment } from "@fortawesome/fontawesome-free-solid";
-import { faThumbsUp } from "@fortawesome/fontawesome-free-solid";
+import { faBookmark as solidBookmark } from "@fortawesome/fontawesome-free-solid";
+import { faComment } from "@fortawesome/fontawesome-free-solid";
+import { faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
+import { faThumbsUp as regularThumbsUp } from "@fortawesome/free-regular-svg-icons";
+import { faThumbsUp as solidThumbsUp } from "@fortawesome/fontawesome-free-solid";
 import { faShare } from "@fortawesome/fontawesome-free-solid";
-import { faThumbsDown } from "@fortawesome/fontawesome-free-solid";
+import { faThumbsDown as regularThumbsDown } from "@fortawesome/free-regular-svg-icons";
+import { faThumbsDown as solidThumbsDown } from "@fortawesome/fontawesome-free-solid";
 import { faCaretDown } from "@fortawesome/fontawesome-free-solid";
 import { faArrowRight } from "@fortawesome/fontawesome-free-solid";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
@@ -29,6 +33,7 @@ import {
   onChildAdded,
 } from "firebase/database";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import likeIcon from "../../assets/thumbs-up-regular.svg"
 
 import {
   doc,
@@ -70,11 +75,70 @@ function PostDisplay({
 
   
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
+  const [disliked, setDisliked] = useState(false); // Estado para controlar se o usuário curtiu o post
   const [likes, setLikes] = useState(post.likes);
   const [dislikes, setDislikes] = useState(post.deslikes);
+  const [saveIcon, setSaveIcon] = useState("regular");
+  const [likeIcon, setLikeIcon] = useState("regular");
+  const [dislikeIcon, setDislikeIcon] = useState("regular");
+  const [isBeatingL, setIsBeatingL] = useState(false);
+  const [isBeatingD, setIsBeatingD] = useState(false);
+  const [isBeatingB, setIsBeatingB] = useState(false);
+  const iconToUse = saveIcon === 'solid' ? solidBookmark : regularBookmark;
+  const likeToUse = likeIcon === 'solid' ? solidThumbsUp : regularThumbsUp;
+  const dislikeToUse = dislikeIcon === 'solid' ? solidThumbsDown : regularThumbsDown;
   const postDate = new Date(post.time);
   const now = new Date();
   let timeAgo;
+  
+  const handleIconClickB = () => {
+    setIsBeatingB(!isBeatingB);
+    setTimeout(() => {
+      setIsBeatingB(false);
+    }, 1000);
+  };
+
+  const handleIconClickD = () => {
+    setIsBeatingD(!isBeatingD);
+    setTimeout(() => {
+      setIsBeatingD(false);
+    }, 1000);
+  };
+
+  const handleIconClickL = () => {
+    setIsBeatingL(!isBeatingL);
+    setTimeout(() => {
+      setIsBeatingL(false);
+    }, 1000);
+  };
+
+  useEffect(() => {
+    if (userLoggedData && userLoggedData.savedPosts.includes(post.id)) {
+      setSaveIcon('solid');
+    }
+  }, [userLoggedData, post]);
+
+  useEffect(() => {
+    if (liked) {
+      setLikeIcon('solid');
+    }
+    else
+    setLikeIcon('regular');
+  }, [liked]);
+
+  useEffect(() => {
+    if (disliked) {
+      setDislikeIcon('solid');
+    }
+    else
+    setDislikeIcon('regular');
+  }, [disliked]);
+
+  useEffect(() => {
+    if (userLoggedData && userLoggedData.savedPosts.includes(post.id)) {
+      setDislikeIcon('solid');
+    }
+  }, [userLoggedData, post]);
 
   const handleLikeClick = async (e) => {
     e.stopPropagation();
@@ -107,6 +171,7 @@ function PostDisplay({
 
           // Adicionar a interação na coleção "interactions"
           await addInteraction(userId, post.id, "like");
+          setLiked(true);
         } else {
           console.error("Post não encontrado no Firebase.");
           // Reverter a contagem local de likes em caso de erro
@@ -151,6 +216,7 @@ function PostDisplay({
               likes: newLikes,
             });
             console.log("Likes atualizados no Firebase com sucesso!");
+            setLiked(false);
           }
         }
       } catch (error) {
@@ -198,13 +264,7 @@ function PostDisplay({
     }
   };
 
-  const copyToClipboard = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    const postLink = window.location.href + "/" + post.id; // Obtém o URL da página
-    navigator.clipboard.writeText(postLink); // Copia o URL para a área de transferência
-    alert("Link copiado para a área de transferência: " + postLink); // Exibe um alerta informando que o link foi copiado
-  };
+
 
   // Calcule a diferença em segundos entre as datas
   const secondsAgo = Math.floor((now - postDate) / 1000);
@@ -249,6 +309,16 @@ function PostDisplay({
   const [showReplies, setShowReplies] = useState(false);
   const [replies, setReplies] = useState([]);
   const [showDetails, setShowDetails] = useState(false); // Estado para rastrear a exibição do post em detalhes
+  const [replyCount, setReplyCount] = useState(0);
+
+  useEffect(() => {
+    const fetchReplyCount = async () => {
+      const count = await countRepliesWithMessageReplyed(post.id);
+      setReplyCount(count);
+    };
+    
+    fetchReplyCount();
+  }, [post.id]);
 
   // Função para buscar e definir as respostas do post
   const fetchReplies = async () => {
@@ -320,33 +390,45 @@ function PostDisplay({
       if (user) {
         // Obtém a referência do documento do usuário no banco de dados
         const userDocRef = doc(db, "users", user);
-
+  
         // Obtém o documento do usuário
         const userDoc = await getDoc(userDocRef);
         const userData = userDoc.data();
-
+  
         // Verifica se o savedPosts existe no documento do usuário
         if (userData.savedPosts) {
           // Verifica se o postId já existe no array savedPosts
-          if (!userData.savedPosts.includes(postId)) {
-            // Cria uma nova array com o postId adicionado
-            const updatedSavedPosts = [...userData.savedPosts, postId];
-
+          if (userData.savedPosts.includes(postId)) {
+            // Cria um novo array com o postId removido
+            const updatedSavedPosts = userData.savedPosts.filter(savedPost => savedPost !== postId);
+  
             // Atualiza o documento do usuário com o novo array savedPosts
             await updateDoc(userDocRef, {
               savedPosts: updatedSavedPosts,
             });
 
-            console.log("Post salvo com sucesso!");
+            setSaveIcon("regular");
+  
+            console.log("Post removido dos salvos com sucesso!");
           } else {
-            console.log("Post já está salvo.");
+            // Caso contrário, o postId não está no array, então o adicionamos
+            const updatedSavedPosts = [...userData.savedPosts, postId];
+  
+            // Atualiza o documento do usuário com o novo array savedPosts
+            await updateDoc(userDocRef, {
+              savedPosts: updatedSavedPosts,
+            });
+  
+            setSaveIcon("solid");
+
+            console.log("Post salvo com sucesso!");
           }
         } else {
           // Se savedPosts não existe, cria um novo array com o postId
           await updateDoc(userDocRef, {
             savedPosts: [postId],
           });
-
+  
           console.log("Post salvo com sucesso!");
         }
       } else {
@@ -356,6 +438,7 @@ function PostDisplay({
       console.error("Erro ao salvar o post: ", error);
     }
   };
+  
 
   const linkStyle = {
     textDecoration: "none",
@@ -414,6 +497,7 @@ function PostDisplay({
         await deleteDoc(interactionDoc.ref);
 
         console.log(`Deslike removido com sucesso!`);
+        
       }
     } else {
       // Se o usuário ainda não interagiu com a postagem, adicione a interação de deslike
@@ -425,6 +509,7 @@ function PostDisplay({
 
       await addDoc(interactionsRef, newInteraction);
       console.log(`Deslike registrado com sucesso!`);
+      setDisliked(true);
     }
   };
 
@@ -472,12 +557,26 @@ function PostDisplay({
           const newDislikes = dislikes - 1;
           setDislikes(newDislikes);
           console.log("Deslike removido com sucessoaaa!");
+          setDisliked(false);
         }
       } catch (error) {
         console.error("Erro ao remover deslike: ", error);
       }
     }
   };
+  async function countRepliesWithMessageReplyed(postId) {
+    const repliesCollectionRef = collection(db, "replys");
+    const queryRef = query(repliesCollectionRef, where("messageReplyed", "==", postId));
+  
+    try {
+      const querySnapshot = await getDocs(queryRef);
+      const replyCount = querySnapshot.size;
+      return replyCount;
+    } catch (error) {
+      console.error("Erro ao contar as respostas:", error);
+      return 0; // Retorna 0 em caso de erro
+    }
+  }
 
   const [denunciaIsOpen, setDenunciaIsOpen] = useState(false);
 
@@ -558,40 +657,35 @@ function PostDisplay({
               <div className="tl-ps-opcoes">
                 <div className="tl-ps-reply">
                   <FontAwesomeIcon icon={faComment} onClick={toggleReply} />
-                  <span>{post.replyCount}</span>
+                  <span>{" "}{replyCount}</span>
                 </div>
                 <div
                   className="tl-ps-like"
                   onClick={(e) => {
                     handleLikeClick(e);
+                    handleIconClickL();
                   }}
                 >
-                  <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes}</span>
+                  <FontAwesomeIcon icon={likeToUse} beat ={isBeatingL}/> <span>{likes}</span>
                 </div>
                 <div
                   className="tl-ps-deslike"
                   onClick={(e) => {
                     handleDislikeClick(e);
+                    handleIconClickD();
                   }}
                 >
-                  <FontAwesomeIcon icon={faThumbsDown} />{" "}
+                  <FontAwesomeIcon icon={dislikeToUse} beat ={isBeatingD}/>{" "}
                   <span>{dislikes}</span>
                 </div>
                 <div
                   className="tl-ps-salvar"
                   onClick={(e) => {
-                    handleSavePost(e, post.id);
+                    handleSavePost(e, post.id)
+                    handleIconClickB();
                   }}
                 >
-                  <FontAwesomeIcon icon={faBookmark} />{" "}
-                </div>
-                <div
-                  className="tl-ps-share"
-                  onClick={(e) => {
-                    copyToClipboard(e);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faShare} />{" "}
+                  <FontAwesomeIcon icon={iconToUse}  beat ={isBeatingB}/>{" "}
                 </div>
               </div>
             </div>
