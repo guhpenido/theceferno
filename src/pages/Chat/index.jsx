@@ -256,7 +256,11 @@ function Chat() {
   return (
     <>
       <div className="full-dm-screen">
-        <div className="lateral-wrapper">
+      <MenuLateral
+            isMobileLateralVisible={isMobileLateralVisible}
+            toggleMobileLateral={toggleMobileLateral}
+    />
+        {/* <div className="lateral-wrapper">
           <div className="lateral-estatica-dm">
               <div className="imgProfilePic">
                 <Link to="/perfil"><img className="profilePicDm" src={currentUserProfilePic} alt="Imagem de perfil"></img></Link>
@@ -289,7 +293,7 @@ function Chat() {
               </Link> 
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="screen-dm-usavel">
           <div className="headerDm">
             <Link to={`/dm`}><img id="voltarChat" className="iconDm" src={voltarIcon} alt="Voltar" /></Link>

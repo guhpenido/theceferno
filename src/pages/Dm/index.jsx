@@ -25,6 +25,7 @@ import { Link } from "react-router-dom";
 import VLibras from "@djpfs/react-vlibras";
 import { Acessibilidade } from "../Acessibilidade/index";
 // import { Container, Header} from '../../pages/Perfil/styles/Icons';
+import MenuLateral from "../MenuLateral/MenuLateral";
 
 import cefernoFullImg from "../../assets/ceferno_icon_full.png";
 
@@ -56,6 +57,7 @@ function Dm() {
   const [userLoggedData, setUserLoggedData] = useState(null);
   const imageref = useRef(null);
   const imageref1 = useRef(null);
+  const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
 
   const nodeRef = useRef(null);
 
@@ -312,10 +314,22 @@ function Dm() {
       setSearchResults([]);
     }
   };
+
+  const toggleMobileLateral = () => {
+    setIsMobileLateralVisible(!isMobileLateralVisible);
+    console.log("clicou");
+    console.log(isMobileLateralVisible);
+  };
+
+
   return (
     <>
     <div className="full-dm-screen">
-    <div className="lateral-wrapper">
+    <MenuLateral
+            isMobileLateralVisible={isMobileLateralVisible}
+            toggleMobileLateral={toggleMobileLateral}
+    />
+    {/* <div className="lateral-wrapper">
       <div className="lateral-estatica-dm">
         <div className="imgProfilePic">
           <Link to="/perfil"><img className="profilePicDm" ref={imageref1} alt="Imagem de perfil"></img></Link>
@@ -347,8 +361,8 @@ function Dm() {
                 </div>
               </Link> 
         </div>
-      </div>
-      </div>
+      </div> 
+      </div>*/}
       <div className="screen-dm-usavel">
       <div className="headerDm">
         <Link to="/perfil"><img
