@@ -711,7 +711,7 @@ function PostDisplay({
                     handleLikeClick(e);
                   }}
                 >
-                  <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes}</span>
+                  <FontAwesomeIcon icon={faThumbsUp}/> <span>{likes}</span>
                 </div>
                 <div
                   className="tl-ps-deslike"
