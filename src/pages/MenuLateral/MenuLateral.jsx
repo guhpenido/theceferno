@@ -15,7 +15,8 @@ import {
   where,
   getDocs,
 } from "firebase/firestore";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+export { MenuLateral };
 
 function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
   console.log("No menu" + isMobileLateralVisible);
