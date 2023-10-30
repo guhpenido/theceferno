@@ -474,6 +474,17 @@ body{
   align-items: center;
   animation: ease;
 }
+.tl-header-post{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ease;
+}
+.tl-header-post h1{
+  font-size: 12px;
+  font-weight: 500;
+}
 .tl-header-filter{
   width: 8%;
   display: flex;

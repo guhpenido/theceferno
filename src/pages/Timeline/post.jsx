@@ -194,13 +194,7 @@ function PostDisplay({
     }
   };
 
-  const copyToClipboard = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    const postLink = window.location.href + "/" + post.id; // Obtém o URL da página
-    navigator.clipboard.writeText(postLink); // Copia o URL para a área de transferência
-    alert("Link copiado para a área de transferência: " + postLink); // Exibe um alerta informando que o link foi copiado
-  };
+
 
   // Calcule a diferença em segundos entre as datas
   const secondsAgo = Math.floor((now - postDate) / 1000);
@@ -480,33 +474,41 @@ function PostDisplay({
       if (user) {
         // Obtém a referência do documento do usuário no banco de dados
         const userDocRef = doc(db, "users", user);
-
+  
         // Obtém o documento do usuário
         const userDoc = await getDoc(userDocRef);
         const userData = userDoc.data();
-
+  
         // Verifica se o savedPosts existe no documento do usuário
         if (userData.savedPosts) {
           // Verifica se o postId já existe no array savedPosts
-          if (!userData.savedPosts.includes(postId)) {
-            // Cria uma nova array com o postId adicionado
-            const updatedSavedPosts = [...userData.savedPosts, postId];
-
+          if (userData.savedPosts.includes(postId)) {
+            // Cria um novo array com o postId removido
+            const updatedSavedPosts = userData.savedPosts.filter(savedPost => savedPost !== postId);
+  
             // Atualiza o documento do usuário com o novo array savedPosts
             await updateDoc(userDocRef, {
               savedPosts: updatedSavedPosts,
             });
-
-            console.log("Post salvo com sucesso!");
+  
+            console.log("Post removido dos salvos com sucesso!");
           } else {
-            console.log("Post já está salvo.");
+            // Caso contrário, o postId não está no array, então o adicionamos
+            const updatedSavedPosts = [...userData.savedPosts, postId];
+  
+            // Atualiza o documento do usuário com o novo array savedPosts
+            await updateDoc(userDocRef, {
+              savedPosts: updatedSavedPosts,
+            });
+  
+            console.log("Post salvo com sucesso!");
           }
         } else {
           // Se savedPosts não existe, cria um novo array com o postId
           await updateDoc(userDocRef, {
             savedPosts: [postId],
           });
-
+  
           console.log("Post salvo com sucesso!");
         }
       } else {
@@ -516,6 +518,7 @@ function PostDisplay({
       console.error("Erro ao salvar o post: ", error);
     }
   };
+  
 
   const linkStyle = {
     textDecoration: "none",
@@ -726,14 +729,6 @@ function PostDisplay({
                   }}
                 >
                   <FontAwesomeIcon icon={faBookmark} />{" "}
-                </div>
-                <div
-                  className="tl-ps-share"
-                  onClick={(e) => {
-                    copyToClipboard(e);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faShare} />{" "}
                 </div>
               </div>
             </div>
