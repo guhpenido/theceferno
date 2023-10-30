@@ -375,3 +375,7 @@
 .mobile-lateral-wrapper{
     display: none;
 }
+.botaoAcessar:hover{
+  background-color: #0c0c0c;
+  border-radius: 15px;
+}
