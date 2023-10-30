@@ -9,12 +9,12 @@ export const Container = styled.div`
   flex-shrink: 0;
   max-width: 100%;
   border-radius: 5px;
-  border: 2px solid #4763e4;
-  background: rgba(71, 99, 228, 0.2);
+  background: #111111;
   margin-bottom: 15px;
   align-items: flex-start;
   box-sizing: border-box;
   margin-top: 15px;
+  width: 100%;
 `;
 
 export const ImgConteiner = styled.img`
@@ -33,17 +33,18 @@ export const Body = styled.div`
   flex-direction: column;
   text-align: center;
   align-items: center; 
+  width: 100%;
 `;
 
 export const Avatar = styled.div`
-  width: 49px;
-  height: 49px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   flex-shrink: 0;
   background: #7a7a7a;
   top: 10px;
   left: 10px;
-  margin-right: 1em;
+  margin-right: 10px;
   align-items: left; 
 `;
 export const Content = styled.div`
@@ -58,7 +59,6 @@ export const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  height: fit-content;
   font-size: 15px;
   color: #fff;
 
@@ -89,7 +89,7 @@ export const Footer = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  height: 10vh;
+  height: auto;
   font-size: 15px;
   color: #fff;
 
@@ -114,20 +114,19 @@ export const Footer = styled.div`
   }
 `;
 export const Posts = styled.div`
-  font-size: 14px;
-  margin-top: 4px;
-  color: #d9d9d9;
-  width: 300px;
+  text-align: left;
+  font-size: 15px;
+  margin-top: 2px;
+  color: #d6d6d6;
+  font-weight: normal;
 `;
 
 export const Postdays = styled.div`
-  display: flex;
-  justify-content: space-between;
+  color: #d6d6d6;
+  float: right;
 
-  > div:nth-child(1) {
-    color: white;
-    left: 3em;
-    position: relative;
+  > div {
+    color: #7a7a7ac7;
   }
 `;
 
@@ -136,11 +135,10 @@ export const Icons = styled.div`
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin: 11px auto 0;
   width: 100%;
 
   @media (min-width: 330px) {
-    width: 63%;
+   
   }
 
   > div {
@@ -154,11 +152,11 @@ export const Icons = styled.div`
 
 export const Status = styled.div`
   color: #d9d9d9;
-  margin-left: 3em;
   align-items: center; 
   display: flex;
   flex-direction: row; 
   width: fit-content; 
+  margin-left: 35px;
 `;
 
 const IconCSS = css`
@@ -183,28 +181,30 @@ export const ConteudoPostagens = styled.div`
 
 export const HeaderName = styled.div`
   display: flex;
-
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-around;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: center;
   align-content: center;
   height: fit-content; 
+  gap: 5px;
 
   > div:nth-child(1) {
     font-size: 15px;
-    margin-left: -40px;
     color: white;
-    margin-top: -50px;
-    margin-bottom: 6px;
   }
 
   > div:nth-child(2) {
-    margin-left: 10px;
-    margin-top: -50px;
-    color: white;
+    color: #7a7a7ac7;
   }
 `;
+
+export const PostInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+
+`
 
 export const HeaderNameMentioned = styled.div`
   display: flex;
@@ -213,20 +213,14 @@ export const HeaderNameMentioned = styled.div`
   align-content: center;
   width: fit-content; 
   height: fit-content; 
-  margin-top: -60px;
-  margin-left: 50px;
 
   > div:nth-child(1) {
-    margin-right: 5px;
     font-size: 15px;
     color: white;
   }
   > div:nth-child(2) {
     color: white;
     font-size: 13px;
-    margin-top: 8px;
-    margin-left: 12px;
-    margin-right: 13px;
   }
 `;
 

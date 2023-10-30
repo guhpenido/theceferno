@@ -210,4 +210,3 @@ const WhispersVisitor = ({ objetoUsuario }) => {
 
 export default WhispersVisitor;
 
-

@@ -57,6 +57,7 @@ function Dm() {
   const [userLoggedData, setUserLoggedData] = useState(null);
   const imageref = useRef(null);
   const imageref1 = useRef(null);
+  const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
 
   const nodeRef = useRef(null);
 
@@ -96,7 +97,6 @@ function Dm() {
     if (userDoc.exists()) {
       console.log(userDoc.data().imageUrl);
       imageref.current.src = userDoc.data().imageUrl;
-      imageref1.current.src = userDoc.data().imageUrl;
       return userDoc.data();
     } else {
       console.log("User not found");
@@ -313,6 +313,14 @@ function Dm() {
       setSearchResults([]);
     }
   };
+
+  const toggleMobileLateral = () => {
+    setIsMobileLateralVisible(!isMobileLateralVisible);
+    console.log("clicou");
+    console.log(isMobileLateralVisible);
+  };
+
+
   return (
     <>
       <div className="full-dm-screen">

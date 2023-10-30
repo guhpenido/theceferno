@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div `
-  background: #000;
+  background: #0c0c0c;
 `;
 
 export const Wrapper = styled.div`
