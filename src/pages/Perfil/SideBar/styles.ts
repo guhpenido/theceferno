@@ -7,7 +7,7 @@ export const Container = styled.div`
     @media (min-width: 1000px) {
     display: flex;
     flex-direction: column;
-    width: min(399px, 100%);
+    width: min(200px, 100%);
 }
 `;
 export const SearchWrapper = styled.div`

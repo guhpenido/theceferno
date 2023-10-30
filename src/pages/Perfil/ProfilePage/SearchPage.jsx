@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import MenuBar from "../MenuBar";
 import SideBar from "../SideBar";
 import { Link, useLocation } from "react-router-dom";
 import { Wrapper } from "../Layout/styles";
