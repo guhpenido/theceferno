@@ -13,6 +13,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+export { MenuLateral };
 
 function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
 console.log("No menu" + isMobileLateralVisible);
