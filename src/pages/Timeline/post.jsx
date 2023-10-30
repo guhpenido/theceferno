@@ -7,6 +7,7 @@ import { faShare } from "@fortawesome/fontawesome-free-solid";
 import { faThumbsDown } from "@fortawesome/fontawesome-free-solid";
 import { faCaretDown } from "@fortawesome/fontawesome-free-solid";
 import { faArrowRight } from "@fortawesome/fontawesome-free-solid";
+import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { faEnvelope } from "@fortawesome/fontawesome-free-solid";
 //import { faMagnifyingGlassArrowRight } from "@fortawesome/fontawesome-free-solid";
 import { faBell } from "@fortawesome/fontawesome-free-solid";
@@ -66,12 +67,6 @@ function PostDisplay({
   userId,
   userLoggedData,
 }) {""
-
-  const [denunciaVisible, setDenunciaVisible] = useState(false);
-
-  const toggleh1Visibility = () => {
-    setDenunciaVisible(!denunciaVisible);
-  };
 
   
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
@@ -484,17 +479,28 @@ function PostDisplay({
     }
   };
 
+  const [denunciaIsOpen, setDenunciaIsOpen] = useState(false);
+
+  const openDenuncia = () => {
+    setDenunciaIsOpen(true);
+    console.log(denunciaIsOpen)
+    console.log("clicou na denucnai")
+  };
+
+
   return (
     <>
       <div className="tl-box" key={post.id}>
 
-      <button onClick={toggleh1Visibility}>Denunciar</button>
-      {denunciaVisible && (
-        <Denuncia />
-      )}
-
-
         <div className="tl-post">
+          <FontAwesomeIcon className="iconeDenuncia" onClick={openDenuncia} icon={faEllipsisVertical} />
+          {denunciaIsOpen && (
+            <Denuncia
+              postId={post.id}
+              userId={userId}
+              userSentData={userSentData}
+            />
+          )}
           <Link
             style={linkStyle}
             state={{

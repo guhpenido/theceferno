@@ -1,12 +1,8 @@
 /* denuncia */
 
 .iconeDenuncia {
-  margin-left: -6vw;
-  margin-right: -8vw;
-  margin-bottom: -0.3vh;
-  cursor: pointer;
-  width: 3.5vw !important;
-  height: 1.5vh !important;
+  margin-left: 45vw;
+  color: #4763e4;
 }
 
 .DenunciaInvisible {
@@ -19,12 +15,14 @@
 
 .denuncia {
   position: fixed !important;
-  width: 81vw;
+  width: 50vw;
+  height: 30vh;
   background-color: #000000;
-  border: 4.5px groove white;
+  border: 4.5px groove #4763e4;
   padding-left: 2vw;
   padding-right: 7vw;
   color: white;
+  z-index: 1;
 }
 
 .denuncia button {
@@ -35,7 +33,7 @@
 
 .denuncia .enviar {
   margin-top: 10vh;
-  margin-left: 37vw;
+  margin-left: 35vw;
   font-size: 2.5vh;
 }
 .denuncia h1 {

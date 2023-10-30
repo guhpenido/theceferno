@@ -48,7 +48,13 @@ export function Trending() {
       postsData.push(postData);
     });
 
-    return postsData;
+    return querySnapshot.docs.map((doc) => {
+      const postData = {
+        id: doc.data().postId,
+        ...doc.data(),
+      };
+      return postData;
+    });
   };
 
   console.log("trendingPosts:", trendingPosts);
@@ -57,13 +63,13 @@ export function Trending() {
     <div className="trending-section">
       <h2>Trending Posts</h2>
       <div className="trending-posts">
-        {trendingPosts.map((post) => (
-          console.log("post:", post), // Adicione um log para ver os dados de cada post
-          // Verificar se as propriedades necessárias estão definidas antes de renderizar
-          (post.userSentData && post.userSentData.nome) && (
-            <PostDisplay key={post.id} post={post} />
-          )
-        ))}
+        {trendingPosts.map((post) => {
+          console.log("post:", post);
+
+          if (post.userSentData && post.userSentData.nome) {
+            return <PostDisplay key={post.id} post={post} />;
+          }
+        })}
       </div>
     </div>
   );
