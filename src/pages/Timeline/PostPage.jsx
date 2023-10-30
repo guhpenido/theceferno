@@ -44,9 +44,12 @@ import perfilIcon from "../../assets/perfil-icon.svg";
 import setaPostar from "../../assets/seta-postar.svg";
 import dmIcon from "../../assets/dm-icon.svg";
 import { Acessibilidade } from "../Acessibilidade/index";
+import Header from "./Header";
+import MenuLateral from "../MenuLateral/MenuLateral";
 
 
 function PostPage() {
+    const [imageSentData, setImageSentData] = useState("https://cdn.discordapp.com/attachments/871728576972615680/1133946789343531079/logo.png");
     const location = useLocation();
     const { userSentData, userMentionedData } = location.state;
     const { postId } = useParams();
@@ -71,6 +74,13 @@ function PostPage() {
     const [dislikes, setDislikes] = useState(null);
     const [profile, setProfile] = useState(null);
     const [selectedProfile, setSelectedProfile] = useState(null);
+    const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
+
+
+    useEffect(() => {
+        console.log(imageSentData); // Aqui, você verá o valor atualizado de imageSentData
+    }, [imageSentData]);
+
     useEffect(() => {
         console.log("useEffect está sendo executado!");
         if (isFetching) {
@@ -96,52 +106,56 @@ function PostPage() {
         return () => unsubscribe();
     }, [auth, navigate]);
 
+    useEffect(() => {
+        console.log("Valor atualizado de imageSentData:", imageSentData);
+    }, [imageSentData]);
     const fetchUserDataAndSetState = async (userId) => {
         console.log(userId);
         try {
-          const userLoggedDataResponse = await fetchUserData(userId);
-          setSelectedProfile(userLoggedDataResponse.usuario);
-          setUserLoggedData({
-            id: userLoggedDataResponse.id,
-            usuario: userLoggedDataResponse.usuario,
-            pseudonimo: userLoggedDataResponse.pseudonimo,
-            imageUrl: userLoggedDataResponse.imageUrl,
-            nome: userLoggedDataResponse.nome,
-          });
-          setProfile({
-            username: userLoggedDataResponse.pseudonimo,
-            photoURL:
-                "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png",
-        });
-          setIsLoadingUser(false); // Data has been fetched, no longer loading
+            const userLoggedDataResponse = await fetchUserData(userId);
+            setSelectedProfile(userLoggedDataResponse.usuario);
+            setUserLoggedData({
+                id: userLoggedDataResponse.id,
+                usuario: userLoggedDataResponse.usuario,
+                pseudonimo: userLoggedDataResponse.pseudonimo,
+                imageUrl: userLoggedDataResponse.imageUrl,
+                nome: userLoggedDataResponse.nome,
+            });
+            setProfile({
+                username: userLoggedDataResponse.pseudonimo,
+                photoURL:
+                    "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png",
+            });
+            setIsLoadingUser(false); // Data has been fetched, no longer loading
         } catch (error) {
-          console.error("Error fetching user data:", error.message);
-          setIsLoadingUser(false); // Even if there's an error, stop loading
+            console.error("Error fetching user data:", error.message);
+            setIsLoadingUser(false); // Even if there's an error, stop loading
         }
-      };
+    };
+
 
     const fetchUserData = async (userId) => {
         try {
-          if (!userId) {
-            console.error("Invalid userId");
-            return null;
-          }
-    
-          const userDocRef = doc(db, "users", userId);
-    
-          const userDoc = await getDoc(userDocRef);
-    
-          if (userDoc.exists()) {
-            return userDoc.data();
-          } else {
-            console.log("User not found");
-            return null;
-          }
+            if (!userId) {
+                console.error("Invalid userId");
+                return null;
+            }
+
+            const userDocRef = doc(db, "users", userId);
+
+            const userDoc = await getDoc(userDocRef);
+
+            if (userDoc.exists()) {
+                return userDoc.data();
+            } else {
+                console.log("User not found");
+                return null;
+            }
         } catch (error) {
-          console.error("Error fetching user data:", error.message);
-          return null;
+            console.error("Error fetching user data:", error.message);
+            return null;
         }
-      };
+    };
 
     const fetchPostAndComments = async () => {
         if (!postIdInt) {
@@ -558,7 +572,7 @@ function PostPage() {
 
     const fetchLatestReplyId = async () => {
         try {
-            const postsRef = collection(db, "timeline");
+            const postsRef = collection(db, "replys");
             const querySnapshot = await getDocs(
                 query(postsRef, orderBy("replyId", "desc"), limit(1))
             ); // Obtém o último reply com o ID mais alto
@@ -701,90 +715,30 @@ function PostPage() {
     };
 
 
+    const toggleMobileLateral = () => {
+        setIsMobileLateralVisible(!isMobileLateralVisible);
+        console.log("clicou");
+        console.log(isMobileLateralVisible);
+    };
+
     return (
         <>
             <div className="tl-screen">
                 <div className="tl-container">
                     <div className="tl-header" style={css}>
-                            <Link to="/timeline">
-                                <FontAwesomeIcon className="arrow" icon={faArrowLeft} style={css} />
-                            </Link>
+                        <Link to="/timeline">
+                            <FontAwesomeIcon icon={faArrowLeft} />
+                        </Link>
                         <div className="tl-header-post header-active">
                             <h1>Para Você</h1>
                             <div className="header-active-in"></div>
                         </div>
                     </div>
-                    <div className="tl-ladoEsquerdo">
-                        <div className="lateral-wrapper">
-                            <div className="lateral-estatica-dm">
-                                <div className="lateral-header">
-                                    <div className="imgProfilePic">
-                                        <Link className="tl-foto" to="/perfil">
-                                            <div>
-                                                <ProfileImage selectedProfile={selectedProfile} />
-                                            </div>
-                                        </Link>
-                                    </div>
-                                </div>
-                                <div className="menu-lateral-dm">
-                                    <Link className="botaoAcessar iconDm" to="/timeline">
-                                        <div className="cada-icone-img-nome-dm">
-                                            <img
-                                                id="home"
-                                                src={homeIcon}
-                                                alt="Botão ir para Home"
-                                            ></img>
-                                            <div className="escrita-lateral-dm">
-                                                <p className="escrita-lateral-dm">Timeline</p>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                    <Link className="botaoAcessar iconDm" to="/perfil">
-                                        <div className="cada-icone-img-nome-dm">
-                                            <img
-                                                id="dm"
-                                                src={perfilIcon}
-                                                alt="Botão ir para o perfil"
-                                            ></img>
-                                            <div className="escrita-lateral-dm">
-                                                <p className="escrita-lateral-dm">Perfil</p>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                    <Link className="botaoAcessar iconDm" to="/dm">
-                                        <div className="cada-icone-img-nome-dm">
-                                            <img
-                                                id="dm"
-                                                src={dmIcon}
-                                                alt="Botão ir para DM, chat conversas privadas"
-                                            ></img>
-                                            <div className="escrita-lateral-dm">
-                                                <p className="escrita-lateral-dm">DM</p>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                    <Link className="botaoAcessar a-postar-menu-lateral" to="/dm">
-                                        <div className="botao-buscar-menu">
-                                            <div className="postar-menu-lateral">
-                                                <img
-                                                    id="img-postar-menu-lateral-medio"
-                                                    src={setaPostar}
-                                                    alt="Botão ir para DM, chat conversas privadas"
-                                                ></img>
-                                                <p id="p-postar-menu-lateral">Postar</p>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                </div>
-                                <div className="logoCeferno">
-                                    <img
-                                        src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png?ex=654f16a6&is=653ca1a6&hm=47f7d679b329ecf5cc49ea053019ef5d019999ddb77a0ba1a3dda31532ab55da&"
-                                        alt=""
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <MenuLateral
+                        isMobileLateralVisible={isMobileLateralVisible}
+                        toggleMobileLateral={toggleMobileLateral}
+                    />
+                    <div className="tl-ladoEsquerdo"></div>
                     <div className="tl-main">
                         <div className="tl-container">
                             <div className="tl-box">
@@ -853,9 +807,6 @@ function PostPage() {
                                             <div className="tl-ps-salvar" onClick={(e) => { handleSavePost(e, postIdInt) }}>
                                                 <FontAwesomeIcon icon={faBookmark} />{" "}
                                             </div>
-                                            <div className="tl-ps-share" onClick={copyToClipboard}>
-                                                <FontAwesomeIcon icon={faShare} />{" "}
-                                            </div>
                                         </div>
                                     </div>
                                     {isReplying && (
@@ -878,17 +829,17 @@ function PostPage() {
 
                                 </div>
                                 {showReplies && (
-                                <div className="replies-container">
-                                    {replies.map((reply) => (
-                                        <ReplyDisplay
-                                            key={reply.id}
-                                            reply={reply}
-                                            user={userLoggedData}
-                                            mode={modoResposta}
-                                        />
-                                    ))}
-                                </div>
-                            )}
+                                    <div className="replies-container">
+                                        {replies.map((reply) => (
+                                            <ReplyDisplay
+                                                key={reply.id}
+                                                reply={reply}
+                                                userId={userLoggedData.id}
+                                                mode={modoResposta}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         {isFetching && <p>Carregando mais posts...</p>}

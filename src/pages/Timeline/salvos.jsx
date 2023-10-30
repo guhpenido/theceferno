@@ -6,6 +6,7 @@ import { faThumbsUp } from "@fortawesome/fontawesome-free-solid";
 import { faThumbsDown } from "@fortawesome/fontawesome-free-solid";
 import { faCaretDown } from "@fortawesome/fontawesome-free-solid";
 import { faArrowRight } from "@fortawesome/fontawesome-free-solid";
+import { faArrowLeft } from "@fortawesome/fontawesome-free-solid";
 import { faEnvelope } from "@fortawesome/fontawesome-free-solid";
 //import { faMagnifyingGlassArrowRight } from "@fortawesome/fontawesome-free-solid";
 import { faBell } from "@fortawesome/fontawesome-free-solid";
@@ -22,6 +23,7 @@ import pesquisaIcon from "../../assets/pesquisa-icon.svg";
 import { Acessibilidade } from "../Acessibilidade/index";
 import AddPost from "./AddPost";
 import Header from "./Header";
+import MenuLateral from "../MenuLateral/MenuLateral";
 import {
   getDatabase,
   ref,
@@ -80,6 +82,7 @@ export function SavedPosts() {
   const [selectedInstituicao] = useState("");
   const [nextPostId, setNextPostId] = useState(0);
   const [savedPosts, setSavedPosts] = useState(null);
+  const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
   const handleScroll = () => {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
@@ -108,6 +111,10 @@ export function SavedPosts() {
   }, []);
 
   useEffect(() => {
+    carregaTml();
+  });
+
+  useEffect(() => {
     console.log("useEffect para usreId");
     if (userId) {
       fetchUserDataAndSetState(userId);
@@ -116,24 +123,24 @@ export function SavedPosts() {
 
   useEffect(() => {
     console.log("useEffect para carregarTml");
-    if(userId){
-    if (isFetching) {
+    if (userId) {
+      if (isFetching) {
         carregaTml().then(() => {
           setIsFetching(false);
         });
       }
     }
   }, [userId], [isFetching]);
-  
+
   useEffect(() => {
     console.log("useEffect para carregarTml2");
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-      const currentUserUid = user.uid;
-      setUserId(currentUserUid); // Atualize o estado de userId
-      fetchUserDataAndSetState(currentUserUid);
-      console.log(currentUserUid);
-      carregaTml();
+        const currentUserUid = user.uid;
+        setUserId(currentUserUid); // Atualize o estado de userId
+        fetchUserDataAndSetState(currentUserUid);
+        console.log(currentUserUid);
+        carregaTml();
       } else {
         navigate("/login");
       }
@@ -174,7 +181,7 @@ export function SavedPosts() {
     }
 
     setIsFetching(true);
-    if(!userId){
+    if (!userId) {
       setIsFetching(true);
     }
     const postsCollectionRef = collection(db, "timeline");
@@ -187,248 +194,217 @@ export function SavedPosts() {
     const userDocRef = doc(db, "users", userId);
     const userDocSnapshot = await getDoc(userDocRef);
 
-      if (userDocSnapshot.exists()) {
-        // O documento do usuário existe, agora você pode acessar o vetor 'savedPosts'
-        const userData = userDocSnapshot.data();
-        const newSavedPosts = userData.savedPosts;
-        if (newSavedPosts === null) {
-          console.log("Sem posts salvos");
-          return <h1>Nenhum post salvo!</h1>;
-        }
-        if (lastLoadedPostId) {
-          console.log("Latest post:" + lastLoadedPostId);
-          // Se houver um último post carregado, use startAfter para obter os próximos posts
-          postsQuery = query(
-            postsCollectionRef,
-            orderBy("postId", "desc"),
-            where("postId", "in", newSavedPosts),
-            startAfter(lastLoadedPostId),
-          );}
-          else {
-          console.log(newSavedPosts);
-          postsQuery = query(
-            postsCollectionRef,
-            where("postId", "in", newSavedPosts),
-            orderBy("postId", "desc")
-          );
-        }
+    if (userDocSnapshot.exists()) {
+      // O documento do usuário existe, agora você pode acessar o vetor 'savedPosts'
+      const userData = userDocSnapshot.data();
+      const newSavedPosts = userData.savedPosts;
+      if (newSavedPosts === null) {
+        console.log("Sem posts salvos");
+        return <h1>Nenhum post salvo!</h1>;
       }
-      try {
-        const postsData = await getPostsFromFirestore(postsQuery);
+      if (lastLoadedPostId) {
+        console.log("Latest post:" + lastLoadedPostId);
+        // Se houver um último post carregado, use startAfter para obter os próximos posts
+        postsQuery = query(
+          postsCollectionRef,
+          orderBy("postId", "desc"),
+          where("postId", "in", newSavedPosts),
+          startAfter(lastLoadedPostId),
+        );
+      }
+      else {
+        console.log(newSavedPosts);
+        postsQuery = query(
+          postsCollectionRef,
+          where("postId", "in", newSavedPosts),
+          orderBy("postId", "desc")
+        );
+      }
+    }
+    try {
+      const postsData = await getPostsFromFirestore(postsQuery);
 
-        if (postsData.length === 0) {
-          console.log("Você já chegou ao fim");
-        } else {
-          const postsWithUserData = [];
+      if (postsData.length === 0) {
+        console.log("Você já chegou ao fim");
+      } else {
+        const postsWithUserData = [];
 
-          for (const post of postsData) {
-            const userSentData = await fetchUserData(post.userSent);
-            let userMentionedData = null;
+        for (const post of postsData) {
+          const userSentData = await fetchUserData(post.userSent);
+          let userMentionedData = null;
 
-            if (post.userMentioned !== null) {
-              userMentionedData = await fetchUserData(post.userMentioned);
-            }
-
-            postsWithUserData.push({
-              post,
-              userSentData,
-              userMentionedData,
-            });
+          if (post.userMentioned !== null) {
+            userMentionedData = await fetchUserData(post.userMentioned);
           }
 
-          // Aqui, substitua todo o estado de loadedPosts com os novos posts carregados
-          setLoadedPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
-          console.log("Novos posts carregados!");
+          postsWithUserData.push({
+            post,
+            userSentData,
+            userMentionedData,
+          });
         }
-      } catch (error) {
-        console.error("Erro ao obter os posts:", error);
-      } finally {
-        setIsFetching(false);
+
+        // Aqui, substitua todo o estado de loadedPosts com os novos posts carregados
+        setLoadedPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
+        console.log("Novos posts carregados!");
       }
+    } catch (error) {
+      console.error("Erro ao obter os posts:", error);
+    } finally {
+      setIsFetching(false);
     }
+  }
 
-    const fetchUserDataAndSetState = async (userId) => {
-      console.log(userId);
-      try {
-        const userLoggedDataResponse = await fetchUserData(userId);
-        setUserLoggedData(userLoggedDataResponse);
-        setSelectedProfile(userLoggedDataResponse.usuario);
-        setIsLoadingUser(false); // Data has been fetched, no longer loading
-      } catch (error) {
-        console.error("Error fetching user data:", error.message);
-        setIsLoading(false); // Even if there's an error, stop loading
-      }
-    };
+  const fetchUserDataAndSetState = async (userId) => {
+    console.log(userId);
+    try {
+      const userLoggedDataResponse = await fetchUserData(userId);
+      setUserLoggedData(userLoggedDataResponse);
+      setSelectedProfile(userLoggedDataResponse.usuario);
+      setIsLoadingUser(false); // Data has been fetched, no longer loading
+    } catch (error) {
+      console.error("Error fetching user data:", error.message);
+      setIsLoading(false); // Even if there's an error, stop loading
+    }
+  };
 
-    const getPostsFromFirestore = async (query) => {
-      const querySnapshot = await getDocs(query);
-      console.log("Query Snapshot:", querySnapshot);
-      const postsData = [];
+  const getPostsFromFirestore = async (query) => {
+    const querySnapshot = await getDocs(query);
+    console.log("Query Snapshot:", querySnapshot);
+    const postsData = [];
 
-      querySnapshot.forEach((doc) => {
-        const postData = {
-          id: doc.data().postId,
-          ...doc.data(),
-        };
-        postsData.push(postData);
-      });
-      console.log("Posts Data:", postsData);
-      return postsData;
-    };
+    querySnapshot.forEach((doc) => {
+      const postData = {
+        id: doc.data().postId,
+        ...doc.data(),
+      };
+      postsData.push(postData);
+    });
+    console.log("Posts Data:", postsData);
+    return postsData;
+  };
 
-    const fetchUserData = async (userId) => {
-      try {
-        if (!userId) {
-          console.error("Invalid userId");
-          return null;
-        }
-
-        const userDocRef = doc(db, "users", userId);
-
-        const userDoc = await getDoc(userDocRef);
-
-        if (userDoc.exists()) {
-          return userDoc.data();
-        } else {
-          console.log("User not found");
-          return null;
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error.message);
+  const fetchUserData = async (userId) => {
+    try {
+      if (!userId) {
+        console.error("Invalid userId");
         return null;
       }
-    };
 
-    const toggleVisibility = () => {
-      setSelectedProfile(userLoggedData.usuario);
-      setIsVisible(!isVisible);
-      setIsUserListVisible(!isUserListVisible);
-    };
+      const userDocRef = doc(db, "users", userId);
 
-    if (isLoadingUser) {
-      return <p>Carregando...</p>;
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        return userDoc.data();
+      } else {
+        console.log("User not found");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error.message);
+      return null;
     }
-    function ProfileImage() {
-      // Determine qual perfil está selecionado e use o URL da imagem correspondente
-      const profileImageUrl =
-        selectedProfile === userLoggedData.usuario
-          ? userLoggedData.imageUrl
-          : profile.photoURL;
+  };
 
-      return <img src={profileImageUrl} alt="Perfil" />;
-    }
+  const toggleVisibility = () => {
+    setSelectedProfile(userLoggedData.usuario);
+    setIsVisible(!isVisible);
+    setIsUserListVisible(!isUserListVisible);
+  };
 
-    const profile = {
-      username: userLoggedData.pseudonimo,
-      photoURL:
-        "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png",
-    };
+  if (isLoadingUser) {
+    return <p>Carregando...</p>;
+  }
+  function ProfileImage() {
+    // Determine qual perfil está selecionado e use o URL da imagem correspondente
+    const profileImageUrl =
+      selectedProfile === userLoggedData.usuario
+        ? userLoggedData.imageUrl
+        : profile.photoURL;
 
-    return (
-      <>
-        <div className="tl-screen">
-          <div className="tl-container">
-            <Header />
-            <div className="tl-ladoEsquerdo">
-              <div className="lateral-wrapper">
-                <div className="lateral-estatica-dm">
-                  <div className="lateral-header">
-                    <div className="imgProfilePic">
-                      <Link className="tl-foto" to="/perfil">
-                        <div>
-                          <ProfileImage selectedProfile={selectedProfile} />
-                        </div>
-                      </Link>
-                    </div>
-                  </div>
-                  <div className="menu-lateral-dm">
-                    <Link className="botaoAcessar iconDm" to="/timeline">
-                      <div className="cada-icone-img-nome-dm">
-                        <img
-                          id="home"
-                          src={homeIcon}
-                          alt="Botão ir para Home"
-                        ></img>
-                        <div className="escrita-lateral-dm">
-                          <p className="escrita-lateral-dm">Timeline</p>
-                        </div>
-                      </div>
-                    </Link>
-                    <Link className="botaoAcessar iconDm" to="/perfil">
-                      <div className="cada-icone-img-nome-dm">
-                        <img
-                          id="dm"
-                          src={perfilIcon}
-                          alt="Botão ir para o perfil"
-                        ></img>
-                        <div className="escrita-lateral-dm">
-                          <p className="escrita-lateral-dm">Perfil</p>
-                        </div>
-                      </div>
-                    </Link>
-                    <Link className="botaoAcessar iconDm" to="/dm">
-                      <div className="cada-icone-img-nome-dm">
-                        <img
-                          id="dm"
-                          src={dmIcon}
-                          alt="Botão ir para DM, chat conversas privadas"
-                        ></img>
-                        <div className="escrita-lateral-dm">
-                          <p className="escrita-lateral-dm">DM</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="logoCeferno">
+    return <img src={profileImageUrl} alt="Perfil" />;
+  }
+
+  const profile = {
+    username: userLoggedData.pseudonimo,
+    photoURL:
+      "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png",
+  };
+
+  const toggleMobileLateral = () => {
+    setIsMobileLateralVisible(!isMobileLateralVisible);
+    console.log("clicou");
+    console.log(isMobileLateralVisible);
+  };
+
+  const css = {
+    color: "#fff",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: "5px",
+};
+
+  return (
+    <>
+      <div className="tl-screen">
+        <div className="tl-container">
+          <div className="tl-header" style={css}>
+            <Link to="/timeline">
+              <FontAwesomeIcon icon={faArrowLeft} />
+            </Link>
+            <div className="tl-header-post header-active">
+              <h1>Salvos</h1>
+              <div className="header-active-in"></div>
+            </div>
+          </div>
+          <MenuLateral
+            isMobileLateralVisible={isMobileLateralVisible}
+            toggleMobileLateral={toggleMobileLateral}
+          />
+          <div className="tl-ladoEsquerdo"></div>
+          <div className="tl-main">
+            <div className="tl-box">
+              {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
+                <PostDisplay
+                  key={post.id}
+                  post={post}
+                  userSentData={userSentData}
+                  userId={userId}
+                  userMentionedData={userMentionedData}
+                  userLoggedData={userLoggedData}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="tl-ladoDireito">
+            <div className="tl-ladoDireito-procurar">
+              <div className="procurar-box">
+                <div className="img-procurar-box">
+                  <div className="img-procurar-box-in">
                     <img
-                      src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png?ex=654f16a6&is=653ca1a6&hm=47f7d679b329ecf5cc49ea053019ef5d019999ddb77a0ba1a3dda31532ab55da&"
+                      src="https://cdn.discordapp.com/attachments/871728576972615680/1167934652267368488/6328608.png?ex=654feee8&is=653d79e8&hm=15078133d7bcc63b14665f301890a83cf549dba37a671c8827a8c9c6e8c50c11&"
                       alt=""
                     />
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="tl-main">
-              <div className="tl-box">
-                {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
-                  <PostDisplay
-                    key={post.id}
-                    post={post}
-                    userSentData={userSentData}
-                    userId={userId}
-                    userMentionedData={userMentionedData}
-                    userLoggedData={userLoggedData}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className="tl-ladoDireito">
-              <div className="tl-ladoDireito-procurar">
-                <div className="procurar-box">
-                  <div className="img-procurar-box">
-                    <div className="img-procurar-box-in">
-                      <img
-                        src="https://cdn.discordapp.com/attachments/871728576972615680/1167934652267368488/6328608.png?ex=654feee8&is=653d79e8&hm=15078133d7bcc63b14665f301890a83cf549dba37a671c8827a8c9c6e8c50c11&"
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                  <div className="procurar-box-input">
-                    <input type="text" placeholder="Procurar" />
-                  </div>
+                <div className="procurar-box-input">
+                  <input type="text" placeholder="Procurar" />
                 </div>
               </div>
-              <div className="tl-ladoDireito-doar">
-                <h1>Deseja doar para o CEFERNO?</h1>
-                <p>
-                  O CEFERNO é um projeto estudantil, e para mantermos ele online
-                  precisamos das doações.
-                </p>
-                <button>Doar</button>
-              </div>
+            </div>
+            <div className="tl-ladoDireito-doar">
+              <h1>Deseja doar para o CEFERNO?</h1>
+              <p>
+                O CEFERNO é um projeto estudantil, e para mantermos ele online
+                precisamos das doações.
+              </p>
+              <button>Doar</button>
             </div>
           </div>
-          {/*<div className="tl-menu">
+        </div>
+        {/*<div className="tl-menu">
           <div className="tl-menu-header">
             <div className="tl-menu-header-profile">
               <div className="tl-menu-foto"></div>
@@ -457,8 +433,8 @@ export function SavedPosts() {
           </div>
           <div className="tl-menu-footer"></div>
   </div>*/}
-        </div>
-        <Acessibilidade />
-      </>
-    );
-  }
+      </div>
+      <Acessibilidade />
+    </>
+  );
+}
