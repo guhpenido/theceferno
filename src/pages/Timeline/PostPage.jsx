@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark, faComment } from "@fortawesome/fontawesome-free-solid";
-import { faThumbsUp } from "@fortawesome/fontawesome-free-solid";
-import { faThumbsDown } from "@fortawesome/fontawesome-free-solid";
-import { faArrowRight } from "@fortawesome/fontawesome-free-solid";
 import { faArrowLeft } from "@fortawesome/fontawesome-free-solid";
+import { faBookmark as solidBookmark } from "@fortawesome/fontawesome-free-solid";
+import { faComment } from "@fortawesome/fontawesome-free-solid";
+import { faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
+import { faThumbsUp as regularThumbsUp } from "@fortawesome/free-regular-svg-icons";
+import { faThumbsUp as solidThumbsUp } from "@fortawesome/fontawesome-free-solid";
 import { faShare } from "@fortawesome/fontawesome-free-solid";
+import { faThumbsDown as regularThumbsDown } from "@fortawesome/free-regular-svg-icons";
+import { faThumbsDown as solidThumbsDown } from "@fortawesome/fontawesome-free-solid";
+import { faCaretDown } from "@fortawesome/fontawesome-free-solid";
+import { faArrowRight } from "@fortawesome/fontawesome-free-solid";
+import { faEnvelope } from "@fortawesome/fontawesome-free-solid";
 //import { faMagnifyingGlassArrowRight } from "@fortawesome/fontawesome-free-solid";
 
 //import { faXmark } from "@fortawesome/fontawesome-free-solid";
@@ -46,14 +52,14 @@ import dmIcon from "../../assets/dm-icon.svg";
 import { Acessibilidade } from "../Acessibilidade/index";
 import Header from "./Header";
 import MenuLateral from "../MenuLateral/MenuLateral";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 
 
 function PostPage() {
     const [imageSentData, setImageSentData] = useState("https://cdn.discordapp.com/attachments/871728576972615680/1133946789343531079/logo.png");
     const location = useLocation();
-    const { userSentData, userMentionedData } = location.state;
+    const { userSentData, userMentionedData, userLoggedData } = location.state;
     const { postId } = useParams();
-    const [userLoggedData, setUserLoggedData] = useState(null);
     const postIdInt = parseInt(postId, 10);
     const [post, setPost] = useState(null);
     const [comments, setComments] = useState([]);
@@ -70,16 +76,72 @@ function PostPage() {
     const auth = getAuth(app);
     const db = getFirestore(app);
     const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
+    const [disliked, setDisliked] = useState(false); // Estado para controlar se o usuário curtiu o post
     const [likes, setLikes] = useState(null);
     const [dislikes, setDislikes] = useState(null);
     const [profile, setProfile] = useState(null);
     const [selectedProfile, setSelectedProfile] = useState(null);
     const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
+    const [saveIcon, setSaveIcon] = useState("regular");
+  const [likeIcon, setLikeIcon] = useState("regular");
+  const [dislikeIcon, setDislikeIcon] = useState("regular");
+    const [isBeatingL, setIsBeatingL] = useState(false);
+    const [isBeatingD, setIsBeatingD] = useState(false);
+    const [isBeatingB, setIsBeatingB] = useState(false);
+    const iconToUse = saveIcon === 'solid' ? solidBookmark : regularBookmark;
+    const likeToUse = likeIcon === 'solid' ? solidThumbsUp : regularThumbsUp;
+    const dislikeToUse = dislikeIcon === 'solid' ? solidThumbsDown : regularThumbsDown;
 
+    const handleIconClickB = () => {
+        setIsBeatingB(!isBeatingB);
+        setTimeout(() => {
+            setIsBeatingB(false);
+        }, 1000);
+    };
+
+    const handleIconClickD = () => {
+        setIsBeatingD(!isBeatingD);
+        setTimeout(() => {
+            setIsBeatingD(false);
+        }, 1000);
+    };
+
+    const handleIconClickL = () => {
+        setIsBeatingL(!isBeatingL);
+        setTimeout(() => {
+            setIsBeatingL(false);
+        }, 1000);
+    };
+
+    useEffect(() => {
+        if (liked) {
+          setLikeIcon('solid');
+        }
+        else
+        setLikeIcon('regular');
+      }, [liked]);
+    
+      useEffect(() => {
+        if (disliked) {
+          setDislikeIcon('solid');
+        }
+        else
+        setDislikeIcon('regular');
+      }, [disliked]);
 
     useEffect(() => {
         console.log(imageSentData); // Aqui, você verá o valor atualizado de imageSentData
     }, [imageSentData]);
+
+    console.log(postIdInt);
+    useEffect(() => {
+        if (userLoggedData && userLoggedData.savedPosts.includes(postIdInt)) {
+            setSaveIcon('solid');
+        }
+        else {
+            setSaveIcon('regular');
+        }
+    }, [userLoggedData, postIdInt]);
 
     useEffect(() => {
         console.log("useEffect está sendo executado!");
@@ -226,6 +288,7 @@ function PostPage() {
 
                     // Adicionar a interação na coleção "interactions"
                     await addInteraction(userId, postIdInt, "like");
+                    setLiked(true);
                 } else {
                     console.error("Post não encontrado no Firebase.");
                     // Reverter a contagem local de likes em caso de erro
@@ -270,6 +333,7 @@ function PostPage() {
                             likes: newLikes,
                         });
                         console.log("Likes atualizados no Firebase com sucesso!");
+                        setLiked(false);
                     }
                 }
             } catch (error) {
@@ -348,6 +412,7 @@ function PostPage() {
 
                     // Adicionar a interação na coleção "interactions"
                     await addInteraction(userId, postIdInt, "dislike");
+                    setDisliked(true);
                 } else {
                     console.error("Post não encontrado no Firebase.");
                     // Reverter a contagem local de likes em caso de erro
@@ -392,6 +457,7 @@ function PostPage() {
                             deslikes: newDislikes,
                         });
                         console.log("Likes atualizados no Firebase com sucesso!");
+                        setDisliked(false);
                     }
                 }
             } catch (error) {
@@ -652,6 +718,8 @@ function PostPage() {
     };
 
     const handleSavePost = async (e, postId) => {
+        e.stopPropagation();
+        e.preventDefault();
         try {
             // Obtém o usuário atualmente autenticado
             const user = userId;
@@ -667,23 +735,35 @@ function PostPage() {
                 // Verifica se o savedPosts existe no documento do usuário
                 if (userData.savedPosts) {
                     // Verifica se o postId já existe no array savedPosts
-                    if (!userData.savedPosts.includes(postId)) {
-                        // Cria uma nova array com o postId adicionado
+                    if (userData.savedPosts.includes(postId)) {
+                        // Cria um novo array com o postId removido
+                        const updatedSavedPosts = userData.savedPosts.filter(savedPost => savedPost !== postId);
+
+                        // Atualiza o documento do usuário com o novo array savedPosts
+                        await updateDoc(userDocRef, {
+                            savedPosts: updatedSavedPosts,
+                        });
+
+                        setSaveIcon("regular");
+
+                        console.log("Post removido dos salvos com sucesso!");
+                    } else {
+                        // Caso contrário, o postId não está no array, então o adicionamos
                         const updatedSavedPosts = [...userData.savedPosts, postId];
 
                         // Atualiza o documento do usuário com o novo array savedPosts
                         await updateDoc(userDocRef, {
-                            savedPosts: updatedSavedPosts
+                            savedPosts: updatedSavedPosts,
                         });
 
+                        setSaveIcon("solid");
+
                         console.log("Post salvo com sucesso!");
-                    } else {
-                        console.log("Post já está salvo.");
                     }
                 } else {
                     // Se savedPosts não existe, cria um novo array com o postId
                     await updateDoc(userDocRef, {
-                        savedPosts: [postId]
+                        savedPosts: [postId],
                     });
 
                     console.log("Post salvo com sucesso!");
@@ -792,20 +872,23 @@ function PostPage() {
                                                 <span></span>
                                             </div>
                                             <div className="tl-ps-like" onClick={(e) => {
-                                                e.stopPropagation();
                                                 handleLikeClick(e);
+                                                handleIconClickL();
                                             }}>
-                                                <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes}</span>
+                                                <FontAwesomeIcon icon={likeToUse} beat={isBeatingL}/> <span>{likes}</span>
                                             </div>
                                             <div className="tl-ps-deslike" onClick={(e) => {
-                                                e.stopPropagation();
                                                 handleDislikeClick(e);
+                                                handleIconClickD();
                                             }}>
-                                                <FontAwesomeIcon icon={faThumbsDown} />{" "}
+                                                <FontAwesomeIcon icon={dislikeToUse} beat={isBeatingD}/>{" "}
                                                 <span>{dislikes}</span>
                                             </div>
-                                            <div className="tl-ps-salvar" onClick={(e) => { handleSavePost(e, postIdInt) }}>
-                                                <FontAwesomeIcon icon={faBookmark} />{" "}
+                                            <div className="tl-ps-salvar" onClick={(e) => { 
+                                                handleSavePost(e, postIdInt);
+                                                handleIconClickB();
+                                             }}>
+                                                <FontAwesomeIcon icon={iconToUse} beat={isBeatingB}/>{" "}
                                             </div>
                                         </div>
                                     </div>
