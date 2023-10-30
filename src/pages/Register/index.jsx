@@ -322,13 +322,16 @@ export function Register() {
   };
 
   // Função para tratar a mudança de pseudônimo no input
-  const handlePseudonimoChange = (event) => {
+  const handlePseudonimoChange = async (event) => {
     const pseudonimo = event.target.value;
     setState((prevState) => ({
       ...prevState,
       pseudonimo,
     }));
+    const isValid = await isPseudonimoValid(pseudonimo);
+    console.log(isValid);
   };
+  
 
   // Função para tratar a mudança de imagem de perfil no input
   const handleImagemPerfilChange = async (event) => {
@@ -697,7 +700,7 @@ export function Register() {
               </div>
               <div
                 className="etapa03"
-                style={{ display: state.etapa === 3 ? "block" : "none" }}
+                style={{ display: state.etapa === 3 ? "flex" : "none" }}
               >
                 <span>
                   <a onClick={retrocederEtapa} href="#">
@@ -759,10 +762,13 @@ export function Register() {
                       <img id="output" src={state.imageSrc} alt="Preview" />
                     )}
                   </div>
-                  <div className="profile-pica">
-                    <label className="-label" htmlFor="file">
-                      <span className="glyphicon glyphicon-camera"></span>
-                      <span>Mudar banner</span>
+                  <br></br>
+                  <h3>Banner</h3>
+                
+                  <div className="ZZprofile-pic">
+                    <label className="ZZ-label" htmlFor="file">
+                      <span className="ZZglyphicon ZZglyphicon-camera"></span>
+                      <span className="in-text-foto" >Mudar banner</span>
                     </label>
                     <input
                       id="file"
@@ -776,6 +782,7 @@ export function Register() {
                     )}
                   </div>
                 </div>
+                <br></br>
                 <h1
                   onClick={() => isEtapa3Valid() && avancarEtapa()} // Click is only triggered if the step is valid
                   className={`button ${!isEtapa3Valid() ? "invalid" : ""}`}
@@ -810,10 +817,10 @@ export function Register() {
                     value={state.pseudonimo}
                     onChange={handlePseudonimoChange}
                     style={{
-                      borderColor: isPseudonimoValid() ? "green" : "red",
+                      borderColor: isPseudonimoValid(state.pseudonimo) ? "green" : "red",
                     }}
                   />
-                  {!isPseudonimoValid() && (
+                  {!isPseudonimoValid(state.pseudonimo) && (
                     <p style={{ color: "red" }}>Pseudônimo inválido</p>
                   )}
                 </div>

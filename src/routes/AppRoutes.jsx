@@ -11,11 +11,13 @@ import   Chat   from "../pages/Chat";
 import Layout from '../pages/Perfil/Layout';
 import Whisper from "../pages/Whisper";
 import {Timeline} from "../pages/Timeline/index";
+import {SavedPosts} from "../pages/Timeline/salvos";
 import PostPage from "../pages/Timeline/PostPage";
 import VisitorPage from "../pages/Perfil/ProfilePage/VisitorPage";
 import SeachPage from "../pages/Perfil/ProfilePage/SearchPage";
 import { Acessibilidade } from "../pages/Acessibilidade/index";
 import Trending from "../pages/Timeline/Trending";
+import Notificacao from "../pages/Notificacao/Notificacao";
 //
 export function AppRoutes() {
   return (
@@ -38,6 +40,8 @@ export function AppRoutes() {
         <Route path="/SeachPage" element={<SeachPage />} />
         <Route path="/acc" element={<Acessibilidade />} />
         <Route path="/trending" element={<Trending />} />
+        <Route path="/savedPosts" element={<SavedPosts />} />
+        <Route path="/not" element={<Notificacao />} />
       </Routes>
     </BrowserRouter>
   );

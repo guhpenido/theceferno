@@ -6,6 +6,7 @@ import { faThumbsUp } from "@fortawesome/fontawesome-free-solid";
 import { faThumbsDown } from "@fortawesome/fontawesome-free-solid";
 import { faCaretDown } from "@fortawesome/fontawesome-free-solid";
 import { faArrowRight } from "@fortawesome/fontawesome-free-solid";
+import { faArrowLeft } from "@fortawesome/fontawesome-free-solid";
 import { faEnvelope } from "@fortawesome/fontawesome-free-solid";
 //import { faMagnifyingGlassArrowRight } from "@fortawesome/fontawesome-free-solid";
 import { faBell } from "@fortawesome/fontawesome-free-solid";
@@ -55,7 +56,7 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import "./stylesTimeline.css";
 
-export function Timeline() {
+export function SavedPosts() {
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedId, setSelectedId] = useState("");
   const [isLoadingUser, setIsLoadingUser] = useState(true);
@@ -80,6 +81,7 @@ export function Timeline() {
   const [selectedCurso] = useState("");
   const [selectedInstituicao] = useState("");
   const [nextPostId, setNextPostId] = useState(0);
+  const [savedPosts, setSavedPosts] = useState(null);
   const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
   const handleScroll = () => {
     const windowHeight = window.innerHeight;
@@ -109,19 +111,35 @@ export function Timeline() {
   }, []);
 
   useEffect(() => {
-    if (isFetching) {
-      carregaTml().then(() => {
-        setIsFetching(false);
-      });
-    }
-  }, [isFetching]);
+    carregaTml();
+  });
+
   useEffect(() => {
+    console.log("useEffect para usreId");
+    if (userId) {
+      fetchUserDataAndSetState(userId);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    console.log("useEffect para carregarTml");
+    if (userId) {
+      if (isFetching) {
+        carregaTml().then(() => {
+          setIsFetching(false);
+        });
+      }
+    }
+  }, [userId], [isFetching]);
+
+  useEffect(() => {
+    console.log("useEffect para carregarTml2");
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log(user);
-        setUserId(user.uid);
-        console.log(user);
-        fetchUserDataAndSetState(user.uid);
+        const currentUserUid = user.uid;
+        setUserId(currentUserUid); // Atualize o estado de userId
+        fetchUserDataAndSetState(currentUserUid);
+        console.log(currentUserUid);
         carregaTml();
       } else {
         navigate("/login");
@@ -157,56 +175,77 @@ export function Timeline() {
     transition: "opacity 0.3s",
   };
 
-  const [newPost, setNewPost] = useState({
-    deslikes: 0,
-    likes: 0,
-    mode: "public",
-    text: "",
-    time: "",
-    userMentioned: "",
-    userSent: userId,
-  });
-
   const carregaTml = async () => {
-
     if (isFetching) {
       return;
     }
-  
+
     setIsFetching(true);
+    if (!userId) {
+      setIsFetching(true);
+    }
     const postsCollectionRef = collection(db, "timeline");
-  
-    let postsQuery = query(
-      postsCollectionRef,
-      orderBy("postId", "desc"), // Ordene por postId em ordem decrescente
-      limit(15)
-    );
-  
+    const lastLoadedPost =
+      loadedPosts.length > 0 ? loadedPosts[loadedPosts.length - 1].post : null;
+    const lastLoadedPostId = lastLoadedPost ? lastLoadedPost.id : "";
+    let postsQuery = null;
+    console.log(selectedInstituicao);
+    console.log(selectedCurso);
+    const userDocRef = doc(db, "users", userId);
+    const userDocSnapshot = await getDoc(userDocRef);
+
+    if (userDocSnapshot.exists()) {
+      // O documento do usuário existe, agora você pode acessar o vetor 'savedPosts'
+      const userData = userDocSnapshot.data();
+      const newSavedPosts = userData.savedPosts;
+      if (newSavedPosts === null) {
+        console.log("Sem posts salvos");
+        return <h1>Nenhum post salvo!</h1>;
+      }
+      if (lastLoadedPostId) {
+        console.log("Latest post:" + lastLoadedPostId);
+        // Se houver um último post carregado, use startAfter para obter os próximos posts
+        postsQuery = query(
+          postsCollectionRef,
+          orderBy("postId", "desc"),
+          where("postId", "in", newSavedPosts),
+          startAfter(lastLoadedPostId),
+        );
+      }
+      else {
+        console.log(newSavedPosts);
+        postsQuery = query(
+          postsCollectionRef,
+          where("postId", "in", newSavedPosts),
+          orderBy("postId", "desc")
+        );
+      }
+    }
     try {
       const postsData = await getPostsFromFirestore(postsQuery);
-  
+
       if (postsData.length === 0) {
         console.log("Você já chegou ao fim");
       } else {
         const postsWithUserData = [];
-  
+
         for (const post of postsData) {
           const userSentData = await fetchUserData(post.userSent);
           let userMentionedData = null;
-  
+
           if (post.userMentioned !== null) {
             userMentionedData = await fetchUserData(post.userMentioned);
           }
-  
+
           postsWithUserData.push({
             post,
             userSentData,
             userMentionedData,
           });
         }
-  
-        // Substitua o estado de loadedPosts com os novos posts carregados
-        setLoadedPosts(postsWithUserData);
+
+        // Aqui, substitua todo o estado de loadedPosts com os novos posts carregados
+        setLoadedPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
         console.log("Novos posts carregados!");
       }
     } catch (error) {
@@ -214,44 +253,7 @@ export function Timeline() {
     } finally {
       setIsFetching(false);
     }
-  };
-
-  useEffect(() => {
-    if (userId) {
-      fetchUserDataAndSetState(userId);
-    }
-  }, [userId]);
-
-  useEffect(() => {
-    // Lógica para determinar quando aplicar a classe
-    if (userLoggedData && selectedProfile === userLoggedData.usuario) {
-      setAddPostClass("anon");
-    } else {
-      setAddPostClass("");
-    }
-  }, [selectedProfile, userLoggedData]);
-
-  //pega o id do post para incrementar
-  const fetchLatestPostId = async () => {
-    try {
-      const postsRef = collection(db, "timeline");
-      const querySnapshot = await getDocs(
-        query(postsRef, orderBy("postId", "desc"), limit(1))
-      ); // Obtém o último post com o ID mais alto
-      if (!querySnapshot.empty) {
-        const latestPost = querySnapshot.docs[0].data();
-        const postIdAsNumber = parseInt(latestPost.postId, 10);
-        console.log(postIdAsNumber);
-        setNextPostId(postIdAsNumber + 1); // Define o próximo ID disponível com base no último ID
-      }
-    } catch (error) {
-      console.error("Error fetching latest post ID:", error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchLatestPostId();
-  }, []);
+  }
 
   const fetchUserDataAndSetState = async (userId) => {
     console.log(userId);
@@ -262,7 +264,7 @@ export function Timeline() {
       setIsLoadingUser(false); // Data has been fetched, no longer loading
     } catch (error) {
       console.error("Error fetching user data:", error.message);
-      //setIsLoading(false); // Even if there's an error, stop loading
+      setIsLoading(false); // Even if there's an error, stop loading
     }
   };
 
@@ -335,29 +337,33 @@ export function Timeline() {
     console.log("clicou");
     console.log(isMobileLateralVisible);
   };
-  const recarregarTml = async () => {
-    // Limpe o estado dos posts carregados
-    setLoadedPosts([]);
-    setHasLoadedPosts(false);
-    // Chame a função carregaTml para carregar novamente os últimos 15 posts
-    carregaTml();
-  };
+
+  const css = {
+    color: "#fff",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: "5px",
+};
 
   return (
     <>
       <div className="tl-screen">
         <div className="tl-container">
-          <Header
-            userLogged={userLoggedData}
-            toggleMobileLateral={toggleMobileLateral}
-            carregatml={carregaTml}
-          />
+          <div className="tl-header" style={css}>
+            <Link to="/timeline">
+              <FontAwesomeIcon icon={faArrowLeft} />
+            </Link>
+            <div className="tl-header-post header-active">
+              <h1>Salvos</h1>
+              <div className="header-active-in"></div>
+            </div>
+          </div>
           <MenuLateral
             isMobileLateralVisible={isMobileLateralVisible}
             toggleMobileLateral={toggleMobileLateral}
-            carregatml={recarregarTml}
           />
-          
+          <div className="tl-ladoEsquerdo"></div>
           <div className="tl-main">
             <div className="tl-box">
               {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
@@ -397,7 +403,6 @@ export function Timeline() {
               <button>Doar</button>
             </div>
           </div>
-          <AddPost />
         </div>
         {/*<div className="tl-menu">
           <div className="tl-menu-header">

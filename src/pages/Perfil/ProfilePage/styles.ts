@@ -45,8 +45,9 @@ export const ProfileData = styled.div`
     font-weight: bold;
     font-size: 19px;
     text-align: left;
-    margin-top: -20px;
+    margin-top: -10px;
     color: #d9d9d9;
+    margin-left:15px;
   }
 
   > h2 {
@@ -54,7 +55,10 @@ export const ProfileData = styled.div`
     font-size: 15px;
     text-align: left;
     color: #7a7a7a;
+    margin-top: 5px;
+    margin-left:15px;
   }
+
 
   > p {
     font-size: 15px;
@@ -118,32 +122,28 @@ export const Tags = styled.div`
 export const Institution = styled.div`
   text-align: center;
   background-color: rgba(71, 99, 228, 0.2);
-  border: 3px solid rgb(71, 99, 228);
+  border: 1px solid rgb(71, 99, 228);
   border-radius: 10px;
-  padding-left: 10px;
-  padding-top: 2px;
-  padding-right: 10px;
   margin-left:15px; 
   font-size: 12px;
+  margin-top: 20px;
+  padding: 5px 10px;
 `;
 
 export const Course = styled.div`
-  padding: 5px 15px;
+  padding: 5px 10px;
   display: inline-block;
   flex: 1 0 auto;
   width: max-content;
   box-sizing: border-box;
   border-radius: 15px;
-  border: 2px solid #4763e4;
   background-color: rgba(71, 99, 228, 0.2);
-  border: 3px solid rgb(71, 99, 228);
+  border: 1px solid rgb(71, 99, 228);
   border-radius: 10px; 
-  padding-left: 10px;
-  padding-top: 2px;
-  padding-right: 10px;
   margin: 2px;
   font-size: 12px;
   margin-right:70px;
+  margin-top: 20px;
 `;
 
 export const Following = styled.div`
