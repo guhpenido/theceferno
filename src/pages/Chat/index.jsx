@@ -7,7 +7,7 @@ import perfilIcon from "../../assets/perfil-icon.svg";
 import cefernoFullImg from "../../assets/ceferno_icon_full.png";
 import setaPostar from "../../assets/seta-postar.svg";
 import notificacaoIcon from "../../assets/notificacao-icon.svg";
-// import "./chatStyles.css";
+import "./chatStyles.css";
 import "./stylesChat.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';

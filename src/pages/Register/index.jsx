@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import arrowImg from "../../assets/arrow.svg";
 import logoImg from "../../assets/logo.png";
-import "./stylesRegister.scss";
+//import "./stylesRegister.scss";
 import "./stylesRegister.css"; //descomentar apenas esse
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { app } from "../../services/firebaseConfig";
 import {
   getFirestore,
@@ -20,7 +20,7 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import {  doc, setDoc } from "firebase/firestore"; // Import the doc function
+import { doc, setDoc } from "firebase/firestore"; // Import the doc function
 import cefernoFullImg from "../../assets/ceferno_icon_full.png";
 import VLibras from "@djpfs/react-vlibras";
 
@@ -42,12 +42,21 @@ export function Register() {
     pseudonimo: "",
     imageSrc:
       "https://cdn.discordapp.com/attachments/871728576972615680/1133946789343531079/logo.png",
-    bannerSrc: "https://media.discordapp.net/attachments/1100381589805998080/1147535718642614322/Cabecalho_do_Twitter_1500x500_px..jpeg?width=1025&height=342",
+    bannerSrc:
+      "https://media.discordapp.net/attachments/1100381589805998080/1147535718642614322/Cabecalho_do_Twitter_1500x500_px..jpeg?width=1025&height=342",
     etapa: 1,
     isEmailValid: true,
     isPasswordMatch: true,
   });
+  const [usuarioValido, setUsuarioValido] = useState(false);
+  useEffect(() => {
+    async function verificaUsuario() {
+      const isValid = await isUsuarioValid(state.usuario);
+      setUsuarioValido(isValid);
+    }
 
+    verificaUsuario();
+  }, [state.usuario]);
   // Função para verificar se o email é válido
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -187,6 +196,14 @@ export function Register() {
     }
   };
 
+  async function checkUsuario() {
+    try {
+      const isValid = await isUsuarioValid(state.usuario);
+      console.log(isValid);
+    } catch (error) {
+      console.error("Erro:", error);
+    }
+  }
   // Função para avançar para a próxima etapa do cadastro
   const avancarEtapa = () => {
     setState((prevState) => ({
@@ -316,27 +333,27 @@ export function Register() {
   // Função para tratar a mudança de imagem de perfil no input
   const handleImagemPerfilChange = async (event) => {
     const imageFile = event.target.files[0];
-  
+
     if (imageFile) {
       const storage = getStorage();
-      const storageRef = ref(storage, 'profile_images/' + imageFile.name);
-  
+      const storageRef = ref(storage, "profile_images/" + imageFile.name);
+
       try {
         // Faz o upload do arquivo para o Firebase Storage
         const snapshot = await uploadBytes(storageRef, imageFile);
-  
+
         // Obtém a URL de download do arquivo
         const downloadURL = await getDownloadURL(snapshot.ref);
-  
+
         // Atualiza o estado do componente com a URL de download da imagem
         setState((prevState) => ({
           ...prevState,
           imageSrc: downloadURL,
         }));
-  
-        console.log('Upload concluído. URL de download:', downloadURL);
+
+        console.log("Upload concluído. URL de download:", downloadURL);
       } catch (error) {
-        console.error('Erro ao fazer o upload da imagem:', error);
+        console.error("Erro ao fazer o upload da imagem:", error);
       }
     }
   };
@@ -344,27 +361,27 @@ export function Register() {
   // Função para tratar a mudança de imagem de perfil no input
   const handleBannerPerfilChange = async (event) => {
     const bannerFile = event.target.files[0];
-  
+
     if (bannerFile) {
       const storage = getStorage();
-      const storageRef = ref(storage, 'profile_images/' + bannerFile.name);
-  
+      const storageRef = ref(storage, "profile_images/" + bannerFile.name);
+
       try {
         // Faz o upload do arquivo para o Firebase Storage
         const snapshot = await uploadBytes(storageRef, bannerFile);
-  
+
         // Obtém a URL de download do arquivo
         const downloadURL = await getDownloadURL(snapshot.ref);
-  
+
         // Atualiza o estado do componente com a URL de download da imagem
         setState((prevState) => ({
           ...prevState,
           bannerSrc: downloadURL,
         }));
-  
-        console.log('Upload concluído. URL de download:', downloadURL);
+
+        console.log("Upload concluído. URL de download:", downloadURL);
       } catch (error) {
-        console.error('Erro ao fazer o upload da imagem:', error);
+        console.error("Erro ao fazer o upload da imagem:", error);
       }
     }
   };
@@ -377,7 +394,8 @@ export function Register() {
       isStrongPassword(state.password) &&
       state.isPasswordMatch &&
       isEmailAvailable(state.email) &&
-      state.isEmailValid && isPasswordMatch
+      state.isEmailValid &&
+      isPasswordMatch
     );
   };
 
@@ -393,7 +411,10 @@ export function Register() {
 
   // Função para verificar se a etapa 3 é válida
   const isEtapa3Valid = () => {
-    return isNomeValid(state.nome);
+    return (
+      isNomeValid(state.nome) &&
+      usuarioValido
+    )
   };
 
   const isEtapa4Valid = () => {
@@ -431,7 +452,7 @@ export function Register() {
         usuario,
         pseudonimo,
         imageSrc,
-        bannerSrc, 
+        bannerSrc,
       } = state;
 
       // Cadastre o usuário no Firebase Authentication
@@ -453,7 +474,7 @@ export function Register() {
 
         let bannerUrl = null;
         if (bannerSrc) {
-          bannerUrl =  bannerSrc; 
+          bannerUrl = bannerSrc;
         }
 
         // Cadastre os detalhes do usuário na coleção 'users' com o ID do usuário autenticado
@@ -482,304 +503,338 @@ export function Register() {
   };
 
   return (
-
-    
     <div className="login">
-    <div className="registro-full-screen">
-    <div className="div-registro-cefernoFullImg"><img className="registro-cefernoFullImg" src={cefernoFullImg} alt="Logo Ceferno"></img></div>
-      <div className="registr-borda">
-      <div className="container">
-      <br></br><br></br>
-        <header className="header">
-          <img src={logoImg} alt="Logo Ceferno" className="registro-logoImg" />
-          <span>Por favor digite suas informações de cadastro</span>
-        </header>
-        <form>
-          <div
-            className="etapa01"
-            style={{ display: state.etapa === 1 ? "block" : "none" }}
-          >
-            <h2>Etapa 01/04</h2>
+      <div className="registro-full-screen">
+        <div className="div-registro-cefernoFullImg">
+          <img
+            className="registro-cefernoFullImg"
+            src={cefernoFullImg}
+            alt="Logo Ceferno"
+          ></img>
+        </div>
+        <div className="registr-borda">
+          <div className="container">
             <br></br>
-            <div className="inputContainer">
-              <label className="label-registro" htmlFor="email">E-mail</label>
-              <input
-                type="text"
-                name="email"
-                id="email"
-                placeholder="email@provedor.com"
-                value={state.email}
-                onChange={handleEmailChange}
-                style={{ borderColor: state.isEmailValid ? "green" : "red" }}
+            <br></br>
+            <header className="header">
+              <img
+                src={logoImg}
+                alt="Logo Ceferno"
+                className="registro-logoImg"
               />
-              {!state.isEmailValid && (
-                <p style={{ color: "red" }}>E-mail inválido</p>
-              )}
-            </div>
+              <span>Por favor digite suas informações de cadastro</span>
+            </header>
+            <form>
+              <div
+                className="etapa01"
+                style={{ display: state.etapa === 1 ? "block" : "none" }}
+              >
+                <h2>Etapa 01/04</h2>
+                <br></br>
+                <div className="inputContainer">
+                  <label className="label-registro" htmlFor="email">
+                    E-mail
+                  </label>
+                  <input
+                    type="text"
+                    name="email"
+                    id="email"
+                    placeholder="email@provedor.com"
+                    value={state.email}
+                    onChange={handleEmailChange}
+                    style={{
+                      borderColor: state.isEmailValid ? "green" : "red",
+                    }}
+                  />
+                  {!state.isEmailValid && (
+                    <p style={{ color: "red" }}>E-mail inválido</p>
+                  )}
+                </div>
 
-            <div className="inputContainer">
-              <label htmlFor="password">Senha</label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="********************"
-                value={state.password}
-                onChange={handlePasswordChange}
-              />
-            </div>
-            <div className="inputContainer">
-              <label htmlFor="password">Confirmar senha</label>
-              <input
-                type="password"
-                name="password"
-                id="password2"
-                placeholder="********************"
-                value={state.confirmPassword}
-                onChange={handleConfirmPasswordChange}
-                onBlur={state.checkPasswordMatch}
-                style={{ borderColor: state.isPasswordMatch ? "green" : "red" }}
-              />
-              {!state.isPasswordMatch && (
-                <p style={{ color: "red" }}>As senhas não coincidem</p>
-              )}
-              {!state.isPasswordMatch && renderValidationMessages()}
-              {renderPasswordRules()}
-            </div>
-            <h1
-              onClick={() => isEtapa1Valid() && avancarEtapa()} // Click is only triggered if the step is valid
-              className={`button ${!isEtapa1Valid() ? "invalid" : ""}`}
-              style={{
-                cursor: !isEtapa1Valid() ? "not-allowed" : "pointer",
-                backgroundColor: !isEtapa1Valid() ? "#24054C" : "green",
-              }}
-            >
-              Continuar <img src={arrowImg} alt="Botão continuar" />
-            </h1>
+                <div className="inputContainer">
+                  <label htmlFor="password">Senha</label>
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="********************"
+                    value={state.password}
+                    onChange={handlePasswordChange}
+                  />
+                </div>
+                <div className="inputContainer">
+                  <label htmlFor="password">Confirmar senha</label>
+                  <input
+                    type="password"
+                    name="password"
+                    id="password2"
+                    placeholder="********************"
+                    value={state.confirmPassword}
+                    onChange={handleConfirmPasswordChange}
+                    onBlur={state.checkPasswordMatch}
+                    style={{
+                      borderColor: state.isPasswordMatch ? "green" : "red",
+                    }}
+                  />
+                  {!state.isPasswordMatch && (
+                    <p style={{ color: "red" }}>As senhas não coincidem</p>
+                  )}
+                  {!state.isPasswordMatch && renderValidationMessages()}
+                  {renderPasswordRules()}
+                </div>
+                <h1
+                  onClick={() => isEtapa1Valid() && avancarEtapa()} // Click is only triggered if the step is valid
+                  className={`button ${!isEtapa1Valid() ? "invalid" : ""}`}
+                  style={{
+                    cursor: !isEtapa1Valid() ? "not-allowed" : "pointer",
+                    backgroundColor: !isEtapa1Valid() ? "#24054C" : "green",
+                  }}
+                >
+                  Continuar <img src={arrowImg} alt="Botão continuar" />
+                </h1>
 
-            <div className="footer">
-              <p>Você já tem uma conta?</p>
-              <Link to="/login">Acesse sua conta aqui</Link>
-            </div>
-          </div>
-          <div
-            className="etapa02"
-            style={{ display: state.etapa === 2 ? "block" : "none" }}
-          >
-            <span>
-              <a onClick={retrocederEtapa} href="#">
-              &lt;- Voltar
-              </a>
-            </span>
-            <h2>Etapa 02/04</h2>
-            <br></br>
-            <h3>Informações</h3>
-            <br></br>
-            <div className="inputContainer">
-              <label htmlFor="celular">Celular</label>
-              <input
-                type="text"
-                name="celular"
-                id="celular"
-                placeholder="(xx) xxxxx-xxxx"
-                value={state.celular}
-                onChange={handleCelularChange}
-                style={{ borderColor: isValidCelular(state.celular) ? "green" : "red" }}
-              />
-              {!isValidCelular(state.celular) && (
-                <p style={{ color: "red" }}>Celular inválido</p>
-              )}
-            </div> 
-            <div className="inputContainer">
-              <label htmlFor="instituicao">Instituição de Ensino</label>
-              <input
-                type="text"
-                name="instituicao"
-                id="instituicao"
-                placeholder="Nome da instituição"
-                value={state.instituicao}
-                onChange={handleInstituicaoChange}
-                style={{ borderColor: isInstituicaoValid(state.instituicao) ? "green" : "red" }}
-              />
-              {!isInstituicaoValid(state.instituicao) && (
-                <p style={{ color: "red" }}>Instituição inválida</p>
-              )}
-            </div>
-            <div className="inputContainer">
-              <label htmlFor="curso">Curso</label>
-              <input
-                type="text"
-                name="curso"
-                id="curso"
-                placeholder="Nome do curso"
-                value={state.curso}
-                onChange={handleCursoChange}
-                style={{ borderColor: isCursoValid(state.curso) ? "green" : "red" }}
-              />
-              {!isCursoValid(state.curso) && (
-                <p style={{ color: "red" }}>Curso inválido</p>
-              )}
-            </div>
-            <div className="inputContainer">
-              <label htmlFor="dtNascimento">Data de Nascimento</label>
-              <input
-                type="date"
-                name="dtNascimento"
-                id="dtNascimento"
-                value={state.dtNascimento}
-                onChange={handleDtNascimentoChange}
-                style={{ borderColor: isDtNascimentoValid(state.dtNascimento) ? "green" : "red" }}
-              />
-              {!isDtNascimentoValid(state.dtNascimento) && (
-                <p style={{ color: "red" }}>Data de nascimento inválida</p>
-              )}
-            </div>
-            <h1
-              onClick={() => isEtapa2Valid() && avancarEtapa()} // Click is only triggered if the step is valid
-              className={`button ${!isEtapa2Valid() ? "invalid" : ""}`}
-              style={{
-                cursor: !isEtapa2Valid() ? "not-allowed" : "pointer",
-                backgroundColor: !isEtapa2Valid() ? "red" : "green",
-              }}
-            >
-              Continuar <img src={arrowImg} alt="Botão continuar" />
-            </h1>
-          </div>
-          <div
-            className="etapa03"
-            style={{ display: state.etapa === 3 ? "block" : "none" }}
-          >
-            <span>
-              <a onClick={retrocederEtapa} href="#">
-              &lt;- Voltar
-              </a>
-            </span>
-            <h2>Etapa 03/04</h2>
-            <br></br>
-            <h3>Informações</h3>
-            <br></br>
-            <div className="inputContainer">
-              <label htmlFor="nome">Nome Completo</label>
-              <input
-                type="text"
-                name="nome"
-                id="nome"
-                placeholder="Nome completo"
-                value={state.nome}
-                onChange={handleNomeChange}
-                style={{ borderColor: isNomeValid() ? "green" : "red" }}
-              />
-              {!isNomeValid() && <p style={{ color: "red" }}>Nome inválido</p>}
-            </div>
-            <div className="inputContainer">
-              <label htmlFor="usuario">Usuário</label>
-              <input
-                type="text"
-                name="usuario"
-                id="usuario"
-                placeholder="Usuário"
-                value={state.usuario}
-                onChange={handleUsuarioChange}
-                style={{ borderColor: isUsuarioValid() ? "green" : "red" }}
-              />
-              {!isUsuarioValid() && (
-                <p style={{ color: "red" }}>Usuário inválido</p>
-              )}
-            </div>
-            <div className="mudaImagem">
-            <h3>Foto</h3>
-            <br></br>
-              <div className="profile-pic">
-                <label className="-label" htmlFor="file">
-                  <span className="glyphicon glyphicon-camera"></span>
-                  <span>Mudar imagem</span>
-                </label>
-                <input
-                  id="file"
-                  type="file"
-                  name="fotoPerfil"
-                  accept="image/*"
-                  onChange={handleImagemPerfilChange}
-                />
-                {state.imageSrc && (
-                  <img id="output" src={state.imageSrc} alt="Preview" />
-                )}
+                <div className="footer">
+                  <p>Você já tem uma conta?</p>
+                  <Link to="/login">Acesse sua conta aqui</Link>
+                </div>
               </div>
-              <div className="profile-pic">
-                <label className="-label" htmlFor="file">
-                  <span className="glyphicon glyphicon-camera"></span>
-                  <span>Mudar banner</span>
-                </label>
-                <input
-                  id="file"
-                  type="file"
-                  name="fotoPerfilBanner"
-                  accept="image/*"
-                  onChange={handleBannerPerfilChange}
-                />
-                {state.bannerSrc && (
-                  <img id="output" src={state.bannerSrc} alt="Preview" />
-                )}
+              <div
+                className="etapa02"
+                style={{ display: state.etapa === 2 ? "block" : "none" }}
+              >
+                <span>
+                  <a onClick={retrocederEtapa} href="#">
+                    &lt;- Voltar
+                  </a>
+                </span>
+                <h2>Etapa 02/04</h2>
+                <br></br>
+                <h3>Informações</h3>
+                <br></br>
+                <div className="inputContainer">
+                  <label htmlFor="celular">Celular</label>
+                  <input
+                    type="text"
+                    name="celular"
+                    id="celular"
+                    placeholder="(xx) xxxxx-xxxx"
+                    value={state.celular}
+                    onChange={handleCelularChange}
+                    style={{
+                      borderColor: isValidCelular(state.celular)
+                        ? "green"
+                        : "red",
+                    }}
+                  />
+                  {!isValidCelular(state.celular) && (
+                    <p style={{ color: "red" }}>Celular inválido</p>
+                  )}
+                </div>
+                <div className="inputContainer">
+                  <label htmlFor="instituicao">Instituição de Ensino</label>
+                  <input
+                    type="text"
+                    name="instituicao"
+                    id="instituicao"
+                    placeholder="Nome da instituição"
+                    value={state.instituicao}
+                    onChange={handleInstituicaoChange}
+                    style={{
+                      borderColor: isInstituicaoValid(state.instituicao)
+                        ? "green"
+                        : "red",
+                    }}
+                  />
+                  {!isInstituicaoValid(state.instituicao) && (
+                    <p style={{ color: "red" }}>Instituição inválida</p>
+                  )}
+                </div>
+                <div className="inputContainer">
+                  <label htmlFor="curso">Curso</label>
+                  <input
+                    type="text"
+                    name="curso"
+                    id="curso"
+                    placeholder="Nome do curso"
+                    value={state.curso}
+                    onChange={handleCursoChange}
+                    style={{
+                      borderColor: isCursoValid(state.curso) ? "green" : "red",
+                    }}
+                  />
+                  {!isCursoValid(state.curso) && (
+                    <p style={{ color: "red" }}>Curso inválido</p>
+                  )}
+                </div>
+                <div className="inputContainer">
+                  <label htmlFor="dtNascimento">Data de Nascimento</label>
+                  <input
+                    type="date"
+                    name="dtNascimento"
+                    id="dtNascimento"
+                    value={state.dtNascimento}
+                    onChange={handleDtNascimentoChange}
+                    style={{
+                      borderColor: isDtNascimentoValid(state.dtNascimento)
+                        ? "green"
+                        : "red",
+                    }}
+                  />
+                  {!isDtNascimentoValid(state.dtNascimento) && (
+                    <p style={{ color: "red" }}>Data de nascimento inválida</p>
+                  )}
+                </div>
+                <h1
+                  onClick={() => isEtapa2Valid() && avancarEtapa()} // Click is only triggered if the step is valid
+                  className={`button ${!isEtapa2Valid() ? "invalid" : ""}`}
+                  style={{
+                    cursor: !isEtapa2Valid() ? "not-allowed" : "pointer",
+                    backgroundColor: !isEtapa2Valid() ? "red" : "green",
+                  }}
+                >
+                  Continuar <img src={arrowImg} alt="Botão continuar" />
+                </h1>
               </div>
-            </div>
-            <h1
-              onClick={() => isEtapa3Valid() && avancarEtapa()} // Click is only triggered if the step is valid
-              className={`button ${!isEtapa3Valid() ? "invalid" : ""}`}
-              style={{
-                cursor: !isEtapa3Valid() ? "not-allowed" : "pointer",
-                backgroundColor: !isEtapa3Valid() ? "red" : "green",
-              }}
-            >
-              Continuar <img src={arrowImg} alt="Botão continuar" />
-            </h1>
+              <div
+                className="etapa03"
+                style={{ display: state.etapa === 3 ? "block" : "none" }}
+              >
+                <span>
+                  <a onClick={retrocederEtapa} href="#">
+                    &lt;- Voltar
+                  </a>
+                </span>
+                <h2>Etapa 03/04</h2>
+                <br></br>
+                <h3>Informações</h3>
+                <br></br>
+                <div className="inputContainer">
+                  <label htmlFor="nome">Nome Completo</label>
+                  <input
+                    type="text"
+                    name="nome"
+                    id="nome"
+                    placeholder="Nome completo"
+                    value={state.nome}
+                    onChange={handleNomeChange}
+                    style={{
+                      borderColor: isNomeValid(state.nome) ? "green" : "red",
+                    }}
+                  />
+                  {!isNomeValid(state.nome) && (
+                    <p style={{ color: "red" }}>Nome inválido</p>
+                  )}
+                </div>
+                <div className="inputContainer">
+                  <label htmlFor="usuario">Usuário</label>
+                  <input
+                    type="text"
+                    name="usuario"
+                    id="usuario"
+                    placeholder="Usuário"
+                    value={state.usuario}
+                    onChange={handleUsuarioChange}
+                    style={{ borderColor: usuarioValido ? "green" : "red" }}
+                  />
+                  {!usuarioValido && (
+                    <p style={{ color: "red" }}>Usuário inválido</p>
+                  )}
+                </div>
+                <div className="mudaImagem">
+                  <h3>Foto</h3>
+                  <br></br>
+                  <div className="profile-pic">
+                    <label className="-label" htmlFor="file">
+                      <span className="glyphicon glyphicon-camera"></span>
+                      <span className="in-text-foto">Mudar imagem</span>
+                    </label>
+                    <input
+                      id="file"
+                      type="file"
+                      name="fotoPerfil"
+                      accept="image/*"
+                      onChange={handleImagemPerfilChange}
+                    />
+                    {state.imageSrc && (
+                      <img id="output" src={state.imageSrc} alt="Preview" />
+                    )}
+                  </div>
+                  <div className="profile-pica">
+                    <label className="-label" htmlFor="file">
+                      <span className="glyphicon glyphicon-camera"></span>
+                      <span>Mudar banner</span>
+                    </label>
+                    <input
+                      id="file"
+                      type="file"
+                      name="fotoPerfilBanner"
+                      accept="image/*"
+                      onChange={handleBannerPerfilChange}
+                    />
+                    {state.bannerSrc && (
+                      <img id="output" src={state.bannerSrc} alt="Preview" />
+                    )}
+                  </div>
+                </div>
+                <h1
+                  onClick={() => isEtapa3Valid() && avancarEtapa()} // Click is only triggered if the step is valid
+                  className={`button ${!isEtapa3Valid() ? "invalid" : ""}`}
+                  style={{
+                    cursor: !isEtapa3Valid() ? "not-allowed" : "pointer",
+                    backgroundColor: !isEtapa3Valid() ? "red" : "green",
+                  }}
+                >
+                  Continuar <img src={arrowImg} alt="Botão continuar" />
+                </h1>
+              </div>
+              <div
+                className="etapa04"
+                style={{ display: state.etapa === 4 ? "block" : "none" }}
+              >
+                <span className="voltarEtapa04">
+                  <a onClick={retrocederEtapa} href="#">
+                    &lt;- Voltar
+                  </a>
+                </span>
+                <h2>Etapa 04/04</h2>
+                <br></br>
+                <h3>Informações</h3>
+                <br></br>
+                <div className="inputContainer">
+                  <label htmlFor="pseudonimo">Pseudônimo</label>
+                  <input
+                    type="text"
+                    name="pseudonimo"
+                    id="pseudonimo"
+                    placeholder="Pseudônimo"
+                    value={state.pseudonimo}
+                    onChange={handlePseudonimoChange}
+                    style={{
+                      borderColor: isPseudonimoValid() ? "green" : "red",
+                    }}
+                  />
+                  {!isPseudonimoValid() && (
+                    <p style={{ color: "red" }}>Pseudônimo inválido</p>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  onClick={handleSubmit}
+                  className="button"
+                  disabled={!isFormValid()}
+                  style={{
+                    cursor: !isEtapa4Valid() ? "not-allowed" : "pointer",
+                    backgroundColor: !isEtapa4Valid() ? "red" : "green",
+                  }}
+                >
+                  Cadastrar
+                </button>
+              </div>
+            </form>
           </div>
-          <div
-            className="etapa04"
-            style={{ display: state.etapa === 4 ? "block" : "none" }}
-          >
-            <span className="voltarEtapa04">
-              <a onClick={retrocederEtapa} href="#">
-              &lt;- Voltar
-              </a>
-            </span>
-            <h2>Etapa 04/04</h2>
-            <br></br>
-            <h3>Informações</h3>
-            <br></br>
-            <div className="inputContainer">
-              <label htmlFor="pseudonimo">Pseudônimo</label>
-              <input
-                type="text"
-                name="pseudonimo"
-                id="pseudonimo"
-                placeholder="Pseudônimo"
-                value={state.pseudonimo}
-                onChange={handlePseudonimoChange}
-                style={{ borderColor: isPseudonimoValid() ? "green" : "red" }}
-              />
-              {!isPseudonimoValid() && (
-                <p style={{ color: "red" }}>Pseudônimo inválido</p>
-              )}
-            </div>
-            <button
-              type="submit"
-              onClick={handleSubmit}
-              className="button"
-              disabled={!isFormValid()}
-              style={{
-                cursor: !isEtapa4Valid() ? "not-allowed" : "pointer",
-                backgroundColor: !isEtapa4Valid() ? "red" : "green",
-              }}
-            >
-              Cadastrar
-            </button>
-          </div>
-        </form>
+        </div>
+        <VLibras forceOnload={true} />
       </div>
-      </div>
-      <VLibras forceOnload={true} />
     </div>
-    
-  </div>
   );
 }

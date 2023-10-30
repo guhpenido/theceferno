@@ -364,7 +364,7 @@ export function Timeline() {
             isMobileLateralVisible={isMobileLateralVisible}
             toggleMobileLateral={toggleMobileLateral}
           />
-          <div className="tl-ladoEsquerdo"></div>
+          
           <div className="tl-main">
             <div className="tl-box">
               {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
