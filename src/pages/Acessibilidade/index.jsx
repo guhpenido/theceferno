@@ -222,20 +222,6 @@ export function Acessibilidade() {
                 <h3>Aumentar altura</h3>
               </div>
             </div>
-            <div className="acc-item acc-cursor">
-              <div className="acc-actives">
-                <div className="acc-item-active acc-active1"></div>
-                <div className="acc-item-active acc-active2"></div>
-                <div className="acc-item-active acc-active3"></div>
-              </div>
-              <div className="acc-item-body">
-                <img
-                  src="https://cdn.discordapp.com/attachments/871728576972615680/1163445773783015424/3119186.png?ex=653f9a50&is=652d2550&hm=d247012f2670f4a2d6d5ee77929ce2be3a4837479e7b8a4d64939be3774ce9cf&"
-                  alt="Alterar cursor"
-                />
-                <h3>Cursor</h3>
-              </div>
-            </div>
           </div>
           
         </div>

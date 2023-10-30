@@ -468,7 +468,7 @@ body{
   border: 1px #111111 solid;
 }
 .tl-header-div1, .tl-header-div2{
-  width: 46.5%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -643,7 +643,7 @@ align-items: center;
   background-color: #111111;
   border-radius: 30px;
   width: 80%;
-  height: 200px;
+  height: AUTO;
   padding: 20px;
 }
 .tl-ladoDireito-doar h1{

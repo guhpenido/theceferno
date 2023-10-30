@@ -168,6 +168,7 @@ export function Timeline() {
   });
 
   const carregaTml = async () => {
+
     if (isFetching) {
       return;
     }
@@ -188,14 +189,14 @@ export function Timeline() {
         postsCollectionRef,
         orderBy("postId", "desc"),
         startAfter(lastLoadedPostId),
-        limit(10)
+        limit(1)
       );
     } else {
       // Se não houver último post carregado, simplesmente carregue os 10 posts mais recentes
       postsQuery = query(
         postsCollectionRef,
         orderBy("postId", "desc"),
-        limit(10)
+        limit(1)
       );
     }
     try {
@@ -278,7 +279,7 @@ export function Timeline() {
       setIsLoadingUser(false); // Data has been fetched, no longer loading
     } catch (error) {
       console.error("Error fetching user data:", error.message);
-      setIsLoading(false); // Even if there's an error, stop loading
+      //setIsLoading(false); // Even if there's an error, stop loading
     }
   };
 
@@ -363,6 +364,7 @@ export function Timeline() {
           <MenuLateral
             isMobileLateralVisible={isMobileLateralVisible}
             toggleMobileLateral={toggleMobileLateral}
+            carregatml={carregaTml}
           />
           
           <div className="tl-main">
