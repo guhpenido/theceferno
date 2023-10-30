@@ -172,58 +172,41 @@ export function Timeline() {
     if (isFetching) {
       return;
     }
-
+  
     setIsFetching(true);
     const postsCollectionRef = collection(db, "timeline");
-    const lastLoadedPost =
-      loadedPosts.length > 0 ? loadedPosts[loadedPosts.length - 1].post : null;
-    const lastLoadedPostId = lastLoadedPost ? lastLoadedPost.id : "";
-    let postsQuery = null;
-    console.log(selectedInstituicao);
-    console.log(selectedCurso);
-
-    if (lastLoadedPostId) {
-      console.log("Latest post:" + lastLoadedPostId);
-      // Se houver um último post carregado, use startAfter para obter os próximos posts
-      postsQuery = query(
-        postsCollectionRef,
-        orderBy("postId", "desc"),
-        startAfter(lastLoadedPostId),
-        limit(1)
-      );
-    } else {
-      // Se não houver último post carregado, simplesmente carregue os 10 posts mais recentes
-      postsQuery = query(
-        postsCollectionRef,
-        orderBy("postId", "desc"),
-        limit(1)
-      );
-    }
+  
+    let postsQuery = query(
+      postsCollectionRef,
+      orderBy("postId", "desc"), // Ordene por postId em ordem decrescente
+      limit(15)
+    );
+  
     try {
       const postsData = await getPostsFromFirestore(postsQuery);
-
+  
       if (postsData.length === 0) {
         console.log("Você já chegou ao fim");
       } else {
         const postsWithUserData = [];
-
+  
         for (const post of postsData) {
           const userSentData = await fetchUserData(post.userSent);
           let userMentionedData = null;
-
+  
           if (post.userMentioned !== null) {
             userMentionedData = await fetchUserData(post.userMentioned);
           }
-
+  
           postsWithUserData.push({
             post,
             userSentData,
             userMentionedData,
           });
         }
-
-        // Aqui, substitua todo o estado de loadedPosts com os novos posts carregados
-        setLoadedPosts((prevPosts) => [...prevPosts, ...postsWithUserData]);
+  
+        // Substitua o estado de loadedPosts com os novos posts carregados
+        setLoadedPosts(postsWithUserData);
         console.log("Novos posts carregados!");
       }
     } catch (error) {
@@ -352,6 +335,13 @@ export function Timeline() {
     console.log("clicou");
     console.log(isMobileLateralVisible);
   };
+  const recarregarTml = async () => {
+    // Limpe o estado dos posts carregados
+    setLoadedPosts([]);
+    setHasLoadedPosts(false);
+    // Chame a função carregaTml para carregar novamente os últimos 15 posts
+    carregaTml();
+  };
 
   return (
     <>
@@ -360,11 +350,12 @@ export function Timeline() {
           <Header
             userLogged={userLoggedData}
             toggleMobileLateral={toggleMobileLateral}
+            carregatml={carregaTml}
           />
           <MenuLateral
             isMobileLateralVisible={isMobileLateralVisible}
             toggleMobileLateral={toggleMobileLateral}
-            carregatml={carregaTml}
+            carregatml={recarregarTml}
           />
           
           <div className="tl-main">

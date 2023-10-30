@@ -136,7 +136,7 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
                 </div>
               </div>
             </Link>
-            <Link className="botaoAcessar a-postar-menu-lateral" to="timeline">
+            <Link className="botaoAcessar a-postar-menu-lateral" to="/timeline">
               <div className="botao-buscar-menu">
                 <div className="postar-menu-lateral">
                   <img
@@ -226,9 +226,21 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
                   </div>
                 </div>
               </Link>
+              <Link className="mobile-botaoAcessar mobile-iconMenu" to="/savedPosts">
+              <div className="mobile-cada-icone-img-nome">
+                <img
+                  id="dm"
+                  src={savedIcon}
+                  alt="Botão ir para a página que mostra os posts salvos."
+                ></img>
+                <div className="mobile-escrita-lateral">
+                  <p className="mobile-escrita-lateral">Salvos</p>
+                </div>
+              </div>
+            </Link>
               <Link
                 className="mobile-botaoAcessar mobile-a-postar-menu-lateral"
-                to="/dm"
+                to="/timeline"
               >
                 <div className="mobile-botao-buscar-menu">
                   <div className="mobile-postar-menu-lateral">
@@ -242,13 +254,17 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
                 </div>
               </Link>
             </div>
-            <div className="mobile-menu-footer">
-              <img
-                className="mobile-imagemBottom"
-                src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png?ex=654f16a6&is=653ca1a6&hm=47f7d679b329ecf5cc49ea053019ef5d019999ddb77a0ba1a3dda31532ab55da&"
-                alt=""
-              />
+            <div className="menu-footer">
+            <div className="menu-logout" onClick={handleLogout}>
+              <img id="logout" src={logout} alt="Botão de LogOut"></img>
+              <h1>Sair</h1>
             </div>
+            <img
+              className="imagemBottom"
+              src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png?ex=654f16a6&is=653ca1a6&hm=47f7d679b329ecf5cc49ea053019ef5d019999ddb77a0ba1a3dda31532ab55da&"
+              alt=""
+            />
+          </div>
           </div>
         </div>
       )}
