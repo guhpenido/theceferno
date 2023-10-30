@@ -83,6 +83,7 @@ export function SavedPosts() {
   const [nextPostId, setNextPostId] = useState(0);
   const [savedPosts, setSavedPosts] = useState(null);
   const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
+
   const handleScroll = () => {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
