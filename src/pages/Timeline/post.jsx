@@ -28,6 +28,7 @@ import {
   onChildAdded,
 } from "firebase/database";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import likeIcon from "../../assets/thumbs-up-regular.svg"
 
 import {
   doc,
@@ -403,6 +404,16 @@ function PostDisplay({
   const [showReplies, setShowReplies] = useState(false);
   const [replies, setReplies] = useState([]);
   const [showDetails, setShowDetails] = useState(false); // Estado para rastrear a exibição do post em detalhes
+  const [replyCount, setReplyCount] = useState(0);
+
+  useEffect(() => {
+    const fetchReplyCount = async () => {
+      const count = await countRepliesWithMessageReplyed(post.id);
+      setReplyCount(count);
+    };
+    
+    fetchReplyCount();
+  }, [post.id]);
 
   // Função para buscar e definir as respostas do post
   const fetchReplies = async () => {
@@ -641,6 +652,19 @@ function PostDisplay({
       }
     }
   };
+  async function countRepliesWithMessageReplyed(postId) {
+    const repliesCollectionRef = collection(db, "replys");
+    const queryRef = query(repliesCollectionRef, where("messageReplyed", "==", postId));
+  
+    try {
+      const querySnapshot = await getDocs(queryRef);
+      const replyCount = querySnapshot.size;
+      return replyCount;
+    } catch (error) {
+      console.error("Erro ao contar as respostas:", error);
+      return 0; // Retorna 0 em caso de erro
+    }
+  }
 
   return (
     <>
@@ -703,7 +727,7 @@ function PostDisplay({
               <div className="tl-ps-opcoes">
                 <div className="tl-ps-reply">
                   <FontAwesomeIcon icon={faComment} onClick={toggleReply} />
-                  <span>{post.replyCount}</span>
+                  <span>{" "}{replyCount}</span>
                 </div>
                 <div
                   className="tl-ps-like"
