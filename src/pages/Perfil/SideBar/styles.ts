@@ -16,7 +16,6 @@ export const SearchWrapper = styled.div`
     position: fixed;
     top: 0;
     z-index: 2;
-    background: #000;
     max-height: 57px;
 `;
 

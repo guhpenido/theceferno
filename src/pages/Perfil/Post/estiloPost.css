@@ -128,7 +128,12 @@ body{
     margin-right: 10px;
   }
   .arrow {
-    margin-right: 10px;
+    margin: 0;
+  }
+  .footer-profile{
+    width: calc(100% - 50px);
+    margin-left: 50px;
+    justify-content: space-between;
   }
   .tl-ps-nome img {
     width: 10px;

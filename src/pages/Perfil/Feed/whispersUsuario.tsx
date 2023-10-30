@@ -14,7 +14,7 @@ import ModalReact from "react-modal";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { onSnapshot, collection, query, where } from "firebase/firestore";
-import PostDisplay from "../Post/index";
+import PostDisplay from "../../Timeline/post";
 import {
   Container,
   Body,

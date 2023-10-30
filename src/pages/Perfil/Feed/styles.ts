@@ -14,7 +14,6 @@ export const Tab = styled.div`
   outline: 0;
   cursor: pointer;
   color: white;
-  padding-left: 3.5vw;
   
   border-radius: 15px 15px 0  0 ;
 
@@ -43,8 +42,7 @@ export const TabContainer = styled.div`
 `;
 
 export const Whispers = styled.div`
-  background-color: black; 
-  padding: 30px;
+  background-color: #0c0c0c; 
   display: flex;
   flex-direction: column;
   flex-shrink: 0;

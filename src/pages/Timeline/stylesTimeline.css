@@ -688,6 +688,14 @@ align-items: center;
 .logoCeferno img{
   width: 100%;
 }
+.footer-profile{
+  width: calc(100% - 50px);
+  margin-left: 50px;
+  justify-content: space-between;
+}
+.container-wrapper{
+  padding: 20px;
+}
 @media (max-width: 767px) {
   .tl-ladoDireito-doar{
     margin-top: 50px;

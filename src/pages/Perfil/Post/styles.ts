@@ -14,6 +14,7 @@ export const Container = styled.div`
   align-items: flex-start;
   box-sizing: border-box;
   margin-top: 15px;
+  width: 100%;
 `;
 
 export const ImgConteiner = styled.img`
@@ -32,16 +33,18 @@ export const Body = styled.div`
   flex-direction: column;
   text-align: center;
   align-items: center; 
+  width: 100%;
 `;
 
 export const Avatar = styled.div`
-  width: 49px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   flex-shrink: 0;
   background: #7a7a7a;
   top: 10px;
   left: 10px;
-  margin-right: 1em;
+  margin-right: 10px;
   align-items: left; 
 `;
 export const Content = styled.div`
@@ -111,20 +114,19 @@ export const Footer = styled.div`
   }
 `;
 export const Posts = styled.div`
-  font-size: 14px;
-  margin-top: 4px;
-  color: #d9d9d9;
-  width: 300px;
+  text-align: left;
+  font-size: 15px;
+  margin-top: 2px;
+  color: #d6d6d6;
+  font-weight: normal;
 `;
 
 export const Postdays = styled.div`
-  display: flex;
-  justify-content: space-between;
+  color: #d6d6d6;
+  float: right;
 
-  > div:nth-child(1) {
-    color: white;
-    left: 3em;
-    position: relative;
+  > div {
+    color: #7a7a7ac7;
   }
 `;
 
@@ -133,7 +135,6 @@ export const Icons = styled.div`
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin: 11px auto 0;
   width: 100%;
 
   @media (min-width: 330px) {
@@ -182,10 +183,11 @@ export const HeaderName = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-around;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: center;
   align-content: center;
   height: fit-content; 
+  gap: 5px;
 
   > div:nth-child(1) {
     font-size: 15px;
@@ -193,10 +195,16 @@ export const HeaderName = styled.div`
   }
 
   > div:nth-child(2) {
-    margin-left: 10px;
-    color: white;
+    color: #7a7a7ac7;
   }
 `;
+
+export const PostInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+
+`
 
 export const HeaderNameMentioned = styled.div`
   display: flex;

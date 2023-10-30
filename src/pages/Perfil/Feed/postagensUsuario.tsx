@@ -32,10 +32,11 @@ import {
     HeaderNameMentioned,
     Postdays,
     Footer,
+    PostInfo,
 } from "../Post/styles";
 import { parseISO, formatDistanceToNow } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faThumbsDown, faThumbsUp, faComment } from "@fortawesome/free-solid-svg-icons";
 import { faArrowDown } from "@fortawesome/fontawesome-free-solid";
 
 const firebaseConfig = {
@@ -364,7 +365,7 @@ const PostagensUsuario: React.FC = () => {
     };
     // Renderize o array combinado
     return (
-        <div>
+        <div className="container-wrapper">
             {combinedData.length === 0 ? (
                 <div>{/* Renderize a mensagem de "Nada Encontrado" aqui */}</div>
             ) : (
@@ -374,46 +375,48 @@ const PostagensUsuario: React.FC = () => {
                             <Icons>
                                 <Header>
                                     <Avatar as="img" src={newAvatar || ""} alt="Novo Avatar" />
-                                    <HeaderName>
-                                        <div>{userName}</div>
-                                        <div>@{nickname}</div>
-                                        <FontAwesomeIcon className="arrow" icon={faArrowRight} />
-                                        {item.userMentionedData && (
+                                    <PostInfo>
+                                        <HeaderName>
+                                            <div>{userName}</div>
+                                            <div>@{nickname}</div>
+                                            <FontAwesomeIcon icon={faArrowRight} />
+                                            {item.userMentionedData && (
+                                                <div>
+                                                    <HeaderNameMentioned>
+                                                    <Avatar as="img" src={item.userMentionedData.imageUrl || ""} alt="Novo Avatar" />
+                                                        <div>{item.userMentionedData.nome}</div>
+                                                        <div className="tl-ps-userReceived">
+                                                            @{item.userMentionedData.usuario}
+                                                        </div>
+                                                    </HeaderNameMentioned>
+                                                </div>
+                                            )}
+                                            {item.userMentioned && !item.userMentionedData && (
+                                                // Renderize algo se o usuário mencionado não for encontrado
+                                                <span>Usuário mencionado não encontrado</span>
+                                            )}
+                                        </HeaderName>
+                                        <Posts>
                                             <div>
-                                                <HeaderNameMentioned>
-                                                <Avatar as="img" src={item.userMentionedData.imageUrl || ""} alt="Novo Avatar" />
-                                                    <div>{item.userMentionedData.nome}</div>
-                                                    <div className="tl-ps-userReceived">
-                                                        @{item.userMentionedData.usuario}
-                                                    </div>
-                                                </HeaderNameMentioned>
+                                                {item.text}
                                             </div>
-                                        )}
-                                        {item.userMentioned && !item.userMentionedData && (
-                                            // Renderize algo se o usuário mencionado não for encontrado
-                                            <span>Usuário mencionado não encontrado</span>
-                                        )}
-                                    </HeaderName>
+                                        </Posts>
+                                    </PostInfo>
                                 </Header>
-                                <Posts>
-                                    <div>
-                                        {item.text}
+                                <div className="tl-ps-opcoes footer-profile">
+                                    <div className="tl-ps-reply">
+                                        <FontAwesomeIcon icon={faComment}/>
+                                        <span> {item.replysCount}</span>
                                     </div>
-                                </Posts>
-                                <Footer>
-                                    <Status>
-                                        <CommentIcon />
-                                        {item.replysCount}
-                                    </Status>
-                                    <Status>
+                                    <div className="tl-ps-like">
                                         <FontAwesomeIcon icon={faThumbsUp} onClick={() => handleLikeClick(item.likes, item.postId)} />
-                                        {item.likes}
-                                    </Status>
-                                    <Status>
+                                        <span> {item.likes}</span>
+                                    </div>
+                                    <div className="tl-ps-deslike">
                                         <FontAwesomeIcon icon={faThumbsDown} onClick={() => handleDeslikes(item.deslikes, item.postId)} />
-                                        {item.deslikes}
-                                    </Status>
-                                    <Status>
+                                        <span> {item.deslikes}</span>
+                                    </div>
+                                    <div>
                                         <Postdays>
                                             <div>
                                                 {item.time
@@ -426,8 +429,8 @@ const PostagensUsuario: React.FC = () => {
                                                     : "Tempo não disponível"}
                                             </div>
                                         </Postdays>
-                                    </Status>
-                                </Footer>
+                                    </div>
+                                </div>
                             </Icons>
                         </Body>
                     </Container>

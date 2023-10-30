@@ -174,7 +174,7 @@ export const Cabecalho = styled.div`
   z-index: 2;
   position: sticky;
   top: 0;
-  background: #000;
+  background: #0c0c0c;
   display: flex;
   align-items: center;
   text-align: left;

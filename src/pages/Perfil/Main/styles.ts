@@ -78,7 +78,7 @@ export const BottomMenu = styled.div`
   z-index: 2;
   background: #000;
   width: 100%;
-  border-top: 1px solid #4763E4;
+  border: 1px solid #111111;
   display: flex;
   justify-content: space-between;
   padding: 8px min(46px, max(10vw, 10px));
