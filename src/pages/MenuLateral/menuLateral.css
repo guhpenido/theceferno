@@ -51,11 +51,11 @@
 }
 
 .menu-lateral-wrapper {
-  display: none;
+  display: flex;
   flex-direction: column;
   padding: 0px 15px 0px 15px;
   align-items: center;
-  height: 100vh;
+  height: 100%;
   padding-top: 20px;
   align-items: flex-start;
   background-color: #111111;
@@ -63,9 +63,9 @@
 }
 
 .menu-lateral {
-  display: none;
+  display: flex;
   padding: 20px;
-  height: 100vh;
+  height:100%;
   background-color: #111111;
 }
 
@@ -73,7 +73,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  height: 40%;
+  height: 70%;
 }
 
 .escrita-lateral {
@@ -209,7 +209,6 @@
   text-align: start;
 }
 .menu-footer {
-  margin-top: 100px;
   width: 100%;
   height: 80px;
 }
@@ -378,4 +377,34 @@
 .botaoAcessar:hover{
   background-color: #0c0c0c;
   border-radius: 15px;
+}
+@media (max-width: 713px) {
+  .menu-lateral-wrapper{
+    display: none;
+  }
+}
+.menu-footer{
+  display: flex;
+  flex-direction: column;
+}
+.menu-logout{
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
+  margin-bottom: 3px;
+}
+.menu-logout h1{
+  font-size: 18px;
+  margin: 5px;
+}
+#logout{
+  filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg)
+    brightness(94%) contrast(90%);
+    width: 32px;
+}
+.menu-logout:hover{
+  background-color: #0c0c0c;
+  cursor: pointer;
 }
