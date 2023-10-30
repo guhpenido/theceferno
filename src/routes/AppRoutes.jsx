@@ -15,6 +15,7 @@ import PostPage from "../pages/Timeline/PostPage";
 import VisitorPage from "../pages/Perfil/ProfilePage/VisitorPage";
 import SeachPage from "../pages/Perfil/ProfilePage/SearchPage";
 import { Acessibilidade } from "../pages/Acessibilidade/index";
+import Trending from "../pages/Timeline/Trending";
 //
 export function AppRoutes() {
   return (
@@ -36,6 +37,7 @@ export function AppRoutes() {
         <Route path="/VisitorPage" element={<VisitorPage />} />
         <Route path="/SeachPage" element={<SeachPage />} />
         <Route path="/acc" element={<Acessibilidade />} />
+        <Route path="/trending" element={<Trending />} />
       </Routes>
     </BrowserRouter>
   );
