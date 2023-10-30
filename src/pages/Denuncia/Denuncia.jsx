@@ -1,21 +1,14 @@
 import "./stylesDenuncia.css";
 
-import React, { useState, useEffect, useRef } from "react";
-import { getFirestore, startAfter } from "firebase/firestore";
+import React, { useState, useEffect } from "react";
 import { app } from "../../services/firebaseConfig";
-
 import {
-  doc,
-  getDoc,
   getDocs,
-  onSnapshot,
   collection,
-  where,
-  query,
-  orderBy,
-  limit,
+  updateDoc,
+  getFirestore,
+  addDoc
 } from "firebase/firestore";
-
 
 
 function Denuncia () {
@@ -62,7 +55,7 @@ function Denuncia () {
   }, []);
 
   //deixa e tira a visibilidade da div denuncia conteudo indevido
-  const toggleBox1Visibility = () => {
+  const toggleBox1Visibility = () => {v 
     setBox1Visible(!box1Visible);
     setBox2Visible(false); // Hide box2 when showing box1
   };

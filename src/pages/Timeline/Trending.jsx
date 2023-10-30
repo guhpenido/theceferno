@@ -36,16 +36,16 @@ function Trending() {
     <div style={{color: "white"}}>
       <h1>Documentos da Coleção "Timeline" Ordenados por Deslikes</h1>
       
-        {timelineData.map((post) => (
-          <div className='tl-box' key={post.id}  style={{border: '1px solid white', marginBottom: '1vh'}}>
-            {/* <h1> <strong>ID:</strong> {post.id}</h1> */}
-            <p> <strong>Enviou:</strong> {post.userSent}  </p>
-            <p> <strong>Recebeu:</strong> {post.userMentioned}  </p>
-            <p> <strong>CONTEUDO:</strong> {post.text}  </p>
-            <p> <strong>Deslikes:</strong> {post.deslikes} </p>
-            <p> <strong>TIME:</strong> {post.time} </p>
-          </div>
-        ))}
+      {timelineData.map(({ post, userSentData, userMentionedData }) => (
+        <PostDisplay
+          key={post.id}
+          post={post}
+          userSentData={userSentData}
+          userId={userId}
+          userMentionedData={userMentionedData}
+          userLoggedData={userLoggedData}
+        />
+      ))}
   
     </div>
   );

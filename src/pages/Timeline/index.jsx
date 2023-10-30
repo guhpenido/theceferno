@@ -54,24 +54,8 @@ import { addDoc } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import "./stylesTimeline.css";
-<<<<<<< HEAD
-import Trending from "./Trending";
-import Denuncia from "../Denuncia/Denuncia";
-
-=======
->>>>>>> origin/prodGustavo
 
 export function Timeline() {
-
-  const [mostrarComponente, setMostrarComponente] = useState(false);
-
-  const handleClick = () => {
-    setMostrarComponente(true);
-  }
-
-
-
-
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedId, setSelectedId] = useState("");
   const [isLoadingUser, setIsLoadingUser] = useState(true);
@@ -361,30 +345,6 @@ export function Timeline() {
     photoURL:
       "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png",
   };
-  const userDocRef = doc(db, "users", userId);
-  async function getSavedPosts() {
-  try {
-    const userDocSnapshot = await getDoc(userDocRef);
-
-    if (userDocSnapshot.exists()) {
-      // O documento do usuário existe, agora você pode acessar o vetor 'savedPosts'
-      const userData = userDocSnapshot.data();
-      const savedPosts = userData.savedPosts;
-      console.log(savedPosts);
-      // 'savedPosts' é um vetor de inteiros que você pode usar como quiser
-    } else {
-      console.log('Documento não encontrado!');
-    }
-  } catch (error) {
-    console.error('Erro ao obter o documento do usuário:', error);
-  }
-}
-
-  const toggleMobileLateral = () => {
-    setIsMobileLateralVisible(!isMobileLateralVisible);
-    console.log("clicou");
-    console.log(isMobileLateralVisible);
-  };
 
   const toggleMobileLateral = () => {
     setIsMobileLateralVisible(!isMobileLateralVisible);
@@ -396,213 +356,6 @@ export function Timeline() {
     <>
       <div className="tl-screen">
         <div className="tl-container">
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <div className="tl-header">
-            <div className="tl-header1">
-              <Link className="tl-foto" to="/perfil">
-                <div>
-                  <ProfileImage selectedProfile={selectedProfile} />
-                </div>
-              </Link>
-              <div className="tl-logo">
-                <img
-                  src="https://cdn.discordapp.com/attachments/871728576972615680/1142335297980477480/Ceferno_2.png"
-                  alt="Logo Ceferno"
-                />
-              </div>
-            </div>
-            <div className="tl-titulo">
-            <button className="tlBotaoTroca" onClick={() => handleTabChange("timeline")}>Timeline</button>
-            <p style={{color: '#193cd8'}}>|</p>
-            <button className="tlBotaoTroca" onClick={handleClick}>Trending</button> {mostrarComponente && <Denuncia />}
-            </div>
-          </div>
-          </div>
-          <div className="tl-main">
-            <div className="tl-box">
-              {/*{posts.map(async (post) => {
-                const userSentData = await fetchUserData(post.userSent);
-                const userMentionedData = await fetchUserData(
-                  post.userMentioned
-                );
-
-                const userSentImage = await fetchUserImage(userSentData);
-                const userMentionedImage = await fetchUserImage(
-                  userMentionedData
-                );
-
-                return (
-                  <div className="tl-box" key={post.id}>
-                    <div className="tl-post">
-                      <div className="tl-ps-header">
-                        <div className="tl-ps-foto">
-                          {userSentImage && <img src={userSentImage} alt="" />}
-                        </div>
-                        <div className="tl-ps-nomes">
-                          <p className="tl-ps-nome">
-                            {userSentData.nome}{" "}
-                            <span className="tl-ps-user">
-                              @{userSentData.usuario}{" "}
-                            </span>
-                            <span className="tl-ps-tempo">• {post.time}</span>
-                            <FontAwesomeIcon
-                              className="arrow"
-                              icon={faArrowRight}
-                            />
-                            {post.userMentioned !== null && (
-                              <div>
-                                {userMentionedImage && (
-                                  <img src={userMentionedImage} alt="" />
-                                )}
-                                {userMentionedData.nome}{" "}
-                                <span className="tl-ps-userReceived">
-                                  @{userMentionedData.usuario}{" "}
-                                </span>
-                              </div>
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="tl-ps-texto">
-                        <p>{post.text}</p>
-                      </div>
-                      <div className="tl-ps-footer">
-                        <div className="tl-ps-opcoes">
-                          <div className="tl-ps-reply">
-                            <FontAwesomeIcon icon={faComment} />
-                            <span>{post.replyCount}</span>
-                          </div>
-                          <div className="tl-ps-like">
-                            <FontAwesomeIcon icon={faThumbsUp} />{" "}
-                            <span>{post.likes}</span>
-                          </div>
-                          <div className="tl-ps-deslike">
-                            <FontAwesomeIcon icon={faThumbsDown} />{" "}
-                            <span>{post.deslikes}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}*/}
-
-              <div className="tl-post">
-                <div className="tl-ps-header">
-                  <div className="tl-ps-foto">
-                    <img
-                      src="https://cdn.discordapp.com/attachments/871728576972615680/1142349089133047868/image.png"
-                      alt="Imagem perfil"
-                    />
-                  </div>
-                  <div className="tl-ps-nomes">
-                    <p className="tl-ps-nome">
-                      Stella <span className="tl-ps-user">@tellaswift </span>
-                      <span className="tl-ps-tempo">• 42s</span>
-                      <FontAwesomeIcon className="arrow" icon={faArrowRight} />
-                      <img
-                        src="https://cdn.discordapp.com/attachments/871728576972615680/1142348920949833829/image.png"
-                        alt="Imagem perfil"
-                      />{" "}
-                      Kettles{" "}
-                      <span className="tl-ps-userReceived">@eokettles </span>
-                    </p>
-                  </div>
-                </div>
-                <div className="tl-ps-texto">
-                  <p>Ain apelaummmm!</p>
-                </div>
-                <div className="tl-ps-footer">
-                  <div className="tl-ps-opcoes">
-                    <div className="tl-ps-reply">
-                      <FontAwesomeIcon icon={faComment} />
-                      <span>10</span>
-                    </div>
-                    <div className="tl-ps-like">
-                      <FontAwesomeIcon icon={faThumbsUp} /> <span>10</span>
-                    </div>
-                    <div className="tl-ps-deslike">
-                      <FontAwesomeIcon icon={faThumbsDown} />
-                      <span>10</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="tl-post">
-                <div className="tl-ps-header">
-                  <div className="tl-ps-foto">
-                    <img
-                      src="https://cdn.discordapp.com/attachments/871728576972615680/1142349089133047868/image.png"
-                      alt="Imagem perfil"
-                    />
-                  </div>
-                  <div className="tl-ps-nomes">
-                    <p className="tl-ps-nome">
-                      Stella <span className="tl-ps-user">@tellaswift </span>
-                      <span className="tl-ps-tempo">• 1h</span>
-                    </p>
-                  </div>
-                </div>
-                <div className="tl-ps-texto">Esse é meu primeiro post.</div>
-                <div className="tl-ps-footer">
-                  <div className="tl-ps-opcoes">
-                    <div className="tl-ps-reply">
-                      <FontAwesomeIcon icon={faComment} />
-                      <span>10</span>
-                    </div>
-                    <div className="tl-ps-like">
-                      <FontAwesomeIcon icon={faThumbsUp} /> <span>10</span>
-                    </div>
-                    <div className="tl-ps-deslike">
-                      <FontAwesomeIcon icon={faThumbsDown} />
-                      <span>10</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="tl-addpost" onClick={toggleVisibility}>
-            <img
-              src="https://cdn.discordapp.com/attachments/871728576972615680/1142352433352294482/asa.png"
-              alt="Imagem perfil"
-            />
-          </div>
-          <div className="tl-footer">
-            <div>
-              <FontAwesomeIcon icon={faEnvelope} />
-            </div>
-            <div>
-              <FontAwesomeIcon icon={faBell} />
-            </div>
-            <div>
-              <FontAwesomeIcon icon={faQuestion} />
-            </div>
-            <div>
-              <FontAwesomeIcon icon={faQuestion} />
-            <div className="tl-container">
-            {activeTab === "timeline" && (
-                <div className="tl-posts">
-                {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
-                  <PostDisplay
-                    key={post.id}
-                    userId = {userId}
-                    post={post}
-                    userSentData={userSentData}
-                    userMentionedData={userMentionedData}
-                  />
-                ))}
-              </div>
-            )}
-            {activeTab === "trending" && (
-              
-                <Trending />
-              
-              )}
-=======
-=======
->>>>>>> origin/prodLucas
           <Header
             userLogged={userLoggedData}
             toggleMobileLateral={toggleMobileLateral}
@@ -624,7 +377,6 @@ export function Timeline() {
                   userLoggedData={userLoggedData}
                 />
               ))}
->>>>>>> origin/prodGustavo
             </div>
           </div>
           <div className="tl-ladoDireito">

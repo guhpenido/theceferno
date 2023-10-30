@@ -445,7 +445,6 @@ body{
 .tl-reply-button:hover {
   background-color: #000;
 }
-<<<<<<< HEAD
 
 .tlBotaoTroca {
   background: none;
@@ -456,7 +455,8 @@ body{
 
 .tlBotaoTroca:hover {
   border-bottom: 1px solid #4562e2;
-=======
+}
+
 .tl-main{
   margin-top: 50px;
   width: 51%;
@@ -775,8 +775,5 @@ align-items: center;
   100% {
     transform: translateX(0);
   }
-<<<<<<< HEAD
->>>>>>> origin/prodGustavo
-=======
->>>>>>> origin/prodLucas
+
 }

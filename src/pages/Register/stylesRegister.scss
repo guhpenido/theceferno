@@ -1,16 +1,16 @@
 @mixin object-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-image: linear-gradient(30deg, #4d01ff 12%, transparent 12.5%, transparent 87%, #4d01ff 87.5%, #4d01ff),
-    linear-gradient(150deg, #4d01ff 12%, transparent 12.5%, transparent 87%, #4d01ff 87.5%, #4d01ff),
-    linear-gradient(30deg, #4d01ff 12%, transparent 12.5%, transparent 87%, #4d01ff 87.5%, #4d01ff),
-    linear-gradient(150deg, #4d01ff 12%, transparent 12.5%, transparent 87%, #4d01ff 87.5%, #4d01ff),
-    linear-gradient(60deg, rgba(77, 1, 255, 0.5) 25%, transparent 25.5%, transparent 75%, rgba(77, 1, 255, 0.5) 75%, rgba(77, 1, 255, 0.5)),
-    linear-gradient(60deg, rgba(77, 1, 255, 0.5) 25%, transparent 25.5%, transparent 75%, rgba(77, 1, 255, 0.5) 75%, rgba(77, 1, 255, 0.5));
-  background-size: 64px 112px;
-  background-position: 0 0, 0 0, 32px 56px, 32px 56px, 0 0, 32px 56px;
-  background-color: #210034;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  // background-image: linear-gradient(30deg, #4d01ff 12%, transparent 12.5%, transparent 87%, #4d01ff 87.5%, #4d01ff),
+  //   linear-gradient(150deg, #4d01ff 12%, transparent 12.5%, transparent 87%, #4d01ff 87.5%, #4d01ff),
+  //   linear-gradient(30deg, #4d01ff 12%, transparent 12.5%, transparent 87%, #4d01ff 87.5%, #4d01ff),
+  //   linear-gradient(150deg, #4d01ff 12%, transparent 12.5%, transparent 87%, #4d01ff 87.5%, #4d01ff),
+  //   linear-gradient(60deg, rgba(77, 1, 255, 0.5) 25%, transparent 25.5%, transparent 75%, rgba(77, 1, 255, 0.5) 75%, rgba(77, 1, 255, 0.5)),
+  //   linear-gradient(60deg, rgba(77, 1, 255, 0.5) 25%, transparent 25.5%, transparent 75%, rgba(77, 1, 255, 0.5) 75%, rgba(77, 1, 255, 0.5));
+  // background-size: 64px 112px;
+  // background-position: 0 0, 0 0, 32px 56px, 32px 56px, 0 0, 32px 56px;
+  // background-color: #210034;
 }
 
 $circleSize: 165px;
