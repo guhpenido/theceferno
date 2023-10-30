@@ -1,67 +1,72 @@
-import React, { useEffect, useState } from 'react';
-import { app } from '../../services/firebaseConfig';
-import { getFirestore, collection, query, orderBy, getDocs } from 'firebase/firestore';
+import React, { useState, useEffect } from "react";
+import { getFirestore } from "firebase/firestore";
+import {
+  collection,
+  query,
+  orderBy,
+  getDocs,
+} from "firebase/firestore";
+import { app } from "../../services/firebaseConfig";
 
-function Trending() {
-  const [timelineData, setTimelineData] = useState([]);
+import PostDisplay from "./post";
+
+// import "./stylesTrending.css"; // Estilo personalizado para a seção "Trending"
+
+export function Trending() {
+  const [trendingPosts, setTrendingPosts] = useState([]);
+  const db = getFirestore(app);
 
   useEffect(() => {
-    const fetchTimelineData = async () => {
-      try {
-        const db = getFirestore(app);
-        const timelineCollectionRef = collection(db, "timeline");
-
-        // Criar uma consulta que ordena os documentos por "deslikes" em ordem decrescente
-        const q = query(timelineCollectionRef, orderBy("deslikes", "desc"));
-
-        const snapshot = await getDocs(q);
-
-        // Processar os documentos da coleção "timeline"
-        const timelineData = [];
-        snapshot.forEach((doc) => {
-          timelineData.push({ id: doc.id, ...doc.data() });
-        });
-
-        // Definir o estado com os documentos ordenados
-        setTimelineData(timelineData);
-      } catch (error) {
-        console.error("Erro ao buscar documentos da coleção 'timeline':", error);
-      }
-    };
-
-    fetchTimelineData();
+    fetchTrendingPosts();
   }, []);
 
+  const fetchTrendingPosts = async () => {
+    try {
+      const postsCollectionRef = collection(db, "timeline");
+      const trendingPostsQuery = query(
+        postsCollectionRef,
+        orderBy("deslikes", "desc") // Ordene por deslikes em ordem decrescente
+      );
+
+      const trendingPostsData = await getPostsFromFirestore(trendingPostsQuery);
+
+      setTrendingPosts(trendingPostsData);
+    } catch (error) {
+      console.error("Erro ao obter os posts em tendência:", error);
+    }
+  };
+
+  const getPostsFromFirestore = async (query) => {
+    const querySnapshot = await getDocs(query);
+    const postsData = [];
+
+    querySnapshot.forEach((doc) => {
+      const postData = {
+        id: doc.data().postId,
+        ...doc.data(),
+      };
+      postsData.push(postData);
+    });
+
+    return postsData;
+  };
+
+  console.log("trendingPosts:", trendingPosts);
+
   return (
-    <div style={{color: "white"}}>
-      <h1>Documentos da Coleção "Timeline" Ordenados por Deslikes</h1>
-      
-      {timelineData.map(({ post, userSentData, userMentionedData }) => (
-        <PostDisplay
-          key={post.id}
-          post={post}
-          userSentData={userSentData}
-          userId={userId}
-          userMentionedData={userMentionedData}
-          userLoggedData={userLoggedData}
-        />
-      ))}
-  
+    <div className="trending-section">
+      <h2>Trending Posts</h2>
+      <div className="trending-posts">
+        {trendingPosts.map((post) => (
+          console.log("post:", post), // Adicione um log para ver os dados de cada post
+          // Verificar se as propriedades necessárias estão definidas antes de renderizar
+          (post.userSentData && post.userSentData.nome) && (
+            <PostDisplay key={post.id} post={post} />
+          )
+        ))}
+      </div>
     </div>
   );
 }
 
 export default Trending;
-
-
-// <div className="tl-trending-posts">
-    //   <ul>
-    //     {sortedTrendingPosts.map((post) => (
-    //       <li key={post.id}>
-    //         <h3>{post.title}</h3>
-    //         <p>{post.content}</p>
-    //         <p>Deslikes: {post.dislikes}</p>
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </div>
