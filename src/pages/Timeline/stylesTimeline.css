@@ -619,6 +619,9 @@ border-radius: 25000px;
 .img-procurar-box{
   width: 20%;
 }
+.img-procurar-box-in img{
+  filter: invert(1);
+}
 .img-procurar-box-in{
 width: 100%;
 height: 100%;

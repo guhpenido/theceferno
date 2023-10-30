@@ -33,12 +33,10 @@ export const Header = styled.div`
   z-index: 2;
   position: sticky;
   top: 0;
-  background: #000;
   display: flex;
   align-items: center;
   text-align: left;
   padding: 8px 0 9px 13px;
-  border-bottom: 1px solid #4763E4;
 
   > button {
     padding: 8px;
@@ -47,6 +45,7 @@ export const Header = styled.div`
     cursor: pointer;
     background: #000;
     border: 0;
+    color: #ffffff;
 
     &:hover {
       background: #00003d;

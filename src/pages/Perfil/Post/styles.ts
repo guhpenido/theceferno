@@ -9,8 +9,7 @@ export const Container = styled.div`
   flex-shrink: 0;
   max-width: 100%;
   border-radius: 5px;
-  border: 2px solid #4763e4;
-  background: rgba(71, 99, 228, 0.2);
+  background: #111111;
   margin-bottom: 15px;
   align-items: flex-start;
   box-sizing: border-box;
@@ -37,7 +36,6 @@ export const Body = styled.div`
 
 export const Avatar = styled.div`
   width: 49px;
-  height: 49px;
   border-radius: 50%;
   flex-shrink: 0;
   background: #7a7a7a;
@@ -58,7 +56,6 @@ export const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  height: fit-content;
   font-size: 15px;
   color: #fff;
 
@@ -89,7 +86,7 @@ export const Footer = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  height: 10vh;
+  height: auto;
   font-size: 15px;
   color: #fff;
 
@@ -140,7 +137,7 @@ export const Icons = styled.div`
   width: 100%;
 
   @media (min-width: 330px) {
-    width: 63%;
+   
   }
 
   > div {
@@ -154,11 +151,11 @@ export const Icons = styled.div`
 
 export const Status = styled.div`
   color: #d9d9d9;
-  margin-left: 3em;
   align-items: center; 
   display: flex;
   flex-direction: row; 
   width: fit-content; 
+  margin-left: 35px;
 `;
 
 const IconCSS = css`
@@ -183,7 +180,6 @@ export const ConteudoPostagens = styled.div`
 
 export const HeaderName = styled.div`
   display: flex;
-
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-around;
@@ -193,15 +189,11 @@ export const HeaderName = styled.div`
 
   > div:nth-child(1) {
     font-size: 15px;
-    margin-left: -40px;
     color: white;
-    margin-top: -50px;
-    margin-bottom: 6px;
   }
 
   > div:nth-child(2) {
     margin-left: 10px;
-    margin-top: -50px;
     color: white;
   }
 `;
@@ -213,20 +205,14 @@ export const HeaderNameMentioned = styled.div`
   align-content: center;
   width: fit-content; 
   height: fit-content; 
-  margin-top: -60px;
-  margin-left: 50px;
 
   > div:nth-child(1) {
-    margin-right: 5px;
     font-size: 15px;
     color: white;
   }
   > div:nth-child(2) {
     color: white;
     font-size: 13px;
-    margin-top: 8px;
-    margin-left: 12px;
-    margin-right: 13px;
   }
 `;
 

@@ -17,6 +17,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import VLibras from "@djpfs/react-vlibras";
 import { Acessibilidade } from "../Acessibilidade/index";
+import MenuLateral from "../MenuLateral/MenuLateral";
 
 // Conexão com o Firebase
 const firebaseConfig = {
@@ -46,6 +47,7 @@ function Chat() {
   const [userUid, setUserId] = useState(null);
   const navigate = useNavigate();
   const [userLoggedData, setUserLoggedData] = useState(null);
+  const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
 
   let idCombinado = "";
 
@@ -252,6 +254,12 @@ function Chat() {
    }, []);
 
   fetchChatInfo()
+
+  const toggleMobileLateral = () => {
+    setIsMobileLateralVisible(!isMobileLateralVisible);
+    console.log("clicou");
+    console.log(isMobileLateralVisible);
+  };
 
   return (
     <>

@@ -1,12 +1,20 @@
 import React from "react";
 import { initializeApp } from "firebase/app";
-import { getDoc, getFirestore, orderBy } from 'firebase/firestore';
+import {
+    getFirestore,
+    doc,
+    getDoc,
+    updateDoc,
+    orderBy,
+    getDocs,
+    limit,
+} from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import ModalReact from 'react-modal';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import ModalReact from "react-modal";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { onSnapshot, collection, query, where, doc } from 'firebase/firestore';
+import { onSnapshot, collection, query, where } from "firebase/firestore";
 import {
     Container,
     Body,
@@ -19,7 +27,16 @@ import {
     CommentIcon,
     RepublicationIcon,
     LikeIcon,
+    ImgConteiner,
+    HeaderName,
+    HeaderNameMentioned,
+    Postdays,
+    Footer,
 } from "../Post/styles";
+import { parseISO, formatDistanceToNow } from "date-fns";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown } from "@fortawesome/fontawesome-free-solid";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
@@ -27,7 +44,7 @@ const firebaseConfig = {
     projectId: "auth-ceferno",
     storageBucket: "auth-ceferno.appspot.com",
     messagingSenderId: "388861107940",
-    appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
+    appId: "1:388861107940:web:0bf718602145d96cc9d6f1",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -35,38 +52,49 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 // Definindo uma interface para os itens da timeline
-interface TimelineItem {
+type TimelineItem = {
     postId: string;
-    userSent: string;
     userMentioned: string;
     text: string;
     time: string;
     replysCount: number;
     likes: number;
-    dislikes: number;
-}
+    deslikes: number;
+};
 
 const PostagensUsuario: React.FC = () => {
     const navigate = useNavigate();
     const auth = getAuth(app);
-    const [userName, setUserName] = useState<string | null>(null);
-    const [nickname, setNickname] = useState<string | null>(null);
-    const [newAvatar, setNewAvatar] = useState<string | null>(null);
 
     const [currentUser, setCurrentUser] = useState<any | null>(null);
 
-    const [timelineItems, setTimelineItems] = useState<TimelineItem[]>([]); // Corrigido o tipo
+    const [timelineItems, setTimelineItems] = useState<TimelineItem[]>([]);
+
+    const [userId, setUserId] = useState<string | null>(null);
+
+    const [isUserSent, setUsersent] = useState<string | null>(null);
+    const [likes, setLikes] = useState(null);
+    const [deslikes, setDesLikes] = useState<string | null>(null);
+
     const [userLoggedData, setUserLoggedData] = useState<any>(null); // Adjust the type accordingly
     const [selectedProfile, setSelectedProfile] = useState<any>(null); // Adjust the type accordingly
     const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
+    const [posts, setPosts] = useState<any[]>([]); // Adjust the type accordingly
+    const [userName, setUserName] = useState<string | null>(null);
+    const [nickname, setNickname] = useState<string | null>(null);
+    const [newAvatar, setNewAvatar] = useState<string | null>(null);
     const [noItemsFound, setNoItemsFound] = useState<boolean>(false);
+    const [isMetionedDataAndPropsPosts, setMetionedDataAndPropsPosts] = useState<
+        any[]
+    >([]);
 
-    //pegar o id do usuario de outra página
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                setCurrentUser(user.uid);
+                setUserId(user.uid);
+                setUsersent(user.uid);
                 fetchUserDataAndSetState(user.uid);
+                fetchTimelineItemsForUser(user.uid);
             } else {
                 navigate("/login");
             }
@@ -75,89 +103,333 @@ const PostagensUsuario: React.FC = () => {
         return () => unsubscribe();
     }, [auth, navigate]);
 
-    //pegar os whispers (mensagens que aquela pessoa postou/direcionou na página de alguém.)
     useEffect(() => {
-        const q = query(collection(db, 'timeline'), where('userSent', '==', currentUser), orderBy('time', 'desc'));
+        if (isUserSent) {
+            const unsubscribe = getPostsFromFirestore();
+            return () => unsubscribe();
+        }
+    }, [isUserSent]);
 
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const items: TimelineItem[] = [];
-            snapshot.forEach(async (documento) => {
-                const data = documento.data();
-                const ref = doc(db, "users", data.userSent);
-                const docSnap = await getDoc(ref);
-                    if (docSnap.exists()) {
-                        const usr = docSnap.data();
-                        setUserName(usr.nome);
-                        setNickname(usr.usuario);
-                        setNewAvatar(usr.imageUrl);
-                        console.log(usr);
+    useEffect(() => {
+        if (userId) {
+            fetchUserDataAndSetState(userId);
+        }
+    }, [userId]);
+
+    const fetchUserDataAndSetState = async (userId: string) => {
+        try {
+            if (userId) {
+                const userLoggedDataResponse = await fetchUserData(userId);
+                if (userLoggedDataResponse) {
+                    setUserLoggedData(userLoggedDataResponse);
+                    setUserName(userLoggedDataResponse.nome);
+                    setNickname(userLoggedDataResponse.usuario);
+                    setNewAvatar(userLoggedDataResponse.avatar);
+                    setSelectedProfile(userLoggedDataResponse.usuario);
+                    setIsLoadingUser(false);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error.message);
+        }
+    };
+
+    const getPostsFromFirestore = () => {
+        const q = query(
+            collection(db, "timeline"),
+            where("userSent", "==", isUserSent),
+            orderBy("time", "desc")
+        );
+
+        return onSnapshot(q, (snapshot) => {
+            const postsDataFilter: any[] = [];
+            snapshot.forEach((doc) => {
+                const postData = {
+                    id: doc.id,
+                    ...doc.data(),
+                };
+                postsDataFilter.push(postData);
+            });
+
+            setPosts(postsDataFilter);
+        });
+    };
+
+    useEffect(() => {
+        const postsCollectionRef = collection(db, "timeline");
+        const postsQuery = query(
+            postsCollectionRef,
+            orderBy("time", "desc"),
+            limit(10)
+        );
+
+        const fetchData = async () => {
+            try {
+                const postsData = await getPostsFromFirestoreOnMetioneData(postsQuery);
+                const filteredPostData = postsData.filter(
+                    (element) => element.userMentioned !== ""
+                );
+                const userMentionedValues = filteredPostData.map(
+                    (element) => element.userMentioned
+                );
+
+                // console.log({userMentionedValues});
+
+                const postsWithUserDataArray = [];
+
+                for (const post of userMentionedValues) {
+                    let myUserMetioned = await fetchUserData(post);
+
+                    if (post !== null) {
+                        postsWithUserDataArray.push(myUserMetioned);
                     }
-                    
-                items.push({
-                    postId: documento.id,
-                    userSent: data.userSent,
+                }
+                setMetionedDataAndPropsPosts(postsWithUserDataArray);
+            } catch (error) {
+                console.error("Erro ao obter os posts:", error);
+            }
+        };
+
+        fetchData();
+    }, [db, posts]);
+
+    const getPostsFromFirestoreOnMetioneData = async (query) => {
+        const querySnapshot = await getDocs(query);
+        const postsData = [];
+        querySnapshot.forEach((doc) => {
+            const postData = {
+                id: doc.id,
+                ...doc.data(),
+            };
+            postsData.push(postData);
+        });
+
+        return postsData;
+    };
+
+    const fetchUserData = async (userId: string) => {
+        const userDoc = await getDoc(doc(db, "users", userId));
+        if (userDoc.exists()) {
+            return userDoc.data();
+        } else {
+            console.log("User not found");
+            return null;
+        }
+    };
+
+    const fetchTimelineItemsForUser = async (
+        userId: string
+    ): Promise<TimelineItem[]> => {
+        try {
+            const q = query(
+                collection(db, "timeline"),
+                where("userSent", "==", userId),
+                orderBy("time", "desc")
+            );
+            const querySnapshot = await getDocs(q);
+
+            const timelineItems: TimelineItem[] = [];
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                timelineItems.push({
+                    postId: doc.id,
                     userMentioned: data.userMentioned,
                     text: data.text,
                     time: data.time,
                     replysCount: data.replysCount,
                     likes: data.likes,
-                    dislikes: data.dislikes,
+                    deslikes: data.deslikes,
                 });
             });
-            setTimelineItems(items);
+
+            setTimelineItems(timelineItems);
+            return timelineItems;
+        } catch (error) {
+            console.error("Error fetching timeline items:", error.message);
+            return [];
+        }
+    };
+
+    const defaultUserImageURL =
+        "https://media.discordapp.net/attachments/871728576972615680/1148261217840926770/logoanon.png?width=473&height=473";
+
+    const combinedData = posts.map((post) => {
+        // console.log({posts}); 
+        const matchedUser = isMetionedDataAndPropsPosts.find(
+            (user) => user.id === post.userMentioned
+        );
+        // setLikes(post.likes);
+        return {
+            ...post,
+            userMentionedData: matchedUser || null,
+        };
+    });
+
+    const handleLikeClick = async (itemLike, IdPost) => {
+        const postLikes = posts.map((post) => {
+            const { likes, deslikes, postId } = post;
+
+            return {
+                likes,
+                deslikes,
+                postId,
+            };
         });
 
-        return () => unsubscribe();
-    }, [currentUser]);
+        const filterLike = postLikes.filter((post) => post.postId === IdPost);
 
+        const sumeLikes = filterLike.map((post) => {
+            const { postId } = post;
+
+            let sumLikes = post.likes + 1;
+
+            return { sumLikes, postId };
+        });
+
+        const q = query(
+            collection(db, "timeline"),
+            where("postId", "==", sumeLikes[0].postId)
+        );
+
+        try {
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                const postDoc = querySnapshot.docs[0];
+
+                await updateDoc(doc(db, "timeline", postDoc.id), {
+                    likes: sumeLikes[0].sumLikes,
+                });
+
+                console.log("Likes atualizados no Firebase com sucesso!");
+            } else {
+                console.error("Post não encontrado no Firebase.");
+                setLikes(likes);
+            }
+        } catch (error) {
+            console.error("Erro ao atualizar likes no Firebase: ", error);
+            setLikes(likes);
+        }
+    };
+
+
+    const handleDeslikes = async (itemLike, IdPost) => {
+
+        console.log({ posts });
+
+        const postLikes = posts.map((post) => {
+            const { likes, deslikes, postId } = post;
+
+            return {
+                likes,
+                deslikes,
+                postId,
+            };
+        });
+
+        const filterLike = postLikes.filter((post) => post.postId === IdPost);
+
+        const sumeDeslikes = filterLike.map((post) => {
+            const { postId } = post;
+
+            let sumDeslikes = post.deslikes + 1;
+
+            return { sumDeslikes, postId };
+        });
+
+        const q = query(
+            collection(db, "timeline"),
+            where("postId", "==", sumeDeslikes[0].postId)
+        );
+
+        try {
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                const postDoc = querySnapshot.docs[0];
+
+                await updateDoc(doc(db, "timeline", postDoc.id), {
+                    deslikes: sumeDeslikes[0].sumDeslikes,
+                });
+
+                console.log("Deslikes atualizados no Firebase com sucesso!");
+            } else {
+                console.error("Post não encontrado no Firebase.");
+                setDesLikes(deslikes);
+            }
+        } catch (error) {
+            console.error("Erro ao atualizar Deslikes no Firebase: ", error);
+            setDesLikes(deslikes);
+        }
+    };
+    // Renderize o array combinado
     return (
         <div>
-            {timelineItems.length === 0 ? (
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    padding: '14px 16px',
-                    borderBottom: '1px solid #4763E4',
-                    maxWidth: '100%',
-                    flexShrink: 0,
-                    borderRadius: '5px',
-                    border: '2px solid #4763e4',
-                    background: 'rgba(71, 99, 228, 0.2)',
-                    marginBottom: '15px',
-                    color: 'whitesmoke',
-                    textAlign: 'center', 
-                }}>
-                    Nada Encontrado
-                </div>
+            {combinedData.length === 0 ? (
+                <div>{/* Renderize a mensagem de "Nada Encontrado" aqui */}</div>
             ) : (
-                timelineItems.map((item) => (
-                    <Container key={item.postId}>
-                        {<Body>
-                            <Avatar as="img" style={{marginLeft: '-240px', }} src={newAvatar || " "} alt="Novo Avatar" />
-                            <Content>
-                                <Header style={{marginTop:'-40px'}}>
-                                    <strong>{userName}</strong>
-                                    <span>@{nickname}</span>
+                combinedData.map((item) => (
+                    <Container key={item.id}>
+                        <Body>
+                            <Icons>
+                                <Header>
+                                    <Avatar as="img" src={newAvatar || ""} alt="Novo Avatar" />
+                                    <HeaderName>
+                                        <div>{userName}</div>
+                                        <div>@{nickname}</div>
+                                        <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                                        {item.userMentionedData && (
+                                            <div>
+                                                <HeaderNameMentioned>
+                                                <Avatar as="img" src={item.userMentionedData.imageUrl || ""} alt="Novo Avatar" />
+                                                    <div>{item.userMentionedData.nome}</div>
+                                                    <div className="tl-ps-userReceived">
+                                                        @{item.userMentionedData.usuario}
+                                                    </div>
+                                                </HeaderNameMentioned>
+                                            </div>
+                                        )}
+                                        {item.userMentioned && !item.userMentionedData && (
+                                            // Renderize algo se o usuário mencionado não for encontrado
+                                            <span>Usuário mencionado não encontrado</span>
+                                        )}
+                                    </HeaderName>
                                 </Header>
                                 <Posts>
-                                    <p style={{marginTop:'20px'}}>{item.text}</p> {/* Adjust this according to your needs */}
+                                    <div>
+                                        {item.text}
+                                    </div>
                                 </Posts>
-                                <Icons>
+                                <Footer>
                                     <Status>
                                         <CommentIcon />
                                         {item.replysCount}
                                     </Status>
                                     <Status>
-                                        <RepublicationIcon />
+                                        <FontAwesomeIcon icon={faThumbsUp} onClick={() => handleLikeClick(item.likes, item.postId)} />
                                         {item.likes}
                                     </Status>
                                     <Status>
-                                        <LikeIcon />
-                                        {item.dislikes}
+                                        <FontAwesomeIcon icon={faThumbsDown} onClick={() => handleDeslikes(item.deslikes, item.postId)} />
+                                        {item.deslikes}
                                     </Status>
-                                </Icons>
-                            </Content>
-                        </Body>}
+                                    <Status>
+                                        <Postdays>
+                                            <div>
+                                                {item.time
+                                                    ? `${formatDistanceToNow(
+                                                        parseISO(item.time),
+                                                        {
+                                                            addSuffix: true,
+                                                        }
+                                                    )}`
+                                                    : "Tempo não disponível"}
+                                            </div>
+                                        </Postdays>
+                                    </Status>
+                                </Footer>
+                            </Icons>
+                        </Body>
                     </Container>
                 ))
             )}
@@ -166,7 +438,3 @@ const PostagensUsuario: React.FC = () => {
 };
 
 export default PostagensUsuario;
-
-function fetchUserDataAndSetState(uid: string) {
-    throw new Error("Function not implemented.");
-}

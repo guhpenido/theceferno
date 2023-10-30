@@ -97,7 +97,6 @@ function Dm() {
     if (userDoc.exists()) {
       console.log(userDoc.data().imageUrl);
       imageref.current.src = userDoc.data().imageUrl;
-      imageref1.current.src = userDoc.data().imageUrl;
       return userDoc.data();
     } else {
       console.log("User not found");
