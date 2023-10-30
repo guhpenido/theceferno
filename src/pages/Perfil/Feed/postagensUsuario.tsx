@@ -133,14 +133,14 @@ const PostagensUsuario: React.FC = () => {
                 timelineItems.map((item) => (
                     <Container key={item.postId}>
                         {<Body>
-                            <Avatar as="img" src={newAvatar || " "} alt="Novo Avatar" />
+                            <Avatar as="img" style={{marginLeft: '-240px', }} src={newAvatar || " "} alt="Novo Avatar" />
                             <Content>
-                                <Header>
+                                <Header style={{marginTop:'-40px'}}>
                                     <strong>{userName}</strong>
                                     <span>@{nickname}</span>
                                 </Header>
                                 <Posts>
-                                    <p>{item.text}</p> {/* Adjust this according to your needs */}
+                                    <p style={{marginTop:'20px'}}>{item.text}</p> {/* Adjust this according to your needs */}
                                 </Posts>
                                 <Icons>
                                     <Status>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom'
-import MenuBar from '../MenuBar';
 import SideBar from '../SideBar';
 import { Container, Wrapper } from '../Layout/styles';
 import MainVisitor from '../Main/MainVisitor';
