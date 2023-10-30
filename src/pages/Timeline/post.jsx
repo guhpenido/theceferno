@@ -111,7 +111,7 @@ function PostDisplay({
   };
 
   useEffect(() => {
-    if (userLoggedData && userLoggedData.savedPosts.includes(post.id)) {
+    if (userLoggedData && userLoggedData.savedPosts && userLoggedData.savedPosts.includes(post.id)) {
       setSaveIcon('solid');
     }
   }, [userLoggedData, post]);
@@ -133,7 +133,7 @@ function PostDisplay({
   }, [disliked]);
 
   useEffect(() => {
-    if (userLoggedData && userLoggedData.savedPosts.includes(post.id)) {
+    if (userLoggedData && userLoggedData.savedPosts && userLoggedData.savedPosts.includes(post.id)) {
       setDislikeIcon('solid');
     }
   }, [userLoggedData, post]);

@@ -135,13 +135,12 @@ function PostPage() {
 
     console.log(postIdInt);
     useEffect(() => {
-        if (userLoggedData && userLoggedData.savedPosts.includes(postIdInt)) {
-            setSaveIcon('solid');
+        if (userLoggedData && Array.isArray(userLoggedData.savedPosts) && userLoggedData.savedPosts.includes(postIdInt)) {
+          setSaveIcon('solid');
+        } else {
+          setSaveIcon('regular');
         }
-        else {
-            setSaveIcon('regular');
-        }
-    }, [userLoggedData, postIdInt]);
+      }, [userLoggedData, postIdInt]);
 
     useEffect(() => {
         console.log("useEffect está sendo executado!");
@@ -818,7 +817,6 @@ function PostPage() {
                         isMobileLateralVisible={isMobileLateralVisible}
                         toggleMobileLateral={toggleMobileLateral}
                     />
-                    <div className="tl-ladoEsquerdo"></div>
                     <div className="tl-main">
                         <div className="tl-container">
                             <div className="tl-box">
