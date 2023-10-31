@@ -12,7 +12,7 @@ const VisitorPage = () => {
   return (
     <Container >
       <Wrapper>
-        <MenuBar />
+        <SideBar/>
         {
           modo === 'public' ? <MainVisitor objetoUsuario={objetoUsuario} /> : window.location.href = "/timeline"
         }
