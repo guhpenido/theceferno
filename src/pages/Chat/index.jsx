@@ -21,12 +21,13 @@ import MenuLateral from "../MenuLateral/MenuLateral";
 
 // Conexão com o Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
-  authDomain: "auth-ceferno.firebaseapp.com",
-  projectId: "auth-ceferno",
-  storageBucket: "auth-ceferno.appspot.com",
-  messagingSenderId: "388861107940",
-  appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
+  apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
+  authDomain: "auth-cefernotcc.firebaseapp.com",
+  projectId: "auth-cefernotcc",
+  storageBucket: "auth-cefernotcc.appspot.com",
+  messagingSenderId: "1060989440087",
+  appId: "1:1060989440087:web:439b25a3b18602ec53d312",
+  measurementId: "G-45ESHWMMPR"
 };
 
 
