@@ -17,15 +17,17 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import VLibras from "@djpfs/react-vlibras";
 import { Acessibilidade } from "../Acessibilidade/index";
+import MenuLateral from "../MenuLateral/MenuLateral";
 
 // Conexão com o Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
-  authDomain: "auth-ceferno.firebaseapp.com",
-  projectId: "auth-ceferno",
-  storageBucket: "auth-ceferno.appspot.com",
-  messagingSenderId: "388861107940",
-  appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
+  apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
+  authDomain: "auth-cefernotcc.firebaseapp.com",
+  projectId: "auth-cefernotcc",
+  storageBucket: "auth-cefernotcc.appspot.com",
+  messagingSenderId: "1060989440087",
+  appId: "1:1060989440087:web:439b25a3b18602ec53d312",
+  measurementId: "G-45ESHWMMPR"
 };
 
 
@@ -46,6 +48,7 @@ function Chat() {
   const [userUid, setUserId] = useState(null);
   const navigate = useNavigate();
   const [userLoggedData, setUserLoggedData] = useState(null);
+  const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
 
   let idCombinado = "";
 
@@ -253,10 +256,20 @@ function Chat() {
 
   fetchChatInfo()
 
+  const toggleMobileLateral = () => {
+    setIsMobileLateralVisible(!isMobileLateralVisible);
+    console.log("clicou");
+    console.log(isMobileLateralVisible);
+  };
+
   return (
     <>
       <div className="full-dm-screen">
-        <div className="lateral-wrapper">
+      <MenuLateral
+            isMobileLateralVisible={isMobileLateralVisible}
+            toggleMobileLateral={toggleMobileLateral}
+    />
+        {/* <div className="lateral-wrapper">
           <div className="lateral-estatica-dm">
               <div className="imgProfilePic">
                 <Link to="/perfil"><img className="profilePicDm" src={currentUserProfilePic} alt="Imagem de perfil"></img></Link>
@@ -289,7 +302,7 @@ function Chat() {
               </Link> 
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="screen-dm-usavel">
           <div className="headerDm">
             <Link to={`/dm`}><img id="voltarChat" className="iconDm" src={voltarIcon} alt="Voltar" /></Link>

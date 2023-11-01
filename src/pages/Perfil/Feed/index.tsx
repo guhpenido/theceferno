@@ -41,13 +41,13 @@ const Feed: React.FC<FeedProps> = ({ avatarUrl }) => {
         {/* <Tab onClick={handlePerfil}>Perfil</Tab> */}
         <Tab onClick={handleWhisper}>Whispers</Tab>
       </TabContainer>
-      <Whispers>
+      <div className="whispers-container">
         {/* Passando avatarUrl como avatarUrl para o componente Post */}
         {visibilityPostagens && <PostagensUsuario />}
         {visibilityWhispers && <WhispersUsuario />}
         {/* {visibilityPerfil && <PerfilUsuario />} */}
         {/* <Post avatarUrl={avatarUrl} />   */}
-      </Whispers>
+      </div>
     </Container>
   );
 };

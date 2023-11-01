@@ -28,6 +28,13 @@ export function Sobre() {
               </Link>
             </div>
             <div className="header-items">
+            <div className="header-item">
+              <Link style={{ textDecoration: 'none' }} to="/">
+                <div className="item-title">
+                  <h2 className="title-text-sobre">Home</h2>
+                </div>
+              </Link>
+            </div>
               <div className="header-item">
                 <Link style={{ textDecoration: "none" }} to="/sobre">
                   <div className="item-title">

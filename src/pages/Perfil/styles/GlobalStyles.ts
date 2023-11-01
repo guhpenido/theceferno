@@ -20,10 +20,10 @@ html, body, #root {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
 }
 html {
-    background: #000;
+    background: #0c0c0c;
 }
 :root {
-    --primary: #000;
+    --primary: #0c0c0c;
     --secondary: #15181c;
     --search: #202327;
     --white: #d9d9d9;
@@ -32,7 +32,7 @@ html {
     --retweet: #00c06b;
     --like: #e8265e;
     --ceferno: #4763E4;
-    --ceferno-dark-hover: #00003d;
+    --ceferno-dark-hover: #0c0c0c;
     --ceferno-light-hover: #00276c;
 }
 `;

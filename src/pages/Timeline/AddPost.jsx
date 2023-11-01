@@ -103,7 +103,7 @@ function AddPost() {
         setUserId(user.uid);
         console.log(user);
         fetchUserDataAndSetState(user.uid);
-        carregaTml();
+        //carregaTml();
       } else {
         navigate("/login");
       }
