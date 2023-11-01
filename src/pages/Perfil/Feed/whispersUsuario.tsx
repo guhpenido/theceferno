@@ -74,6 +74,7 @@ const WhispersUsuario: React.FC = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        console.log(user.uid);
         setCurrentUser(user.uid);
         fetchUserDataAndSetState(user.uid);
       } else {
@@ -124,6 +125,7 @@ const WhispersUsuario: React.FC = () => {
         const postsData = await getPostsFromFirestore(postsQuery);
         const postsWithUserData = [];
 
+        
         for (const post of postsData) {
           const userSentData = await fetchUserData(post.userSent);
           let userMentionedData = null;

@@ -189,15 +189,16 @@ const ProfilePage: React.FC = () => {
         setNewAvatar(avatarURL);
 
         // Fazer upload da imagem para o Firebase Storage
-        const storageRef = ref(storage, `avatars/${currentUser.uid}`);
+        const storageRef = ref(storage, `avatar/${currentUser.uid}`);
         await uploadBytes(storageRef, file);
 
         // Obter o URL da imagem do Firebase Storage
         const downloadURL = await getDownloadURL(storageRef);
-
+        console.log(downloadURL);
         // Atualizar o URL do avatar no Firestore
         const userDocRef = doc(db, 'users', currentUser.uid);
-        await updateDoc(userDocRef, { avatar: downloadURL });
+        console.log(currentUser.uid);
+        await updateDoc(userDocRef, { imageUrl: downloadURL });
       }
     }
   };

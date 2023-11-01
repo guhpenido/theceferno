@@ -5,7 +5,8 @@ import { Container, Header, BackIcon, ProfileInfo, BottomMenu, HomeIcon, SearchI
 import ProfilePageVisitor from '../ProfilePage/ProfilePageVisitor';
 
 
-const MainVisitor = ({ objetoUsuario }) => {
+const MainVisitor = ({ userPId }) => {
+    console.log(userPId);
     // console.log(objetoUsuario);
 
     const [currentUser, setCurrentUser] = useState(null);
@@ -36,7 +37,7 @@ const MainVisitor = ({ objetoUsuario }) => {
             </Header>
 
 
-            <ProfilePageVisitor objetoUsuario={objetoUsuario} />
+            <ProfilePageVisitor userPId={userPId} />
 
             <BottomMenu>
                 <HomeIcon />
