@@ -83,8 +83,8 @@ function PostPage() {
     const [selectedProfile, setSelectedProfile] = useState(null);
     const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
     const [saveIcon, setSaveIcon] = useState("regular");
-  const [likeIcon, setLikeIcon] = useState("regular");
-  const [dislikeIcon, setDislikeIcon] = useState("regular");
+    const [likeIcon, setLikeIcon] = useState("regular");
+    const [dislikeIcon, setDislikeIcon] = useState("regular");
     const [isBeatingL, setIsBeatingL] = useState(false);
     const [isBeatingD, setIsBeatingD] = useState(false);
     const [isBeatingB, setIsBeatingB] = useState(false);
@@ -115,19 +115,19 @@ function PostPage() {
 
     useEffect(() => {
         if (liked) {
-          setLikeIcon('solid');
+            setLikeIcon('solid');
         }
         else
-        setLikeIcon('regular');
-      }, [liked]);
-    
-      useEffect(() => {
+            setLikeIcon('regular');
+    }, [liked]);
+
+    useEffect(() => {
         if (disliked) {
-          setDislikeIcon('solid');
+            setDislikeIcon('solid');
         }
         else
-        setDislikeIcon('regular');
-      }, [disliked]);
+            setDislikeIcon('regular');
+    }, [disliked]);
 
     useEffect(() => {
         console.log(imageSentData); // Aqui, você verá o valor atualizado de imageSentData
@@ -833,7 +833,9 @@ function PostPage() {
                                                     {nomeEnvio}{" "}
                                                     <span className="tl-ps-user">@{userEnvio} </span>
                                                     <span className="tl-ps-tempo">• {timeAgo}</span>
-                                                    <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                                                    {userMentionedData && (
+                                                        <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                                                    )}   
                                                     {userMentionedData && (
                                                         <img src={userMentionedData.imageUrl} alt="" />
                                                     )}
@@ -873,20 +875,20 @@ function PostPage() {
                                                 handleLikeClick(e);
                                                 handleIconClickL();
                                             }}>
-                                                <FontAwesomeIcon icon={likeToUse} beat={isBeatingL}/> <span>{likes}</span>
+                                                <FontAwesomeIcon icon={likeToUse} beat={isBeatingL} /> <span>{likes}</span>
                                             </div>
                                             <div className="tl-ps-deslike" onClick={(e) => {
                                                 handleDislikeClick(e);
                                                 handleIconClickD();
                                             }}>
-                                                <FontAwesomeIcon icon={dislikeToUse} beat={isBeatingD}/>{" "}
+                                                <FontAwesomeIcon icon={dislikeToUse} beat={isBeatingD} />{" "}
                                                 <span>{dislikes}</span>
                                             </div>
-                                            <div className="tl-ps-salvar" onClick={(e) => { 
+                                            <div className="tl-ps-salvar" onClick={(e) => {
                                                 handleSavePost(e, postIdInt);
                                                 handleIconClickB();
-                                             }}>
-                                                <FontAwesomeIcon icon={iconToUse} beat={isBeatingB}/>{" "}
+                                            }}>
+                                                <FontAwesomeIcon icon={iconToUse} beat={isBeatingB} />{" "}
                                             </div>
                                         </div>
                                     </div>
@@ -926,21 +928,6 @@ function PostPage() {
                         {isFetching && <p>Carregando mais posts...</p>}
                     </div>
                     <div className="tl-ladoDireito">
-                        <div className="tl-ladoDireito-procurar">
-                            <div className="procurar-box">
-                                <div className="img-procurar-box">
-                                    <div className="img-procurar-box-in">
-                                        <img
-                                            src="https://cdn.discordapp.com/attachments/871728576972615680/1167934652267368488/6328608.png?ex=654feee8&is=653d79e8&hm=15078133d7bcc63b14665f301890a83cf549dba37a671c8827a8c9c6e8c50c11&"
-                                            alt=""
-                                        />
-                                    </div>
-                                </div>
-                                <div className="procurar-box-input">
-                                    <input type="text" placeholder="Procurar" />
-                                </div>
-                            </div>
-                        </div>
                         <div className="tl-ladoDireito-doar">
                             <h1>Deseja doar para o CEFERNO?</h1>
                             <p>

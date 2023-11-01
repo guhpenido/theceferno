@@ -53,7 +53,8 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 
-const PostagensVisitor = ({ objetoUsuario }) => {
+const PostagensVisitor = ({ userPId }) => {
+    console.log(userPId);
     const navigate = useNavigate();
     const auth = getAuth(app);
 
@@ -80,10 +81,10 @@ const PostagensVisitor = ({ objetoUsuario }) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                setUserId(objetoUsuario.id);
-                setUsersent(objetoUsuario.id);
-                fetchUserDataAndSetState(objetoUsuario.id);
-                fetchTimelineItemsForUser(objetoUsuario.id);
+                setUserId(userPId);
+                setUsersent(userPId);
+                fetchUserDataAndSetState(userPId);
+                fetchTimelineItemsForUser(userPId);
             } else {
                 navigate("/login");
             }
@@ -111,10 +112,10 @@ const PostagensVisitor = ({ objetoUsuario }) => {
                 const userLoggedDataResponse = await fetchUserData(userId);
                 if (userLoggedDataResponse) {
                     setUserLoggedData(userLoggedDataResponse);
-                    setUserName(objetoUsuario.nome);
-                    setNickname(objetoUsuario.usuario);
-                    setNewAvatar(objetoUsuario.imageUrl);
-                    setSelectedProfile(objetoUsuario.usuario);
+                    setUserName(userLoggedDataResponse.nome);
+                    setNickname(userLoggedDataResponse.usuario);
+                    setNewAvatar(userLoggedDataResponse.imageUrl);
+                    setSelectedProfile(userLoggedDataResponse.usuario);
                     setIsLoadingUser(false);
                 }
             }

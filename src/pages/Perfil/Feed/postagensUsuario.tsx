@@ -180,6 +180,7 @@ const PostagensUsuario: React.FC = () => {
 
                 for (const post of userMentionedValues) {
                     let myUserMetioned = await fetchUserData(post);
+                    console.log(post);
 
                     if (post !== null) {
                         postsWithUserDataArray.push(myUserMetioned);

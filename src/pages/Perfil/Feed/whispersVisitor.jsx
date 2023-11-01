@@ -44,7 +44,7 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 
-const WhispersVisitor = ({ objetoUsuario }) => {
+const WhispersVisitor = ({ userPId }) => {
   const navigate = useNavigate();
   const auth = getAuth(app);
   const [userName, setUserName] = useState(null);
@@ -64,8 +64,8 @@ const WhispersVisitor = ({ objetoUsuario }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setCurrentUser(objetoUsuario.id);
-        fetchUserDataAndSetState(objetoUsuario.id);
+        setCurrentUser(userPId);
+        fetchUserDataAndSetState(userPId);
       } else {
         navigate("/login");
       }

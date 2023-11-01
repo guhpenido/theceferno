@@ -5,7 +5,7 @@ import PerfilUsuario from "./perfilUsuario";
 import WhispersVisitor from "./whispersVisitor";
 import PostagensVisitor from "./postagensVisitor";
 
-const FeedVisitor = ({ objetoUsuario }) => {
+const FeedVisitor = ({ userId }) => {
 
   const [visibilityPerfil, setVisibilityPerfil] = useState(false);
   const [visibilityPostagens, setVisibilityPostagens] = useState(true);
@@ -31,8 +31,8 @@ const FeedVisitor = ({ objetoUsuario }) => {
         <Tab onClick={handleWhisper}>Whispers</Tab>
       </TabContainer>
       <Whispers>
-        {visibilityPostagens && <PostagensVisitor objetoUsuario={objetoUsuario} />}
-        {visibilityWhispers && <WhispersVisitor objetoUsuario={objetoUsuario}/>}
+        {visibilityPostagens && <PostagensVisitor userPId={userId} />}
+        {visibilityWhispers && <WhispersVisitor userPId={userId}/>}
       </Whispers>
     </Container>
   );
