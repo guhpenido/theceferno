@@ -64,7 +64,6 @@
 
 .menu-lateral {
   display: flex;
-  padding: 20px;
   height:100%;
   background-color: #111111;
 }
@@ -375,11 +374,16 @@
 .mobile-lateral-wrapper{
     display: none;
 }
-.botaoAcessar:hover{
+.botaoComHoverMenuLateral:hover, .botaoAcessar:hover {
   background-color: #0c0c0c;
   border-radius: 50px;
   /* padding: 5px 40px 5px 40px;
   justify-content: center; */
+}
+.botaoComHoverMenuLateral{
+  width: 100%;
+  padding: 10px 40px 10px 10px;
+  display: flex;
 }
 @media (max-width: 713px) {
   .menu-lateral-wrapper{
