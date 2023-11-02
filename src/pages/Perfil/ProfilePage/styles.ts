@@ -197,42 +197,17 @@ export const Cabecalho = styled.div`
 `
 
 export const Botao = styled.button`
-    
-    
-    &[data-follow='true']{
-      all: unset;
-      padding: 5px 15px;
-      display: inline-block;
-      flex: 1 0 auto;
-      width: max-content;
-      box-sizing: border-box;
-      border-radius: 15px;
-      border: 2px solid #4763e4;
-      margin-left: auto;
-    }
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 7px;
+  padding: 4px 16px;
+  font-size: 13px;
 
-    &[data-follow='false']{
-      all: unset;
-      padding: 5px 15px;
-      display: inline-block;
-      flex: 1 0 auto;
-      width: max-content;
-      box-sizing: border-box;
-      border-radius: 15px;
-      border: 2px solid #4763e4;
-      background-color: rgba(71, 99, 228, 0.2);
-      margin-left: auto;
-    }
-
-    &[data-follow='false']:hover {
-      background-color: rgba(71, 99, 228, 0.5);
-      cursor: pointer;
-    }
-
-    &[data-follow='true']:hover {
-      background-color: rgba(255, 0, 0, 0.2);
-      border: 2px solid #ff0000;
-      cursor: pointer;
-    }
+  @media (min-width: 320px) {
+    top: calc(80% + 2px);
+    padding: 5px 15px;
+    font-size: 15px;
+    border-radius: 25px;
+  }
 
 `

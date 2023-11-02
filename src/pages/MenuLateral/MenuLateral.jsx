@@ -94,7 +94,7 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
           </div>
 
           <div className="menu-lateral">
-            <Link className="botaoAcessar iconMenu" to="/timeline">
+            <Link className="botaoAcessar iconMenu botaoComHoverMenuLateral" to="/timeline">
               <div className="cada-icone-img-nome">
                 <img id="home" src={homeIcon} alt="Botão ir para Home"></img>
                 <div className="escrita-lateral">
@@ -102,7 +102,7 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
                 </div>
               </div>
             </Link>
-            <Link className="botaoAcessar iconMenu" to="/perfil">
+            <Link className="botaoAcessar iconMenu botaoComHoverMenuLateral" to="/perfil">
               <div className="cada-icone-img-nome">
                 <img
                   id="perfil"
@@ -114,7 +114,7 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
                 </div>
               </div>
             </Link>
-            <Link className="botaoAcessar iconMenu" to="/dm">
+            <Link className="botaoAcessar iconMenu botaoComHoverMenuLateral" to="/dm">
               <div className="cada-icone-img-nome">
                 <img
                   id="dm"
@@ -126,7 +126,7 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
                 </div>
               </div>
             </Link>
-            <Link className="botaoAcessar iconMenu" to="/savedPosts">
+            <Link className="botaoAcessar iconMenu botaoComHoverMenuLateral" to="/savedPosts">
               <div className="cada-icone-img-nome">
                 <img
                   id="dm"

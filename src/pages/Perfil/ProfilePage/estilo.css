@@ -23,3 +23,17 @@
     transform: scale(1.1);
     cursor: pointer;
 }
+
+.ppv-button-follow {
+    background-color: #4763E4;
+    border-color: transparent;
+    cursor: pointer;
+    border-color: 3px solid #4763E4;
+}
+
+.ppv-button-follow:hover {
+    background-color: #00003d;
+    transition: background-color 0.3s, color 0.3s;
+    border-color: 3px solid #4763E4;
+
+}

@@ -32,11 +32,12 @@ import {
     HeaderNameMentioned,
     Postdays,
     Footer,
+    PostInfo,
 } from "../Post/styles";
 import { parseISO, formatDistanceToNow } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { faArrowDown, faThumbsDown, faThumbsUp } from "@fortawesome/fontawesome-free-solid";
+import { faArrowDown, faComment, faThumbsDown, faThumbsUp } from "@fortawesome/fontawesome-free-solid";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
@@ -46,7 +47,7 @@ const firebaseConfig = {
     messagingSenderId: "1060989440087",
     appId: "1:1060989440087:web:439b25a3b18602ec53d312",
     measurementId: "G-45ESHWMMPR"
-  };
+};
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -353,7 +354,7 @@ const PostagensVisitor = ({ userPId }) => {
 
     // Renderize o array combinado
     return (
-        <div>
+        <div className="container-wrapper">
             {combinedData.length === 0 ? (
                 <div>{/* Renderize a mensagem de "Nada Encontrado" aqui */}</div>
             ) : (
@@ -363,56 +364,58 @@ const PostagensVisitor = ({ userPId }) => {
                             <Icons>
                                 <Header>
                                     <Avatar as="img" src={newAvatar || ""} alt="Novo Avatar" />
-                                    <HeaderName>
-                                        <div>{userName}</div>
-                                        <div>@{nickname}</div>
-                                        <FontAwesomeIcon className="arrow" icon={faArrowRight} />
-                                        {item.userMentionedData && (
-                                            <div>
+                                    <PostInfo>
+                                        <HeaderName>
+                                            <div>{userName}</div>
+                                            <div>@{nickname}</div>
+                                            <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                                            {item.userMentionedData && (
+                                                <div>
 
-                                                <HeaderNameMentioned>
-                                                    <Avatar>
-                                                        {item.userMentionedData.avatar ? (
-                                                            <ImgConteiner
-                                                                src={item.userMentionedData.avatar}
-                                                                alt=""
-                                                            />
-                                                        ) : (
-                                                            <ImgConteiner src={defaultUserImageURL} alt="" />
-                                                        )}
-                                                    </Avatar>
-                                                    <div>{item.userMentionedData.nome}</div>
-                                                    <div className="tl-ps-userReceived">
-                                                        @{item.userMentionedData.usuario}
-                                                    </div>
-                                                </HeaderNameMentioned>
+                                                    <HeaderNameMentioned>
+                                                        <Avatar>
+                                                            {item.userMentionedData.imageUrl ? (
+                                                                <ImgConteiner
+                                                                    src={item.userMentionedData.imageUrl}
+                                                                    alt=""
+                                                                />
+                                                            ) : (
+                                                                <ImgConteiner src={defaultUserImageURL} alt="" />
+                                                            )}
+                                                        </Avatar>
+                                                        <div>{item.userMentionedData.nome}</div>
+                                                        <div className="tl-ps-userReceived">
+                                                            @{item.userMentionedData.usuario}
+                                                        </div>
+                                                    </HeaderNameMentioned>
+                                                </div>
+                                            )}
+                                            {item.userMentioned && !item.userMentionedData && (
+                                                // Renderize algo se o usuário mencionado não for encontrado
+                                                <span>Usuário mencionado não encontrado</span>
+                                            )}
+                                        </HeaderName>
+                                        <Posts>
+                                            <div>
+                                                {item.text}
                                             </div>
-                                        )}
-                                        {item.userMentioned && !item.userMentionedData && (
-                                            // Renderize algo se o usuário mencionado não for encontrado
-                                            <span>Usuário mencionado não encontrado</span>
-                                        )}
-                                    </HeaderName>
+                                        </Posts>
+                                    </PostInfo>
                                 </Header>
-                                <Posts>
-                                    <div>
-                                        {item.text}
+                                <div className="tl-ps-opcoes footer-profile">
+                                    <div className="tl-ps-reply">
+                                        <FontAwesomeIcon icon={faComment} />
+                                        <span> {item.replysCount}</span>
                                     </div>
-                                </Posts>
-                                <Footer>
-                                    <Status>
-                                        <CommentIcon />
-                                        {item.replysCount}
-                                    </Status>
-                                    <Status>
+                                    <div className="tl-ps-like">
                                         <FontAwesomeIcon icon={faThumbsUp} onClick={() => handleLikeClick(item.likes, item.postId)} />
-                                        {item.likes}
-                                    </Status>
-                                    <Status>
+                                        <span> {item.likes}</span>
+                                    </div>
+                                    <div className="tl-ps-deslike">
                                         <FontAwesomeIcon icon={faThumbsDown} onClick={() => handleDeslikes(item.deslikes, item.postId)} />
-                                        {item.deslikes}
-                                    </Status>
-                                    <Status>
+                                        <span> {item.deslikes}</span>
+                                    </div>
+                                    <div>
                                         <Postdays>
                                             <div>
                                                 {item.time
@@ -425,8 +428,8 @@ const PostagensVisitor = ({ userPId }) => {
                                                     : "Tempo não disponível"}
                                             </div>
                                         </Postdays>
-                                    </Status>
-                                </Footer>
+                                    </div>
+                                </div>
                             </Icons>
                         </Body>
                     </Container>
