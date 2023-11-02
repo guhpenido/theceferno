@@ -36,7 +36,7 @@ export function AppRoutes() {
         <Route path="/timeline" element={<Timeline />} /> 
         <Route path="/timeline/:postId" element={<PostPage />} />
         <Route path="/timeline" element={<Timeline />} />
-        <Route path="/VisitorPage" element={<VisitorPage />} />
+        <Route path="/VisitorPage/:perfilId" element={<VisitorPage />} />
         <Route path="/SeachPage" element={<SeachPage />} />
         <Route path="/acc" element={<Acessibilidade />} />
         <Route path="/trending" element={<Trending />} />

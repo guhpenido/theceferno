@@ -32,7 +32,7 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-const SideBar = ({ objetoUsuario }) => {
+const SideBar = ({  }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const nodeRef = useRef(null);
@@ -213,8 +213,7 @@ const SideBar = ({ objetoUsuario }) => {
                 key={user.id ? user.id : user.uid + "1"}
               >
                 <Link
-                  to="/VisitorPage"
-                  state={{ objetoUsuario: user, modo: "public" }}
+                  to={`/VisitorPage/${user.id}`}
                   style={{ color: "white" }}
                 >
                   <li

@@ -1,0 +1,25 @@
+.pf-custom-button {
+    background-color: #fff;
+    color: #00003d;
+    border: none;
+    border-radius: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    align-self: center;
+    text-align: center;
+}
+
+.pf-custom-button:hover {
+    background-color: #e6e0e0;
+    color: #4763E4;
+}
+
+.imageDiv:hover>div {
+    transform: scale(1.1);
+    cursor: pointer;
+}

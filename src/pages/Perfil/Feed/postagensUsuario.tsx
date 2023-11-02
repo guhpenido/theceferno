@@ -125,7 +125,7 @@ const PostagensUsuario: React.FC = () => {
                     setUserLoggedData(userLoggedDataResponse);
                     setUserName(userLoggedDataResponse.nome);
                     setNickname(userLoggedDataResponse.usuario);
-                    setNewAvatar(userLoggedDataResponse.avatar);
+                    setNewAvatar(userLoggedDataResponse.imageUrl);
                     setSelectedProfile(userLoggedDataResponse.usuario);
                     setIsLoadingUser(false);
                 }
@@ -180,6 +180,7 @@ const PostagensUsuario: React.FC = () => {
 
                 for (const post of userMentionedValues) {
                     let myUserMetioned = await fetchUserData(post);
+                    console.log(post);
 
                     if (post !== null) {
                         postsWithUserDataArray.push(myUserMetioned);
