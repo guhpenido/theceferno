@@ -167,7 +167,6 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-
   const openModal = () => {
     setIsModalOpen(true);
   };
