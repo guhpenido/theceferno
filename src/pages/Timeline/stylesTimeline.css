@@ -76,7 +76,6 @@ body{
   color: #fff;
   font-size: 15px;
   font-weight: 500;
-  height: 20px;
 }
 .tl-ps-foto {
   position: relative;
@@ -84,12 +83,10 @@ body{
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  left: -3px;
-  top: -3px;
   margin-right: 10px;
 }
 .tl-ps-foto img {
-  width: 100%;
+  width: 40px;
   height: 40px;
   border-radius: 50%;
 }
@@ -743,6 +740,23 @@ align-items: center;
     font-weight: 900;
     margin-top: 10px;
   }
+
+  .tl-addPost {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 25%;
+    width: 95%;
+    background-color: #0c0c0c;
+    z-index: 1;
+    border-radius: 10px;
+    border: 1px solid #242424;
+  }
+
+  .tl-addPost-list-container {
+    position: absolute;
+    width: 43%;
+  }
 }
 @media (max-width: 713px) {
   .tl-ladoDireito{
@@ -768,6 +782,23 @@ align-items: center;
   .mobile-tl-header{
     display: block;
   }
+
+  .tl-addPost {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 25%;
+    width: 95%;
+    background-color: #0c0c0c;
+    z-index: 1;
+    border-radius: 10px;
+    border: 1px solid #242424;
+  }
+
+  .tl-addPost-list-container {
+    position: absolute;
+    width: 43%;
+  }
 }
 .mobile-lateral-wrapper{
   display: block;
@@ -779,7 +810,7 @@ align-items: center;
 .close-mobile-menu{
   width: 20px;
   height: 20px;
-  background-color: red;
+  background-color: #4763E4;
   position: absolute;
   right: 0;
   top: 0;
