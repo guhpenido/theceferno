@@ -125,7 +125,7 @@ const PostagensUsuario: React.FC = () => {
                     setUserLoggedData(userLoggedDataResponse);
                     setUserName(userLoggedDataResponse.nome);
                     setNickname(userLoggedDataResponse.usuario);
-                    setNewAvatar(userLoggedDataResponse.avatar);
+                    setNewAvatar(userLoggedDataResponse.imageUrl);
                     setSelectedProfile(userLoggedDataResponse.usuario);
                     setIsLoadingUser(false);
                 }
