@@ -56,14 +56,14 @@ function Header(props) {
         <div className="tl-header-div2">
           <h1> <Link to="/trending"> Trending</Link> </h1>
         </div>
-        {/* <div className="tl-header-filter">
+         <div className="tl-header-filter">
           <div className="tl-header-filter-in">
             <img
               src="https://cdn.discordapp.com/attachments/812025565615882270/1168379201146077205/recurring-appointment-xxl.png?ex=65518cec&is=653f17ec&hm=5bb554d4e8f281a9ca4e2e554ab14d50d1c55cc82413fef5a1372af880dd7a07&"
               alt=""
             />
           </div>
-        </div> */}
+        </div> 
       </div>
       <div className="mobile-tl-header">
         <div className="mobile-tl-header-header">
@@ -86,9 +86,6 @@ function Header(props) {
         <div className="mobile-tl-header-down">
           <div className="mobile-tl-header-div1 active-mobile-role">
             <h1>Para você</h1>
-          </div>
-          <div className="mobile-tl-header-div2 ">
-            <h1>Seguindo</h1>
           </div>
         </div>
       </div>

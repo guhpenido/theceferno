@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import SideBar from '../SideBar';
 import { Container, Wrapper } from '../Layout/styles';
 import MainVisitor from '../Main/MainVisitor';
 import { Link } from "react-router-dom";
+import MenuLateral from "../../MenuLateral/MenuLateral"
 
 const VisitorPage = () => {
-  const location = useLocation()
-  const { objetoUsuario, modo } = location.state;
-
+  const userId = useParams();
   return (
     <Container >
       <Wrapper>
-        <MenuBar />
-        {
-          modo === 'public' ? <MainVisitor objetoUsuario={objetoUsuario} /> : window.location.href = "/timeline"
-        }
-        <SideBar objetoUsuario={objetoUsuario}/>
+        <MenuLateral />
+          <MainVisitor userPId={userId.perfilId} />
+        <SideBar/>
       </Wrapper>
     </Container>
   );

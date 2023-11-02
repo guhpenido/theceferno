@@ -2,9 +2,9 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, doc, getDoc, updateDoc, onSnapshot, collection } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import ModalReact from 'react-modal';
-
+import './estilo.css'; 
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -21,12 +21,13 @@ import Feed from "../Feed";
 import { auth } from "firebase-admin";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
-  authDomain: "auth-ceferno.firebaseapp.com",
-  projectId: "auth-ceferno",
-  storageBucket: "auth-ceferno.appspot.com",
-  messagingSenderId: "388861107940",
-  appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
+  apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
+  authDomain: "auth-cefernotcc.firebaseapp.com",
+  projectId: "auth-cefernotcc",
+  storageBucket: "auth-cefernotcc.appspot.com",
+  messagingSenderId: "1060989440087",
+  appId: "1:1060989440087:web:439b25a3b18602ec53d312",
+  measurementId: "G-45ESHWMMPR"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -133,13 +134,13 @@ const ProfilePage: React.FC = () => {
           const cursoValue = userData['curso'] || '';
           const instituicaoValue = userData['instituicao'] || '';
           const bannerUrlValue = userData['banner'] || ''; // Campo banner
-          const newAvatarValue = userData['avatar'] || ''; // Campo avatar
+          const newAvatarValue = userData['imageUrl'] || ''; // Campo avatar
           const nicknameValue = userData['usuario'] || '';
           const userNameValue = userData['userName'] || '';
 
           // Verifique e defina o valor padrão para bannerUrl e newAvatarValue
           if (!bannerUrlValue) {
-            setNewBanner(userData['bannerUrl'] || '');
+            setNewBanner(userData['banner'] || '');
             // console.log(userData['bannerUrl']); 
           } else {
             setNewBanner(bannerUrlValue);
@@ -179,7 +180,7 @@ const ProfilePage: React.FC = () => {
     setBio(event.target.value);
   };
 
-  const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
       const file = files[0];
@@ -188,21 +189,33 @@ const ProfilePage: React.FC = () => {
         setNewAvatar(avatarURL);
 
         // Fazer upload da imagem para o Firebase Storage
-        const storageRef = ref(storage, `avatars/${currentUser.uid}`);
+        const storageRef = ref(storage, `avatar/${currentUser.uid}`);
         await uploadBytes(storageRef, file);
 
         // Obter o URL da imagem do Firebase Storage
         const downloadURL = await getDownloadURL(storageRef);
+        console.log(downloadURL);
 
-        // Atualizar o URL do avatar no Firestore
+        // Atualizar o URL do avatar no Firestore (substitua essa parte pelo seu código de atualização Firestore)
         const userDocRef = doc(db, 'users', currentUser.uid);
-        await updateDoc(userDocRef, { avatar: downloadURL });
+        console.log(currentUser.uid);
+        await updateDoc(userDocRef, { imageUrl: downloadURL });
       }
     }
   };
 
+  const selectImage = () => {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    fileInput.click();
+  };
+
+  const selectBanner = (event: React.MouseEvent<HTMLDivElement>) => {
+    const fileInput = document.getElementById('fileInputBanner') as HTMLInputElement;
+    fileInput.click();
+  };
+
   //mudar o banner
-  const handleBannerChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBannerChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
       const file = files[0];
@@ -214,18 +227,15 @@ const ProfilePage: React.FC = () => {
         // Obter o URL da imagem do Firebase Storage
         const downloadURL = await getDownloadURL(storageRef);
 
-        // Atualizar o URL do banner no Firestore
+        // Atualizar o URL do banner no estado
+        setNewBanner(downloadURL);
+
+        // Atualizar o URL do banner no Firestore (opcional)
         const userDocRef = doc(db, 'users', currentUser.uid);
         await updateDoc(userDocRef, { banner: downloadURL });
       }
     }
   };
-
-  //mudar o nome
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserName(event.target.value);
-  };
-
 
   const saveChanges = async () => {
     try {
@@ -245,9 +255,9 @@ const ProfilePage: React.FC = () => {
         updatedData.bio = bio;
       }
 
-      if (userName) {
-        updatedData.nome = userName;
-      }
+      // if (userName) {
+      //   updatedData.nome = userName;
+      // }
 
       await updateDoc(userDocRef, updatedData);
 
@@ -279,8 +289,9 @@ const ProfilePage: React.FC = () => {
   }
 
   const estiloInput = {
-    display: 'none',
+    borderRadius: '50%',
   };
+
 
   return (
     <Container>
@@ -299,22 +310,23 @@ const ProfilePage: React.FC = () => {
         <ModalReact className="Modal" isOpen={isModalOpen} onRequestClose={closeModal}
           style={{
             overlay: {
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
               zIndex: 1000,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             },
             content: {
-              backgroundColor: '#4763E4',
+              backgroundColor: '#111111',
               padding: '20px',
               borderRadius: '12px',
               boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
               width: '90%', // Responsivo: ocupar 90% da largura disponível
-              maxWidth: '400px', // Largura máxima
+              maxWidth: '800px', // Largura máxima
               maxHeight: '80%', // Altura máxima
               display: 'flex',
               flexDirection: 'column',
+              position: 'relative',
 
               // Estilos para responsividade em telas menores (até 768px)
               '@media (max-width: 768px)': {
@@ -325,46 +337,93 @@ const ProfilePage: React.FC = () => {
             },
           }}>
 
+          <div id="pf-div-modal" style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="modalContainer">
+              <div>
+                <div>
+                  <div
+                    className="bannerDiv"
+                    onClick={selectBanner}
+                    style={{
+                      flexShrink: '0',
+                      width: '100%',
+                      height: 'min(33vw, 199px)',
+                      padding: '60px 0 100px',
+                      background: '#4763E4',
+                      position: 'relative',
+                      backgroundImage: `url(${newBanner || ''})`,
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize: 'cover',
+                      top: '0',
+                      left: '0',
+                      borderRadius: '15px', 
+                      cursor: 'pointer', 
+                    }}
+                  >
+                    {!newBanner && 'Selecione uma imagem de capa'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="fileInput"
+                      style={{ display: 'none' }}
+                      onChange={handleBannerChange}
+                    />
+                  </div>
 
-          <input
-            placeholder="Escolha uma foto de perfil"
-            type="file"
-            accept="image/*"
-            onChange={handleAvatarChange}
-            style={{ estiloInput }} // Espaçamento inferior
-          />
-          <input
-            placeholder="Escolha uma foto de capa"
-            type="file"
-            accept="image/*"
-            onChange={handleBannerChange}
-            style={{ marginBottom: '10px' }} // Espaçamento inferior
-          />
-          <textarea
-            value={bio}
-            onChange={handleBioChange}
-            style={{ marginBottom: '10px', resize: 'none', minHeight: '100px' }} // Espaçamento inferior, evita redimensionamento vertical e altura mínima
-          />
-          <textarea
-            value={userName}
-            onChange={handleNameChange}
-            style={{ marginBottom: '10px', resize: 'none', minHeight: '100px' }}
-          />
-          <button
-            onClick={saveChanges}
-            style={{
-              backgroundColor: '#fff',
-              color: '#4763E4',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '10px 20px',
-              cursor: 'pointer',
-              transition: 'background-color 0.3s, color 0.3s',
-              fontWeight: 'bold',
-            }}
-          >
-            Salvar Alterações
-          </button>
+                  <div className="container-img">
+                    <div className="imageDiv" onClick={selectImage}>
+                      <div
+                        style={{
+                          width: 'min(135px, max(45px, 22vw))',
+                          height: 'min(135px, max(45px, 22vw))',
+                          border: '3px solid #111111',
+                          background: '#7a7a7a',
+                          backgroundSize: 'cover',
+                          borderRadius: '50%',
+                          left: '20px',
+                          position: 'absolute',
+                          backgroundImage: `url(${newAvatar || ''})`,
+                          zIndex: '1',
+                          top: '115px',
+                        }}
+                      >
+                        {!newAvatar && 'Selecione uma imagem de perfil'}
+                        <input
+                          placeholder="Escolha uma foto de perfil"
+                          type="file"
+                          accept="image/*"
+                          id="fileInputBanner"
+                          onChange={handleAvatarChange}
+                          style={{ display: 'none' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <textarea
+              value={bio}
+              onChange={handleBioChange}
+              style={{
+                marginBottom: '10px',
+                resize: 'none',
+                minHeight: '100px',
+                marginTop: '40px',
+                borderRadius: '15px',
+                backgroundColor: 'transparent',
+                width: '100%',
+                padding: '10px',
+              }}
+            />
+            <button
+              onClick={saveChanges}
+              className="pf-custom-button"
+            >
+              Salvar Alterações
+            </button>
+
+          </div>
         </ModalReact>
         <h1>{userName}</h1>
         <h2>@{nickname}</h2>
@@ -383,6 +442,5 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
-
 
 

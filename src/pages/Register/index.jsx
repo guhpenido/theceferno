@@ -23,6 +23,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore"; // Import the doc function
 import cefernoFullImg from "../../assets/ceferno_icon_full.png";
 import VLibras from "@djpfs/react-vlibras";
+import { Acessibilidade } from "../Acessibilidade";
 
 const db = getFirestore(app);
 
@@ -115,31 +116,32 @@ export function Register() {
   };
 
   const isPseudonimoValid = async (pseudonimo) => {
-    try {
-      // Verifica se o usuário é uma string e não está vazia
-      if (typeof pseudonimo !== "string" || pseudonimo.trim() === "") {
-        throw new Error("pseudonimo inválido. Deve ser uma palavra não vazia.");
-      }
+    return false;
+    // try {
+    //   // Verifica se o usuário é uma string e não está vazia
+    //   if (typeof pseudonimo !== "string" || pseudonimo.trim() === "") {
+    //     throw new Error("pseudonimo inválido. Deve ser uma palavra não vazia.");
+    //   }
 
-      // Verifica se o usuário tem menos de 20 caracteres e não contém espaços
-      if (pseudonimo.length >= 20 || /\s/.test(pseudonimo)) {
-        throw new Error(
-          "O pseudonimo deve ter menos de 20 caracteres e não conter espaços."
-        );
-      }
+    //   // Verifica se o usuário tem menos de 20 caracteres e não contém espaços
+    //   if (pseudonimo.length >= 20 || /\s/.test(pseudonimo)) {
+    //     throw new Error(
+    //       "O pseudonimo deve ter menos de 20 caracteres e não conter espaços."
+    //     );
+    //   }
 
-      // Get a reference to the 'users' collection
-      const usersCollectionRef = collection(db, "users");
-      const q = query(
-        usersCollectionRef,
-        where("pseudonimo", "==", pseudonimo)
-      );
-      const querySnapshot = await getDocs(q);
-      if (pseudonimo.length > 5 && querySnapshot.empty) return true;
-    } catch (error) {
-      console.error("Error checking pseudonimo validity:", error);
-      return false;
-    }
+    //   // Get a reference to the 'users' collection
+    //   const usersCollectionRef = collection(db, "users");
+    //   const q = query(
+    //     usersCollectionRef,
+    //     where("pseudonimo", "==", pseudonimo)
+    //   );
+    //   const querySnapshot = await getDocs(q);
+    //   if (pseudonimo.length > 5 && querySnapshot.empty) return true;
+    // } catch (error) {
+    //   console.error("Error checking pseudonimo validity:", error);
+    //   return false;
+    // }
   };
 
   const isDtNascimentoValid = (dtNascimento) => {
@@ -766,19 +768,19 @@ export function Register() {
                   <h3>Banner</h3>
                 
                   <div className="ZZprofile-pic">
-                    <label className="ZZ-label" htmlFor="file">
+                    <label className="ZZ-label" htmlFor="filebanner">
                       <span className="ZZglyphicon ZZglyphicon-camera"></span>
                       <span className="in-text-foto" >Mudar banner</span>
                     </label>
                     <input
-                      id="file"
+                      id="filebanner"
                       type="file"
                       name="fotoPerfilBanner"
                       accept="image/*"
                       onChange={handleBannerPerfilChange}
                     />
                     {state.bannerSrc && (
-                      <img id="output" src={state.bannerSrc} alt="Preview" />
+                      <img id="outputBanner" src={state.bannerSrc} alt="Preview" />
                     )}
                   </div>
                 </div>
@@ -840,7 +842,7 @@ export function Register() {
             </form>
           </div>
         </div>
-        <VLibras forceOnload={true} />
+        <Acessibilidade/>
       </div>
     </div>
   );

@@ -58,8 +58,10 @@ const SeachPage = () => {
 
                     console.log({ userData });
                     const bannerUrlValue = userData["banner"] || "";
+                    const bio = userData["bio"] || "";
                     const newAvatarValue = userData["imageUrl"] || "";
-                    setBio(userDoc.data().bio || "");
+                    setBio(bio);
+                    console.log(bio);
                     setNewBanner(bannerUrlValue);
                     setNewAvatar(newAvatarValue);
                     setNickname(userData.usuario);

@@ -480,9 +480,7 @@ export function Timeline() {
                 O CEFERNO é um projeto estudantil, e para mantermos ele online
                 precisamos das doações.
               </p>
-              <Link to="https://media.discordapp.net/attachments/944149522177724467/1168375178351353966/image.png?ex=6551892d&is=653f142d&hm=7d05dea6af65bd29a93f20f6b8baee33dda6a2feb41d29705790a41baf7f9938&=">
-              <button>Doar</button>
-              </Link>
+              <Link to="https://linktr.ee/theceferno" target="_blank"><button>Doar</button></Link>
             </div>
           </div>
           <AddPost />

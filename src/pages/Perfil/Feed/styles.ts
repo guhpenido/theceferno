@@ -7,18 +7,26 @@ export const Container = styled.div`
 export const Tab = styled.div`
   flex: 1;
   margin-top: 2vw;
-  padding: 1.5vw 3.5vw 2vw;
+  padding: 15px 15px 15px 15px;
   text-align: center;
   font-weight: bold;
-  font-size: 1.5vw;
+  font-size: 15px;
   outline: 0;
   cursor: pointer;
-  color: #4763E4;
-  padding-left: 3.5vw;
-  border-bottom: 0.15vw solid #4763E4;
+  color: white;
+  
+  border-radius: 15px 15px 0  0 ;
 
   &:hover {
-    background: #00003d;
+    border-bottom: 2px solid #4763E4;
+  }
+
+  &:active{
+    border-bottom: 2px solid #4763E4;
+  }
+
+  &:after{
+    border-bottom: 2px solid #4763E4;
   }
 
   @media (max-width: 768px) {
@@ -34,8 +42,7 @@ export const TabContainer = styled.div`
 `;
 
 export const Whispers = styled.div`
-  background-color: black; 
-  padding: 30px;
+  background-color: #0c0c0c; 
   display: flex;
   flex-direction: column;
   flex-shrink: 0;

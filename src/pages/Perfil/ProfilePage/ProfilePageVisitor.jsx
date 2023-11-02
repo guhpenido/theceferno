@@ -24,13 +24,14 @@ import Feed from "../Feed";
 import FeedVisitor from "../Feed/feedVisitor";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
-    authDomain: "auth-ceferno.firebaseapp.com",
-    projectId: "auth-ceferno",
-    storageBucket: "auth-ceferno.appspot.com",
-    messagingSenderId: "388861107940",
-    appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
-};
+    apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
+    authDomain: "auth-cefernotcc.firebaseapp.com",
+    projectId: "auth-cefernotcc",
+    storageBucket: "auth-cefernotcc.appspot.com",
+    messagingSenderId: "1060989440087",
+    appId: "1:1060989440087:web:439b25a3b18602ec53d312",
+    measurementId: "G-45ESHWMMPR"
+  };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -38,9 +39,8 @@ const storage = getStorage(app);
 
 ModalReact.setAppElement('#root');
 
-const ProfilePageVisitor = ({ objetoUsuario }) => {
-
-    // console.log(objetoUsuario); 
+const ProfilePageVisitor = ({ userPId }) => {
+    console.log(userPId);
     const navigate = useNavigate();
     const auth = getAuth(app);
     const [currentUser, setCurrentUser] = useState(null);
@@ -71,20 +71,25 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
                 
                 const userDocRef = doc(db, 'users', user.uid);
                 const userDoc = await getDoc(userDocRef);
-                if(userDoc.exists()){
+                if (userDoc.exists()) {
                     setCurrentUser(userDoc.data());
-
-                    if(userDoc.data().seguindo.includes(objetoUsuario.id)){
+                  
+                    const userData = userDoc.data(); // Obter dados do usuário
+                  
+                    if (userData && userData.seguindo) { // Verificar se 'seguindo' é definido
+                      if (userData.seguindo.includes(userPId)) {
                         buttonFollowRef.current.innerHTML = "Deixar de Seguir"
                         buttonFollowRef.current.setAttribute('data-follow', 'true');
-                    } else {
+                      } else {
                         buttonFollowRef.current.innerHTML = "Seguir";
                         buttonFollowRef.current.setAttribute('data-follow', 'false');
+                      }
                     }
-                } 
-                setUserId(objetoUsuario.id);
-                fetchUserDataAndSetState(objetoUsuario.id);
-                searchUserFields(objetoUsuario.id);
+                  } 
+                  
+                setUserId(userPId);
+                fetchUserDataAndSetState(userPId);
+                searchUserFields(userPId);
             } else {
                 navigate('/login');
             }
@@ -154,6 +159,7 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
                     const cursoValue = userData['curso'] || '';
+                    const imagem = userData['imageUrl'] || '';
                     const instituicaoValue = userData['instituicao'] || '';
                     const bannerUrlValue = userData['banner'] || ''; // Campo banner
                     const newAvatarValue = userData['avatar'] || ''; // Campo avatar
@@ -168,15 +174,15 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
                     }
 
                     if (!newAvatarValue) {
-                        setNewAvatar(objetoUsuario.imageUrl);
+                        setNewAvatar(imagem);
                     } else {
-                        setNewAvatar(objetoUsuario.imageUrl);
+                        setNewAvatar(imagem);
                     }
 
-                    setNickname(objetoUsuario.usuario);
-                    setUserName(objetoUsuario.nome);
-                    setUserCurso(objetoUsuario.curso);
-                    setUserInstituicao(objetoUsuario.instituicao);
+                    setNickname(nicknameValue);
+                    setUserName(userNameValue);
+                    setUserCurso(cursoValue);
+                    setUserInstituicao(instituicaoValue);
                     setUserSeguidores(userData.seguidores?userData.seguidores.length:"0");
                     setUserSeguindo(userData.seguindo?userData.seguindo.length:"0");
 
@@ -194,7 +200,7 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
         onAuthStateChanged(auth, async (user) => {
             if (user) {
 
-                const userDocSelRef = doc(db, 'users', objetoUsuario.id);
+                const userDocSelRef = doc(db, 'users', userPId);
                 const userSelDoc = await getDoc(userDocSelRef);
                 if (userSelDoc.exists()) {
                     setBio(userSelDoc.data().bio || '');
@@ -203,7 +209,7 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
                 setCurrentUser(null);
             }
         });
-    }, []);
+    }, [userPId]);
 
     function capitalizeFirstLetter(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -211,12 +217,12 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
 
     async function handleFollow() {
         const userRef = doc(db, 'users', currentUser.id);
-        const userProfileRef = doc(db, 'users', objetoUsuario.id);
+        const userProfileRef = doc(db, 'users', userPId);
 
         // Deixa de seguir
-        if(currentUser.seguindo.includes(objetoUsuario.id)){
+        if(currentUser.seguindo.includes(userPId)){
             await updateDoc(userRef, {
-                seguindo: arrayRemove(objetoUsuario.id)
+                seguindo: arrayRemove(userPId)
             });
             await updateDoc(userProfileRef, {
                 seguidores: arrayRemove(currentUser.id)
@@ -227,7 +233,7 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
         // Começa a Seguir
         } else {
             await updateDoc(userRef, {
-                seguindo: arrayUnion(objetoUsuario.id)
+                seguindo: arrayUnion(userPId)
             });
             await updateDoc(userProfileRef, {
                 seguidores: arrayUnion(currentUser.id)
@@ -276,7 +282,7 @@ const ProfilePageVisitor = ({ objetoUsuario }) => {
                 </Tags>
                 <Botao onClick={handleFollow} ref={buttonFollowRef}>Seguir</Botao>
             </ProfileData>
-            <FeedVisitor objetoUsuario={objetoUsuario}/>
+            <FeedVisitor userId={userPId}/>
         </Container>
     );
 };

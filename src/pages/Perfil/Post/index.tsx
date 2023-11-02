@@ -27,7 +27,6 @@ import {
   Postdays,
   Posts,
   Status,
-  arrow,
 } from "./styles";
 
 import {
@@ -41,12 +40,13 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
-  authDomain: "auth-ceferno.firebaseapp.com",
-  projectId: "auth-ceferno",
-  storageBucket: "auth-ceferno.appspot.com",
-  messagingSenderId: "388861107940",
-  appId: "1:388861107940:web:0bf718602145d96cc9d6f1",
+  apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
+  authDomain: "auth-cefernotcc.firebaseapp.com",
+  projectId: "auth-cefernotcc",
+  storageBucket: "auth-cefernotcc.appspot.com",
+  messagingSenderId: "1060989440087",
+  appId: "1:1060989440087:web:439b25a3b18602ec53d312",
+  measurementId: "G-45ESHWMMPR"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -148,7 +148,7 @@ function PostDisplay({ post, userSentData, userMentionedData, setRendState }) {
             {imageSent && (
               <Avatar
                 as="img"
-                height="60px"
+                height="0px"
                 src={imageSent}
                 alt="Novo Avatar"
               />
@@ -161,7 +161,7 @@ function PostDisplay({ post, userSentData, userMentionedData, setRendState }) {
                   <HeaderName>
                     <div>{nomeEnvio}</div>
                     <div>@{userEnvio}</div>
-                    <FontAwesomeIcon className="arrow" icon={faArrowRight} style={{ marginTop:'-47px', marginLeft:"50px" }}/>
+                    <FontAwesomeIcon className="arrow" icon={faArrowRight} />
                     {userMentionedData && (
                       <div>
                         <HeaderNameMentioned>
@@ -173,7 +173,7 @@ function PostDisplay({ post, userSentData, userMentionedData, setRendState }) {
                             )}
                           </Avatar>
                           <div>{userMentionedData.nome}</div>
-                          <div className="tl-ps-userReceived" style={{marginTop:"8px", }}>
+                          <div className="tl-ps-userReceived">
                             @{userMentionedData.usuario}
                           </div>
                         </HeaderNameMentioned>
@@ -192,14 +192,14 @@ function PostDisplay({ post, userSentData, userMentionedData, setRendState }) {
                 </Posts>
                 <Footer>
                   <Status>
-                    <FontAwesomeIcon icon={faComment} style={{marginRight:"20px", }}/> {post.replyCount}
+                    <FontAwesomeIcon icon={faComment} /> {post.replyCount}
                   </Status>
                   <Status>
-                    <FontAwesomeIcon icon={faThumbsUp} style={{marginRight:"5px", marginLeft:"15px" }} onClick={() => handleLikeClick(post.likes, post.postId)} />
+                    <FontAwesomeIcon icon={faThumbsUp} onClick={() => handleLikeClick(post.likes, post.postId)} />
                     {likes}
                   </Status>
                   <Status>
-                    <FontAwesomeIcon icon={faThumbsDown} style={{marginRight:"5px", marginLeft:"15px" }}  /> {post.deslikes}
+                    <FontAwesomeIcon icon={faThumbsDown} /> {post.deslikes}
                   </Status>
                   <Status>
                     <Postdays>

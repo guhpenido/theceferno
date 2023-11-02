@@ -121,13 +121,11 @@ export const Tags = styled.div`
 
 export const Institution = styled.div`
   text-align: center;
-  background-color: rgba(71, 99, 228, 0.2);
-  border: 1px solid rgb(71, 99, 228);
   border-radius: 10px;
-  margin-left:15px; 
   font-size: 12px;
-  margin-top: 20px;
-  padding: 5px 10px;
+  padding: 5px 5px;
+  margin-left:10px;
+  color: #9f9d9d;
 `;
 
 export const Course = styled.div`
@@ -137,13 +135,9 @@ export const Course = styled.div`
   width: max-content;
   box-sizing: border-box;
   border-radius: 15px;
-  background-color: rgba(71, 99, 228, 0.2);
-  border: 1px solid rgb(71, 99, 228);
   border-radius: 10px; 
-  margin: 2px;
   font-size: 12px;
-  margin-right:70px;
-  margin-top: 20px;
+  color: #9f9d9d;
 `;
 
 export const Following = styled.div`
@@ -180,7 +174,7 @@ export const Cabecalho = styled.div`
   z-index: 2;
   position: sticky;
   top: 0;
-  background: #000;
+  background: #0c0c0c;
   display: flex;
   align-items: center;
   text-align: left;
@@ -242,5 +236,3 @@ export const Botao = styled.button`
     }
 
 `
-
-

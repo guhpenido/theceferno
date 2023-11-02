@@ -39,20 +39,22 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { faArrowDown, faThumbsDown, faThumbsUp } from "@fortawesome/fontawesome-free-solid";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
-    authDomain: "auth-ceferno.firebaseapp.com",
-    projectId: "auth-ceferno",
-    storageBucket: "auth-ceferno.appspot.com",
-    messagingSenderId: "388861107940",
-    appId: "1:388861107940:web:0bf718602145d96cc9d6f1",
-};
+    apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
+    authDomain: "auth-cefernotcc.firebaseapp.com",
+    projectId: "auth-cefernotcc",
+    storageBucket: "auth-cefernotcc.appspot.com",
+    messagingSenderId: "1060989440087",
+    appId: "1:1060989440087:web:439b25a3b18602ec53d312",
+    measurementId: "G-45ESHWMMPR"
+  };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
 
-const PostagensVisitor = ({ objetoUsuario }) => {
+const PostagensVisitor = ({ userPId }) => {
+    console.log(userPId);
     const navigate = useNavigate();
     const auth = getAuth(app);
 
@@ -79,10 +81,10 @@ const PostagensVisitor = ({ objetoUsuario }) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                setUserId(objetoUsuario.id);
-                setUsersent(objetoUsuario.id);
-                fetchUserDataAndSetState(objetoUsuario.id);
-                fetchTimelineItemsForUser(objetoUsuario.id);
+                setUserId(userPId);
+                setUsersent(userPId);
+                fetchUserDataAndSetState(userPId);
+                fetchTimelineItemsForUser(userPId);
             } else {
                 navigate("/login");
             }
@@ -110,10 +112,10 @@ const PostagensVisitor = ({ objetoUsuario }) => {
                 const userLoggedDataResponse = await fetchUserData(userId);
                 if (userLoggedDataResponse) {
                     setUserLoggedData(userLoggedDataResponse);
-                    setUserName(objetoUsuario.nome);
-                    setNickname(objetoUsuario.usuario);
-                    setNewAvatar(objetoUsuario.imageUrl);
-                    setSelectedProfile(objetoUsuario.usuario);
+                    setUserName(userLoggedDataResponse.nome);
+                    setNickname(userLoggedDataResponse.usuario);
+                    setNewAvatar(userLoggedDataResponse.imageUrl);
+                    setSelectedProfile(userLoggedDataResponse.usuario);
                     setIsLoadingUser(false);
                 }
             }
