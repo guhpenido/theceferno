@@ -16,6 +16,18 @@ export const Container = styled.div`
     border-left: 1px solid #4763E4;
     border-right: 1px solid #4763E4;
   }
+  
+  @media screen and (min-width: 720px) and (max-width: 923px) {
+    width: 70%; 
+  }
+
+  @media screen and (min-width: 924px)  and (max-width: 1090px) {
+    width: 35%; 
+  }
+
+  @media screen and (min-width: 1090px)  and (max-width: 1279px) {
+    width: 30%; 
+  }
 `;
 
 export const ContainerTopo = styled.div`
