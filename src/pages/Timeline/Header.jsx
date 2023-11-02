@@ -53,6 +53,9 @@ function Header(props) {
           <h1>Para Você</h1>
           <div className="header-active-in"></div>
         </div>
+        <div className="tl-header-div2">
+          <h1> <Link to="/trending"> Trending</Link> </h1>
+        </div>
          <div className="tl-header-filter">
           <div className="tl-header-filter-in">
             <img

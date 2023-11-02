@@ -415,7 +415,7 @@ form .tl-textInput{
   overflow: visible;
 }
 
-.footerDm div:hover img{
+.footerDm div:hover img {
   filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%) drop-shadow(0px 0px 5px #4763E4) drop-shadow(0px 0px 15px #4763E4);
 }
 
@@ -467,6 +467,18 @@ form .tl-textInput{
 .tl-reply-button:hover {
   background-color: #000;
 }
+
+.tlBotaoTroca {
+  background: none;
+  border: none;
+  padding: 0 1vw 0 1vw;
+
+}
+
+.tlBotaoTroca:hover {
+  border-bottom: 1px solid #4562e2;
+}
+
 .tl-main{
   margin-top: 50px;
   width: 51%;
@@ -796,4 +808,5 @@ align-items: center;
   100% {
     transform: translateX(0);
   }
+
 }
