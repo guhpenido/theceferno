@@ -4,7 +4,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenti
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import React, { useState, useEffect, useRef } from 'react';
 import ModalReact from 'react-modal';
-
+import './estilo.css'; 
 import { useNavigate } from "react-router-dom";
 import {
     Container,
@@ -280,7 +280,7 @@ const ProfilePageVisitor = ({ userPId }) => {
                         <p><span ref={followingRef}>{userSeguindo}</span>Seguindo</p>
                     </Following>
                 </Tags>
-                <Botao onClick={handleFollow} ref={buttonFollowRef}>Seguir</Botao>
+                <Botao className="ppv-button-follow" onClick={handleFollow} ref={buttonFollowRef}>Seguir</Botao>
             </ProfileData>
             <FeedVisitor userId={userPId}/>
         </Container>
