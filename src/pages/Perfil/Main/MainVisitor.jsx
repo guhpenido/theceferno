@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { Container, Header, BackIcon, ProfileInfo, BottomMenu, HomeIcon, SearchIcon, DmIcon, Whisper, Config }
+import { Container, Header, BackIcon, ProfileInfo, BottomMenu }
     from './styles';
 import ProfilePageVisitor from '../ProfilePage/ProfilePageVisitor';
+import homeIcon from "../../../assets/home-icon.svg";
+import dmIcon from "../../../assets/dm-icon.svg";
+import perfilIcon from "../../../assets/perfil-icon.svg";
+import { Link } from "react-router-dom";
 
 
 const MainVisitor = ({ userPId }) => {
@@ -40,11 +44,31 @@ const MainVisitor = ({ userPId }) => {
             <ProfilePageVisitor userPId={userPId} />
 
             <BottomMenu>
-                <HomeIcon />
-                <SearchIcon />
-                <Whisper />
-                <DmIcon />
-                <Config />
+            <div className="footerDm">
+					<Link className="botaoAcessar" to="/timeline">
+						<div>
+							<img id="home" src={homeIcon} alt="Botão ir para Home"></img>
+						</div>
+					</Link>
+					<Link className="botaoAcessar" to="/perfil">
+						<div>
+							<img
+								id="pesquisa"
+								src={perfilIcon}
+								alt="Botão para pesquisa"
+							></img>
+						</div>
+					</Link>
+					<Link className="botaoAcessar" to="/dm">
+						<div>
+							<img
+								id="dm"
+								src={dmIcon}
+								alt="Botão ir para DM, chat conversas privadas"
+							></img>
+						</div>
+					</Link>
+				</div>
             </BottomMenu>
         </Container>
     );
