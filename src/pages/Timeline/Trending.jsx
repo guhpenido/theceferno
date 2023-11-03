@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import {
-  doc,
-  getDoc,
-  getDocs,
-  getFirestore,
-  onSnapshot,
-  collection,
-  where,
-  query,
-  orderBy,
-  limit,
+	doc,
+	getDoc,
+	getDocs,
+	getFirestore,
+	onSnapshot,
+	collection,
+	where,
+	query,
+	orderBy,
+	limit,
 } from "firebase/firestore";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -21,172 +21,201 @@ import Header from "./Header";
 import MenuLateral from "../MenuLateral/MenuLateral";
 import { Acessibilidade } from "../Acessibilidade/index";
 import { Link } from "react-router-dom";
+import homeIcon from "../../assets/home-icon.svg";
+import dmIcon from "../../assets/dm-icon.svg";
+import perfilIcon from "../../assets/perfil-icon.svg";
 
 // import "./stylesTrending.css"; // Estilo personalizado para a seção "Trending"
 
- function Trending() {
-  const [trendingPosts, setTrendingPosts] = useState([]);
-  const db = getFirestore(app);
+function Trending() {
+	const [trendingPosts, setTrendingPosts] = useState([]);
+	const db = getFirestore(app);
 
-  const [userSentData, setUserSentData] = useState(null);
-  const [userMentionedData, setUserMentionedData] = useState(null);
+	const [userSentData, setUserSentData] = useState(null);
+	const [userMentionedData, setUserMentionedData] = useState(null);
 
-  useEffect(() => {
-    fetchTrendingPosts();
-  }, []);
+	useEffect(() => {
+		fetchTrendingPosts();
+	}, []);
 
-  const fetchTrendingPosts = async () => {
-    try {
-      const postsCollectionRef = collection(db, "timeline");
-      const trendingPostsQuery = query(
-        postsCollectionRef,
-        orderBy("deslikes", "desc") // Ordene por deslikes em ordem decrescente
-      );
+	const fetchTrendingPosts = async () => {
+		try {
+			const postsCollectionRef = collection(db, "timeline");
+			const trendingPostsQuery = query(
+				postsCollectionRef,
+				orderBy("deslikes", "desc") // Ordene por deslikes em ordem decrescente
+			);
 
-      const trendingPostsData = await getPostsFromFirestore(trendingPostsQuery);
-      if (trendingPostsData.length == 0) {
-        console.log("Você já chegou ao fim");
-      } else {
-        const postsWithUserData = [];
+			const trendingPostsData = await getPostsFromFirestore(trendingPostsQuery);
+			if (trendingPostsData.length == 0) {
+				console.log("Você já chegou ao fim");
+			} else {
+				const postsWithUserData = [];
 
-        for (const post of trendingPostsData) {
-          const userSentData = await fetchUserData(post.userSent);
-          let userMentionedData = null;
-          
-          if (post.userMentioned !== "") {
-            userMentionedData = await fetchUserData(post.userMentioned);
-          }
+				for (const post of trendingPostsData) {
+					const userSentData = await fetchUserData(post.userSent);
+					let userMentionedData = null;
 
-          postsWithUserData.push({
-            post,
-            userSentData,
-            userMentionedData,
-          });
+					if (post.userMentioned !== "") {
+						userMentionedData = await fetchUserData(post.userMentioned);
+					}
 
-        }
+					postsWithUserData.push({
+						post,
+						userSentData,
+						userMentionedData,
+					});
+				}
 
-        setTrendingPosts(postsWithUserData)
-      }
-    } catch (error) {
-      console.error("Erro ao obter os posts em tendência:", error);
-    }
-  }
-  
+				setTrendingPosts(postsWithUserData);
+			}
+		} catch (error) {
+			console.error("Erro ao obter os posts em tendência:", error);
+		}
+	};
 
-  const getPostsFromFirestore = async (query) => {
-    const querySnapshot = await getDocs(query);
-    const postsData = [];
+	const getPostsFromFirestore = async (query) => {
+		const querySnapshot = await getDocs(query);
+		const postsData = [];
 
-    querySnapshot.forEach((doc) => {
-      const postData = {
-        id: doc.data().postId,
-        ...doc.data(),
-      };
-      postsData.push(postData);
-    });
-    return postsData;
-  };
+		querySnapshot.forEach((doc) => {
+			const postData = {
+				id: doc.data().postId,
+				...doc.data(),
+			};
+			postsData.push(postData);
+		});
+		return postsData;
+	};
 
-  // console.log("trendingPosts:", trendingPosts);
+	// console.log("trendingPosts:", trendingPosts);
 
-  const auth = getAuth(app);
-  const navigate = useNavigate();
-  const [userId, setUserId] = useState(null);
-  const [userLoggedData, setUserLoggedData] = useState(null);
+	const auth = getAuth(app);
+	const navigate = useNavigate();
+	const [userId, setUserId] = useState(null);
+	const [userLoggedData, setUserLoggedData] = useState(null);
 
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(auth, (user) => {
+			if (user) {
+				console.log(user);
+				setUserId(user.uid);
+				console.log(user);
+				fetchUserDataAndSetState(user.uid);
+				// carregaTml();
+				// fetchTrendingPosts();
+			} else {
+				navigate("/login");
+			}
+		});
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log(user);
-        setUserId(user.uid);
-        console.log(user);
-        fetchUserDataAndSetState(user.uid);
-        // carregaTml();
-        // fetchTrendingPosts();
+		return () => unsubscribe();
+	}, [auth, navigate]);
 
-      } else {
-        navigate("/login");
-      }
-    });
+	const fetchUserDataAndSetState = async (userId) => {
+		console.log(userId);
+		try {
+			const userLoggedDataResponse = await fetchUserData(userId);
+			setUserLoggedData(userLoggedDataResponse);
+			console.log(userLoggedData);
+		} catch (error) {
+			console.error("Error fetching user data:", error.message);
+			//setIsLoading(false); // Even if there's an error, stop loading
+		}
+	};
 
-    return () => unsubscribe();
-  }, [auth, navigate]);
+	const fetchUserData = async (userId) => {
+		try {
+			if (!userId) {
+				console.error("Invalid userId");
+				return null;
+			}
 
-const fetchUserDataAndSetState = async (userId) => {
-    console.log(userId);
-    try {
-      const userLoggedDataResponse = await fetchUserData(userId);
-      setUserLoggedData(userLoggedDataResponse);
-      console.log(userLoggedData)
-    } catch (error) {
-      console.error("Error fetching user data:", error.message);
-      //setIsLoading(false); // Even if there's an error, stop loading
-    }
-  };
+			const userDocRef = doc(db, "users", userId);
 
-const fetchUserData = async (userId) => {
-    try {
-      if (!userId) {
-        console.error("Invalid userId");
-        return null;
-      }
+			const userDoc = await getDoc(userDocRef);
 
-      const userDocRef = doc(db, "users", userId);
+			if (userDoc.exists()) {
+				return userDoc.data();
+			} else {
+				console.log("User not found");
+				return null;
+			}
+		} catch (error) {
+			console.error("Error fetching user data:", error.message);
+			return null;
+		}
+	};
 
-      const userDoc = await getDoc(userDocRef);
-
-      if (userDoc.exists()) {
-        return userDoc.data();
-      } else {
-        console.log("User not found");
-        return null;
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error.message);
-      return null;
-    }
-  };
-
-  return (
-    <>
-      <div className="tl-screen">
-        <div className="tl-container">
-        <div className="tl-header">
-        <div className="tl-header-div1 header-active">
-          <h1> <Link to="/timeline">Para Você</Link> </h1>
-        </div>
-        <div className="tl-header-div2">
-          <h1> <Link to="/trending"> Trending</Link> </h1>
-          <div className="header-active-in"></div>
-        </div>
-         <div className="tl-header-filter">
-          <div className="tl-header-filter-in">
-            <img
-              src="https://cdn.discordapp.com/attachments/812025565615882270/1168379201146077205/recurring-appointment-xxl.png?ex=65518cec&is=653f17ec&hm=5bb554d4e8f281a9ca4e2e554ab14d50d1c55cc82413fef5a1372af880dd7a07&"
-              alt=""
-            />
-          </div>
-        </div> 
-      </div>
-        <MenuLateral />
-          <div className="tl-main">
-            <div className="tl-box">
-              {trendingPosts.map(( { post, userSentData, userMentionedData } ) => (
-                <PostDisplay 
-                  key={post.id} 
-                  post={post} 
-                  userSentData={userSentData} 
-                  userMentionedData={userMentionedData}
-                  userId={userId}
-                  userLoggedData={userLoggedData}
-                />
-            
-              ))}
-            </div>
-          </div>
-          <div className="tl-ladoDireito">
-            {/* <div className="tl-ladoDireito-procurar">
+	return (
+		<>
+			<div className="tl-screen">
+				<div className="tl-container">
+					<div className="tl-header">
+						<div className="tl-header-div1 header-active">
+							<h1>
+								<Link to="/timeline">Para Você</Link>
+							</h1>
+						</div>
+						<div className="tl-header-div2">
+							<h1>
+								<Link to="/trending"> Trending</Link>
+							</h1>
+							<div className="header-active-in"></div>
+						</div>
+						<div className="tl-header-filter">
+							<div className="tl-header-filter-in">
+								<img
+									src="https://cdn.discordapp.com/attachments/812025565615882270/1168379201146077205/recurring-appointment-xxl.png?ex=65518cec&is=653f17ec&hm=5bb554d4e8f281a9ca4e2e554ab14d50d1c55cc82413fef5a1372af880dd7a07&"
+									alt=""
+								/>
+							</div>
+						</div>
+					</div>
+					<MenuLateral />
+					<div className="footerDm">
+						<Link className="botaoAcessar" to="/timeline">
+							<div>
+								<img id="home" src={homeIcon} alt="Botão ir para Home"></img>
+							</div>
+						</Link>
+						<Link className="botaoAcessar" to="/perfil">
+							<div>
+								<img
+									id="pesquisa"
+									src={perfilIcon}
+									alt="Botão para pesquisa"
+								></img>
+							</div>
+						</Link>
+						<Link className="botaoAcessar" to="/dm">
+							<div>
+								<img
+									id="dm"
+									src={dmIcon}
+									alt="Botão ir para DM, chat conversas privadas"
+								></img>
+							</div>
+						</Link>
+					</div>
+					<div className="tl-main">
+						<div className="tl-box">
+							{trendingPosts.map(
+								({ post, userSentData, userMentionedData }) => (
+									<PostDisplay
+										key={post.id}
+										post={post}
+										userSentData={userSentData}
+										userMentionedData={userMentionedData}
+										userId={userId}
+										userLoggedData={userLoggedData}
+									/>
+								)
+							)}
+						</div>
+					</div>
+					<div className="tl-ladoDireito">
+						{/* <div className="tl-ladoDireito-procurar">
               <div className="procurar-box">
                 <div className="img-procurar-box">
                   <div className="img-procurar-box-in">
@@ -240,18 +269,19 @@ const fetchUserData = async (userId) => {
                 )}
               </div>
             </div> */}
-            <div className="tl-ladoDireito-doar">
-              <h1>Deseja doar para o CEFERNO?</h1>
-              <p>
-                O CEFERNO é um projeto estudantil, e para mantermos ele online
-                precisamos das doações.
-              </p>
-              <Link to="https://linktr.ee/theceferno" target="_blank"><button>Doar</button></Link>
-            </div>
-          </div>
-       
-        </div>
-        {/*<div className="tl-menu">
+						<div className="tl-ladoDireito-doar">
+							<h1>Deseja doar para o CEFERNO?</h1>
+							<p>
+								O CEFERNO é um projeto estudantil, e para mantermos ele online
+								precisamos das doações.
+							</p>
+							<Link to="https://linktr.ee/theceferno" target="_blank">
+								<button>Doar</button>
+							</Link>
+						</div>
+					</div>
+				</div>
+				{/*<div className="tl-menu">
           <div className="tl-menu-header">
             <div className="tl-menu-header-profile">
               <div className="tl-menu-foto"></div>
@@ -280,10 +310,9 @@ const fetchUserData = async (userId) => {
           </div>
           <div className="tl-menu-footer"></div>
   </div>*/}
-      </div>
-    </>
-
-  );
+			</div>
+		</>
+	);
 }
 
 export default Trending;

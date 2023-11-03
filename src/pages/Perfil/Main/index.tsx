@@ -53,13 +53,6 @@ const Main: React.FC = () => {
       </Header>
 
       <ProfilePage />
-      <BottomMenu>
-        <HomeIcon />
-        <SearchIcon />
-        <Whisper />
-        <DmIcon />
-        <Config />
-      </BottomMenu>
     </Container>
   );
 };
