@@ -1,28 +1,39 @@
 /* denuncia */
 
-.iconeDenuncia {
-  margin-left: 45vw;
-  color: #4763e4;
-}
-
-.DenunciaInvisible {
-  display: none;
-}
-
-.FundoInvisible {
-  backdrop-filter: blur(50px);
-}
+/* mobile first */
 
 .denuncia {
   position: fixed !important;
-  width: 50vw;
-  height: 30vh;
+  top: 15vh;
+  left: 8vw;
+  width: 85vw;
+  height: auto;
   background-color: #000000;
-  border: 4.5px groove #4763e4;
+  border: 4px groove #4763e4;
   padding-left: 2vw;
-  padding-right: 7vw;
+  padding-right: 2vw;
   color: white;
   z-index: 1;
+
+  border-radius: 12px;
+}
+
+.iconeDenuncia {
+  margin-left: 80vw;
+  color: #4763e4;
+}
+
+.iconeDenuncia:hover,
+.fecharDenuncia:hover ,
+.escolhaDenuncia:hover, 
+select:hover {
+  cursor: pointer;
+}
+
+.escolhaDenuncia {
+  margin-bottom: -1vh;
+  margin-left: -1vw;
+
 }
 
 .denuncia button {
@@ -32,36 +43,68 @@
 }
 
 .denuncia .enviar {
-  margin-top: 10vh;
+  margin-top: 2vh;
   margin-left: 35vw;
   font-size: 2.5vh;
 }
+
 .denuncia h1 {
-  font-size: 4vh;
-  text-align: center;
-  margin-top: 1vh;
-  margin-left: 20vw;
-  padding-bottom: 1.5vh;
+  font-size: 3vh;
+  padding-left: 25vw;
+  display: inline;
+}
+
+.fecharDenuncia {
+  padding-left: 25vw;
+  padding-top: -5vw;
+  font-size: 15px;
+  display: inline;
+}
+
+.headerDenuncia {
+  padding-top: 1vh;
+  display: block;
+  margin-bottom: 2vh;
 }
 
 .denuncia h1 button {
   margin-left: 15vw;
 }
 
-
 .opcoesDenuncia {
   background: black !important;
   color: white;
   font-weight: bold;
   height: 5vh;
-  width: auto;
-  border: 2.5px groove blue !important;
+  width: 80vw;
+  border: 2px groove blue !important;
+  border-radius: 5px;
 }
 
 .alternaOpcao {
   padding-left: 3vw;
 }
 
+
+.DenunciaInvisible {
+  display: none;
+}
+
+.FundoInvisible {
+  backdrop-filter: blur(50px);
+}
+
 label {
-  font-size: 3vw;
+  display: block;
+  width: 82vw;
+}
+
+option {
+  padding: 10px !important;
+  border: 2px solid red;
+}
+
+::selection {
+  color: white;
+  background-color: #4763e4; /* Define a cor de fundo da seleção */
 }
