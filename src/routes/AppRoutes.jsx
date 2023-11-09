@@ -18,6 +18,7 @@ import { Acessibilidade } from "../pages/Acessibilidade/index";
 import Trending from "../pages/Timeline/Trending";
 import Notificacao from "../pages/Notificacao/Notificacao";
 import {SavedPosts} from "../pages/Timeline/salvos";
+import Pesquisa from "../pages/Pesquisa/index"
 export function AppRoutes() {
   return (
     <BrowserRouter>
@@ -40,7 +41,7 @@ export function AppRoutes() {
         <Route path="/acc" element={<Acessibilidade />} />
         <Route path="/trending" element={<Trending />} />
         <Route path="/savedPosts" element={<SavedPosts />} />
-        <Route path="/not" element={<Notificacao />} />
+        <Route path="/pesquisa" element={<Pesquisa />} />
       </Routes>
     </BrowserRouter>
   );

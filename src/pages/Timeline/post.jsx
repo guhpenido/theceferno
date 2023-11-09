@@ -567,6 +567,7 @@ function PostDisplay({
     }
   };
   async function countRepliesWithMessageReplyed(postId) {
+    const db = getFirestore(app);
     const repliesCollectionRef = collection(db, "replys");
     const queryRef = query(repliesCollectionRef, where("messageReplyed", "==", postId));
   
