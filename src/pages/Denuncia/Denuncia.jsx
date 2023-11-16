@@ -86,13 +86,16 @@ function Denuncia ({  postId, userId, userSentData }) {
 
   return (
     <div className={`denuncia ${h1Visible ? 'visible' : 'DenunciaInvisible'}`}>
-      <h1>Denúncia <button onClick={toggleh1Visibility}>X</button></h1>
-      <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box1'> Está publicando conteúdo que não deveria estar no Ceferno  <button className="alternaOpcao" onClick={toggleBox1Visibility}> <img src="src\pages\Timeline\assets\icone.png" /> </button></label>
+      <div className="headerDenuncia">
+        <h1>Denúncia </h1>
+        <button className="fecharDenuncia" onClick={toggleh1Visibility}>X</button>
+      </div>
+      <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box1'> Está publicando conteúdo que não deveria estar no Ceferno  <button className="alternaOpcao" onClick={toggleBox1Visibility}> <img className="escolhaDenuncia" src="src\pages\Timeline\assets\icone.png" /> </button></label>
       <select className={`opcoesDenuncia box1 ${box1Visible ? 'visible' : 'DenunciaInvisible'}`} id="box1" name="box1" value={motive} onChange={handleMotiveChange}>
         <option>Selecione uma opção</option>
         <option value="Eh_Spam"> É spam </option>
         <option value="Nao_Gostei"> Simplesmente não gostei </option>
-        <option value="Suicidio_Automutilacao_Disturbios"> Suicidio, automutilação ou disturbios alimentares </option>
+        <option value="Suicidio_Automutilacao_Disturbios"> Suicidio e automutilação  </option>
         <option value="Produtos_ilicitos"> Venda de produtos ilicitos </option>
         <option value="Nudez"> Nudez ou atividade sexual </option>
         <option value="Discurso_de_Odio"> Símbolos ou discurso de ódio </option>
@@ -105,7 +108,7 @@ function Denuncia ({  postId, userId, userSentData }) {
 
       <br></br>
 
-      <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box2'> Está fingindo ser outra pessoa  <button className="alternaOpcao" onClick={toggleBox2Visibility}> <img src="src\pages\Timeline\assets\icone.png" /> </button></label>
+      <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box2'> Está fingindo ser outra pessoa  <button className="alternaOpcao" onClick={toggleBox2Visibility}> <img className="escolhaDenuncia" src="src\pages\Timeline\assets\icone.png" /> </button></label>
       <select className={`opcoesDenuncia box2 ${box2Visible ? 'visible' : 'DenunciaInvisible'}`} id="box2" name="box2" value={motive} onChange={handleMotiveChange}>
         <option>Selecione uma opção</option>
         <option value="fingindo_Ser_Eu"> Eu </option>
@@ -114,7 +117,7 @@ function Denuncia ({  postId, userId, userSentData }) {
         <option value="fingindo_Ser_Empresa"> Uma empresa ou organização </option>
       </select>
 
-      <button className={`enviar ${h1Visible ? 'visible' : 'DenunciaInvisible'}`} onClick={CriarDenuncia}>Enviar</button>
+      <button className={`enviarDenuncia ${h1Visible ? 'visible' : 'DenunciaInvisible'}`} onClick={CriarDenuncia}>Enviar</button>
     </div>
   );
 }
