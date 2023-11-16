@@ -42,10 +42,14 @@ select:hover {
   color: white;
 }
 
-.denuncia .enviar {
+.denuncia .enviarDenuncia {
   margin-top: 2vh;
   margin-left: 35vw;
   font-size: 2.5vh;
+}
+
+.denuncia .enviarDenuncia:hover {
+  cursor: pointer;
 }
 
 .denuncia h1 {

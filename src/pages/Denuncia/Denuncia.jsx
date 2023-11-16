@@ -117,7 +117,7 @@ function Denuncia ({  postId, userId, userSentData }) {
         <option value="fingindo_Ser_Empresa"> Uma empresa ou organização </option>
       </select>
 
-      <button className={`enviar ${h1Visible ? 'visible' : 'DenunciaInvisible'}`} onClick={CriarDenuncia}>Enviar</button>
+      <button className={`enviarDenuncia ${h1Visible ? 'visible' : 'DenunciaInvisible'}`} onClick={CriarDenuncia}>Enviar</button>
     </div>
   );
 }
