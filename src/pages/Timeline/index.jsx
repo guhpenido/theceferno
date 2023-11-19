@@ -343,10 +343,6 @@ export function Timeline() {
     carregaTml();
   };
 
-  const handleSearchInputChange = (event) => {
-
-  };
-
   return (
     <>
       <div className="tl-screen">
@@ -390,9 +386,7 @@ export function Timeline() {
                 <div className="procurar-box-input">
                   <input
                     placeholder="Procurar"
-                    type="search"
-                    value={searchTerm}
-                    onChange={handleSearchInputChange}
+                    type="text"
                   />
                 </div>
               </div>
