@@ -23,6 +23,7 @@ import { Acessibilidade } from "../Acessibilidade/index";
 import AddPost from "./AddPost";
 import Header from "./Header";
 import MenuLateral from "../MenuLateral/MenuLateral";
+import Pesquisa from "../Pesquisa/index";
 import {
   getDatabase,
   ref,
@@ -372,36 +373,7 @@ export function Timeline() {
               ))}
             </div>
           </div>
-          <div className="tl-ladoDireito">
-            <div className="tl-ladoDireito-procurar">
-              <div className="procurar-box">
-                <div className="img-procurar-box">
-                  <div className="img-procurar-box-in">
-                    <img
-                      src="https://cdn.discordapp.com/attachments/871728576972615680/1167934652267368488/6328608.png?ex=654feee8&is=653d79e8&hm=15078133d7bcc63b14665f301890a83cf549dba37a671c8827a8c9c6e8c50c11&"
-                      alt=""
-                    />
-                  </div>
-                </div>
-                <div className="procurar-box-input">
-                  <input
-                    placeholder="Procurar"
-                    type="text"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="tl-ladoDireito-doar">
-              <h1>Deseja doar para o CEFERNO?</h1>
-              <p>
-                O CEFERNO é um projeto estudantil, e para mantermos ele online
-                precisamos das doações.
-              </p>
-              <Link to="https://linktr.ee/theceferno" target="_blank">
-                <button>Doar</button>
-              </Link>
-            </div>
-          </div>
+          <Pesquisa />
           <AddPost />
         </div>
         {/*<div className="tl-menu">
