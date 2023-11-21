@@ -33,6 +33,17 @@ body, html{
   padding: 0 0 0 20px;
 }
 
+.large-cursor {
+  cursor: url('../../assets/arrow-pointer-solid.svg'), auto;
+  /* Substitua '16 16' pelas coordenadas de hotspot desejadas */
+}
+
+#cursor-svg{
+    transform: scale(10); /* Aumenta o tamanho do SVG em 2 vezes */
+    width: 50px;
+    height: 50px;
+}
+
 .home-title{
   justify-content: center;
   color: #f9f9f9;
@@ -538,4 +549,5 @@ body, html{
   .home-screen{
     width: 60%;
   }
+
 }

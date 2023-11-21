@@ -154,7 +154,7 @@ const MenuBar: React.FC = () => {
         <Container>
             <TopSide>
                 <Link to="/timeline">
-                    <Logo as="img" src={newAvatar} alt="Novo Avatar" style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                    {/* <Logo as="img" src={newAvatar} alt="Novo Avatar" style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} /> */}
                 </Link>
                 <MenuButton>
                     <IconWhisper />

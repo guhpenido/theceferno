@@ -472,6 +472,7 @@ function AddPost() {
             <form onSubmit={handleSubmitPost}>
               <div className="tl-textInput">
                 <textarea
+                maxlength="250"
                   className="tl-textInput-input"
                   placeholder="O que você deseja susurrar alto hoje?"
                   name="text"

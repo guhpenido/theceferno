@@ -1,0 +1,114 @@
+/* denuncia */
+
+/* mobile first */
+
+.denuncia {
+  position: fixed !important;
+  top: 15vh;
+  left: 8vw;
+  width: 85vw;
+  height: auto;
+  background-color: #000000;
+  border: 4px groove #4763e4;
+  padding-left: 2vw;
+  padding-right: 2vw;
+  color: white;
+  z-index: 1;
+
+  border-radius: 12px;
+}
+
+.iconeDenuncia {
+  margin-left: 80vw;
+  color: #4763e4;
+}
+
+.iconeDenuncia:hover,
+.fecharDenuncia:hover ,
+.escolhaDenuncia:hover, 
+select:hover {
+  cursor: pointer;
+}
+
+.escolhaDenuncia {
+  margin-bottom: -1vh;
+  margin-left: -1vw;
+
+}
+
+.denuncia button {
+  background: #000000;
+  border: none;
+  color: white;
+}
+
+.denuncia .enviarDenuncia {
+  margin-top: 2vh;
+  margin-left: 35vw;
+  font-size: 2.5vh;
+}
+
+.denuncia .enviarDenuncia:hover {
+  cursor: pointer;
+}
+
+.denuncia h1 {
+  font-size: 3vh;
+  padding-left: 25vw;
+  display: inline;
+}
+
+.fecharDenuncia {
+  padding-left: 25vw;
+  padding-top: -5vw;
+  font-size: 15px;
+  display: inline;
+}
+
+.headerDenuncia {
+  padding-top: 1vh;
+  display: block;
+  margin-bottom: 2vh;
+}
+
+.denuncia h1 button {
+  margin-left: 15vw;
+}
+
+.opcoesDenuncia {
+  background: black !important;
+  color: white;
+  font-weight: bold;
+  height: 5vh;
+  width: 80vw;
+  border: 2px groove blue !important;
+  border-radius: 5px;
+}
+
+.alternaOpcao {
+  padding-left: 3vw;
+}
+
+
+.DenunciaInvisible {
+  display: none;
+}
+
+.FundoInvisible {
+  backdrop-filter: blur(50px);
+}
+
+label {
+  display: block;
+  width: 82vw;
+}
+
+option {
+  padding: 10px !important;
+  border: 2px solid red;
+}
+
+::selection {
+  color: white;
+  background-color: #4763e4; /* Define a cor de fundo da seleção */
+}

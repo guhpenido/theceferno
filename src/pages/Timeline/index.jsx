@@ -23,6 +23,7 @@ import { Acessibilidade } from "../Acessibilidade/index";
 import AddPost from "./AddPost";
 import Header from "./Header";
 import MenuLateral from "../MenuLateral/MenuLateral";
+import Pesquisa from "../Pesquisa/index";
 import {
   getDatabase,
   ref,
@@ -81,7 +82,7 @@ export function Timeline() {
   const [selectedInstituicao] = useState("");
   const [nextPostId, setNextPostId] = useState(0);
   const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
-  
+
   const handleScroll = () => {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
@@ -169,43 +170,42 @@ export function Timeline() {
   });
 
   const carregaTml = async () => {
-
     if (isFetching) {
       return;
     }
-  
+
     setIsFetching(true);
     const postsCollectionRef = collection(db, "timeline");
-  
+
     let postsQuery = query(
       postsCollectionRef,
       orderBy("postId", "desc"), // Ordene por postId em ordem decrescente
       limit(15)
     );
-  
+
     try {
       const postsData = await getPostsFromFirestore(postsQuery);
-  
+
       if (postsData.length === 0) {
         console.log("Você já chegou ao fim");
       } else {
         const postsWithUserData = [];
-  
+
         for (const post of postsData) {
           const userSentData = await fetchUserData(post.userSent);
           let userMentionedData = null;
-  
+
           if (post.userMentioned !== null) {
             userMentionedData = await fetchUserData(post.userMentioned);
           }
-  
+
           postsWithUserData.push({
             post,
             userSentData,
             userMentionedData,
           });
         }
-  
+
         // Substitua o estado de loadedPosts com os novos posts carregados
         setLoadedPosts(postsWithUserData);
         console.log("Novos posts carregados!");
@@ -344,52 +344,6 @@ export function Timeline() {
     carregaTml();
   };
 
-  const handleSearchInputChange = (event) => {
-    const searchValue = event.target.value.trim();
-
-    setSearchTerm(searchValue);
-
-    // Create a Firestore query to search for users by name
-    if (searchValue !== "") {
-      const usersRef = collection(db, "users");
-
-      // const searchQuery = query(usersRef, or( where("usuario", "==", searchValue), where("nome", "==", searchValue)));
-      const searchQuery = query(
-        usersRef,
-        where("usuario", ">=", searchValue),
-        where("usuario", "<=", searchValue + "\uf8ff")
-      );
-      const searchQuery2 = query(
-        usersRef,
-        where("nome", ">=", searchValue),
-        where("nome", "<=", searchValue + "\uf8ff")
-      );
-
-      // Listen for real-time updates and update searchResults state
-      onSnapshot(searchQuery, (snapshot) => {
-        const results = snapshot.docs.map((doc) => ({
-          id: doc.data,
-          ...doc.data(),
-        }));
-
-        setSearchResults(results);
-      });
-
-      onSnapshot(searchQuery2, (snapshot) => {
-        const results2 = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setSearchResults((prevResults) => prevResults.concat(results2));
-        setIsUserListVisible(true); // Mostrar a lista de usuários
-      });
-    } else {
-      setSearchResults([]); // Limpar os resultados da pesquisa se o termo de pesquisa estiver vazio
-      setIsUserListVisible(false); // Ocultar a lista de usuários
-    }
-  };
-
   return (
     <>
       <div className="tl-screen">
@@ -404,7 +358,7 @@ export function Timeline() {
             toggleMobileLateral={toggleMobileLateral}
             carregatml={recarregarTml}
           />
-          
+
           <div className="tl-main">
             <div className="tl-box">
               {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
@@ -419,70 +373,7 @@ export function Timeline() {
               ))}
             </div>
           </div>
-          <div className="tl-ladoDireito">
-            {/* <div className="tl-ladoDireito-procurar">
-              <div className="procurar-box">
-                <div className="img-procurar-box">
-                  <div className="img-procurar-box-in">
-                    <img
-                      src="https://cdn.discordapp.com/attachments/871728576972615680/1167934652267368488/6328608.png?ex=654feee8&is=653d79e8&hm=15078133d7bcc63b14665f301890a83cf549dba37a671c8827a8c9c6e8c50c11&"
-                      alt=""
-                    />
-                  </div>
-                </div>
-                <div className="procurar-box-input">
-                  <input
-                    placeholder="Procurar"
-                    type="search"
-                    value={searchTerm}
-                    onChange={handleSearchInputChange} />
-                </div>
-                {isUserListVisible && ( // Verifica se a lista de usuários deve ser exibida
-                  <div className="tl-search-list-container">
-                    <TransitionGroup component="ul">
-                      {searchResults.map((user) => (
-                        <CSSTransition
-                          nodeRef={nodeRef}
-                          timeout={500}
-                          classNames="my-node"
-                          key={user.id + "1"}
-                        >
-                          <Link to="">
-                          <li
-                            className="tl-search-list-item"
-                            key={user.id}
-                            ref={nodeRef}
-                          >
-                            <img
-                              className="tl-search-list-profilePic"
-                              src={user.imageUrl}
-                            ></img>
-                            <div className="tl-search-list-dadosPessoais">
-                              <p className="tl-search-list-nome bold">
-                                {user.nome}
-                              </p>
-                              <p className="tl-search-list-user ">
-                                @{user.usuario}
-                              </p>
-                            </div>
-                          </li>
-                          </Link>
-                        </CSSTransition>
-                      ))}
-                    </TransitionGroup>
-                  </div>
-                )}
-              </div>
-            </div> */}
-            <div className="tl-ladoDireito-doar">
-              <h1>Deseja doar para o CEFERNO?</h1>
-              <p>
-                O CEFERNO é um projeto estudantil, e para mantermos ele online
-                precisamos das doações.
-              </p>
-              <Link to="https://linktr.ee/theceferno" target="_blank"><button>Doar</button></Link>
-            </div>
-          </div>
+          <Pesquisa />
           <AddPost />
         </div>
         {/*<div className="tl-menu">
