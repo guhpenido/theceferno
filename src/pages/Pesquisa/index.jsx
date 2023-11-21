@@ -191,6 +191,7 @@ function Pesquisa() {
             </div>
             <div className="procurar-box-input">
               <input
+                id="input-pesquisa-lateral"
                 placeholder="Procurar"
                 type="text"
                 value={termoPesquisa}

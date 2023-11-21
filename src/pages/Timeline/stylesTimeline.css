@@ -292,6 +292,15 @@ form .tl-textInput{
     margin-bottom: 20px;
 }
 
+.tl-confirmPost button:hover{
+  background-color: #ffffff;
+  color: #4562e2;
+  cursor: pointer;
+}
+
+/* #input-timeline-marcar{
+  font-size: 15 px;
+} */
 .anon .tl-addPost-header{
   background-color: black;
 }

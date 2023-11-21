@@ -43,7 +43,7 @@ export function Register() {
     usuario: "",
     pseudonimo: "",
     imageSrc:
-      "imagemPerfil",
+      "https://cdn.discordapp.com/attachments/920399601993908274/1176539083284172930/logo-ceferno-perfil.png?ex=656f3c68&is=655cc768&hm=db7c133e5722d58253f1d518f073e60b317710c58872be5e7c69272dd9a05d43&",
     bannerSrc:
       "https://media.discordapp.net/attachments/1100381589805998080/1147535718642614322/Cabecalho_do_Twitter_1500x500_px..jpeg?width=1025&height=342",
     etapa: 1,

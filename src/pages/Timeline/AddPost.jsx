@@ -416,6 +416,8 @@ function AddPost() {
                   <span className="tl-addPost-mark-input">{selectedUser}</span>
                 ) : (
                   <input
+                    id="input-timeline-marcar"
+                    placeholder="Mencionar usuário"
                     className="tl-addPost-mark-input"
                     type="search"
                     value={searchTerm}
