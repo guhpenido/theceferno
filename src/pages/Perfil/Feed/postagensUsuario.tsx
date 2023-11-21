@@ -15,6 +15,7 @@ import ModalReact from "react-modal";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { onSnapshot, collection, query, where } from "firebase/firestore";
+import { app } from "../../../services/firebaseConfig";
 import {
     Container,
     Body,
@@ -39,18 +40,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faThumbsDown, faThumbsUp, faComment } from "@fortawesome/free-solid-svg-icons";
 import { faArrowDown } from "@fortawesome/fontawesome-free-solid";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
-    authDomain: "auth-cefernotcc.firebaseapp.com",
-    projectId: "auth-cefernotcc",
-    storageBucket: "auth-cefernotcc.appspot.com",
-    messagingSenderId: "1060989440087",
-    appId: "1:1060989440087:web:439b25a3b18602ec53d312",
-    measurementId: "G-45ESHWMMPR"
-  };
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
+
 
 // Definindo uma interface para os itens da timeline
 type TimelineItem = {
@@ -88,6 +78,8 @@ const PostagensUsuario: React.FC = () => {
     const [isMetionedDataAndPropsPosts, setMetionedDataAndPropsPosts] = useState<
         any[]
     >([]);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {

@@ -11,6 +11,7 @@ import "./chatStyles.css";
 import "./stylesChat.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
+import { app } from "../../services/firebaseConfig";
 import { doc, getDoc, onSnapshot, updateDoc, arrayUnion , setDoc } from "firebase/firestore";
 import { Link, useParams } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -19,21 +20,8 @@ import VLibras from "@djpfs/react-vlibras";
 import { Acessibilidade } from "../Acessibilidade/index";
 import MenuLateral from "../MenuLateral/MenuLateral";
 
-// Conexão com o Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
-  authDomain: "auth-cefernotcc.firebaseapp.com",
-  projectId: "auth-cefernotcc",
-  storageBucket: "auth-cefernotcc.appspot.com",
-  messagingSenderId: "1060989440087",
-  appId: "1:1060989440087:web:439b25a3b18602ec53d312",
-  measurementId: "G-45ESHWMMPR"
-};
 
 
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
 
 
 function Chat() {
@@ -49,6 +37,7 @@ function Chat() {
   const navigate = useNavigate();
   const [userLoggedData, setUserLoggedData] = useState(null);
   const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
+  const db = getFirestore(app);
 
   let idCombinado = "";
 

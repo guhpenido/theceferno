@@ -15,22 +15,11 @@ import {
   orderBy,
 } from "firebase/firestore";
 import ViewUsers from "./viewUsers";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
-  authDomain: "auth-cefernotcc.firebaseapp.com",
-  projectId: "auth-cefernotcc",
-  storageBucket: "auth-cefernotcc.appspot.com",
-  messagingSenderId: "1060989440087",
-  appId: "1:1060989440087:web:439b25a3b18602ec53d312",
-  measurementId: "G-45ESHWMMPR"
-};
+import { app } from "../../../services/firebaseConfig";
 
 import './'
 
-const app = initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
 
 const SideBar = ({  }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,6 +28,9 @@ const SideBar = ({  }) => {
   const imageref = useRef(null);
   const [isFetching, setIsFetching] = useState(false);
   const [loadedPosts, setLoadedPosts] = useState([]);
+  const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+
 
   useEffect(() => {
     // console.log("cheguei");

@@ -35,6 +35,7 @@ const SeachPage = () => {
     const [bio, setBio] = useState("");
     const [newAvatar, setNewAvatar] = useState(null);
     const [newBanner, setNewBanner] = useState(null);
+    
 
     const { searchTerm } = location.state;
     useEffect(() => {

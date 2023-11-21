@@ -38,26 +38,16 @@ import {
 import { collection, doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
+import { app } from "../../../services/firebaseConfig";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
-  authDomain: "auth-cefernotcc.firebaseapp.com",
-  projectId: "auth-cefernotcc",
-  storageBucket: "auth-cefernotcc.appspot.com",
-  messagingSenderId: "1060989440087",
-  appId: "1:1060989440087:web:439b25a3b18602ec53d312",
-  measurementId: "G-45ESHWMMPR"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
 
 function PostDisplay({ post, userSentData, userMentionedData, setRendState }) {
   const [isRendStateCss, setRendStateCss] = useState(false);
   const [likes, setLikes] = useState(post.likes);
   const [deslikes, setDesLikes] = useState<string | null>(null);
   // console.log(setRendState);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
 
   useEffect(() => {
     if (setRendState) {
