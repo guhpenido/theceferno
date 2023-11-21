@@ -76,7 +76,6 @@ body{
   color: #fff;
   font-size: 15px;
   font-weight: 500;
-  height: 20px;
 }
 .tl-ps-foto {
   position: relative;
@@ -84,12 +83,10 @@ body{
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  left: -3px;
-  top: -3px;
   margin-right: 10px;
 }
 .tl-ps-foto img {
-  width: 100%;
+  width: 40px;
   height: 40px;
   border-radius: 50%;
 }
@@ -173,17 +170,18 @@ body{
     left: 50%;
     transform: translateX(-50%);
     top: 25%;
-    width: 90vw;
-    height: 40vh;
-    background-color: rgb(20, 20, 20);
+    width: 500px;
+    background-color: #0c0c0c;
     z-index: 1;
     border-radius: 10px;
+    border: 1px solid #242424;
 }
 .tl-addPost-header{
-    background-color: #193cd8;
     width: 100%;
-    height: 4vh;
+    height: 70px;
     border-bottom: 0.2px rgb(36, 35, 35) solid;
+    display: flex;
+    border-radius: 10px 10px 0 0;
 }
 .tl-addPost-close{
     background-color: #4763e4;
@@ -200,21 +198,20 @@ body{
     cursor: pointer;   
 }
 .tl-addPost-modeSelect, .tl-addPost-mark-input{
-    border: 0.2px #4763e4 solid;
-    background-color: #4764e4c5;
+    border: 1px #4763e4 solid;
+    background-color: #4764e400;
     border-radius: 10px;
-    font-size: 12px;
+    font-size: 15px;
     color: #fff;
     text-align: center;
-    margin-top: 2px;
-    padding: 1px;
+    padding: 2px 5px 2px 5px;
     
 }
 .tl-addPost-modeSelect{
-    margin-left: 40px;
+    
 }
 .tl-addPost-mark-input{
-    margin-right: 40px;
+  width: 80%;
 }
 .tl-addPost-arrow{
     color: #fff;
@@ -226,9 +223,9 @@ body{
     height: 40px;
     background-color: aqua;
     border-radius: 50%;
-    position: fixed;
+    /* position: fixed;
     left: -10px;
-    top: -10px;
+    top: -10px; */
 }
 .tl-addPost-foto img{
     width: 40px;
@@ -240,6 +237,7 @@ body{
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    width: 100%;
 }
 .tl-addPost-modeSelect-option{
     border: 0.2px #4763e4 solid;
@@ -250,44 +248,69 @@ body{
     text-align: center;
 }
 .tl-addpost-body{
-    width: 80%;
+    width: 100%;
     height: 35vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 10%;
+    padding: 30px 20px 30px 20px;
+}
+.tl-textInput{
+  width: 100%;
+}
+form .tl-textInput{
+  width: 100%;
 }
 .tl-textInput-input{
     display: flex;
     height: 30vh;
-    width: 80vw;
+    width: 100%;
     background-color: transparent;
     text-align: flex-start;
     align-items: flex-start;
     outline: 0;
     border: none;
-    color: #4763e4;
+    color: #ffffff;
+    padding: 30px 20px 30px 20px;
+}
+.tl-confirmPost{
+  display: flex;
+  justify-content: center;
 }
 .tl-confirmPost button{
-    background-color: #193cd8;
-    width: 20vw;
-    height: 5vh;
-    position: fixed;
-    bottom: -5px;
-    right: -5px;
+    background-color: #4763e4;
+    width: 30%;
+    height: 40px;
     border-radius: 15px;
     color: #fff;
     font-size: 12px;
     outline: 0;
     border: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
+.tl-confirmPost button:hover{
+  background-color: #ffffff;
+  color: #4562e2;
+  cursor: pointer;
+}
+
+/* #input-timeline-marcar{
+  font-size: 15 px;
+} */
 .anon .tl-addPost-header{
   background-color: black;
 }
 
 .anon {
   background-color: rgb(48, 48, 48) !important;
+}
+
+.tl-addpost-body form{
+  width: 100%;
 }
 
 /* Adicione estilo para cada item da lista */
@@ -301,12 +324,12 @@ body{
 
 .tl-addPost-list-container {
   position: absolute;
-  width: 50%;
-  background-color: #193cd8;
+  width: 35%;
+  background-color: #4763e4;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
+  border-radius: 15px;
   z-index: 1;
-  max-height: 200px; /* Defina a altura máxima desejada */
+  max-height: 100px;
   overflow-y: auto;
 }
 
@@ -342,8 +365,8 @@ body{
 }
 
 .tl-addPost-list-user {
-  font-size: 14px;
-  color: #666666;
+  font-size: 11px;
+  color: #bdbdbd;
 }
 
 /* Estilos para o ícone "X" de limpar seleção */
@@ -353,7 +376,9 @@ body{
   margin-left: 10px;
   font-size: 18px;
   position: absolute;
-  right: 25px;
+  right: 10px;
+  top: 25px;
+  width: 10px;
 }
 
 .tl-addPost-clear-icon:hover {
@@ -396,7 +421,7 @@ body{
   overflow: visible;
 }
 
-.footerDm div:hover img{
+.footerDm div:hover img {
   filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%) drop-shadow(0px 0px 5px #4763E4) drop-shadow(0px 0px 15px #4763E4);
 }
 
@@ -448,6 +473,18 @@ body{
 .tl-reply-button:hover {
   background-color: #000;
 }
+
+.tlBotaoTroca {
+  background: none;
+  border: none;
+  padding: 0 1vw 0 1vw;
+
+}
+
+.tlBotaoTroca:hover {
+  border-bottom: 1px solid #4562e2;
+}
+
 .tl-main{
   margin-top: 50px;
   width: 51%;
@@ -724,6 +761,23 @@ align-items: center;
     font-weight: 900;
     margin-top: 10px;
   }
+
+  .tl-addPost {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 25%;
+    width: 95%;
+    background-color: #0c0c0c;
+    z-index: 1;
+    border-radius: 10px;
+    border: 1px solid #242424;
+  }
+
+  .tl-addPost-list-container {
+    position: absolute;
+    width: 43%;
+  }
 }
 @media (max-width: 713px) {
   .tl-ladoDireito{
@@ -749,6 +803,23 @@ align-items: center;
   .mobile-tl-header{
     display: block;
   }
+
+  .tl-addPost {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 25%;
+    width: 95%;
+    background-color: #0c0c0c;
+    z-index: 1;
+    border-radius: 10px;
+    border: 1px solid #242424;
+  }
+
+  .tl-addPost-list-container {
+    position: absolute;
+    width: 43%;
+  }
 }
 .mobile-lateral-wrapper{
   display: block;
@@ -760,7 +831,7 @@ align-items: center;
 .close-mobile-menu{
   width: 20px;
   height: 20px;
-  background-color: red;
+  background-color: #4763E4;
   position: absolute;
   right: 0;
   top: 0;
@@ -777,4 +848,5 @@ align-items: center;
   100% {
     transform: translateX(0);
   }
+
 }

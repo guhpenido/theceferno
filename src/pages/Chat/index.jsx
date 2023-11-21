@@ -7,10 +7,10 @@ import perfilIcon from "../../assets/perfil-icon.svg";
 import cefernoFullImg from "../../assets/ceferno_icon_full.png";
 import setaPostar from "../../assets/seta-postar.svg";
 import notificacaoIcon from "../../assets/notificacao-icon.svg";
-import "./chatStyles.css";
 import "./stylesChat.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
+import { app } from "../../services/firebaseConfig";
 import { doc, getDoc, onSnapshot, updateDoc, arrayUnion , setDoc } from "firebase/firestore";
 import { Link, useParams } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -18,22 +18,10 @@ import { useNavigate } from "react-router-dom";
 import VLibras from "@djpfs/react-vlibras";
 import { Acessibilidade } from "../Acessibilidade/index";
 import MenuLateral from "../MenuLateral/MenuLateral";
-
-// Conexão com o Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
-  authDomain: "auth-cefernotcc.firebaseapp.com",
-  projectId: "auth-cefernotcc",
-  storageBucket: "auth-cefernotcc.appspot.com",
-  messagingSenderId: "1060989440087",
-  appId: "1:1060989440087:web:439b25a3b18602ec53d312",
-  measurementId: "G-45ESHWMMPR"
-};
+import Pesquisa from "../Pesquisa/index";
 
 
-const app = initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
 
 
 function Chat() {
@@ -49,6 +37,7 @@ function Chat() {
   const navigate = useNavigate();
   const [userLoggedData, setUserLoggedData] = useState(null);
   const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
+  const db = getFirestore(app);
 
   let idCombinado = "";
 
@@ -315,11 +304,9 @@ function Chat() {
             <img id="enviarChat" className="iconDm" src={enviarIcon}  onKeyDown={handleKeyDown} tabIndex="0" alt="Enviar" onClick={enviarMensagem} />
           </div>
         </div>
-        <div className="tela-logo-lateral-dm">
-          <div className="div-dm-cefernoFullImg">
-            <img className="dm-cefernoFullImg" src={cefernoFullImg} alt="Logo Ceferno"></img>
-          </div>
-      </div>
+        <div id="pesquisa-Dm-lateral">
+        <Pesquisa />
+        </div>
       <Acessibilidade />
       </div>
     </>

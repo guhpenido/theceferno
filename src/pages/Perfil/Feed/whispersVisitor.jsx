@@ -10,11 +10,12 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { app } from "../../../services/firebaseConfig";
 import ModalReact from "react-modal";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { onSnapshot, collection, query, where } from "firebase/firestore";
-import PostDisplay from "../Post/index";
+import PostDisplay from "../../Timeline/post";
 import {
   Container,
   Body,
@@ -29,19 +30,7 @@ import {
   LikeIcon,
 } from "../Post/styles";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
-  authDomain: "auth-cefernotcc.firebaseapp.com",
-  projectId: "auth-cefernotcc",
-  storageBucket: "auth-cefernotcc.appspot.com",
-  messagingSenderId: "1060989440087",
-  appId: "1:1060989440087:web:439b25a3b18602ec53d312",
-  measurementId: "G-45ESHWMMPR"
-};
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
 
 
 const WhispersVisitor = ({ userPId }) => {
@@ -59,6 +48,8 @@ const WhispersVisitor = ({ userPId }) => {
   const [selectedProfile, setSelectedProfile] = useState(null); // Adjust the type accordingly
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const [noItemsFound, setNoItemsFound] = useState(false);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
 
   //pegar o id do usuario de outra página
   useEffect(() => {

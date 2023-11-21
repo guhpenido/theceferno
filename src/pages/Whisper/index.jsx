@@ -5,21 +5,9 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenti
 import 'firebase/storage';
 // import './styleWhisper.css'; 
 import fotoUsuario from "../../assets/foto.png";
+import { app } from "../../services/firebaseConfig";
 
-//configuração do firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
-  authDomain: "auth-cefernotcc.firebaseapp.com",
-  projectId: "auth-cefernotcc",
-  storageBucket: "auth-cefernotcc.appspot.com",
-  messagingSenderId: "1060989440087",
-  appId: "1:1060989440087:web:439b25a3b18602ec53d312",
-  measurementId: "G-45ESHWMMPR"
-};
 
-// Inicia o Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
 function Whisper() {
   // Definindo estados do componente usando o hook "useState"
@@ -28,6 +16,7 @@ function Whisper() {
   const [message, setMessage] = useState(''); // Estado que armazena o conteúdo da mensagem digitada
   const [currentUser, setCurrentUser] = useState(null); // Estado para armazenar o usuário atual logado
   const [lastSentMessage, setLastSentMessage] = useState(null); // Estado para armazenar a última mensagem enviada
+  const db = getFirestore(app);
 
   useEffect(() => {
     // Função para buscar dados do Firestore e atualizar o estado

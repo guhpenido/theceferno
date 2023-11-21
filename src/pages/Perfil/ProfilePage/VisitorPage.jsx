@@ -5,6 +5,7 @@ import { Container, Wrapper } from '../Layout/styles';
 import MainVisitor from '../Main/MainVisitor';
 import { Link } from "react-router-dom";
 import MenuLateral from "../../MenuLateral/MenuLateral"
+import { app } from "../../../services/firebaseConfig";
 
 const VisitorPage = () => {
   const userId = useParams();

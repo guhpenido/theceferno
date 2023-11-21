@@ -7,27 +7,19 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import React, { useState, useEffect } from 'react';
 import ModalReact from 'react-modal';
 import { Link } from 'react-router-dom';
+import { app } from "../../../services/firebaseConfig";
 
 import { useNavigate } from "react-router-dom";
 
 import { Container, TopSide, Logo, MenuButton, SearchIcon, IconWhisper, IconBell, EmailIcon, IconConfig, BotSide, Avatar, ProfileData } from './styles';
 
-const firebaseConfig = {
-    apiKey: "AIzaSyCWBhfit2xp3cFuIQez3o8m_PRt8Oi17zs",
-    authDomain: "auth-ceferno.firebaseapp.com",
-    projectId: "auth-ceferno",
-    storageBucket: "auth-ceferno.appspot.com",
-    messagingSenderId: "388861107940",
-    appId: "1:388861107940:web:0bf718602145d96cc9d6f1"
-};
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
 
 ModalReact.setAppElement('#root');
 
 const MenuBar: React.FC = () => {
+
+    const db = getFirestore(app);
 
     const [postagemVisible, setPostagemVisible] = useState(false);
     const [newAvatar, setNewAvatar] = useState<string | null>(null);
@@ -154,7 +146,7 @@ const MenuBar: React.FC = () => {
         <Container>
             <TopSide>
                 <Link to="/timeline">
-                    <Logo as="img" src={newAvatar} alt="Novo Avatar" style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                    {/* <Logo as="img" src={newAvatar} alt="Novo Avatar" style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} /> */}
                 </Link>
                 <MenuButton>
                     <IconWhisper />
