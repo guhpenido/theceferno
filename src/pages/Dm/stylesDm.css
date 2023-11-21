@@ -25,6 +25,7 @@ body, html, :root{
   margin-left:4%;
 }
 
+
 .footerDm{
   justify-content: space-around;
   display: flex;
@@ -106,7 +107,7 @@ body, html, :root{
   background-color: #111111;
   border-radius: 15px;
   display: flex;
-  padding: 15px;
+  padding: 4% 2% 4% 2%;
 }
 
 /*.chatDm:hover{
@@ -459,6 +460,9 @@ link, a{
   .botao-buscar-menu, .a-postar-menu-lateral{
     width: fit-content;
   }
+  #pesquisa-Dm-lateral {
+    display: none;
+  }
 }
 
 /* @media (min-width:850px){
@@ -537,7 +541,7 @@ link, a{
 
   .screen-dm-usavel{
     width: 50vw;
-    margin-left: 244px;
+    margin-left: 260px;
     position: relative;
     height: 100vh;
   }
@@ -630,8 +634,8 @@ link, a{
 
   .screen-dm-usavel{
     width: 100vw;
-    margin-left: 244px;
-    margin-right: 33%;
+    margin-left: 260px;
+    margin-right: 27%;
     position: relative;
     height: 100vh;
   }
@@ -729,8 +733,8 @@ link, a{
 
   .screen-dm-usavel{
     width: 100vw;
-    margin-left: 244px;
-    margin-right: 33%;
+    margin-left: 260px;
+    margin-right: 27%;
     position: relative;
     height: 100vh;
   }

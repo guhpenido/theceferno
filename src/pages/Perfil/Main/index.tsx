@@ -6,23 +6,15 @@ import React, { useState, useEffect } from 'react';
 import { Container, Header, BackIcon, ProfileInfo, BottomMenu, HomeIcon, SearchIcon, DmIcon, Whisper, Config } from './styles';
 import ProfilePage from '../ProfilePage';
 import { Link, Route } from "react-router-dom";
+import { app } from "../../../services/firebaseConfig";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
-  authDomain: "auth-cefernotcc.firebaseapp.com",
-  projectId: "auth-cefernotcc",
-  storageBucket: "auth-cefernotcc.appspot.com",
-  messagingSenderId: "1060989440087",
-  appId: "1:1060989440087:web:439b25a3b18602ec53d312",
-  measurementId: "G-45ESHWMMPR"
-};
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+
 
 const Main: React.FC = () => {
 
   const [currentUser, setCurrentUser] = useState<any | null>(null); // Defina o tipo apropriado aqui
+  const db = getFirestore(app);
 
   useEffect(() => {
     const auth = getAuth();
@@ -53,13 +45,6 @@ const Main: React.FC = () => {
       </Header>
 
       <ProfilePage />
-      <BottomMenu>
-        <HomeIcon />
-        <SearchIcon />
-        <Whisper />
-        <DmIcon />
-        <Config />
-      </BottomMenu>
     </Container>
   );
 };

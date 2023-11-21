@@ -19,20 +19,8 @@ import {
 
 import Feed from "../Feed";
 import { auth } from "firebase-admin";
+import { app } from "../../../services/firebaseConfig";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
-  authDomain: "auth-cefernotcc.firebaseapp.com",
-  projectId: "auth-cefernotcc",
-  storageBucket: "auth-cefernotcc.appspot.com",
-  messagingSenderId: "1060989440087",
-  appId: "1:1060989440087:web:439b25a3b18602ec53d312",
-  measurementId: "G-45ESHWMMPR"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
 
 ModalReact.setAppElement('#root');
 
@@ -56,6 +44,8 @@ const ProfilePage: React.FC = () => {
   const [selectedProfile, setSelectedProfile] = useState<any>(null); // Adjust the type accordingly
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
   const [posts, setPosts] = useState<any[]>([]); // Adjust the type accordingly
+  const db = getFirestore(app);
+  const storage = getStorage(app);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -411,6 +401,7 @@ const ProfilePage: React.FC = () => {
                 marginTop: '40px',
                 borderRadius: '15px',
                 backgroundColor: 'transparent',
+                color: 'white',
                 width: '100%',
                 padding: '10px',
               }}

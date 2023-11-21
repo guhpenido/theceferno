@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { onSnapshot, collection, query, where } from "firebase/firestore";
 import PostDisplay from "../../Timeline/post";
+import { app } from "../../../services/firebaseConfig";
 import {
   Container,
   Body,
@@ -29,19 +30,7 @@ import {
   LikeIcon,
 } from "../Post/styles";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAMmah5RbUcw_J9TUsxSu5PmWqi1ZU4MRk",
-  authDomain: "auth-cefernotcc.firebaseapp.com",
-  projectId: "auth-cefernotcc",
-  storageBucket: "auth-cefernotcc.appspot.com",
-  messagingSenderId: "1060989440087",
-  appId: "1:1060989440087:web:439b25a3b18602ec53d312",
-  measurementId: "G-45ESHWMMPR"
-};
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
 
 // Definindo uma interface para os itens da timeline
 interface TimelineItem {
@@ -69,6 +58,8 @@ const WhispersUsuario: React.FC = () => {
   const [selectedProfile, setSelectedProfile] = useState<any>(null); // Adjust the type accordingly
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
   const [noItemsFound, setNoItemsFound] = useState<boolean>(false);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
 
   //pegar o id do usuario de outra página
   useEffect(() => {

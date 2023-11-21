@@ -37,3 +37,11 @@
     border-color: 3px solid #4763E4;
 
 }
+
+.bannerDiv{
+    display: flex;
+    justify-content: center;
+    padding:60px !important;
+    align-items: center;
+    color: #fff;
+}

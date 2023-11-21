@@ -76,7 +76,6 @@ body{
   color: #fff;
   font-size: 15px;
   font-weight: 500;
-  height: 20px;
 }
 .tl-ps-foto {
   position: relative;
@@ -84,12 +83,10 @@ body{
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  left: -3px;
-  top: -3px;
   margin-right: 10px;
 }
 .tl-ps-foto img {
-  width: 100%;
+  width: 40px;
   height: 40px;
   border-radius: 50%;
 }
@@ -295,6 +292,15 @@ form .tl-textInput{
     margin-bottom: 20px;
 }
 
+.tl-confirmPost button:hover{
+  background-color: #ffffff;
+  color: #4562e2;
+  cursor: pointer;
+}
+
+/* #input-timeline-marcar{
+  font-size: 15 px;
+} */
 .anon .tl-addPost-header{
   background-color: black;
 }
@@ -415,7 +421,7 @@ form .tl-textInput{
   overflow: visible;
 }
 
-.footerDm div:hover img{
+.footerDm div:hover img {
   filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg) brightness(94%) contrast(90%) drop-shadow(0px 0px 5px #4763E4) drop-shadow(0px 0px 15px #4763E4);
 }
 
@@ -467,6 +473,18 @@ form .tl-textInput{
 .tl-reply-button:hover {
   background-color: #000;
 }
+
+.tlBotaoTroca {
+  background: none;
+  border: none;
+  padding: 0 1vw 0 1vw;
+
+}
+
+.tlBotaoTroca:hover {
+  border-bottom: 1px solid #4562e2;
+}
+
 .tl-main{
   margin-top: 50px;
   width: 51%;
@@ -743,6 +761,23 @@ align-items: center;
     font-weight: 900;
     margin-top: 10px;
   }
+
+  .tl-addPost {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 25%;
+    width: 95%;
+    background-color: #0c0c0c;
+    z-index: 1;
+    border-radius: 10px;
+    border: 1px solid #242424;
+  }
+
+  .tl-addPost-list-container {
+    position: absolute;
+    width: 43%;
+  }
 }
 @media (max-width: 713px) {
   .tl-ladoDireito{
@@ -768,6 +803,23 @@ align-items: center;
   .mobile-tl-header{
     display: block;
   }
+
+  .tl-addPost {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 25%;
+    width: 95%;
+    background-color: #0c0c0c;
+    z-index: 1;
+    border-radius: 10px;
+    border: 1px solid #242424;
+  }
+
+  .tl-addPost-list-container {
+    position: absolute;
+    width: 43%;
+  }
 }
 .mobile-lateral-wrapper{
   display: block;
@@ -779,7 +831,7 @@ align-items: center;
 .close-mobile-menu{
   width: 20px;
   height: 20px;
-  background-color: red;
+  background-color: #4763E4;
   position: absolute;
   right: 0;
   top: 0;
@@ -796,4 +848,5 @@ align-items: center;
   100% {
     transform: translateX(0);
   }
+
 }

@@ -416,6 +416,8 @@ function AddPost() {
                   <span className="tl-addPost-mark-input">{selectedUser}</span>
                 ) : (
                   <input
+                    id="input-timeline-marcar"
+                    placeholder="Mencionar usuário"
                     className="tl-addPost-mark-input"
                     type="search"
                     value={searchTerm}
@@ -472,6 +474,7 @@ function AddPost() {
             <form onSubmit={handleSubmitPost}>
               <div className="tl-textInput">
                 <textarea
+                maxlength="250"
                   className="tl-textInput-input"
                   placeholder="O que você deseja susurrar alto hoje?"
                   name="text"

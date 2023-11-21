@@ -21,6 +21,7 @@ export const Banner = styled.div`
   padding: 60px 0 100px;
   background: #4763E4;
   position: relative;
+  text-align:center;
 `;
 
 export const Avatar = styled.div`

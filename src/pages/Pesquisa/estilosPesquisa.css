@@ -1,0 +1,217 @@
+.tl-ladoDireito-boxProcura{
+    background-color: #111111;
+    width: 300px;
+    height: 100%;
+    position: absolute;
+    top: 115px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    overflow: scroll;
+}
+.tl-ladoDireito-proc-resultados{
+    width: 95%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.tl-ladoDireito-proc-perfis{
+    background-color: #0c0c0c;
+    width: 100%;
+    height: 60px;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+}
+.perfis-foto{
+    background-color: antiquewhite;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+.perfis-foto img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.perfis-nome{
+    width: 70%;
+    height: 20px;
+    display: flex;
+    align-items: center;
+}
+.perfis-nome h1{
+    font-size: 14px;
+    margin-right: 5px;
+}
+.perfis-nome h2{
+    font-size: 10px;
+}
+.tl-ladoDireito-proc-resultados h3{
+    font-size: 12px;
+    width: 100%;
+    text-align: start;
+}
+.tl-ladoDireito-proc-postsUser{
+    background-color: #0c0c0c;
+    width: 100%;
+    height: 90px;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+}
+.postUser-header{
+    width: 100%;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 5px;
+}
+.postUser-header-foto{
+    width: 35px;
+    height: 35px;
+    background-color: aqua;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.postUser-header-foto img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.postUser-header-nome h1{
+    font-size: 14px;
+    margin-right: 5px;
+}
+.postUser-header-nome h2{
+    font-size: 10px;
+}
+.postUser-header-nome{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#input-pesquisa-lateral{
+    color:#fff
+}
+.postUser-body{
+    background-color: #111111;
+    width: 95%;
+    height: 40%;
+    border-radius: 15px;
+    padding: 5px;
+}
+.postUser-post{
+    overflow: hidden;
+    height: 100%;
+}
+.postUser-post p{
+    overflow: hidden;
+    font-size: 12px;
+}
+.tl-ladoDireito-proc-postMentioned{
+    background-color: #0c0c0c;
+    width: 100%;
+    height: 120px;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+}
+.postMentioned-header{
+    width: 100%;
+    height: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-left: 5px;
+}
+.postMentioned-header-foto{
+    width: 35px;
+    height: 35px;
+    background-color: aqua;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.postMentioned-header-foto img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.postMentioned-header-nome h1{
+    font-size: 14px;
+    margin-right: 5px;
+}
+.postMentioned-header-nome h2{
+    font-size: 10px;
+}
+.postMentioned-header-nome{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.postMentioned-body{
+    background-color: #111111;
+    width: 95%;
+    height: 40%;
+    border-radius: 15px;
+    margin-top: 25px;
+    padding: 5px;
+}
+.postMentioned-post{
+    overflow: hidden;
+    height: 100%;
+}
+.postUser-post p{
+    overflow: hidden;
+    font-size: 12px;
+}
+.postMentioned-header-fotoMentioned{
+    background-color: antiquewhite;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+}
+.postMentioned-header-fotoMentioned img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.postMentioned-header2{
+    width: 80%;
+    background-color: red;
+    margin-left: 45px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.postMentioned-header-nomeMentioned{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.postMentioned-header-nomeMentioned h1{
+    font-size: 12px;
+    margin-right: 5px;
+}
+.postMentioned-header-nomeMentioned h2{
+    font-size: 10px;
+}
+.setaUserMentioned{
+    width: 20px;
+    height: 20px;
+    fill: #fff;
+    transform: rotate(90deg);
+}
