@@ -11,6 +11,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: min(601px, 100%);
+  height: 100vh;
 
   @media (min-width: 500px) {
     border-left: 1px solid #4763E4;

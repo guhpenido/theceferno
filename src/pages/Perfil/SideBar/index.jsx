@@ -29,7 +29,6 @@ const SideBar = ({  }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [loadedPosts, setLoadedPosts] = useState([]);
   const db = getFirestore(app);
-  const app = initializeApp(firebaseConfig);
 
 
   useEffect(() => {

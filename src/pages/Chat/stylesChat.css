@@ -188,7 +188,7 @@ link, a{
 }
 
 .mensagem {
-  padding: 10px;
+  padding: 20px;
   height: 82vh;
   overflow-y: scroll;
   display: flex;
@@ -285,7 +285,7 @@ link, a{
 @media (min-width:600px){
 
   .mensagem {
-    padding: 10px;
+    padding: 20px;
     height: 80vh;
     overflow-y: scroll;
     display: flex;
@@ -321,7 +321,7 @@ link, a{
 @media (min-width:1150px){
 
   .mensagem {
-    padding: 10px;
+    padding: 20px;
     height: 76vh;
     overflow-y: scroll;
     display: flex;
@@ -339,7 +339,7 @@ link, a{
 @media (min-width:1400px){
 
   .mensagem {
-    padding: 10px;
+    padding: 20px;
     height: 74vh;
     overflow-y: scroll;
     display: flex;

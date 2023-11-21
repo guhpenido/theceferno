@@ -28,6 +28,7 @@ import { Acessibilidade } from "../Acessibilidade/index";
 // import { Container, Header} from '../../pages/Perfil/styles/Icons';
 import MenuLateral from "../MenuLateral/MenuLateral";
 import cefernoFullImg from "../../assets/ceferno_icon_full.png";
+import Pesquisa from "../Pesquisa/index";
 
 /*function AbrirChat(id){
     return <Link to={`/Chat/${id}`}></Link>;
@@ -392,15 +393,10 @@ function Dm() {
             </Link>
           </div>
         </div>
-        <div className="tela-logo-lateral-dm">
-          <div className="div-dm-cefernoFullImg">
-            <img
-              className="dm-cefernoFullImg"
-              src={cefernoFullImg}
-              alt="Logo Ceferno"
-            ></img>
-          </div>
+        <div id="pesquisa-Dm-lateral">
+        <Pesquisa />
         </div>
+        
       </div>
       <Acessibilidade />
     </>

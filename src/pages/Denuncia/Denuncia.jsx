@@ -90,7 +90,7 @@ function Denuncia ({  postId, userId, userSentData }) {
         <h1>Denúncia </h1>
         <button className="fecharDenuncia" onClick={toggleh1Visibility}>X</button>
       </div>
-      <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box1'> Está publicando conteúdo que não deveria estar no Ceferno  <button className="alternaOpcao" onClick={toggleBox1Visibility}> <img className="escolhaDenuncia" src="src\pages\Timeline\assets\icone.png" /> </button></label>
+      <label id="label-denuncia1" className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box1'> Está publicando conteúdo que não deveria estar no Ceferno  <button className="alternaOpcao" onClick={toggleBox1Visibility}> <img className="escolhaDenuncia" src="src\pages\Timeline\assets\icone.png" /> </button></label>
       <select className={`opcoesDenuncia box1 ${box1Visible ? 'visible' : 'DenunciaInvisible'}`} id="box1" name="box1" value={motive} onChange={handleMotiveChange}>
         <option>Selecione uma opção</option>
         <option value="Eh_Spam"> É spam </option>
@@ -108,7 +108,7 @@ function Denuncia ({  postId, userId, userSentData }) {
 
       <br></br>
 
-      <label className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box2'> Está fingindo ser outra pessoa  <button className="alternaOpcao" onClick={toggleBox2Visibility}> <img className="escolhaDenuncia" src="src\pages\Timeline\assets\icone.png" /> </button></label>
+      <label id="label-denuncia" className={`${h1Visible ? 'visible' : 'DenunciaInvisible'}`} htmlFor='box2'> Está fingindo ser outra pessoa  <button className="alternaOpcao" onClick={toggleBox2Visibility}> <img className="escolhaDenuncia" src="src\pages\Timeline\assets\icone.png" /> </button></label>
       <select className={`opcoesDenuncia box2 ${box2Visible ? 'visible' : 'DenunciaInvisible'}`} id="box2" name="box2" value={motive} onChange={handleMotiveChange}>
         <option>Selecione uma opção</option>
         <option value="fingindo_Ser_Eu"> Eu </option>

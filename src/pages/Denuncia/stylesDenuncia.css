@@ -98,7 +98,7 @@ select:hover {
   backdrop-filter: blur(50px);
 }
 
-label {
+#label-denuncia, #label-denuncia1{
   display: block;
   width: 82vw;
 }

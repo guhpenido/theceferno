@@ -7,7 +7,6 @@ import perfilIcon from "../../assets/perfil-icon.svg";
 import cefernoFullImg from "../../assets/ceferno_icon_full.png";
 import setaPostar from "../../assets/seta-postar.svg";
 import notificacaoIcon from "../../assets/notificacao-icon.svg";
-import "./chatStyles.css";
 import "./stylesChat.css";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
@@ -19,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import VLibras from "@djpfs/react-vlibras";
 import { Acessibilidade } from "../Acessibilidade/index";
 import MenuLateral from "../MenuLateral/MenuLateral";
+import Pesquisa from "../Pesquisa/index";
 
 
 
@@ -304,11 +304,9 @@ function Chat() {
             <img id="enviarChat" className="iconDm" src={enviarIcon}  onKeyDown={handleKeyDown} tabIndex="0" alt="Enviar" onClick={enviarMensagem} />
           </div>
         </div>
-        <div className="tela-logo-lateral-dm">
-          <div className="div-dm-cefernoFullImg">
-            <img className="dm-cefernoFullImg" src={cefernoFullImg} alt="Logo Ceferno"></img>
-          </div>
-      </div>
+        <div id="pesquisa-Dm-lateral">
+        <Pesquisa />
+        </div>
       <Acessibilidade />
       </div>
     </>

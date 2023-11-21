@@ -401,6 +401,7 @@ const ProfilePage: React.FC = () => {
                 marginTop: '40px',
                 borderRadius: '15px',
                 backgroundColor: 'transparent',
+                color: 'white',
                 width: '100%',
                 padding: '10px',
               }}
