@@ -88,7 +88,7 @@ function PostDisplay({
   const postDate = new Date(post.time);
   const now = new Date();
   let timeAgo;
-  
+
   const handleIconClickB = () => {
     setIsBeatingB(!isBeatingB);
     setTimeout(() => {
@@ -121,7 +121,7 @@ function PostDisplay({
       setLikeIcon('solid');
     }
     else
-    setLikeIcon('regular');
+      setLikeIcon('regular');
   }, [liked]);
 
   useEffect(() => {
@@ -129,7 +129,7 @@ function PostDisplay({
       setDislikeIcon('solid');
     }
     else
-    setDislikeIcon('regular');
+      setDislikeIcon('regular');
   }, [disliked]);
 
   useEffect(() => {
@@ -335,7 +335,7 @@ function PostDisplay({
     getDenuncia();
   }, []);
 
-  
+
 
   //deixa e tira a visibilidade da div denuncia conteudo indevido
   const toggleBox1Visibility = () => {
@@ -385,9 +385,8 @@ function PostDisplay({
           </button>
         </label>
         <select
-          className={`opcoesDenuncia box1 ${
-            box1Visible ? "visible" : "DenunciaInvisible"
-          }`}
+          className={`opcoesDenuncia box1 ${box1Visible ? "visible" : "DenunciaInvisible"
+            }`}
           id="box1"
           name="box1"
           value={motive}
@@ -435,9 +434,8 @@ function PostDisplay({
           </button>
         </label>
         <select
-          className={`opcoesDenuncia box2 ${
-            box2Visible ? "visible" : "DenunciaInvisible"
-          }`}
+          className={`opcoesDenuncia box2 ${box2Visible ? "visible" : "DenunciaInvisible"
+            }`}
           id="box2"
           name="box2"
           value={motive}
@@ -480,7 +478,7 @@ function PostDisplay({
       const count = await countRepliesWithMessageReplyed(post.id);
       setReplyCount(count);
     };
-    
+
     fetchReplyCount();
   }, [post.id]);
 
@@ -554,35 +552,35 @@ function PostDisplay({
       if (user) {
         // Obtém a referência do documento do usuário no banco de dados
         const userDocRef = doc(db, "users", user);
-  
+
         // Obtém o documento do usuário
         const userDoc = await getDoc(userDocRef);
         const userData = userDoc.data();
-  
+
         // Verifica se o savedPosts existe no documento do usuário
         if (userData.savedPosts) {
           // Verifica se o postId já existe no array savedPosts
           if (userData.savedPosts.includes(postId)) {
             // Cria um novo array com o postId removido
             const updatedSavedPosts = userData.savedPosts.filter(savedPost => savedPost !== postId);
-  
+
             // Atualiza o documento do usuário com o novo array savedPosts
             await updateDoc(userDocRef, {
               savedPosts: updatedSavedPosts,
             });
 
             setSaveIcon("regular");
-  
+
             console.log("Post removido dos salvos com sucesso!");
           } else {
             // Caso contrário, o postId não está no array, então o adicionamos
             const updatedSavedPosts = [...userData.savedPosts, postId];
-  
+
             // Atualiza o documento do usuário com o novo array savedPosts
             await updateDoc(userDocRef, {
               savedPosts: updatedSavedPosts,
             });
-  
+
             setSaveIcon("solid");
 
             console.log("Post salvo com sucesso!");
@@ -592,7 +590,7 @@ function PostDisplay({
           await updateDoc(userDocRef, {
             savedPosts: [postId],
           });
-  
+
           console.log("Post salvo com sucesso!");
         }
       } else {
@@ -602,7 +600,7 @@ function PostDisplay({
       console.error("Erro ao salvar o post: ", error);
     }
   };
-  
+
 
   const linkStyle = {
     textDecoration: "none",
@@ -661,7 +659,7 @@ function PostDisplay({
         await deleteDoc(interactionDoc.ref);
 
         console.log(`Deslike removido com sucesso!`);
-        
+
       }
     } else {
       // Se o usuário ainda não interagiu com a postagem, adicione a interação de deslike
@@ -731,7 +729,7 @@ function PostDisplay({
   async function countRepliesWithMessageReplyed(postId) {
     const repliesCollectionRef = collection(db, "replys");
     const queryRef = query(repliesCollectionRef, where("messageReplyed", "==", postId));
-  
+
     try {
       const querySnapshot = await getDocs(queryRef);
       const replyCount = querySnapshot.size;
@@ -741,6 +739,32 @@ function PostDisplay({
       return 0; // Retorna 0 em caso de erro
     }
   }
+
+  const deletePost = async () => {
+    try {
+      // Verifique se o usuário logado é o autor do post antes de excluir
+      const postRef = doc(db, "timeline", post.id);
+      const postSnapshot = await getDoc(postRef);
+
+      if (postSnapshot.exists()) {
+        const postUserData = postSnapshot.data();
+        const userSent = postUserData.userSent;
+
+        if (userSent === userId) {
+          // O usuário logado é o autor do post, então pode excluir
+          await deleteDoc(postRef);
+          console.log("Post excluído com sucesso!");
+        } else {
+          console.error("Você não tem permissão para excluir este post.");
+        }
+      } else {
+        console.error("O post não foi encontrado.");
+      }
+    } catch (error) {
+      console.error("Erro ao excluir o post: ", error);
+    }
+  };
+
 
   return (
     <>
@@ -756,36 +780,39 @@ function PostDisplay({
             to={`/timeline/${post.id}`}
           >
             <div className="tl-ps-header">
-              <div className="tl-ps-foto">
+              {post.mode !== "anon" ? (<Link
+                to={`/VisitorPage/${userSentData.id}`}
+                style={{ color: "white" }}
+              >
+                <div className="tl-ps-foto">
+                  {imageSent && <img src={imageSent} alt="" />}
+                </div>
+              </Link>) : (<div className="tl-ps-foto">
                 {imageSent && <img src={imageSent} alt="" />}
-              </div>
+              </div>)}
+
               {post.userMentioned !== "" ? (
-                <Link
-                  to="/VisitorPage"
-                  state={{ objetoUsuario: userSentData, modo: post.mode }}
-                  style={{ color: "white" }}
-                >
-                  <div className="tl-ps-nomes">
-                    <p className="tl-ps-nome">
-                      {nomeEnvio}{" "}
-                      <span className="tl-ps-user">@{userEnvio} </span>
-                      <span className="tl-ps-tempo">• {timeAgo}</span>
-                      <FontAwesomeIcon className="arrow" icon={faArrowRight} />
-                      {userMentionedData && (
-                        <img src={userMentionedData.imageUrl} alt="" />
-                      )}
-                      {userMentionedData && (
-                        <>
-                          {" "}
-                          {userMentionedData.nome}{" "}
-                          <span className="tl-ps-userReceived">
-                            @{userMentionedData.usuario}{" "}
-                          </span>
-                        </>
-                      )}
-                    </p>
-                  </div>
-                </Link>
+
+                <div className="tl-ps-nomes">
+                  <p className="tl-ps-nome">
+                    {nomeEnvio}{" "}
+                    <span className="tl-ps-user">@{userEnvio} </span>
+                    <span className="tl-ps-tempo">• {timeAgo}</span>
+                    <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                    {userMentionedData && (
+                      <img src={userMentionedData.imageUrl} alt="" />
+                    )}
+                    {userMentionedData && (
+                      <>
+                        {" "}
+                        {userMentionedData.nome}{" "}
+                        <span className="tl-ps-userReceived">
+                          @{userMentionedData.usuario}{" "}
+                        </span>
+                      </>
+                    )}
+                  </p>
+                </div>
               ) : (
                 <div className="tl-ps-nomes">
                   <p className="tl-ps-nome">
@@ -812,7 +839,7 @@ function PostDisplay({
                     handleIconClickL();
                   }}
                 >
-                  <FontAwesomeIcon icon={likeToUse} beat ={isBeatingL}/> <span>{likes}</span>
+                  <FontAwesomeIcon icon={likeToUse} beat={isBeatingL} /> <span>{likes}</span>
                 </div>
                 <div
                   className="tl-ps-deslike"
@@ -821,7 +848,7 @@ function PostDisplay({
                     handleIconClickD();
                   }}
                 >
-                  <FontAwesomeIcon icon={dislikeToUse} beat ={isBeatingD}/>{" "}
+                  <FontAwesomeIcon icon={dislikeToUse} beat={isBeatingD} />{" "}
                   <span>{dislikes}</span>
                 </div>
                 <div
@@ -831,7 +858,7 @@ function PostDisplay({
                     handleIconClickB();
                   }}
                 >
-                  <FontAwesomeIcon icon={iconToUse}  beat ={isBeatingB}/>{" "}
+                  <FontAwesomeIcon icon={iconToUse} beat={isBeatingB} />{" "}
                 </div>
               </div>
             </div>
