@@ -203,7 +203,7 @@ function Pesquisa() {
             </div>
           </div>
         </div>
-        {inputAtivo && (
+        
         <div className="tl-ladoDireito-boxProcura">
           <div className="tl-ladoDireito-proc-resultados">
             <h3>Perfis:</h3>
@@ -271,7 +271,7 @@ function Pesquisa() {
             ))}
           </div>
         </div>
-        )}
+        
         <div className="tl-ladoDireito-doar">
           <h1>Deseja doar para o CEFERNO?</h1>
           <p>
