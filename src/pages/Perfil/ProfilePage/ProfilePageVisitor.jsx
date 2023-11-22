@@ -156,7 +156,7 @@ const ProfilePageVisitor = ({ userPId }) => {
                     const bannerUrlValue = userData['banner'] || ''; // Campo banner
                     const newAvatarValue = userData['avatar'] || ''; // Campo avatar
                     const nicknameValue = userData['usuario'] || '';
-                    const userNameValue = userData['userName'] || '';
+                    const userNameValue = userData['nome'] || '';
                     // Verifique e defina o valor padrão para bannerUrl e newAvatarValue
                     if (!bannerUrlValue) {
                         setNewBanner(userData['bannerUrl'] || '');

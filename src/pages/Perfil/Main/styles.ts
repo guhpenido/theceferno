@@ -10,7 +10,7 @@ ConfigIcon}  from "../styles/Icons";
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: min(601px, 100%);
+  width: min(700px, 100%);
   height: 100vh;
 
   @media (min-width: 500px) {
@@ -23,7 +23,7 @@ export const Container = styled.div`
   }
 
   @media screen and (min-width: 924px)  and (max-width: 1090px) {
-    width: 35%; 
+    width: 45%; 
   }
 
   @media screen and (min-width: 1090px)  and (max-width: 1279px) {
