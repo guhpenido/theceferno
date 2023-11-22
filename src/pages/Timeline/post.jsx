@@ -65,8 +65,7 @@ import ReplyDisplay from "./reply";
 import VisitorPage from "../Perfil/ProfilePage/VisitorPage";
 import { AppRoutes } from "../../routes/AppRoutes";
 import Denuncia from "../Denuncia/Denuncia";
-
-
+import toast, { Toaster } from 'react-hot-toast';
 function PostDisplay({
   post,
   userSentData,
@@ -624,13 +623,21 @@ function PostDisplay({
       
       const postsexcluidosCollectionRef = collection(db, "postsexcluidos");
       await addDoc(postsexcluidosCollectionRef, newPost);
+      toast("post removido com sucesso");
 
       console.log("Post excluído e adicionado aos postsexcluidos com sucesso!");
     } catch (error) {
       console.error("Erro ao excluir e adicionar post:", error);
     }
+    setOptionsOpen(false)
   };
 
+  const notify = () => toast.success('Here is your toast.');
+
+  const testenot = (event) =>  {
+    deletePost();
+    notify();
+  };
   return (
     <>
       <div className="tl-box" key={post.id}>
@@ -644,12 +651,16 @@ function PostDisplay({
           {optionsOpen && (
             <div className="options-menu-post">
               {post.userSent === userId && (
-                <div className="option-post" onClick={deletePost}>
-                  Excluir Post e Adicionar aos Postsexcluidos
+                <div className="option-post" onClick={testenot}>
+                  Excluir Post
+                  <Toaster
+                    position="top-center"
+                    reverseOrder={false}
+                  />
                 </div>
               )}
               <div className="option-post" onClick={openDenuncia}>
-                Entrar no Painel de Denúncias
+                Denunciar Post
               </div>
               <div className="option-post" onClick={() => setOptionsOpen(false)}>
                 Fechar
