@@ -32,7 +32,6 @@ import {
   onChildAdded,
 } from "firebase/database";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import perfilIcon from "../../assets/perfil-icon.svg";
 import setaPostar from "../../assets/seta-postar.svg";
 
 import {
@@ -53,7 +52,8 @@ import PostDisplay from "./post";
 
 import { addDoc } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-
+import searchIcon from "../../assets/search.svg";
+import perfilIcon from "../../assets/perfil-icon.svg";
 import "./stylesTimeline.css";
 
 export function Timeline() {
@@ -375,36 +375,41 @@ export function Timeline() {
           </div>
           <Pesquisa />
           <AddPost />
+          <div className="footerDm">
+            <Link className="botaoAcessar" to="/timeline">
+              <div>
+                <img id="home" src={homeIcon} alt="Botão ir para Home"></img>
+              </div>
+            </Link>
+            <Link className="botaoAcessar" to="/perfil">
+              <div>
+                <img
+                  id="pesquisa"
+                  src={perfilIcon}
+                  alt="Botão para pesquisa"
+                ></img>
+              </div>
+            </Link>
+            <Link className="botaoAcessar" to="/dm">
+              <div>
+                <img
+                  id="dm"
+                  src={dmIcon}
+                  alt="Botão ir para DM, chat conversas privadas"
+                ></img>
+              </div>
+            </Link>
+            <Link className="botaoAcessar" to="/pesquisa">
+              <div>
+                <img
+                  id="dm"
+                  src={searchIcon}
+                  alt="Botão ir para pesqusisa."
+                ></img>
+              </div>
+            </Link>
+          </div>
         </div>
-        {/*<div className="tl-menu">
-          <div className="tl-menu-header">
-            <div className="tl-menu-header-profile">
-              <div className="tl-menu-foto"></div>
-              <div className="tl-menu-nomes"></div>
-              <div className="tl-menu-follows"></div>
-            </div>
-          </div>
-          <div className="tl-menu-body">
-            <div className="tl-menu-options">
-              <div className="tl-menu-option">
-              <a href="">Perfil</a>
-              </div>     
-              <div className="tl-menu-option">
-              <a href="">Whispers privados</a>
-              </div>
-              <div className="tl-menu-option">
-              <a href="">Configurações</a>
-              </div>
-              <div className="tl-menu-option">
-              <a href="">Notificações</a>
-              </div>
-              <div className="tl-menu-option">
-              <a href="">Pesquisar</a>
-              </div>
-            </div>            
-          </div>
-          <div className="tl-menu-footer"></div>
-  </div>*/}
       </div>
       <Acessibilidade />
     </>
