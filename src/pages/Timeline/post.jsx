@@ -64,7 +64,7 @@ import {
 import ReplyDisplay from "./reply";
 import VisitorPage from "../Perfil/ProfilePage/VisitorPage";
 import { AppRoutes } from "../../routes/AppRoutes";
-import Denuncia from "../Denuncia/Denuncia"; 
+import Denuncia from "../Denuncia/Denuncia";
 
 
 function PostDisplay({
@@ -73,9 +73,10 @@ function PostDisplay({
   userMentionedData,
   userId,
   userLoggedData,
-}) {""
+}) {
+  ""
 
-  
+
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
   const [disliked, setDisliked] = useState(false); // Estado para controlar se o usuário curtiu o post
   const [likes, setLikes] = useState(post.likes);
@@ -86,12 +87,34 @@ function PostDisplay({
   const [isBeatingL, setIsBeatingL] = useState(false);
   const [isBeatingD, setIsBeatingD] = useState(false);
   const [isBeatingB, setIsBeatingB] = useState(false);
+  const [denunciaIsOpen, setDenunciaIsOpen] = useState(false);
+  const [optionsOpen, setOptionsOpen] = useState(false);
+  const [newPost, setNewPost] = useState({
+    deslikes: post.deslikes,
+    likes: post.likes,
+    mode: post.mode,
+    postId: post.id,
+    text: post.text,
+    time: post.time,
+    userMentioned: post.userMentioned,
+    userSent: post.userSent,
+  });
   const iconToUse = saveIcon === 'solid' ? solidBookmark : regularBookmark;
   const likeToUse = likeIcon === 'solid' ? solidThumbsUp : regularThumbsUp;
   const dislikeToUse = dislikeIcon === 'solid' ? solidThumbsDown : regularThumbsDown;
   const postDate = new Date(post.time);
   const now = new Date();
   let timeAgo;
+  const db = getFirestore(app);
+
+  const openDenuncia = () => {
+    setDenunciaIsOpen(true);
+    setOptionsOpen(false); // Fechar as opções quando abrir a denúncia
+  };
+
+  const toggleOptions = () => {
+    setOptionsOpen(!optionsOpen);
+  };
 
   const handleIconClickB = () => {
     setIsBeatingB(!isBeatingB);
@@ -299,12 +322,12 @@ function PostDisplay({
     userEnvio = userSentData.usuario;
   }
 
-  
+
   useEffect(() => {
     // Use um useEffect para atualizar a UI quando o estado dislikes mudar
     // Isso garante que a UI seja renderizada após a atualização do estado
   }, [dislikes]);
-  
+
 
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState("");
@@ -581,27 +604,60 @@ function PostDisplay({
     }
   }
 
-  const [denunciaIsOpen, setDenunciaIsOpen] = useState(false);
+  const deletePost = async () => {
+    try {
+      // Obter referência do documento na coleção "timeline"
+      const timelineDocRef = collection(db, "timeline");
+      const queryInteraction = query(
+        timelineDocRef,
+        where("postId", "==", post.id),
+      );
+      const querySnapshotRemove = await getDocs(queryInteraction);
 
-  const openDenuncia = () => {
-    setDenunciaIsOpen(true);
-    console.log(denunciaIsOpen)
-    console.log("clicou na denucnai")
+      if (!querySnapshotRemove.empty) {
+        const interactionDoc = querySnapshotRemove.docs[0];
+        await deleteDoc(interactionDoc.ref);
+
+        console.log(`Deslike removido com sucesso!`);
+
+      }
+      
+      const postsexcluidosCollectionRef = collection(db, "postsexcluidos");
+      await addDoc(postsexcluidosCollectionRef, newPost);
+
+      console.log("Post excluído e adicionado aos postsexcluidos com sucesso!");
+    } catch (error) {
+      console.error("Erro ao excluir e adicionar post:", error);
+    }
   };
-
 
   return (
     <>
       <div className="tl-box" key={post.id}>
 
         <div className="tl-post">
-          <FontAwesomeIcon className="iconeDenuncia" onClick={openDenuncia} icon={faEllipsisVertical} />
+          <FontAwesomeIcon
+            className="iconeDenuncia"
+            onClick={toggleOptions}
+            icon={faEllipsisVertical}
+          />
+          {optionsOpen && (
+            <div className="options-menu-post">
+              {post.userSent === userId && (
+                <div className="option-post" onClick={deletePost}>
+                  Excluir Post e Adicionar aos Postsexcluidos
+                </div>
+              )}
+              <div className="option-post" onClick={openDenuncia}>
+                Entrar no Painel de Denúncias
+              </div>
+              <div className="option-post" onClick={() => setOptionsOpen(false)}>
+                Fechar
+              </div>
+            </div>
+          )}
           {denunciaIsOpen && (
-            <Denuncia
-              postId={post.id}
-              userId={userId}
-              userSentData={userSentData}
-            />
+            <Denuncia postId={post.id} userId={userId} userSentData={userSentData} />
           )}
           <Link
             style={linkStyle}
