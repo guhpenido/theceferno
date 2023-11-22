@@ -130,6 +130,7 @@ const PostagensUsuario: React.FC = () => {
     const getPostsFromFirestore = () => {
         const q = query(
             collection(db, "timeline"),
+            where("mode", "==", "public"),
             where("userSent", "==", isUserSent),
             orderBy("time", "desc")
         );

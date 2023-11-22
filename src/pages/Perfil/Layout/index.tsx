@@ -9,6 +9,8 @@ import { Link } from "react-router-dom";
 import homeIcon from "../../../assets/home-icon.svg";
 import dmIcon from "../../../assets/dm-icon.svg";
 import perfilIcon from "../../../assets/perfil-icon.svg";
+import Pesquisa from "../../Pesquisa";
+
 
 const Layout: React.FC = () => {
 	return (
@@ -41,7 +43,7 @@ const Layout: React.FC = () => {
 					</Link>
 				</div>
 				<Main />
-				<SideBar />
+				<Pesquisa/>
 				<Acessibilidade />
 			</Wrapper>
 		</Container>
