@@ -159,7 +159,7 @@ const WhispersVisitor = ({ userPId }) => {
       return null;
     }
   };
-
+  
   return (
     <div>
       {timelineItems.length === 0 ? (
