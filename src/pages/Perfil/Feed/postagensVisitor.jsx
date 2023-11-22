@@ -119,6 +119,7 @@ const PostagensVisitor = ({ userPId }) => {
         const q = query(
             collection(db, "timeline"),
             where("userSent", "==", isUserSent),
+            where("mode", "==", "public"), 
             orderBy("time", "desc")
         );
 

@@ -12,27 +12,18 @@ interface FeedProps {
 const Feed: React.FC<FeedProps> = ({ avatarUrl }) => {
 
   // const [mostrarComponente, setMostrarComponente] = useState(false);
-  const [visibilityPerfil, setVisibilityPerfil] = useState(false);
   const [visibilityPostagens, setVisibilityPostagens] = useState(true);
   const [visibilityWhispers, setVisibilityWhispers] = useState(false);
 
   const handleWhisper = () => {
-    setVisibilityPerfil(false);
     setVisibilityPostagens(false);
     setVisibilityWhispers(true);
   }
 
   const handlePostagens = () => {
-    setVisibilityPerfil(false);
     setVisibilityWhispers(false);
     setVisibilityPostagens(true);
   }
-
-  // const handlePerfil = () => {
-  //   setVisibilityPostagens(false);
-  //   setVisibilityPerfil(true);
-  //   setVisibilityWhispers(false);
-  // }
 
   return (
     <Container>
