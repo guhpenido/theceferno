@@ -73,8 +73,6 @@ function PostDisplay({
   userId,
   userLoggedData,
 }) {
-  "";
-
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
   const [disliked, setDisliked] = useState(false); // Estado para controlar se o usuário curtiu o post
   const [likes, setLikes] = useState(post.likes);
@@ -85,13 +83,34 @@ function PostDisplay({
   const [isBeatingL, setIsBeatingL] = useState(false);
   const [isBeatingD, setIsBeatingD] = useState(false);
   const [isBeatingB, setIsBeatingB] = useState(false);
-  const iconToUse = saveIcon === "solid" ? solidBookmark : regularBookmark;
-  const likeToUse = likeIcon === "solid" ? solidThumbsUp : regularThumbsUp;
-  const dislikeToUse =
-    dislikeIcon === "solid" ? solidThumbsDown : regularThumbsDown;
+  const [denunciaIsOpen, setDenunciaIsOpen] = useState(false);
+  const [optionsOpen, setOptionsOpen] = useState(false);
+  const [newPost, setNewPost] = useState({
+    deslikes: post.deslikes,
+    likes: post.likes,
+    mode: post.mode,
+    postId: post.id,
+    text: post.text,
+    time: post.time,
+    userMentioned: post.userMentioned,
+    userSent: post.userSent,
+  });
+  const iconToUse = saveIcon === 'solid' ? solidBookmark : regularBookmark;
+  const likeToUse = likeIcon === 'solid' ? solidThumbsUp : regularThumbsUp;
+  const dislikeToUse = dislikeIcon === 'solid' ? solidThumbsDown : regularThumbsDown;
   const postDate = new Date(post.time);
   const now = new Date();
   let timeAgo;
+  const db = getFirestore(app);
+
+  const openDenuncia = () => {
+    setDenunciaIsOpen(true);
+    setOptionsOpen(false); // Fechar as opções quando abrir a denúncia
+  };
+
+  const toggleOptions = () => {
+    setOptionsOpen(!optionsOpen);
+  };
 
   const handleIconClickB = () => {
     setIsBeatingB(!isBeatingB);
@@ -126,14 +145,18 @@ function PostDisplay({
 
   useEffect(() => {
     if (liked) {
-      setLikeIcon("solid");
-    } else setLikeIcon("regular");
+      setLikeIcon('solid');
+    }
+    else
+      setLikeIcon('regular');
   }, [liked]);
 
   useEffect(() => {
     if (disliked) {
-      setDislikeIcon("solid");
-    } else setDislikeIcon("regular");
+      setDislikeIcon('solid');
+    }
+    else
+      setDislikeIcon('regular');
   }, [disliked]);
 
   useEffect(() => {
@@ -404,9 +427,7 @@ function PostDisplay({
           // Verifica se o postId já existe no array savedPosts
           if (userData.savedPosts.includes(postId)) {
             // Cria um novo array com o postId removido
-            const updatedSavedPosts = userData.savedPosts.filter(
-              (savedPost) => savedPost !== postId
-            );
+            const updatedSavedPosts = userData.savedPosts.filter(savedPost => savedPost !== postId);
 
             // Atualiza o documento do usuário com o novo array savedPosts
             await updateDoc(userDocRef, {
@@ -586,12 +607,31 @@ function PostDisplay({
     }
   }
 
-  const [denunciaIsOpen, setDenunciaIsOpen] = useState(false);
+  const deletePost = async () => {
+    try {
+      // Obter referência do documento na coleção "timeline"
+      const timelineDocRef = collection(db, "timeline");
+      const queryInteraction = query(
+        timelineDocRef,
+        where("postId", "==", post.id),
+      );
+      const querySnapshotRemove = await getDocs(queryInteraction);
 
-  const openDenuncia = () => {
-    setDenunciaIsOpen(true);
-    console.log(denunciaIsOpen);
-    console.log("clicou na denucnai");
+      if (!querySnapshotRemove.empty) {
+        const interactionDoc = querySnapshotRemove.docs[0];
+        await deleteDoc(interactionDoc.ref);
+
+        console.log(`Deslike removido com sucesso!`);
+
+      }
+      
+      const postsexcluidosCollectionRef = collection(db, "postsexcluidos");
+      await addDoc(postsexcluidosCollectionRef, newPost);
+
+      console.log("Post excluído e adicionado aos postsexcluidos com sucesso!");
+    } catch (error) {
+      console.error("Erro ao excluir e adicionar post:", error);
+    }
   };
 
   return (
@@ -600,15 +640,26 @@ function PostDisplay({
         <div className="tl-post">
           <FontAwesomeIcon
             className="iconeDenuncia"
-            onClick={openDenuncia}
+            onClick={toggleOptions}
             icon={faEllipsisVertical}
           />
+          {optionsOpen && (
+            <div className="options-menu-post">
+              {post.userSent === userId && (
+                <div className="option-post" onClick={deletePost}>
+                  Excluir Post e Adicionar aos Postsexcluidos
+                </div>
+              )}
+              <div className="option-post" onClick={openDenuncia}>
+                Entrar no Painel de Denúncias
+              </div>
+              <div className="option-post" onClick={() => setOptionsOpen(false)}>
+                Fechar
+              </div>
+            </div>
+          )}
           {denunciaIsOpen && (
-            <Denuncia
-              postId={post.postId}
-              userId={userId}
-              userSentData={userSentData}
-            />
+            <Denuncia postId={post.id} userId={userId} userSentData={userSentData} />
           )}
           <Link
             style={linkStyle}
@@ -620,34 +671,39 @@ function PostDisplay({
             to={`/timeline/${post.id}`}
           >
             <div className="tl-ps-header">
-              <div className="tl-ps-foto">
+              {post.mode !== "anon" ? (<Link
+                to={`/VisitorPage/${userSentData.id}`}
+                style={{ color: "white" }}
+              >
+                <div className="tl-ps-foto">
+                  {imageSent && <img src={imageSent} alt="" />}
+                </div>
+              </Link>) : (<div className="tl-ps-foto">
                 {imageSent && <img src={imageSent} alt="" />}
-              </div>
+              </div>)}
+
               {post.userMentioned !== "" ? (
-                <Link
-                  to={`/VisitorPage/${userEnvioId}`}
-                >
-                  <div className="tl-ps-nomes">
-                    <p className="tl-ps-nome">
-                      {nomeEnvio}{" "}
-                      <span className="tl-ps-user">@{userEnvio} </span>
-                      <span className="tl-ps-tempo">• {timeAgo}</span>
-                      <FontAwesomeIcon className="arrow" icon={faArrowRight} />
-                      {userMentionedData && (
-                        <img src={userMentionedData.imageUrl} alt="" />
-                      )}
-                      {userMentionedData && (
-                        <>
-                          {" "}
-                          {userMentionedData.nome}{" "}
-                          <span className="tl-ps-userReceived">
-                            @{userMentionedData.usuario}{" "}
-                          </span>
-                        </>
-                      )}
-                    </p>
-                  </div>
-                </Link>
+
+                <div className="tl-ps-nomes">
+                  <p className="tl-ps-nome">
+                    {nomeEnvio}{" "}
+                    <span className="tl-ps-user">@{userEnvio} </span>
+                    <span className="tl-ps-tempo">• {timeAgo}</span>
+                    <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                    {userMentionedData && (
+                      <img src={userMentionedData.imageUrl} alt="" />
+                    )}
+                    {userMentionedData && (
+                      <>
+                        {" "}
+                        {userMentionedData.nome}{" "}
+                        <span className="tl-ps-userReceived">
+                          @{userMentionedData.usuario}{" "}
+                        </span>
+                      </>
+                    )}
+                  </p>
+                </div>
               ) : (
                 <div className="tl-ps-nomes">
                   <Link to={`/VisitorPage/${userEnvioId}`}>
@@ -676,8 +732,7 @@ function PostDisplay({
                     handleIconClickL();
                   }}
                 >
-                  <FontAwesomeIcon icon={likeToUse} beat={isBeatingL} />{" "}
-                  <span>{likes}</span>
+                  <FontAwesomeIcon icon={likeToUse} beat={isBeatingL} /> <span>{likes}</span>
                 </div>
                 <div
                   className="tl-ps-deslike"
