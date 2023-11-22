@@ -111,27 +111,13 @@ export function SavedPosts() {
     };
   }, []);
 
+  
   useEffect(() => {
-    carregaTml();
-  });
-
-  useEffect(() => {
-    console.log("useEffect para usreId");
-    if (userId) {
-      fetchUserDataAndSetState(userId);
+    if(userId){
+      carregaTml();
+      setIsFetching(true);
     }
   }, [userId]);
-
-  useEffect(() => {
-    console.log("useEffect para carregarTml");
-    if (userId) {
-      if (isFetching) {
-        carregaTml().then(() => {
-          setIsFetching(false);
-        });
-      }
-    }
-  }, [userId], [isFetching]);
 
   useEffect(() => {
     console.log("useEffect para carregarTml2");
@@ -149,6 +135,7 @@ export function SavedPosts() {
 
     return () => unsubscribe();
   }, [auth, navigate]);
+
 
   const [scrolling, setScrolling] = useState(false);
 
@@ -177,14 +164,12 @@ export function SavedPosts() {
   };
 
   const carregaTml = async () => {
-    if (isFetching) {
+    if (!userId || isFetching) {
       return;
     }
 
     setIsFetching(true);
-    if (!userId) {
-      setIsFetching(true);
-    }
+
     const postsCollectionRef = collection(db, "timeline");
     const lastLoadedPost =
       loadedPosts.length > 0 ? loadedPosts[loadedPosts.length - 1].post : null;
@@ -193,6 +178,7 @@ export function SavedPosts() {
     console.log(selectedInstituicao);
     console.log(selectedCurso);
     const userDocRef = doc(db, "users", userId);
+    console.log(userId);
     const userDocSnapshot = await getDoc(userDocRef);
 
     if (userDocSnapshot.exists()) {
@@ -224,7 +210,7 @@ export function SavedPosts() {
     }
     try {
       const postsData = await getPostsFromFirestore(postsQuery);
-
+      console.log(postsData.length);
       if (postsData.length === 0) {
         console.log("Você já chegou ao fim");
       } else {
@@ -255,6 +241,8 @@ export function SavedPosts() {
       setIsFetching(false);
     }
   }
+
+  
 
   const fetchUserDataAndSetState = async (userId) => {
     console.log(userId);

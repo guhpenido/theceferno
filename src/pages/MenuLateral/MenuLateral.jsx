@@ -5,6 +5,7 @@ import dmIcon from "../../assets/dm-icon.svg";
 import perfilIcon from "../../assets/perfil-icon.svg";
 import setaPostar from "../../assets/seta-postar.svg";
 import savedIcon from "../../assets/saved.svg";
+import searchIcon from "../../assets/search.svg";
 import logout from "../../assets/logout.svg";
 import { useNavigate } from "react-router-dom";
 import "./menuLateral.css";
@@ -138,15 +139,15 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
                 </div>
               </div>
             </Link>
-            <Link className="botaoAcessar a-postar-menu-lateral" to="/timeline">
-              <div className="botao-buscar-menu">
-                <div className="postar-menu-lateral">
-                  <img
-                    id="img-postar-menu-lateral-medio"
-                    src={setaPostar}
-                    alt="Botão ir para DM, chat conversas privadas"
-                  ></img>
-                  <p id="p-postar-menu-lateral">Postar</p>
+            <Link className="botaoAcessar iconMenu botaoComHoverMenuLateral" to="/pesquisa">
+              <div className="cada-icone-img-nome">
+                <img
+                  id="dm"
+                  src={searchIcon}
+                  alt="Botão ir para a página de pesquisa."
+                ></img>
+                <div className="escrita-lateral">
+                  <p className="escrita-lateral">Buscar</p>
                 </div>
               </div>
             </Link>
@@ -239,17 +240,17 @@ function MenuLateral({ isMobileLateralVisible, toggleMobileLateral }) {
                 </div>
               </Link>
               <Link
-                className="mobile-botaoAcessar mobile-a-postar-menu-lateral"
-                to="/timeline"
+                className="mobile-botaoAcessar mobile-iconMenu"
+                to="/pesquisa"
               >
-                <div className="mobile-botao-buscar-menu">
-                  <div className="mobile-postar-menu-lateral">
-                    <img
-                      id="mobile-img-postar-menu-lateral-medio"
-                      src={setaPostar}
-                      alt="Botão ir para DM, chat conversas privadas"
-                    ></img>
-                    <p id="mobile-p-postar-menu-lateral">Postar</p>
+                <div className="mobile-cada-icone-img-nome">
+                  <img
+                    id="dm"
+                    src={searchIcon}
+                    alt="Botão ir para a página de pesquisa."
+                  ></img>
+                  <div className="mobile-escrita-lateral">
+                    <p className="mobile-escrita-lateral">Buscar</p>
                   </div>
                 </div>
               </Link>

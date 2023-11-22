@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import homeIcon from "../../assets/home-icon.svg";
 import dmIcon from "../../assets/dm-icon.svg";
+import searchIcon from "../../assets/search.svg";
 import perfilIcon from "../../assets/perfil-icon.svg";
 import setaPostar from "../../assets/seta-postar.svg";
 import notificacaoIcon from "../../assets/notificacao-icon.svg";
@@ -388,6 +389,15 @@ function Dm() {
                   id="dm"
                   src={dmIcon}
                   alt="Botão ir para DM, chat conversas privadas"
+                ></img>
+              </div>
+            </Link>
+            <Link className="botaoAcessar" to="/pesquisa">
+              <div>
+                <img
+                  id="dm"
+                  src={searchIcon}
+                  alt="Botão ir para pesqusisa."
                 ></img>
               </div>
             </Link>

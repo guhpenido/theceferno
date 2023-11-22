@@ -694,7 +694,7 @@ function PostPage() {
         console.log("clicou");
         console.log(isMobileLateralVisible);
     };
-
+    console.log(userLoggedData.id);
     return (
         <>
             <div className="tl-screen">

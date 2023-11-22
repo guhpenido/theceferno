@@ -35,7 +35,7 @@ import {
   onChildAdded,
 } from "firebase/database";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import likeIcon from "../../assets/thumbs-up-regular.svg"
+import likeIcon from "../../assets/thumbs-up-regular.svg";
 
 import {
   doc,
@@ -64,8 +64,7 @@ import {
 import ReplyDisplay from "./reply";
 import VisitorPage from "../Perfil/ProfilePage/VisitorPage";
 import { AppRoutes } from "../../routes/AppRoutes";
-import Denuncia from "../Denuncia/Denuncia"; 
-
+import Denuncia from "../Denuncia/Denuncia";
 
 function PostDisplay({
   post,
@@ -73,9 +72,7 @@ function PostDisplay({
   userMentionedData,
   userId,
   userLoggedData,
-}) {""
-
-  
+}) {
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
   const [disliked, setDisliked] = useState(false); // Estado para controlar se o usuário curtiu o post
   const [likes, setLikes] = useState(post.likes);
@@ -86,13 +83,35 @@ function PostDisplay({
   const [isBeatingL, setIsBeatingL] = useState(false);
   const [isBeatingD, setIsBeatingD] = useState(false);
   const [isBeatingB, setIsBeatingB] = useState(false);
+  const [denunciaIsOpen, setDenunciaIsOpen] = useState(false);
+  const [optionsOpen, setOptionsOpen] = useState(false);
+  const [newPost, setNewPost] = useState({
+    deslikes: post.deslikes,
+    likes: post.likes,
+    mode: post.mode,
+    postId: post.id,
+    text: post.text,
+    time: post.time,
+    userMentioned: post.userMentioned,
+    userSent: post.userSent,
+  });
   const iconToUse = saveIcon === 'solid' ? solidBookmark : regularBookmark;
   const likeToUse = likeIcon === 'solid' ? solidThumbsUp : regularThumbsUp;
   const dislikeToUse = dislikeIcon === 'solid' ? solidThumbsDown : regularThumbsDown;
   const postDate = new Date(post.time);
   const now = new Date();
   let timeAgo;
-  
+  const db = getFirestore(app);
+
+  const openDenuncia = () => {
+    setDenunciaIsOpen(true);
+    setOptionsOpen(false); // Fechar as opções quando abrir a denúncia
+  };
+
+  const toggleOptions = () => {
+    setOptionsOpen(!optionsOpen);
+  };
+
   const handleIconClickB = () => {
     setIsBeatingB(!isBeatingB);
     setTimeout(() => {
@@ -115,8 +134,12 @@ function PostDisplay({
   };
 
   useEffect(() => {
-    if (userLoggedData && userLoggedData.savedPosts && userLoggedData.savedPosts.includes(post.id)) {
-      setSaveIcon('solid');
+    if (
+      userLoggedData &&
+      userLoggedData.savedPosts &&
+      userLoggedData.savedPosts.includes(post.id)
+    ) {
+      setSaveIcon("solid");
     }
   }, [userLoggedData, post]);
 
@@ -125,7 +148,7 @@ function PostDisplay({
       setLikeIcon('solid');
     }
     else
-    setLikeIcon('regular');
+      setLikeIcon('regular');
   }, [liked]);
 
   useEffect(() => {
@@ -133,12 +156,16 @@ function PostDisplay({
       setDislikeIcon('solid');
     }
     else
-    setDislikeIcon('regular');
+      setDislikeIcon('regular');
   }, [disliked]);
 
   useEffect(() => {
-    if (userLoggedData && userLoggedData.savedPosts && userLoggedData.savedPosts.includes(post.id)) {
-      setDislikeIcon('solid');
+    if (
+      userLoggedData &&
+      userLoggedData.savedPosts &&
+      userLoggedData.savedPosts.includes(post.id)
+    ) {
+      setDislikeIcon("solid");
     }
   }, [userLoggedData, post]);
 
@@ -266,8 +293,6 @@ function PostDisplay({
     }
   };
 
-
-
   // Calcule a diferença em segundos entre as datas
   const secondsAgo = Math.floor((now - postDate) / 1000);
 
@@ -288,6 +313,7 @@ function PostDisplay({
   let imageSent = null;
   let nomeEnvio = null;
   let userEnvio = null;
+  let userEnvioId = null;
   if (post.mode == "anon") {
     imageSent =
       "https://media.discordapp.net/attachments/871728576972615680/1148261217840926770/logoanon.png?width=473&height=473";
@@ -297,14 +323,13 @@ function PostDisplay({
     nomeEnvio = userSentData.nome;
     imageSent = userSentData.imageUrl;
     userEnvio = userSentData.usuario;
+    userEnvioId = userSentData.id;
   }
 
-  
   useEffect(() => {
     // Use um useEffect para atualizar a UI quando o estado dislikes mudar
     // Isso garante que a UI seja renderizada após a atualização do estado
   }, [dislikes]);
-  
 
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState("");
@@ -318,7 +343,7 @@ function PostDisplay({
       const count = await countRepliesWithMessageReplyed(post.id);
       setReplyCount(count);
     };
-    
+
     fetchReplyCount();
   }, [post.id]);
 
@@ -392,35 +417,35 @@ function PostDisplay({
       if (user) {
         // Obtém a referência do documento do usuário no banco de dados
         const userDocRef = doc(db, "users", user);
-  
+
         // Obtém o documento do usuário
         const userDoc = await getDoc(userDocRef);
         const userData = userDoc.data();
-  
+
         // Verifica se o savedPosts existe no documento do usuário
         if (userData.savedPosts) {
           // Verifica se o postId já existe no array savedPosts
           if (userData.savedPosts.includes(postId)) {
             // Cria um novo array com o postId removido
             const updatedSavedPosts = userData.savedPosts.filter(savedPost => savedPost !== postId);
-  
+
             // Atualiza o documento do usuário com o novo array savedPosts
             await updateDoc(userDocRef, {
               savedPosts: updatedSavedPosts,
             });
 
             setSaveIcon("regular");
-  
+
             console.log("Post removido dos salvos com sucesso!");
           } else {
             // Caso contrário, o postId não está no array, então o adicionamos
             const updatedSavedPosts = [...userData.savedPosts, postId];
-  
+
             // Atualiza o documento do usuário com o novo array savedPosts
             await updateDoc(userDocRef, {
               savedPosts: updatedSavedPosts,
             });
-  
+
             setSaveIcon("solid");
 
             console.log("Post salvo com sucesso!");
@@ -430,7 +455,7 @@ function PostDisplay({
           await updateDoc(userDocRef, {
             savedPosts: [postId],
           });
-  
+
           console.log("Post salvo com sucesso!");
         }
       } else {
@@ -440,7 +465,6 @@ function PostDisplay({
       console.error("Erro ao salvar o post: ", error);
     }
   };
-  
 
   const linkStyle = {
     textDecoration: "none",
@@ -499,7 +523,6 @@ function PostDisplay({
         await deleteDoc(interactionDoc.ref);
 
         console.log(`Deslike removido com sucesso!`);
-        
       }
     } else {
       // Se o usuário ainda não interagiu com a postagem, adicione a interação de deslike
@@ -569,8 +592,11 @@ function PostDisplay({
   async function countRepliesWithMessageReplyed(postId) {
     const db = getFirestore(app);
     const repliesCollectionRef = collection(db, "replys");
-    const queryRef = query(repliesCollectionRef, where("messageReplyed", "==", postId));
-  
+    const queryRef = query(
+      repliesCollectionRef,
+      where("messageReplyed", "==", postId)
+    );
+
     try {
       const querySnapshot = await getDocs(queryRef);
       const replyCount = querySnapshot.size;
@@ -581,27 +607,59 @@ function PostDisplay({
     }
   }
 
-  const [denunciaIsOpen, setDenunciaIsOpen] = useState(false);
+  const deletePost = async () => {
+    try {
+      // Obter referência do documento na coleção "timeline"
+      const timelineDocRef = collection(db, "timeline");
+      const queryInteraction = query(
+        timelineDocRef,
+        where("postId", "==", post.id),
+      );
+      const querySnapshotRemove = await getDocs(queryInteraction);
 
-  const openDenuncia = () => {
-    setDenunciaIsOpen(true);
-    console.log(denunciaIsOpen)
-    console.log("clicou na denucnai")
+      if (!querySnapshotRemove.empty) {
+        const interactionDoc = querySnapshotRemove.docs[0];
+        await deleteDoc(interactionDoc.ref);
+
+        console.log(`Deslike removido com sucesso!`);
+
+      }
+      
+      const postsexcluidosCollectionRef = collection(db, "postsexcluidos");
+      await addDoc(postsexcluidosCollectionRef, newPost);
+
+      console.log("Post excluído e adicionado aos postsexcluidos com sucesso!");
+    } catch (error) {
+      console.error("Erro ao excluir e adicionar post:", error);
+    }
   };
-
 
   return (
     <>
-      <div className="tl-box" key={post.id}>
-
+      <div className="tl-box" key={post.postId}>
         <div className="tl-post">
-          <FontAwesomeIcon className="iconeDenuncia" onClick={openDenuncia} icon={faEllipsisVertical} />
+          <FontAwesomeIcon
+            className="iconeDenuncia"
+            onClick={toggleOptions}
+            icon={faEllipsisVertical}
+          />
+          {optionsOpen && (
+            <div className="options-menu-post">
+              {post.userSent === userId && (
+                <div className="option-post" onClick={deletePost}>
+                  Excluir Post e Adicionar aos Postsexcluidos
+                </div>
+              )}
+              <div className="option-post" onClick={openDenuncia}>
+                Entrar no Painel de Denúncias
+              </div>
+              <div className="option-post" onClick={() => setOptionsOpen(false)}>
+                Fechar
+              </div>
+            </div>
+          )}
           {denunciaIsOpen && (
-            <Denuncia
-              postId={post.id}
-              userId={userId}
-              userSentData={userSentData}
-            />
+            <Denuncia postId={post.id} userId={userId} userSentData={userSentData} />
           )}
           <Link
             style={linkStyle}
@@ -613,43 +671,48 @@ function PostDisplay({
             to={`/timeline/${post.id}`}
           >
             <div className="tl-ps-header">
-              <div className="tl-ps-foto">
+              {post.mode !== "anon" ? (<Link
+                to={`/VisitorPage/${userSentData.id}`}
+                style={{ color: "white" }}
+              >
+                <div className="tl-ps-foto">
+                  {imageSent && <img src={imageSent} alt="" />}
+                </div>
+              </Link>) : (<div className="tl-ps-foto">
                 {imageSent && <img src={imageSent} alt="" />}
-              </div>
+              </div>)}
+
               {post.userMentioned !== "" ? (
-                <Link
-                  to="/VisitorPage"
-                  state={{ objetoUsuario: userSentData, modo: post.mode }}
-                  style={{ color: "white" }}
-                >
-                  <div className="tl-ps-nomes">
-                    <p className="tl-ps-nome">
-                      {nomeEnvio}{" "}
-                      <span className="tl-ps-user">@{userEnvio} </span>
-                      <span className="tl-ps-tempo">• {timeAgo}</span>
-                      <FontAwesomeIcon className="arrow" icon={faArrowRight} />
-                      {userMentionedData && (
-                        <img src={userMentionedData.imageUrl} alt="" />
-                      )}
-                      {userMentionedData && (
-                        <>
-                          {" "}
-                          {userMentionedData.nome}{" "}
-                          <span className="tl-ps-userReceived">
-                            @{userMentionedData.usuario}{" "}
-                          </span>
-                        </>
-                      )}
-                    </p>
-                  </div>
-                </Link>
-              ) : (
+
                 <div className="tl-ps-nomes">
                   <p className="tl-ps-nome">
                     {nomeEnvio}{" "}
                     <span className="tl-ps-user">@{userEnvio} </span>
                     <span className="tl-ps-tempo">• {timeAgo}</span>
+                    <FontAwesomeIcon className="arrow" icon={faArrowRight} />
+                    {userMentionedData && (
+                      <img src={userMentionedData.imageUrl} alt="" />
+                    )}
+                    {userMentionedData && (
+                      <>
+                        {" "}
+                        {userMentionedData.nome}{" "}
+                        <span className="tl-ps-userReceived">
+                          @{userMentionedData.usuario}{" "}
+                        </span>
+                      </>
+                    )}
                   </p>
+                </div>
+              ) : (
+                <div className="tl-ps-nomes">
+                  <Link to={`/VisitorPage/${userEnvioId}`}>
+                    <p className="tl-ps-nome">
+                      {nomeEnvio}{" "}
+                      <span className="tl-ps-user">@{userEnvio} </span>
+                      <span className="tl-ps-tempo">• {timeAgo}</span>
+                    </p>
+                  </Link>
                 </div>
               )}
             </div>
@@ -660,7 +723,7 @@ function PostDisplay({
               <div className="tl-ps-opcoes">
                 <div className="tl-ps-reply">
                   <FontAwesomeIcon icon={faComment} onClick={toggleReply} />
-                  <span>{" "}{replyCount}</span>
+                  <span> {replyCount}</span>
                 </div>
                 <div
                   className="tl-ps-like"
@@ -669,7 +732,7 @@ function PostDisplay({
                     handleIconClickL();
                   }}
                 >
-                  <FontAwesomeIcon icon={likeToUse} beat ={isBeatingL}/> <span>{likes}</span>
+                  <FontAwesomeIcon icon={likeToUse} beat={isBeatingL} /> <span>{likes}</span>
                 </div>
                 <div
                   className="tl-ps-deslike"
@@ -678,17 +741,17 @@ function PostDisplay({
                     handleIconClickD();
                   }}
                 >
-                  <FontAwesomeIcon icon={dislikeToUse} beat ={isBeatingD}/>{" "}
+                  <FontAwesomeIcon icon={dislikeToUse} beat={isBeatingD} />{" "}
                   <span>{dislikes}</span>
                 </div>
                 <div
                   className="tl-ps-salvar"
                   onClick={(e) => {
-                    handleSavePost(e, post.id)
+                    handleSavePost(e, post.id);
                     handleIconClickB();
                   }}
                 >
-                  <FontAwesomeIcon icon={iconToUse}  beat ={isBeatingB}/>{" "}
+                  <FontAwesomeIcon icon={iconToUse} beat={isBeatingB} />{" "}
                 </div>
               </div>
             </div>
