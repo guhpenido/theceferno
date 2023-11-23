@@ -499,7 +499,6 @@ export function Register() {
           bannerUrl,
         });
 
-        alert("Usuario cadastrado!");
         navigate("/login");
       } catch (error) {
         alert("Erro ao cadastrar usuário: " + error.message);
