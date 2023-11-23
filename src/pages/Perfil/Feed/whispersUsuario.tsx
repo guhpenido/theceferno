@@ -63,16 +63,23 @@ const WhispersUsuario: React.FC = () => {
 
   //pegar o id do usuario de outra página
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         console.log(user.uid);
         setCurrentUser(user.uid);
-        fetchUserDataAndSetState(user.uid);
+        console.log(user);
+  
+        // Certifique-se de que fetchUserData retorna uma promessa
+        const userLoggedData = await fetchUserData(user.uid);
+        setUserLoggedData(userLoggedData);
+  
+        // Certifique-se de que fetchUserDataAndSetState retorna uma promessa
+        await fetchUserDataAndSetState(user.uid);
       } else {
         navigate("/login");
       }
     });
-
+  
     return () => unsubscribe();
   }, [auth, navigate]);
 
@@ -204,6 +211,7 @@ const WhispersUsuario: React.FC = () => {
                   userId={currentUser}
                   userSentData={userSentData}
                   userMentionedData={userMentionedData}
+                  userLoggedData={userLoggedData}
                   setRendState={true}
                 />
               ))}

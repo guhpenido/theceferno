@@ -63,24 +63,31 @@ const PostagensUsuario: React.FC = () => {
 
   //pegar o id do usuario de outra página
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         console.log(user.uid);
         setCurrentUser(user.uid);
-        fetchUserDataAndSetState(user.uid);
+        console.log(user);
+  
+        // Certifique-se de que fetchUserData retorna uma promessa
+        const userLoggedData = await fetchUserData(user.uid);
+        setUserLoggedData(userLoggedData);
+  
       } else {
         navigate("/login");
       }
     });
-
+  
     return () => unsubscribe();
   }, [auth, navigate]);
+  
 
   //pegar os whispers (mensagens que aquela pessoa postou/direcionou na página de alguém.)
   useEffect(() => {
     const q = query(
       collection(db, "timeline"),
       where("userSent", "==", currentUser),
+      where("mode", "==", "public"),
       orderBy("time", "desc")
     );
 
@@ -108,6 +115,7 @@ const PostagensUsuario: React.FC = () => {
     const postsCollectionRef = collection(db, "timeline");
     const postsQuery = query(
       postsCollectionRef,
+      where("mode", "==", "public"),
       orderBy("time", "desc"),
     );
 
@@ -204,6 +212,7 @@ const PostagensUsuario: React.FC = () => {
                   userId={currentUser}
                   userSentData={userSentData}
                   userMentionedData={userMentionedData}
+                  userLoggedData={userLoggedData}
                   setRendState={true}
                 />
               ))}

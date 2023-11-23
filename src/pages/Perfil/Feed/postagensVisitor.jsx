@@ -53,15 +53,23 @@ const PostagensVisitor = ({ userPId }) => {
 
   //pegar o id do usuario de outra página
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        console.log(user.uid);
         setCurrentUser(userPId);
-        fetchUserDataAndSetState(userPId);
+        console.log(user);
+  
+        // Certifique-se de que fetchUserData retorna uma promessa
+        const userLoggedData = await fetchUserData(user.uid);
+        setUserLoggedData(userLoggedData);
+  
+        // Certifique-se de que fetchUserDataAndSetState retorna uma promessa
+        await fetchUserDataAndSetState(userPId);
       } else {
         navigate("/login");
       }
     });
-
+  
     return () => unsubscribe();
   }, [auth, navigate]);
 
@@ -70,6 +78,7 @@ const PostagensVisitor = ({ userPId }) => {
     const q = query(
       collection(db, "timeline"),
       where("userSent", "==", currentUser),
+      where("mode", "==", "public"),
       orderBy("time", "desc")
     );
 
@@ -97,7 +106,8 @@ const PostagensVisitor = ({ userPId }) => {
     const postsCollectionRef = collection(db, "timeline");
     const postsQuery = query(
       postsCollectionRef,
-      orderBy("time", "desc"),
+      where("mode", "==", "public"),
+      orderBy("time", "desc")
     );
 
     const fetchData = async () => {
@@ -192,6 +202,7 @@ const PostagensVisitor = ({ userPId }) => {
                 userId={currentUser}
                 userSentData={userSentData}
                 userMentionedData={userMentionedData}
+                userLoggedData={userLoggedData}
                 setRendState={true}
               />
             ))}

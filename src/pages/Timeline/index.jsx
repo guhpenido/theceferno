@@ -25,6 +25,7 @@ import Header from "./Header";
 import MenuLateral from "../MenuLateral/MenuLateral";
 import Pesquisa from "../Pesquisa/index";
 import toast, { Toaster } from "react-hot-toast";
+import faBookmark  from "../../assets/saved.svg";
 import {
   getDatabase,
   ref,
@@ -515,6 +516,15 @@ export function Timeline() {
                 ></img>
               </div>
             </Link>
+            <Link className="botaoAcessar" to="/savedPosts">
+						<div>
+							<img
+								id="dm"
+								src={faBookmark}
+								alt="Botão ir para salvos."
+							></img>
+						</div>
+					</Link>
             <Link className="botaoAcessar" to="/pesquisa">
               <div>
                 <img

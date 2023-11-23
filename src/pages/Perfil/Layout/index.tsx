@@ -10,6 +10,8 @@ import homeIcon from "../../../assets/home-icon.svg";
 import dmIcon from "../../../assets/dm-icon.svg";
 import perfilIcon from "../../../assets/perfil-icon.svg";
 import Pesquisa from "../../Pesquisa";
+import searchIcon from "../../../assets/search.svg";
+import faBookmark  from "../../../assets/saved.svg";
 
 
 const Layout: React.FC = () => {
@@ -41,9 +43,27 @@ const Layout: React.FC = () => {
 							></img>
 						</div>
 					</Link>
+					<Link className="botaoAcessar" to="/savedPosts">
+						<div>
+							<img
+								id="dm"
+								src={faBookmark}
+								alt="Botão ir para salvos."
+							></img>
+						</div>
+					</Link>
+					<Link className="botaoAcessar" to="/pesquisa">
+						<div>
+							<img
+								id="dm"
+								src={searchIcon}
+								alt="Botão ir para pesqusisa."
+							></img>
+						</div>
+					</Link>
 				</div>
 				<Main />
-				<Pesquisa/>
+				<Pesquisa />
 				<Acessibilidade />
 			</Wrapper>
 		</Container>

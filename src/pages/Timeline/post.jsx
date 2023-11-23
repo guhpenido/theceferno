@@ -739,12 +739,20 @@ useEffect(() => {
     setOptionsOpen(false)
   };
 
-  const notify = () => toast.success('Here is your toast.');
+  const notiPostExcluido = () => toast.success('O Post foi excluído com sucesso !', {
+    duration: 7000,
 
-  const testenot = (event) =>  {
+    iconTheme: {
+      primary: '#4763E4',
+      secondary: '#fff',
+    },
+  });
+
+  const excluiENotifica = (event) =>  {
+    notiPostExcluido();
     deletePost();
-    notify();
   };
+
   return (
     <>
       <div className="tl-box" key={post.postId}>
@@ -757,7 +765,7 @@ useEffect(() => {
           {optionsOpen && (
             <div className="options-menu-post">
               {post.userSent === userId && (
-                <div className="option-post" onClick={testenot}>
+                <div className="option-post" onClick={excluiENotifica}>
                   Excluir Post
                   <Toaster
                     position="top-center"
@@ -783,7 +791,7 @@ useEffect(() => {
               userMentionedData: userMentionedData,
               userLoggedData: userLoggedData,
             }}
-            to={`/timeline/${post.id}`}
+            to={`/timeline/${post.postId}`}
           >
             <div className="tl-ps-header">
               {post.mode !== "anon" ? (<Link
