@@ -114,26 +114,47 @@ option {
 }
 
 .options-menu-post {
+  position: absolute;
   color: white;
   background-color: #111111;
   border: 2px solid #4763E4;
   border-radius: 5px;
   z-index: 1;
-  width: 10vw;
-  margin-left: 36vw;
+  width: 35vw;
+  margin-left: 45vw;
   box-shadow: 0 0 10px 0.5px #4763E4;
 }
 
 .option-post {
-  padding: 1vw;
+  padding: 2vw;
 }
 
 .option-post:hover{
   cursor: pointer;
 }
 
+/* Styles for PCs */
 @media (min-width: 720px) {
-  /* Styles for PCs */
+
+  .options-menu-post {
+    color: white;
+    background-color: #111111;
+    border: 2px solid #4763E4;
+    border-radius: 5px;
+    z-index: 1;
+    width: 10vw;
+    margin-left: 36vw;
+    box-shadow: 0 0 10px 0.5px #4763E4;
+  }
+  
+  .option-post {
+    padding: 1vw;
+  }
+  
+  .option-post:hover{
+    cursor: pointer;
+  }
+
   .denuncia {
     width: 40vw;
     left: 30vw;
