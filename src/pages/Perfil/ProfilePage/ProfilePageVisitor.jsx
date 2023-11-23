@@ -46,6 +46,7 @@ const ProfilePageVisitor = ({ userPId }) => {
     const [userId, setUserId] = useState(null);
     const [userSeguidores, setUserSeguidores] = useState(null);
     const [userSeguindo, setUserSeguindo] = useState(null);
+    const [currentUserSeguindo, setCurrentUserSeguindo] = useState(false);
     const buttonFollowRef = useRef(null);
     const followingRef = useRef(null);
     const followersRef = useRef(null);
@@ -70,9 +71,11 @@ const ProfilePageVisitor = ({ userPId }) => {
 
                     if (userData && userData.seguindo) { // Verificar se 'seguindo' é definido
                         if (userData.seguindo.includes(userPId)) {
+                            setCurrentUserSeguindo(true);
                             buttonFollowRef.current.innerHTML = "Deixar de Seguir"
                             buttonFollowRef.current.setAttribute('data-follow', 'true');
                         } else {
+                            setCurrentUserSeguindo(false);
                             buttonFollowRef.current.innerHTML = "Seguir";
                             buttonFollowRef.current.setAttribute('data-follow', 'false');
                         }
@@ -136,6 +139,10 @@ const ProfilePageVisitor = ({ userPId }) => {
     const fetchUserData = async (userId) => {
         const userDoc = await getDoc(doc(db, 'users', userId));
         if (userDoc.exists()) {
+            let data = userDoc.data();
+            if (data.seguindo.includes(userPId)) {
+                setCurrentUserSeguindo(true);
+            }
             return userDoc.data();
         } else {
             console.log('User not found');
@@ -211,35 +218,34 @@ const ProfilePageVisitor = ({ userPId }) => {
     async function handleFollow() {
         const userRef = doc(db, 'users', currentUser.id);
         const userProfileRef = doc(db, 'users', userPId);
-        console.log("aaa" + userPId);
-        console.log("bbb " + currentUser.id);
+        console.log(currentUserSeguindo);
         // Deixa de seguir
-        if(currentUser.seguindo){
-            if (currentUser.seguindo.includes(userPId)) {
-                        console.log("entra ");
-                        await updateDoc(userRef, {
-                            seguindo: arrayRemove(userPId)
-                        });
-                        await updateDoc(userProfileRef, {
-                            seguidores: arrayRemove(currentUser.id)
-                        });
-                        setUserSeguidores(userSeguidores - 1)
-                        buttonFollowRef.current.innerHTML = "Seguir";
-                        buttonFollowRef.current.setAttribute('data-follow', 'false');
-                        // Começa a Seguir
-                    } 
-            } else {
-                        await updateDoc(userRef, {
-                            seguindo: arrayUnion(userPId)
-                        });
-                        await updateDoc(userProfileRef, {
-                            seguidores: arrayUnion(currentUser.id)
-                        });
-                        setUserSeguidores(userSeguidores + 1)
-                        buttonFollowRef.current.innerHTML = "Deixar de Seguir";
-                        buttonFollowRef.current.setAttribute('data-follow', 'true');
-                    }
-                }
+        if (currentUserSeguindo) {
+                console.log("entra ");
+                await updateDoc(userRef, {
+                    seguindo: arrayRemove(userPId)
+                });
+                await updateDoc(userProfileRef, {
+                    seguidores: arrayRemove(currentUser.id)
+                });
+                setUserSeguidores(userSeguidores - 1);
+                buttonFollowRef.current.innerHTML = "Seguir";
+                buttonFollowRef.current.setAttribute('data-follow', 'false');
+                setCurrentUserSeguindo(false);
+                // Começa a Seguir
+        } else {
+                await updateDoc(userRef, {
+                    seguindo: arrayUnion(userPId)
+                });
+                await updateDoc(userProfileRef, {
+                    seguidores: arrayUnion(currentUser.id)
+                });
+                setUserSeguidores(userSeguidores + 1);
+                buttonFollowRef.current.innerHTML = "Deixar de Seguir";
+                buttonFollowRef.current.setAttribute('data-follow', 'true');
+                setCurrentUserSeguindo(true);
+            }
+    }
 
     return (
         <Container>
@@ -312,6 +318,3 @@ const ProfilePageVisitor = ({ userPId }) => {
 };
 
 export default ProfilePageVisitor;
-
-
-
