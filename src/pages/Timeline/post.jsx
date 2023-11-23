@@ -750,7 +750,10 @@ useEffect(() => {
 
   const excluiENotifica = (event) =>  {
     notiPostExcluido();
-    deletePost();
+    setTimeout(() => {
+      deletePost();
+  }, 3000);
+  window.location.reload();
   };
 
   return (

@@ -24,6 +24,8 @@ import { Link } from "react-router-dom";
 import homeIcon from "../../assets/home-icon.svg";
 import dmIcon from "../../assets/dm-icon.svg";
 import perfilIcon from "../../assets/perfil-icon.svg";
+import faBookmark  from "../../assets/saved.svg";
+import searchIcon from "../../assets/search.svg";
 
 // import "./stylesTrending.css"; // Estilo personalizado para a seção "Trending"
 
@@ -147,10 +149,24 @@ function Trending() {
     }
   };
 
+  const toggleMobileLateral = () => {
+    setIsMobileLateralVisible(!isMobileLateralVisible);
+    console.log("clicou");
+    console.log(isMobileLateralVisible);
+  };
+  const toggleFiltroVisivel = () => {
+    setFiltroVisivel(!filtroVisivel);
+  };
+
   return (
     <>
       <div className="tl-screen">
         <div className="tl-container">
+        <Header
+            userLogged={userLoggedData}
+            toggleMobileLateral={toggleMobileLateral}
+            abreMenu={toggleFiltroVisivel}
+          />
           <div className="tl-header">
             <Link className="tl-header-div1" to="/timeline">
               <h1>Para Você</h1>
@@ -193,6 +209,24 @@ function Trending() {
                   id="dm"
                   src={dmIcon}
                   alt="Botão ir para DM, chat conversas privadas"
+                ></img>
+              </div>
+            </Link>
+            <Link className="botaoAcessar" to="/savedPosts">
+						<div>
+							<img
+								id="dm"
+								src={faBookmark}
+								alt="Botão ir para salvos."
+							></img>
+						</div>
+					</Link>
+            <Link className="botaoAcessar" to="/pesquisa">
+              <div>
+                <img
+                  id="dm"
+                  src={searchIcon}
+                  alt="Botão ir para pesqusisa."
                 ></img>
               </div>
             </Link>
