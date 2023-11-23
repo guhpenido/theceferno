@@ -298,6 +298,10 @@ form .tl-textInput{
   cursor: pointer;
 }
 
+.tl-modo-resposta input[type='radio']:checked {
+  border-color: #8739ee;
+  background-color: #4562e2;
+}
 /* #input-timeline-marcar{
   font-size: 15 px;
 } */
@@ -433,6 +437,9 @@ form .tl-textInput{
   padding: 10px;
   background-color: #000;
   border-radius: 10px;
+  border: 1px solid #242424;
+  justify-content: center;
+  width: 80%;
 }
 
 .tl-modo-resposta {
@@ -440,7 +447,12 @@ form .tl-textInput{
   gap: 10px;
   margin-bottom: 10px;
   align-items: center;
+  justify-content: space-around;
 }
+
+/* .tl-modo-resposta input[type="radio"]{
+  background-color: #193cd8;
+} */
 
 .tl-modo-resposta-label {
   display: flex;
@@ -451,6 +463,10 @@ form .tl-textInput{
   margin-right: 20px;
 }
 
+.tl-modo-resposta input{
+  width: 30px;
+}
+
 .tl-reply-textarea {
   width: 100%;
   padding: 10px;
@@ -458,6 +474,8 @@ form .tl-textInput{
   margin-bottom: 10px;
   border: none;
   border-radius: 5px;
+  background: #0c0c0c;
+  color: #fff;
 }
 
 .tl-reply-button {

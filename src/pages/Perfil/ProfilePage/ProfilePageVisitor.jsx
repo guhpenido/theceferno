@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, doc, getDoc, updateDoc, onSnapshot, collection, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenticação
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { app } from "../../../services/firebaseConfig";
 import React, { useState, useEffect, useRef } from 'react';
 import ModalReact from 'react-modal';
 import './estilo.css';
@@ -23,7 +24,7 @@ import {
 import Feed from "../Feed";
 import FeedVisitor from "../Feed/feedVisitor";
 
-import { app } from "../../../services/firebaseConfig";
+
 import { faEnvelope } from "@fortawesome/fontawesome-free-solid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -51,7 +52,7 @@ const ProfilePageVisitor = ({ userPId }) => {
     const followingRef = useRef(null);
     const followersRef = useRef(null);
     const db = getFirestore(app);
-    const storage = getStorage(app);
+    
 
     const [userLoggedData, setUserLoggedData] = useState(null); // Adjust the type accordingly
     const [selectedProfile, setSelectedProfile] = useState(null); // Adjust the type accordingly
