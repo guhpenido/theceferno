@@ -154,12 +154,8 @@ function Trending() {
     console.log("clicou");
     console.log(isMobileLateralVisible);
   };
-  const recarregarTml = async () => {
-    // Limpe o estado dos posts carregados
-    setLoadedPosts([]);
-    setHasLoadedPosts(false);
-    // Chame a função carregaTml para carregar novamente os últimos 15 posts
-    carregaTml();
+  const toggleFiltroVisivel = () => {
+    setFiltroVisivel(!filtroVisivel);
   };
 
   return (
@@ -169,7 +165,7 @@ function Trending() {
         <Header
             userLogged={userLoggedData}
             toggleMobileLateral={toggleMobileLateral}
-            carregatml={recarregarTml}
+            abreMenu={toggleFiltroVisivel}
           />
           <div className="tl-header">
             <Link className="tl-header-div1" to="/timeline">

@@ -118,13 +118,18 @@ export function Timeline() {
     };
   }, []);
 
+  // useEffect(() => {
+  //   if (isFetching) {
+  //     carregaTml().then(() => {
+  //       setIsFetching(false);
+  //     });
+  //   }
+  // }, [isFetching]);
+
   useEffect(() => {
-    if (isFetching) {
-      carregaTml().then(() => {
-        setIsFetching(false);
-      });
-    }
-  }, [isFetching]);
+    carregaTml();
+  }, []);
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -222,9 +227,8 @@ export function Timeline() {
     fetchCursos();
   }, []);
   
-  useEffect(() => {
-    carregaTml();
-  }, []);
+ 
+
 
   const carregaTml = async (instituicao = "", curso = "") => {
     try {
@@ -302,9 +306,10 @@ export function Timeline() {
     }
   };
 
-  const handleFilterClick = () => {
+  useEffect(() => {
     carregaTml(selectedInstituicaoFilter, selectedCursoFilter);
-  };
+  }, [selectedInstituicaoFilter, selectedCursoFilter]);
+  
   useEffect(() => {
     if (userId) {
       fetchUserDataAndSetState(userId);
