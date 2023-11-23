@@ -850,3 +850,26 @@ align-items: center;
   }
 
 }
+.filter-section{
+  background-color: #111111;
+  width: 175px;
+  height: 175px;
+  border-radius: 15px;
+  padding: 15px;
+  color: #fff;
+  position: fixed;
+  right: 25%;
+}
+.filter-section select, .filter-section button{
+  background-color: #0c0c0c;
+  border: none;
+  color: #fff;
+  padding: 5px;
+  border-radius: 15px;
+  margin-top: 5px;
+}
+.filter-section button:hover{
+  background-color: #193cd8;
+  transform: scale(1.02);
+  cursor: pointer;
+}

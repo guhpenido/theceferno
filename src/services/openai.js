@@ -1,8 +1,8 @@
 // api.js
-const apiKey = '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'; // Substitua com sua chave de API da OpenAI
+const apiKey = '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'; // Substitua com sua chave de API da OpenAI
 
 async function verificarAdequacaoDoPost(textoDoPost) {
-  const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
+  const apiUrl = 'https://api.openai.com/v1/completions';
 
   const prompt = `É este post adequado?\n"${textoDoPost}"\nResponda com "true" ou "false":`;
 
