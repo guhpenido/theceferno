@@ -24,6 +24,7 @@ import AddPost from "./AddPost";
 import Header from "./Header";
 import MenuLateral from "../MenuLateral/MenuLateral";
 import Pesquisa from "../Pesquisa/index";
+import toast, { Toaster } from "react-hot-toast";
 import faBookmark  from "../../assets/saved.svg";
 import {
   getDatabase,
@@ -83,6 +84,12 @@ export function Timeline() {
   const [selectedInstituicao] = useState("");
   const [nextPostId, setNextPostId] = useState(0);
   const [isMobileLateralVisible, setIsMobileLateralVisible] = useState(false);
+  const [instituicoes, setInstituicoes] = useState([]);
+  const [cursos, setCursos] = useState([]);
+  const [selectedInstituicaoFilter, setSelectedInstituicaoFilter] =
+    useState("");
+  const [selectedCursoFilter, setSelectedCursoFilter] = useState("");
+  const [filtroVisivel, setFiltroVisivel] = useState(false);
 
   const handleScroll = () => {
     const windowHeight = window.innerHeight;
@@ -125,14 +132,17 @@ export function Timeline() {
         setUserId(user.uid);
         console.log(user);
         fetchUserDataAndSetState(user.uid);
-        carregaTml();
+        carregaTml(selectedInstituicaoFilter, selectedCursoFilter);
       } else {
         navigate("/login");
       }
     });
 
+    // Load timeline when the component mounts
+    carregaTml(selectedInstituicaoFilter, selectedCursoFilter);
+
     return () => unsubscribe();
-  }, [auth, navigate]);
+  }, [auth, navigate, selectedInstituicaoFilter, selectedCursoFilter]);
 
   const [scrolling, setScrolling] = useState(false);
 
@@ -169,29 +179,103 @@ export function Timeline() {
     userMentioned: "",
     userSent: userId,
   });
-
-  const carregaTml = async () => {
-    if (isFetching) {
-      return;
-    }
-
-    setIsFetching(true);
-    const postsCollectionRef = collection(db, "timeline");
-
-    let postsQuery = query(
-      postsCollectionRef,
-      orderBy("postId", "desc"), // Ordene por postId em ordem decrescente
-      limit(15)
-    );
-
+  const fetchCursos = async () => {
     try {
+      const usersRef = collection(db, "users");
+      const usersSnapshot = await getDocs(usersRef);
+
+      const cursosData = [];
+
+      usersSnapshot.forEach((doc) => {
+        const user = doc.data();
+        if (user.curso && !cursosData.includes(user.curso)) {
+          cursosData.push(user.curso);
+        }
+      });
+
+      setCursos(cursosData);
+    } catch (error) {
+      console.error("Erro ao obter cursos:", error);
+    }
+  };
+  const fetchInstituicoes = async () => {
+    try {
+      const usersRef = collection(db, "users");
+      const usersSnapshot = await getDocs(usersRef);
+
+      const instituicoesData = [];
+
+      usersSnapshot.forEach((doc) => {
+        const user = doc.data();
+        if (user.instituicao && !instituicoesData.includes(user.instituicao)) {
+          instituicoesData.push(user.instituicao);
+        }
+      });
+
+      setInstituicoes(instituicoesData);
+    } catch (error) {
+      console.error("Erro ao obter instituições:", error);
+    }
+  };
+  useEffect(() => {
+    fetchInstituicoes();
+    fetchCursos();
+  }, []);
+  
+  useEffect(() => {
+    carregaTml();
+  }, []);
+
+  const carregaTml = async (instituicao = "", curso = "") => {
+    try {
+      if (isFetching) {
+        return;
+      }
+
+      setIsFetching(true);
+      const postsCollectionRef = collection(db, "timeline");
+
+      let postsQuery = query(
+        postsCollectionRef,
+        orderBy("postId", "desc"),
+        limit(15)
+      );
+
+      if (instituicao !== "") {
+        postsQuery = query(
+          postsCollectionRef,
+          where("userSent.instituicao", "==", instituicao),
+          orderBy("postId", "desc"),
+          limit(15)
+        );
+      }
+
+      if (curso !== "") {
+        postsQuery = query(
+          postsCollectionRef,
+          where("userSent.curso", "==", curso),
+          orderBy("postId", "desc"),
+          limit(15)
+        );
+      }
+
+      if (instituicao !== "" && curso !== "") {
+        postsQuery = query(
+          postsCollectionRef,
+          where("userSent.instituicao", "==", instituicao),
+          where("userSent.curso", "==", curso),
+          orderBy("postId", "desc"),
+          limit(15)
+        );
+      }
+
       const postsData = await getPostsFromFirestore(postsQuery);
 
       if (postsData.length === 0) {
-        console.log("Você já chegou ao fim");
+        toast.error("Não há mais posts para carregar.");
       } else {
         const postsWithUserData = [];
-
+        setLoadedPosts(postsWithUserData);
         for (const post of postsData) {
           const userSentData = await fetchUserData(post.userSent);
           let userMentionedData = null;
@@ -207,17 +291,20 @@ export function Timeline() {
           });
         }
 
-        // Substitua o estado de loadedPosts com os novos posts carregados
         setLoadedPosts(postsWithUserData);
-        console.log("Novos posts carregados!");
+        toast.success("Posts carregados!");
       }
     } catch (error) {
       console.error("Erro ao obter os posts:", error);
+      toast.error("Erro ao obter os posts. Por favor, tente novamente.");
     } finally {
       setIsFetching(false);
     }
   };
 
+  const handleFilterClick = () => {
+    carregaTml(selectedInstituicaoFilter, selectedCursoFilter);
+  };
   useEffect(() => {
     if (userId) {
       fetchUserDataAndSetState(userId);
@@ -337,6 +424,7 @@ export function Timeline() {
     console.log("clicou");
     console.log(isMobileLateralVisible);
   };
+
   const recarregarTml = async () => {
     // Limpe o estado dos posts carregados
     setLoadedPosts([]);
@@ -344,7 +432,10 @@ export function Timeline() {
     // Chame a função carregaTml para carregar novamente os últimos 15 posts
     carregaTml();
   };
-
+  
+  const toggleFiltroVisivel = () => {
+    setFiltroVisivel(!filtroVisivel);
+  };
   return (
     <>
       <div className="tl-screen">
@@ -352,7 +443,7 @@ export function Timeline() {
           <Header
             userLogged={userLoggedData}
             toggleMobileLateral={toggleMobileLateral}
-            carregatml={carregaTml}
+            abreMenu={toggleFiltroVisivel}
           />
           <MenuLateral
             isMobileLateralVisible={isMobileLateralVisible}
@@ -361,6 +452,39 @@ export function Timeline() {
           />
 
           <div className="tl-main">
+            {filtroVisivel && (
+              <div className="filter-section">
+                <label htmlFor="instituicaoFilter">Instituição:</label>
+                <select
+                  id="instituicaoFilter"
+                  value={selectedInstituicaoFilter}
+                  onChange={(e) => setSelectedInstituicaoFilter(e.target.value)}
+                >
+                  <option value="">Todas</option>
+                  {instituicoes.map((instituicao, index) => (
+                    <option key={index} value={instituicao}>
+                      {instituicao}
+                    </option>
+                  ))}
+                </select>
+
+                <label htmlFor="cursoFilter">Curso:</label>
+                <select
+                  id="cursoFilter"
+                  value={selectedCursoFilter}
+                  onChange={(e) => setSelectedCursoFilter(e.target.value)}
+                >
+                  <option value="">Todos</option>
+                  {cursos.map((curso, index) => (
+                    <option key={index} value={curso}>
+                      {curso}
+                    </option>
+                  ))}
+                </select>
+
+                <button onClick={() => handleFilterClick}>Filtrar</button>
+              </div>
+            )}
             <div className="tl-box">
               {loadedPosts.map(({ post, userSentData, userMentionedData }) => (
                 <PostDisplay

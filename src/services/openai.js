@@ -1,10 +1,10 @@
 // api.js
-const apiKey = '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'; // Substitua com sua chave de API da OpenAI
+const apiKey = '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'; // Substitua com sua chave de API da OpenAI
 
 async function verificarAdequacaoDoPost(textoDoPost) {
-  const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
+  const apiUrl = 'https://api.openai.com/v1/completions';
 
-  const prompt = `É este post adequado?\n"${textoDoPost}"\nResponda com "true" ou "false":`;
+  const prompt = `É este post adequado? Permita palavrões, mas não muitos.\n"${textoDoPost}"\nResponda somente com "true" ou "false":`;
 
   try {
     const response = await fetch(apiUrl, {
@@ -14,8 +14,9 @@ async function verificarAdequacaoDoPost(textoDoPost) {
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
+        model: "gpt-3.5-turbo",
         prompt,
-        max_tokens: 1,
+        max_tokens: 100,
         stop: ['\n'],
       }),
     });
@@ -32,7 +33,8 @@ async function verificarAdequacaoDoPost(textoDoPost) {
     } else if (respostaDoChatGPT === 'false') {
       return false;
     } else {
-      throw new Error('Resposta inesperada do ChatGPT');
+      console.log(respostaDoChatGPT);
+      throw new Error('Resposta inesperada do ChatGPT', respostaDoChatGPT); 
     }
   } catch (error) {
     console.error('Erro ao verificar a adequação do post:', error.message);
