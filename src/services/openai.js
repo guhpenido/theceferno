@@ -1,5 +1,5 @@
 // api.js
-const apiKey = "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"; // Substitua com sua chave de API da OpenAI
+const apiKey = ""; // Substitua com sua chave de API da OpenAI
 
 async function verificarAdequacaoDoPost(textoDoPost) {
   const apiUrl = "https://api.openai.com/v1/chat/completions";

@@ -65,7 +65,7 @@ import ReplyDisplay from "./reply";
 import VisitorPage from "../Perfil/ProfilePage/VisitorPage";
 import { AppRoutes } from "../../routes/AppRoutes";
 import Denuncia from "../Denuncia/Denuncia";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 
 function PostDisplay({
   post,
@@ -96,9 +96,10 @@ function PostDisplay({
     userMentioned: post.userMentioned,
     userSent: post.userSent,
   });
-  const iconToUse = saveIcon === 'solid' ? solidBookmark : regularBookmark;
-  const likeToUse = likeIcon === 'solid' ? solidThumbsUp : regularThumbsUp;
-  const dislikeToUse = dislikeIcon === 'solid' ? solidThumbsDown : regularThumbsDown;
+  const iconToUse = saveIcon === "solid" ? solidBookmark : regularBookmark;
+  const likeToUse = likeIcon === "solid" ? solidThumbsUp : regularThumbsUp;
+  const dislikeToUse =
+    dislikeIcon === "solid" ? solidThumbsDown : regularThumbsDown;
   const postDate = new Date(post.time);
   const now = new Date();
   let timeAgo;
@@ -136,57 +137,53 @@ function PostDisplay({
 
   useEffect(() => {
     if (liked) {
-        setLikeIcon('solid');
-    }
-    else
-        setLikeIcon('regular');
-}, [liked]);
-
-useEffect(() => {
-    if (disliked) {
-        setDislikeIcon('solid');
-    }
-    else
-        setDislikeIcon('regular');
-}, [disliked]);
-
-useEffect(() => {
-  const fetchData = async () => {
-    const interactionsRef = collection(db, "interactions");
-        const queryInteraction = query(
-          interactionsRef,
-          where("userId", "==", userId),
-          where("postId", "==", post.id),
-          where("interaction", "==", "like")
-        );
-
-        const querySnapshot = await getDocs(queryInteraction);
-
-    if (!querySnapshot.empty) {
       setLikeIcon("solid");
-    }
-  }
-  fetchData();
-}, [userLoggedData, post]);
+    } else setLikeIcon("regular");
+  }, [liked]);
 
-useEffect(() => {
-  const fetchData = async () => {
-    const interactionsRef = collection(db, "interactions");
-        const queryInteraction = query(
-          interactionsRef,
-          where("userId", "==", userId),
-          where("postId", "==", post.id),
-          where("interaction", "==", "dislike")
-        );
-
-        const querySnapshot = await getDocs(queryInteraction);
-        console.log(querySnapshot);
-    if (!querySnapshot.empty) {
+  useEffect(() => {
+    if (disliked) {
       setDislikeIcon("solid");
-    }
-  }
-  fetchData();
-}, [userLoggedData, post]);
+    } else setDislikeIcon("regular");
+  }, [disliked]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const interactionsRef = collection(db, "interactions");
+      const queryInteraction = query(
+        interactionsRef,
+        where("userId", "==", userId),
+        where("postId", "==", post.id),
+        where("interaction", "==", "like")
+      );
+
+      const querySnapshot = await getDocs(queryInteraction);
+
+      if (!querySnapshot.empty) {
+        setLikeIcon("solid");
+      }
+    };
+    fetchData();
+  }, [userLoggedData, post]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const interactionsRef = collection(db, "interactions");
+      const queryInteraction = query(
+        interactionsRef,
+        where("userId", "==", userId),
+        where("postId", "==", post.id),
+        where("interaction", "==", "dislike")
+      );
+
+      const querySnapshot = await getDocs(queryInteraction);
+      console.log(querySnapshot);
+      if (!querySnapshot.empty) {
+        setDislikeIcon("solid");
+      }
+    };
+    fetchData();
+  }, [userLoggedData, post]);
 
   useEffect(() => {
     if (
@@ -231,7 +228,7 @@ useEffect(() => {
           // Adicionar a interação na coleção "interactions"
           await addInteraction(userId, post.id, "like");
           setLiked(true);
-          setLikeIcon('solid');
+          setLikeIcon("solid");
         } else {
           console.error("Post não encontrado no Firebase.");
           // Reverter a contagem local de likes em caso de erro
@@ -261,7 +258,7 @@ useEffect(() => {
           await deleteDoc(interactionDoc.ref);
           console.log("Like removido com sucesso!");
           setLiked(false);
-          setLikeIcon('regular');
+          setLikeIcon("regular");
           // Decrementar o número de likes na coleção "timeline"
           const newLikes = likes - 1;
           setLikes(newLikes);
@@ -329,7 +326,10 @@ useEffect(() => {
     e.preventDefault();
 
     // Verificar se o usuário já curtiu a postagem na coleção "interactions"
-    const userAlreadyDisliked = await checkUserDislikeInteraction(userId, post.id);
+    const userAlreadyDisliked = await checkUserDislikeInteraction(
+      userId,
+      post.id
+    );
 
     if (!userAlreadyDisliked) {
       // Incrementar o número de likes localmente
@@ -350,13 +350,15 @@ useEffect(() => {
           const postDoc = querySnapshot.docs[0]; // Supondo que haja apenas um documento correspondente
 
           // Atualizar o campo "likes" no documento
-          await updateDoc(doc(db, "timeline", postDoc.id), { deslikes: newDislikes });
+          await updateDoc(doc(db, "timeline", postDoc.id), {
+            deslikes: newDislikes,
+          });
           console.log("Likes atualizados no Firebase com sucesso!");
 
           // Adicionar a interação na coleção "interactions"
           await addInteraction(userId, post.id, "dislike");
           setDisliked(true);
-          setDislikeIcon('solid');
+          setDislikeIcon("solid");
         } else {
           console.error("Dislike não encontrado no Firebase.");
           // Reverter a contagem local de likes em caso de erro
@@ -386,7 +388,7 @@ useEffect(() => {
           await deleteDoc(interactionDoc.ref);
           console.log("Dislikes removido com sucesso!");
           setDisliked(false);
-          setDislikeIcon('regular');
+          setDislikeIcon("regular");
           // Decrementar o número de likes na coleção "timeline"
           const newDislikes = dislikes - 1;
           setDislikes(newDislikes);
@@ -528,7 +530,9 @@ useEffect(() => {
           // Verifica se o postId já existe no array savedPosts
           if (userData.savedPosts.includes(postId)) {
             // Cria um novo array com o postId removido
-            const updatedSavedPosts = userData.savedPosts.filter(savedPost => savedPost !== postId);
+            const updatedSavedPosts = userData.savedPosts.filter(
+              (savedPost) => savedPost !== postId
+            );
 
             // Atualiza o documento do usuário com o novo array savedPosts
             await updateDoc(userDocRef, {
@@ -716,7 +720,7 @@ useEffect(() => {
       const timelineDocRef = collection(db, "timeline");
       const queryInteraction = query(
         timelineDocRef,
-        where("postId", "==", post.id),
+        where("postId", "==", post.id)
       );
       const querySnapshotRemove = await getDocs(queryInteraction);
 
@@ -725,35 +729,40 @@ useEffect(() => {
         await deleteDoc(interactionDoc.ref);
 
         console.log(`Deslike removido com sucesso!`);
-
       }
-      
+
       const postsexcluidosCollectionRef = collection(db, "postsexcluidos");
       await addDoc(postsexcluidosCollectionRef, newPost);
-      toast("post removido com sucesso");
 
       console.log("Post excluído e adicionado aos postsexcluidos com sucesso!");
     } catch (error) {
       console.error("Erro ao excluir e adicionar post:", error);
     }
-    setOptionsOpen(false)
+    setOptionsOpen(false);
   };
 
-  const notiPostExcluido = () => toast.success('O Post foi excluído com sucesso !', {
-    duration: 7000,
+  const notiPostExcluido = () =>
+    toast.success("O Post será excluído com sucesso !", {
+      duration: 7000,
 
-    iconTheme: {
-      primary: '#4763E4',
-      secondary: '#fff',
-    },
-  });
+      iconTheme: {
+        primary: "#4763E4",
+        secondary: "#fff",
+      },
+    });
 
-  const excluiENotifica = (event) =>  {
+  const excluiENotifica = (event) => {
     notiPostExcluido();
     setTimeout(() => {
       deletePost();
-  }, 3000);
-  window.location.reload();
+      reaload();
+    }, 3000);
+
+    const reaload = () => {
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+    }
   };
 
   return (
@@ -770,22 +779,26 @@ useEffect(() => {
               {post.userSent === userId && (
                 <div className="option-post" onClick={excluiENotifica}>
                   Excluir Post
-                  <Toaster
-                    position="top-center"
-                    reverseOrder={false}
-                  />
+                  <Toaster position="top-center" reverseOrder={false} />
                 </div>
               )}
               <div className="option-post" onClick={openDenuncia}>
                 Denunciar Post
               </div>
-              <div className="option-post" onClick={() => setOptionsOpen(false)}>
+              <div
+                className="option-post"
+                onClick={() => setOptionsOpen(false)}
+              >
                 Fechar
               </div>
             </div>
           )}
           {denunciaIsOpen && (
-            <Denuncia postId={post.id} userId={userId} userSentData={userSentData} />
+            <Denuncia
+              postId={post.id}
+              userId={userId}
+              userSentData={userSentData}
+            />
           )}
           <Link
             style={linkStyle}
@@ -797,19 +810,22 @@ useEffect(() => {
             to={`/timeline/${post.postId}`}
           >
             <div className="tl-ps-header">
-              {post.mode !== "anon" ? (<Link
-                to={`/VisitorPage/${userSentData.id}`}
-                style={{ color: "white" }}
-              >
+              {post.mode !== "anon" ? (
+                <Link
+                  to={`/VisitorPage/${userSentData.id}`}
+                  style={{ color: "white" }}
+                >
+                  <div className="tl-ps-foto">
+                    {imageSent && <img src={imageSent} alt="" />}
+                  </div>
+                </Link>
+              ) : (
                 <div className="tl-ps-foto">
                   {imageSent && <img src={imageSent} alt="" />}
                 </div>
-              </Link>) : (<div className="tl-ps-foto">
-                {imageSent && <img src={imageSent} alt="" />}
-              </div>)}
+              )}
 
               {post.userMentioned !== "" ? (
-
                 <div className="tl-ps-nomes">
                   <p className="tl-ps-nome">
                     {nomeEnvio}{" "}
@@ -858,7 +874,8 @@ useEffect(() => {
                     handleIconClickL();
                   }}
                 >
-                  <FontAwesomeIcon icon={likeToUse} beat={isBeatingL} /> <span>{likes}</span>
+                  <FontAwesomeIcon icon={likeToUse} beat={isBeatingL} />{" "}
+                  <span>{likes}</span>
                 </div>
                 <div
                   className="tl-ps-deslike"
