@@ -92,7 +92,13 @@ function Header(props) {
         </div>
         <div className="mobile-tl-header-down">
           <div className="mobile-tl-header-div1 active-mobile-role">
-            <h1>Para você</h1>
+            {/* <h1 style={{fontSize: }}>Para você</h1> */}
+            <Link className="tl-header-div2" to="/timeline">
+              <h1> Para você </h1>
+            </Link>
+            <Link className="tl-header-div2" to="/trending">
+              <h1> Trending </h1>
+            </Link>
           </div>
         </div>
       </div>

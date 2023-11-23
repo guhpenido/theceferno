@@ -133,6 +133,7 @@ option {
 
 .option-post:hover{
   cursor: pointer;
+  background-color: #171717;
 }
 
 /* Styles for PCs */

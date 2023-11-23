@@ -397,6 +397,7 @@ form .tl-textInput{
   width: 100%;
   overflow: visible;
   background-color: #111111;
+  z-index: 1;
 }
 
 .footerDm img{

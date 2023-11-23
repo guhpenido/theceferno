@@ -86,7 +86,7 @@ function Denuncia ({  postId, userId, userSentData }) {
   }, [])
 
 
-  const notiDenunciaFeita = () => toast.success('O Post foi denunciado com sucesso !', {
+  const  notiDenunciaFeita = () => toast.success('O Post foi denunciado com sucesso !', {
     duration: 8000,
 
     iconTheme: {
