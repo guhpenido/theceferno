@@ -5,13 +5,12 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAN5raMUWinSBWt_ugFimZy6cJ4OJo_NCY",
-  authDomain: "cefettcc-ceferno.firebaseapp.com",
-  projectId: "cefettcc-ceferno",
-  storageBucket: "cefettcc-ceferno.appspot.com",
-  messagingSenderId: "1043160007197",
-  appId: "1:1043160007197:web:5df4057e46cf52b7d7fcf4",
-  measurementId: "G-7VLHKQ7G3G"
+  apiKey: "AIzaSyDOfuEkxPX2fZzH08D13in_Kk9dk12K1Bk",
+  authDomain: "cerferno-apresentacao.firebaseapp.com",
+  projectId: "cerferno-apresentacao",
+  storageBucket: "cerferno-apresentacao.appspot.com",
+  messagingSenderId: "760290475706",
+  appId: "1:760290475706:web:8543a8c9b565e9c8ee8c83"
 };
 
 // Initialize Firebase

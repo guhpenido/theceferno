@@ -92,11 +92,6 @@ import { Acessibilidade } from "../Acessibilidade/index";
                 </Link>
               </div>
               <div>
-                <Link to="/tutorial">
-                  <p className="title-text-home">Tutorial</p>
-                </Link>
-              </div>
-              <div>
                 <Link to="/contato">
                   <p className="title-text-home">Contato</p>
                 </Link>

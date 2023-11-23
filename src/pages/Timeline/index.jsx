@@ -130,6 +130,14 @@ export function Timeline() {
     carregaTml();
   }, []);
   
+  const postsCarregados = () => toast.success('Posts carregados!', {
+    duration: 3000,
+
+    iconTheme: {
+      primary: '#3dbd3d',
+      secondary: '#fff',
+    },
+  });
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -138,6 +146,7 @@ export function Timeline() {
         console.log(user);
         fetchUserDataAndSetState(user.uid);
         carregaTml(selectedInstituicaoFilter, selectedCursoFilter);
+        postsCarregados();
       } else {
         navigate("/login");
       }
@@ -228,8 +237,6 @@ export function Timeline() {
   }, []);
   
  
-
-
   const carregaTml = async (instituicao = "", curso = "") => {
     try {
       if (isFetching) {
@@ -296,7 +303,6 @@ export function Timeline() {
         }
 
         setLoadedPosts(postsWithUserData);
-        toast.success("Posts carregados!");
       }
     } catch (error) {
       console.error("Erro ao obter os posts:", error);

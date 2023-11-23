@@ -39,7 +39,6 @@ export function Login() {
         password
       );
       const user = userCredential.user; 
-      alert("Usuário logado!");
       navigate("/timeline");
     } catch (error) {
       console.error("Error signing in:", error.message);
