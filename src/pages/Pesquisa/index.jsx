@@ -197,13 +197,13 @@ function Pesquisa() {
                 type="text"
                 value={termoPesquisa}
                 onFocus={() => setInputAtivo(true)}
-                onBlur={() => setInputAtivo(false)}
+                
                 onChange={(e) => setTermoPesquisa(e.target.value)}
               />
             </div>
           </div>
         </div>
-        {inputAtivo && (
+        {termoPesquisa && usuarios.length > 0 && (
         <div className="tl-ladoDireito-boxProcura">
           <div className="tl-ladoDireito-proc-resultados">
             <h3>Perfis:</h3>

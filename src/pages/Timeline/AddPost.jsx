@@ -44,6 +44,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { addDoc } from "firebase/firestore";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import verificarAdequacaoDoPost from "../../services/openai";
+import toast, { Toaster } from 'react-hot-toast';
 function AddPost() {
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedId, setSelectedId] = useState("");
@@ -69,32 +71,6 @@ function AddPost() {
   const [selectedCurso] = useState("");
   const [selectedInstituicao] = useState("");
   const [nextPostId, setNextPostId] = useState(0);
-  const handleScroll = () => {
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollTop =
-      document.documentElement.scrollTop || document.body.scrollTop;
-
-    // Defina um limite inferior para acionar a busca por mais posts
-    const triggerLimit = 100; // Você pode ajustar isso conforme necessário
-
-    if (
-      windowHeight + scrollTop >= documentHeight - triggerLimit &&
-      !isFetching
-    ) {
-      setIsFetching(true);
-    }
-  };
-
-  useEffect(() => {
-    // Adicione um ouvinte de rolagem quando o componente for montado
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      // Remova o ouvinte de rolagem quando o componente for desmontado
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -111,27 +87,6 @@ function AddPost() {
 
     return () => unsubscribe();
   }, [auth, navigate]);
-
-  const [scrolling, setScrolling] = useState(false);
-
-  useEffect(() => {
-    const handleScrollStyle = () => {
-      if (window.scrollY > 0) {
-        setScrolling(true);
-        console.log("Scrollando");
-      } else {
-        setScrolling(false);
-      }
-    };
-
-    // Adicionar um ouvinte de rolagem quando o componente é montado
-    window.addEventListener("scroll", handleScrollStyle);
-
-    // Remover o ouvinte de rolagem quando o componente é desmontado
-    return () => {
-      window.removeEventListener("scroll", handleScrollStyle);
-    };
-  }, []);
 
   const [newPost, setNewPost] = useState({
     deslikes: 0,
@@ -258,7 +213,7 @@ function AddPost() {
     else setPostMode("anon");
     setNewPost({
       ...newPost,
-      [e.target.name]: e.target.value,
+      text: e.target.value,
       userSent: userId,
       time: currentTime,
       mode: postMode,
@@ -269,7 +224,14 @@ function AddPost() {
 
   const handleSubmitPost = async (e) => {
     e.preventDefault();
-    // Crie um novo documento na coleção "timeline" com os dados do novo post
+    // Verifique a adequação do texto do post
+    const adequado = await verificarAdequacaoDoPost(newPost.text);
+    if (!adequado) {
+      // Se o post não for adequado, emita um alerta e retorne
+      toast.error("Sua postagem infringe os termos e condições.");
+      return;
+    }
+    // Se o post for adequado, crie um novo documento na coleção "timeline" com os dados do novo post
     setNewPost({
       ...newPost,
       postId: nextPostId,
@@ -375,7 +337,7 @@ function AddPost() {
         <div className={MudarClasse()}>
           <div className="tl-addPost-header">
             <div className="tl-addPost-close" onClick={toggleVisibility}>
-              <svg  
+              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 height="1em"
                 viewBox="0 0 384 512"
@@ -411,7 +373,6 @@ function AddPost() {
                 icon={faArrowRight}
               />
               <div className="tl-addPost-list-input">
-                
                 {selectedUser ? (
                   <span className="tl-addPost-mark-input">{selectedUser}</span>
                 ) : (
@@ -474,7 +435,7 @@ function AddPost() {
             <form onSubmit={handleSubmitPost}>
               <div className="tl-textInput">
                 <textarea
-                maxlength="250"
+                  maxlength="250"
                   className="tl-textInput-input"
                   placeholder="O que você deseja susurrar alto hoje?"
                   name="text"

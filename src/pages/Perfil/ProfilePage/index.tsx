@@ -4,7 +4,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenti
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import ModalReact from 'react-modal';
-import './estilo.css'; 
+import './estilo.css';
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -169,6 +169,10 @@ const ProfilePage: React.FC = () => {
     setBio(event.target.value);
   };
 
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserName(event.target.value);
+  };
+
   const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
@@ -194,11 +198,11 @@ const ProfilePage: React.FC = () => {
   };
 
   const selectImage = () => {
-    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    const fileInput = document.getElementById('fileInputAvatar') as HTMLInputElement;
     fileInput.click();
   };
 
-  const selectBanner = (event: React.MouseEvent<HTMLDivElement>) => {
+  const selectBanner = () => {
     const fileInput = document.getElementById('fileInputBanner') as HTMLInputElement;
     fileInput.click();
   };
@@ -244,9 +248,9 @@ const ProfilePage: React.FC = () => {
         updatedData.bio = bio;
       }
 
-      // if (userName) {
-      //   updatedData.nome = userName;
-      // }
+      if(userName) {
+        updatedData.username = userName; 
+      }
 
       await updateDoc(userDocRef, updatedData);
 
@@ -343,15 +347,15 @@ const ProfilePage: React.FC = () => {
                       backgroundSize: 'cover',
                       top: '0',
                       left: '0',
-                      borderRadius: '15px', 
-                      cursor: 'pointer', 
+                      borderRadius: '15px',
+                      cursor: 'pointer',
                     }}
                   >
                     {!newBanner && 'Selecione uma imagem de capa'}
                     <input
                       type="file"
                       accept="image/*"
-                      id="fileInput"
+                      id="fileInputBanner"
                       style={{ display: 'none' }}
                       onChange={handleBannerChange}
                     />
@@ -379,7 +383,7 @@ const ProfilePage: React.FC = () => {
                           placeholder="Escolha uma foto de perfil"
                           type="file"
                           accept="image/*"
-                          id="fileInputBanner"
+                          id="fileInputAvatar"
                           onChange={handleAvatarChange}
                           style={{ display: 'none' }}
                         />
@@ -397,6 +401,21 @@ const ProfilePage: React.FC = () => {
                 resize: 'none',
                 minHeight: '100px',
                 marginTop: '40px',
+                borderRadius: '15px',
+                backgroundColor: 'transparent',
+                color: 'white',
+                width: '100%',
+                padding: '10px',
+              }}
+            />
+            <textarea
+              value={userName}
+              onChange={handleNameChange}
+              style={{
+                marginBottom: '10px',
+                resize: 'none',
+                minHeight: '20px',
+                marginTop: '10px',
                 borderRadius: '15px',
                 backgroundColor: 'transparent',
                 color: 'white',

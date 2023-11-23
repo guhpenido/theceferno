@@ -211,92 +211,101 @@ function PesquisaPage() {
             </div>
           </div>
         </div>
-        <div className="PP-procura-resultados">
-          <div className="PP-tl-ladoDireito-boxProcura">
-            <div className="PP-tl-ladoDireito-proc-resultados">
-              <h3>Perfis:</h3>
-              {usuarios.map((usuario) => (
-                <Link
-                  to={`/VisitorPage/${usuario.id}`}
-                  className="tl-ladoDireito-proc-perfis"
-                  key={usuario.id}
-                >
-                  <div className="perfis-foto">
-                    <img src={usuario.imageUrl} alt="" />
-                  </div>
-                  <div className="perfis-nome">
-                    <h1>{usuario.nome}</h1>
-                    <h2>@{usuario.usuario}</h2>
-                  </div>
-                </Link>
-              ))}
-              <h3>Últimos Posts:</h3>
-              {postsUsuario.slice(0, 3).map((post) => (
-                <div
-                  className="tl-ladoDireito-proc-postsUser"
-                  key={post.postId}
-                >
-                  <div className="postUser-header">
-                    <div className="postUser-header-foto">
-                      <img src={userDataMap[post.userSent]?.imageUrl} alt="" />
+        {termoPesquisa && usuarios.length > 0 && (
+          <div className="PP-procura-resultados">
+            <div className="PP-tl-ladoDireito-boxProcura">
+              <div className="PP-tl-ladoDireito-proc-resultados">
+                <h3>Perfis:</h3>
+                {usuarios.map((usuario) => (
+                  <Link
+                    to={`/VisitorPage/${usuario.id}`}
+                    className="tl-ladoDireito-proc-perfis"
+                    key={usuario.id}
+                  >
+                    <div className="perfis-foto">
+                      <img src={usuario.imageUrl} alt="" />
                     </div>
-                    <div className="postUser-header-nome">
-                      <h1>{userDataMap[post.userSent]?.nome}</h1>
-                      <h2>@{userDataMap[post.userSent]?.usuario}</h2>
+                    <div className="perfis-nome">
+                      <h1>{usuario.nome}</h1>
+                      <h2>@{usuario.usuario}</h2>
                     </div>
-                  </div>
-                  <div className="postUser-body">
-                    <div className="postUser-post">
-                      <p>{post.text}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <h3>Mencionados:</h3>
-              {postsMencionamUsuario.slice(0, 3).map((post) => (
-                <div
-                  className="tl-ladoDireito-proc-postMentioned"
-                  key={post.postId}
-                >
-                  <div className="postMentioned-header">
-                    <div className="postMentioned-header-foto">
-                      <img src={MuserDataMap[post.userSent]?.imageUrl} alt="" />
-                    </div>
-                    <div className="postMentioned-header-nome">
-                      <h1>{MuserDataMap[post.userSent]?.nome}</h1>
-                      <h2>@{MuserDataMap[post.userSent]?.usuario}</h2>
-                    </div>
-                    <div className="postMentioned-header2">
-                      <svg
-                        className="setaUserMentioned"
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="1em"
-                        viewBox="0 0 384 512"
-                      >
-                        <path d="M32 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c53 0 96-43 96-96l0-306.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 416c0 17.7-14.3 32-32 32l-96 0z" />
-                      </svg>
-                      <div className="postMentioned-header-fotoMentioned">
+                  </Link>
+                ))}
+                <h3>Últimos Posts:</h3>
+                {postsUsuario.slice(0, 3).map((post) => (
+                  <div
+                    className="tl-ladoDireito-proc-postsUser"
+                    key={post.postId}
+                  >
+                    <div className="postUser-header">
+                      <div className="postUser-header-foto">
                         <img
-                          src={userDataMap[post.userMentioned]?.imageUrl}
+                          src={userDataMap[post.userSent]?.imageUrl}
                           alt=""
                         />
                       </div>
-                      <div className="postMentioned-header-nomeMentioned">
-                        <h1>{userDataMap[post.userMentioned]?.nome}</h1>
-                        <h2>@{userDataMap[post.userMentioned]?.usuario}</h2>
+                      <div className="postUser-header-nome">
+                        <h1>{userDataMap[post.userSent]?.nome}</h1>
+                        <h2>@{userDataMap[post.userSent]?.usuario}</h2>
+                      </div>
+                    </div>
+                    <div className="postUser-body">
+                      <div className="postUser-post">
+                        <p>{post.text}</p>
                       </div>
                     </div>
                   </div>
-                  <div className="postMentioned-body">
-                    <div className="postMentioned-post">
-                      <p>{post.text}</p>
+                ))}
+                <h3>Mencionados:</h3>
+                {postsMencionamUsuario.slice(0, 3).map((post) => (
+                  <div
+                    className="tl-ladoDireito-proc-postMentioned"
+                    key={post.postId}
+                  >
+                    <div className="postMentioned-header">
+                      <div className="postMentioned-header-foto">
+                        <img
+                          src={MuserDataMap[post.userSent]?.imageUrl}
+                          alt=""
+                        />
+                      </div>
+                      <div className="postMentioned-header-nome">
+                        <h1>{MuserDataMap[post.userSent]?.nome}</h1>
+                        <h2>@{MuserDataMap[post.userSent]?.usuario}</h2>
+                      </div>
+                      <div className="postMentioned-header2">
+                        <svg
+                          className="setaUserMentioned"
+                          xmlns="http://www.w3.org/2000/svg"
+                          height="1em"
+                          viewBox="0 0 384 512"
+                        >
+                          <path d="M32 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c53 0 96-43 96-96l0-306.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 416c0 17.7-14.3 32-32 32l-96 0z" />
+                        </svg>
+                        <div className="postMentioned-header-fotoMentioned">
+                          <img
+                            src={userDataMap[post.userMentioned]?.imageUrl}
+                            alt=""
+                          />
+                        </div>
+                        <div className="postMentioned-header-nomeMentioned">
+                          <h1>{userDataMap[post.userMentioned]?.nome}</h1>
+                          <h2>@{userDataMap[post.userMentioned]?.usuario}</h2>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="postMentioned-body">
+                      <div className="postMentioned-post">
+                        <p>{post.text}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
+        ;
       </div>
       <div className="PP-LadoDireito">
         <div className="tl-ladoDireito">
@@ -313,39 +322,31 @@ function PesquisaPage() {
         </div>
       </div>
       <div className="footerDm">
-            <Link className="botaoAcessar" to="/timeline">
-              <div>
-                <img id="home" src={homeIcon} alt="Botão ir para Home"></img>
-              </div>
-            </Link>
-            <Link className="botaoAcessar" to="/perfil">
-              <div>
-                <img
-                  id="pesquisa"
-                  src={perfilIcon}
-                  alt="Botão para pesquisa"
-                ></img>
-              </div>
-            </Link>
-            <Link className="botaoAcessar" to="/dm">
-              <div>
-                <img
-                  id="dm"
-                  src={dmIcon}
-                  alt="Botão ir para DM, chat conversas privadas"
-                ></img>
-              </div>
-            </Link>
-            <Link className="botaoAcessar" to="/pesquisa">
-              <div>
-                <img
-                  id="dm"
-                  src={searchIcon}
-                  alt="Botão ir para pesqusisa."
-                ></img>
-              </div>
-            </Link>
+        <Link className="botaoAcessar" to="/timeline">
+          <div>
+            <img id="home" src={homeIcon} alt="Botão ir para Home"></img>
           </div>
+        </Link>
+        <Link className="botaoAcessar" to="/perfil">
+          <div>
+            <img id="pesquisa" src={perfilIcon} alt="Botão para pesquisa"></img>
+          </div>
+        </Link>
+        <Link className="botaoAcessar" to="/dm">
+          <div>
+            <img
+              id="dm"
+              src={dmIcon}
+              alt="Botão ir para DM, chat conversas privadas"
+            ></img>
+          </div>
+        </Link>
+        <Link className="botaoAcessar" to="/pesquisa">
+          <div>
+            <img id="dm" src={searchIcon} alt="Botão ir para pesqusisa."></img>
+          </div>
+        </Link>
+      </div>
     </div>
   );
 }
