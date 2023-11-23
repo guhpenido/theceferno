@@ -783,7 +783,7 @@ useEffect(() => {
               userMentionedData: userMentionedData,
               userLoggedData: userLoggedData,
             }}
-            to={`/timeline/${post.id}`}
+            to={`/timeline/${post.postId}`}
           >
             <div className="tl-ps-header">
               {post.mode !== "anon" ? (<Link
