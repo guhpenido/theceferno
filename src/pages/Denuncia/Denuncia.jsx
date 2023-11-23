@@ -9,6 +9,7 @@ import {
   getFirestore,
   addDoc
 } from "firebase/firestore";
+import toast, { Toaster } from 'react-hot-toast';
 
 
 function Denuncia ({  postId, userId, userSentData }) {
@@ -84,6 +85,22 @@ function Denuncia ({  postId, userId, userSentData }) {
     toggleh1Visibility();
   }, [])
 
+
+  const notiDenunciaFeita = () => toast.success('O Post foi denunciado com sucesso !', {
+    duration: 8000,
+
+    iconTheme: {
+      primary: '#4763E4',
+      secondary: '#fff',
+    },
+  });
+
+  const denunciaENotifica = (event) =>  {
+    notiDenunciaFeita();
+    CriarDenuncia();
+  };
+
+
   return (
     <div className={`denuncia ${h1Visible ? 'visible' : 'DenunciaInvisible'}`}>
       <div className="headerDenuncia">
@@ -117,7 +134,11 @@ function Denuncia ({  postId, userId, userSentData }) {
         <option value="fingindo_Ser_Empresa"> Uma empresa ou organização </option>
       </select>
 
-      <button className={`enviarDenuncia ${h1Visible ? 'visible' : 'DenunciaInvisible'}`} onClick={CriarDenuncia}>Enviar</button>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+      <button className={`enviarDenuncia ${h1Visible ? 'visible' : 'DenunciaInvisible'}`} onClick={denunciaENotifica}>Enviar</button>
     </div>
   );
 }

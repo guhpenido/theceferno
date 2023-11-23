@@ -637,12 +637,20 @@ function PostDisplay({
     setOptionsOpen(false)
   };
 
-  const notify = () => toast.success('Here is your toast.');
+  const notiPostExcluido = () => toast.success('O Post foi excluído com sucesso !', {
+    duration: 7000,
 
-  const testenot = (event) =>  {
+    iconTheme: {
+      primary: '#4763E4',
+      secondary: '#fff',
+    },
+  });
+
+  const excluiENotifica = (event) =>  {
+    notiPostExcluido();
     deletePost();
-    notify();
   };
+
   return (
     <>
       <div className="tl-box" key={post.postId}>
@@ -655,7 +663,7 @@ function PostDisplay({
           {optionsOpen && (
             <div className="options-menu-post">
               {post.userSent === userId && (
-                <div className="option-post" onClick={testenot}>
+                <div className="option-post" onClick={excluiENotifica}>
                   Excluir Post
                   <Toaster
                     position="top-center"

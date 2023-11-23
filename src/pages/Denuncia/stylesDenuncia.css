@@ -9,7 +9,8 @@
   width: 85vw;
   height: auto;
   background-color: #000000;
-  border: 4px groove #4763e4;
+  border: 2px groove #4763e4;
+  box-shadow: 0 0 10px 0.5px #4763E4;
   padding-left: 2vw;
   padding-right: 2vw;
   color: white;
@@ -84,6 +85,7 @@ select:hover {
   border: 2px groove blue !important;
   border-radius: 5px;
 }
+
 
 .alternaOpcao {
   padding-left: 3vw;
@@ -166,13 +168,13 @@ option {
   }
 
   .escolhaDenuncia {
-    margin-bottom: -2vh;
+    margin-bottom: -1vh;
     margin-left: -2vw;
   }
 
   .denuncia .enviarDenuncia {
-    margin-top: 3vh;
-    margin-left: 20vw;
+    display: block;
+    margin-left: 16.5vw;
     font-size: 2vh;
   }
 
@@ -182,9 +184,9 @@ option {
   }
 
   .fecharDenuncia {
-    padding-left: 15vw;
+    padding-left: 13vw;
     padding-top: -2vh;
-    font-size: 12px;
+    font-size: 15px;
   }
 
   .headerDenuncia {
@@ -197,7 +199,7 @@ option {
   }
 
   .opcoesDenuncia {
-    width: 40vw;
+    width: 15vw !important;
     border-radius: 3px;
   }
 
