@@ -35,7 +35,7 @@ import {
   onChildAdded,
 } from "firebase/database";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import likeIcon from "../../assets/thumbs-up-regular.svg"
+import likeIcon from "../../assets/thumbs-up-regular.svg";
 
 import {
   doc,
@@ -66,6 +66,7 @@ import VisitorPage from "../Perfil/ProfilePage/VisitorPage";
 import { AppRoutes } from "../../routes/AppRoutes";
 import Denuncia from "../Denuncia/Denuncia";
 import toast, { Toaster } from 'react-hot-toast';
+
 function PostDisplay({
   post,
   userSentData,
@@ -73,9 +74,6 @@ function PostDisplay({
   userId,
   userLoggedData,
 }) {
-  ""
-
-
   const [liked, setLiked] = useState(false); // Estado para controlar se o usuário curtiu o post
   const [disliked, setDisliked] = useState(false); // Estado para controlar se o usuário curtiu o post
   const [likes, setLikes] = useState(post.likes);
@@ -137,8 +135,12 @@ function PostDisplay({
   };
 
   useEffect(() => {
-    if (userLoggedData && userLoggedData.savedPosts && userLoggedData.savedPosts.includes(post.id)) {
-      setSaveIcon('solid');
+    if (
+      userLoggedData &&
+      userLoggedData.savedPosts &&
+      userLoggedData.savedPosts.includes(post.id)
+    ) {
+      setSaveIcon("solid");
     }
   }, [userLoggedData, post]);
 
@@ -159,8 +161,12 @@ function PostDisplay({
   }, [disliked]);
 
   useEffect(() => {
-    if (userLoggedData && userLoggedData.savedPosts && userLoggedData.savedPosts.includes(post.id)) {
-      setDislikeIcon('solid');
+    if (
+      userLoggedData &&
+      userLoggedData.savedPosts &&
+      userLoggedData.savedPosts.includes(post.id)
+    ) {
+      setDislikeIcon("solid");
     }
   }, [userLoggedData, post]);
 
@@ -288,8 +294,6 @@ function PostDisplay({
     }
   };
 
-
-
   // Calcule a diferença em segundos entre as datas
   const secondsAgo = Math.floor((now - postDate) / 1000);
 
@@ -310,6 +314,7 @@ function PostDisplay({
   let imageSent = null;
   let nomeEnvio = null;
   let userEnvio = null;
+  let userEnvioId = null;
   if (post.mode == "anon") {
     imageSent =
       "https://media.discordapp.net/attachments/871728576972615680/1148261217840926770/logoanon.png?width=473&height=473";
@@ -319,14 +324,13 @@ function PostDisplay({
     nomeEnvio = userSentData.nome;
     imageSent = userSentData.imageUrl;
     userEnvio = userSentData.usuario;
+    userEnvioId = userSentData.id;
   }
-
 
   useEffect(() => {
     // Use um useEffect para atualizar a UI quando o estado dislikes mudar
     // Isso garante que a UI seja renderizada após a atualização do estado
   }, [dislikes]);
-
 
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState("");
@@ -463,7 +467,6 @@ function PostDisplay({
     }
   };
 
-
   const linkStyle = {
     textDecoration: "none",
     color: "inherit",
@@ -521,7 +524,6 @@ function PostDisplay({
         await deleteDoc(interactionDoc.ref);
 
         console.log(`Deslike removido com sucesso!`);
-
       }
     } else {
       // Se o usuário ainda não interagiu com a postagem, adicione a interação de deslike
@@ -591,7 +593,10 @@ function PostDisplay({
   async function countRepliesWithMessageReplyed(postId) {
     const db = getFirestore(app);
     const repliesCollectionRef = collection(db, "replys");
-    const queryRef = query(repliesCollectionRef, where("messageReplyed", "==", postId));
+    const queryRef = query(
+      repliesCollectionRef,
+      where("messageReplyed", "==", postId)
+    );
 
     try {
       const querySnapshot = await getDocs(queryRef);
@@ -640,8 +645,7 @@ function PostDisplay({
   };
   return (
     <>
-      <div className="tl-box" key={post.id}>
-
+      <div className="tl-box" key={post.postId}>
         <div className="tl-post">
           <FontAwesomeIcon
             className="iconeDenuncia"
@@ -715,11 +719,13 @@ function PostDisplay({
                 </div>
               ) : (
                 <div className="tl-ps-nomes">
-                  <p className="tl-ps-nome">
-                    {nomeEnvio}{" "}
-                    <span className="tl-ps-user">@{userEnvio} </span>
-                    <span className="tl-ps-tempo">• {timeAgo}</span>
-                  </p>
+                  <Link to={`/VisitorPage/${userEnvioId}`}>
+                    <p className="tl-ps-nome">
+                      {nomeEnvio}{" "}
+                      <span className="tl-ps-user">@{userEnvio} </span>
+                      <span className="tl-ps-tempo">• {timeAgo}</span>
+                    </p>
+                  </Link>
                 </div>
               )}
             </div>
@@ -730,7 +736,7 @@ function PostDisplay({
               <div className="tl-ps-opcoes">
                 <div className="tl-ps-reply">
                   <FontAwesomeIcon icon={faComment} onClick={toggleReply} />
-                  <span>{" "}{replyCount}</span>
+                  <span> {replyCount}</span>
                 </div>
                 <div
                   className="tl-ps-like"
@@ -754,7 +760,7 @@ function PostDisplay({
                 <div
                   className="tl-ps-salvar"
                   onClick={(e) => {
-                    handleSavePost(e, post.id)
+                    handleSavePost(e, post.id);
                     handleIconClickB();
                   }}
                 >

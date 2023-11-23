@@ -18,7 +18,7 @@ import { Acessibilidade } from "../pages/Acessibilidade/index";
 import Trending from "../pages/Timeline/Trending";
 import Notificacao from "../pages/Notificacao/Notificacao";
 import {SavedPosts} from "../pages/Timeline/salvos";
-import Pesquisa from "../pages/Pesquisa/index"
+import Pesquisa from "../pages/Pesquisa/pesquisa"
 export function AppRoutes() {
   return (
     <BrowserRouter>

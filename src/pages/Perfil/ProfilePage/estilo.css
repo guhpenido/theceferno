@@ -45,3 +45,27 @@
     align-items: center;
     color: #fff;
 }
+
+.perfil-dm-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%;
+    border: 3px solid #4763E4;
+    overflow: hidden;
+  }
+  
+  .perfil-dm-icon {
+    color: #4763E4;
+    cursor: pointer;
+  }
+
+  .perfil-dm-icon:hover {
+    background-color: #00003d;
+    transition: background-color 0.3s, color 0.3s;
+    border-color: 3px solid #4763E4;
+
+}
+  

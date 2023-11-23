@@ -6,6 +6,7 @@ import MainVisitor from '../Main/MainVisitor';
 import { Link } from "react-router-dom";
 import MenuLateral from "../../MenuLateral/MenuLateral"
 import { app } from "../../../services/firebaseConfig";
+import Pesquisa from '../../Pesquisa';
 
 const VisitorPage = () => {
   const userId = useParams();
@@ -14,7 +15,7 @@ const VisitorPage = () => {
       <Wrapper>
         <MenuLateral />
           <MainVisitor userPId={userId.perfilId} />
-        <SideBar/>
+        <Pesquisa/>
       </Wrapper>
     </Container>
   );

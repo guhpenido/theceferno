@@ -4,8 +4,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"; //modulo de autenti
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import React, { useState, useEffect, useRef } from 'react';
 import ModalReact from 'react-modal';
-import './estilo.css'; 
-import { useNavigate } from "react-router-dom";
+import './estilo.css';
+import { Link, useNavigate } from "react-router-dom";
 import {
     Container,
     Banner,
@@ -24,6 +24,8 @@ import Feed from "../Feed";
 import FeedVisitor from "../Feed/feedVisitor";
 
 import { app } from "../../../services/firebaseConfig";
+import { faEnvelope } from "@fortawesome/fontawesome-free-solid";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 ModalReact.setAppElement('#root');
 
@@ -58,25 +60,25 @@ const ProfilePageVisitor = ({ userPId }) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                
+
                 const userDocRef = doc(db, 'users', user.uid);
                 const userDoc = await getDoc(userDocRef);
                 if (userDoc.exists()) {
                     setCurrentUser(userDoc.data());
-                  
+
                     const userData = userDoc.data(); // Obter dados do usuário
-                  
+
                     if (userData && userData.seguindo) { // Verificar se 'seguindo' é definido
-                      if (userData.seguindo.includes(userPId)) {
-                        buttonFollowRef.current.innerHTML = "Deixar de Seguir"
-                        buttonFollowRef.current.setAttribute('data-follow', 'true');
-                      } else {
-                        buttonFollowRef.current.innerHTML = "Seguir";
-                        buttonFollowRef.current.setAttribute('data-follow', 'false');
-                      }
+                        if (userData.seguindo.includes(userPId)) {
+                            buttonFollowRef.current.innerHTML = "Deixar de Seguir"
+                            buttonFollowRef.current.setAttribute('data-follow', 'true');
+                        } else {
+                            buttonFollowRef.current.innerHTML = "Seguir";
+                            buttonFollowRef.current.setAttribute('data-follow', 'false');
+                        }
                     }
-                  } 
-                  
+                }
+
                 setUserId(userPId);
                 fetchUserDataAndSetState(userPId);
                 searchUserFields(userPId);
@@ -173,8 +175,8 @@ const ProfilePageVisitor = ({ userPId }) => {
                     setUserName(userNameValue);
                     setUserCurso(cursoValue);
                     setUserInstituicao(instituicaoValue);
-                    setUserSeguidores(userData.seguidores?userData.seguidores.length:"0");
-                    setUserSeguindo(userData.seguindo?userData.seguindo.length:"0");
+                    setUserSeguidores(userData.seguidores ? userData.seguidores.length : "0");
+                    setUserSeguindo(userData.seguindo ? userData.seguindo.length : "0");
 
                 } else {
                     console.log('User not found');
@@ -210,7 +212,7 @@ const ProfilePageVisitor = ({ userPId }) => {
         const userProfileRef = doc(db, 'users', userPId);
 
         // Deixa de seguir
-        if(currentUser.seguindo.includes(userPId)){
+        if (currentUser.seguindo.includes(userPId)) {
             await updateDoc(userRef, {
                 seguindo: arrayRemove(userPId)
             });
@@ -220,7 +222,7 @@ const ProfilePageVisitor = ({ userPId }) => {
             setUserSeguidores(userSeguidores - 1)
             buttonFollowRef.current.innerHTML = "Seguir";
             buttonFollowRef.current.setAttribute('data-follow', 'false');
-        // Começa a Seguir
+            // Começa a Seguir
         } else {
             await updateDoc(userRef, {
                 seguindo: arrayUnion(userPId)
@@ -231,12 +233,12 @@ const ProfilePageVisitor = ({ userPId }) => {
             setUserSeguidores(userSeguidores + 1)
             buttonFollowRef.current.innerHTML = "Deixar de Seguir";
             buttonFollowRef.current.setAttribute('data-follow', 'true');
-        }   
+        }
 
         // Atualiza o Documento de 'CurrentUser'
         const userDocRef = doc(db, 'users', currentUser.id);
         const userDoc = await getDoc(userDocRef);
-        if(userDoc.exists()){
+        if (userDoc.exists()) {
             setCurrentUser(userDoc.data());
         }
     }
@@ -270,9 +272,16 @@ const ProfilePageVisitor = ({ userPId }) => {
                         <p><span ref={followingRef}>{userSeguindo}</span>Seguindo</p>
                     </Following>
                 </Tags>
+                
+                <div className="perfil-dm-icon-container">
+                <Link to={`/Chat/${userPId}`}>
+                    <FontAwesomeIcon className="perfil-dm-icon" icon={faEnvelope} />
+                    </Link>
+                </div>
+                
                 <Botao className="ppv-button-follow" onClick={handleFollow} ref={buttonFollowRef}>Seguir</Botao>
             </ProfileData>
-            <FeedVisitor userId={userPId}/>
+            <FeedVisitor userId={userPId} />
         </Container>
     );
 };

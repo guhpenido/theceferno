@@ -64,7 +64,7 @@
 
 .menu-lateral {
   display: flex;
-  height:100%;
+  height: 100%;
   background-color: #111111;
 }
 
@@ -256,10 +256,10 @@
   font-size: 18px;
   margin-left: 15px;
 }
-.mobile-postar-menu-lateral{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.mobile-postar-menu-lateral {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .mobile-postar-menu-lateral p {
   text-align: center;
@@ -359,43 +359,43 @@
 .mobile-menu-footer img {
   width: 100%;
 }
-.mobile-imgProfilePic img{
-    width: 100%;
-    border-radius: 50%;
+.mobile-imgProfilePic img {
+  width: 100%;
+  border-radius: 50%;
 }
-.mobile-menu-lateral-header{
-    height: 50px;
- 
+.mobile-menu-lateral-header {
+  height: 50px;
 }
-.mobile-imgProfilePic{
-    width: 50px;
-    height: 50px;
+.mobile-imgProfilePic {
+  width: 50px;
+  height: 50px;
 }
-.mobile-lateral-wrapper{
-    display: none;
+.mobile-lateral-wrapper {
+  display: none;
 }
-.botaoComHoverMenuLateral:hover, .botaoAcessar:hover {
+.botaoComHoverMenuLateral:hover,
+.botaoAcessar:hover {
   background-color: #0c0c0c;
   border-radius: 50px;
   /* padding: 5px 40px 5px 40px;
   justify-content: center; */
 }
-.botaoComHoverMenuLateral{
+.botaoComHoverMenuLateral {
   width: 100%;
   padding: 10px 40px 10px 10px;
   display: flex;
 }
 @media (max-width: 713px) {
-  .menu-lateral-wrapper{
+  .menu-lateral-wrapper {
     display: none;
   }
 }
-.menu-footer{
+.menu-footer {
   margin-top: 50px;
   display: flex;
   flex-direction: column;
 }
-.menu-logout{
+.menu-logout {
   height: 50px;
   display: flex;
   justify-content: center;
@@ -403,26 +403,35 @@
   border-radius: 25px;
   margin-bottom: 0px;
 }
-.menu-logout h1{
+.menu-logout h1 {
   font-size: 18px;
   margin: 5px;
 }
-#logout{
+#logout {
   filter: invert(35%) sepia(45%) saturate(4230%) hue-rotate(221deg)
     brightness(94%) contrast(90%);
-    width: 32px;
+  width: 32px;
 }
-.menu-logout:hover{
+.menu-logout:hover {
   background-color: #0c0c0c;
   cursor: pointer;
 }
-.menu-header-logo{
-    width: 40px;
+.menu-header-logo {
+  width: 40px;
   height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.menu-header-logo img{
+.menu-header-logo img {
   width: 100%;
+}
+.mobile-tl-header-header-foto{
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+}
+.mobile-tl-header-header-foto img{
+  width: 100%;
+  height: 100%;
 }
