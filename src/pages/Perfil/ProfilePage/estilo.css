@@ -44,6 +44,7 @@
     padding:60px !important;
     align-items: center;
     color: #fff;
+    z-index: 0;
 }
 
 .perfil-dm-icon-container {

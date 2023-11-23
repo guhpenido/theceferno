@@ -10,24 +10,23 @@ ConfigIcon}  from "../styles/Icons";
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: min(601px, 100%);
+  width: min(700px, 100%);
   height: 100vh;
 
   @media (min-width: 500px) {
     border-left: 1px solid #4763E4;
     border-right: 1px solid #4763E4;
   }
-  
-  @media screen and (min-width: 720px) and (max-width: 923px) {
+  @media screen and (min-width: 501px) and (max-width: 923px) {
     width: 70%; 
   }
 
   @media screen and (min-width: 924px)  and (max-width: 1090px) {
-    width: 35%; 
+    width: 45%; 
   }
 
   @media screen and (min-width: 1090px)  and (max-width: 1279px) {
-    width: 30%; 
+    width: 50%; 
   }
 `;
 
@@ -96,9 +95,10 @@ export const BottomMenu = styled.div`
   justify-content: space-between;
   padding: 8px min(46px, max(10vw, 10px));
 
-  @media (min-width: 500px) {
+  @media (min-width: 923px) {
     display: none;
   }
+  
 `;
 
 const iconCSS = css`

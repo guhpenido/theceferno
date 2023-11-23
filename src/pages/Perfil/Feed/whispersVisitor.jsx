@@ -53,15 +53,23 @@ const WhispersVisitor = ({ userPId }) => {
 
   //pegar o id do usuario de outra página
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setCurrentUser(userPId);
-        fetchUserDataAndSetState(userPId);
+        console.log(user.uid);
+        setCurrentUser(user.uid);
+        console.log(user);
+  
+        // Certifique-se de que fetchUserData retorna uma promessa
+        const userLoggedData = await fetchUserData(userPId);
+        setUserLoggedData(userLoggedData);
+  
+        // Certifique-se de que fetchUserDataAndSetState retorna uma promessa
+        await fetchUserDataAndSetState(userPId);
       } else {
         navigate("/login");
       }
     });
-
+  
     return () => unsubscribe();
   }, [auth, navigate]);
 
@@ -189,8 +197,10 @@ const WhispersVisitor = ({ userPId }) => {
               <PostDisplay
                 key={post.id}
                 post={post}
+                userId={currentUser}
                 userSentData={userSentData}
                 userMentionedData={userMentionedData}
+                userLoggedData={userLoggedData}
                 setRendState={true}
               />
             ))}

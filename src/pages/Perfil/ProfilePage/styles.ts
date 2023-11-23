@@ -8,6 +8,7 @@ export const Container = styled.div`
   max-height: 100%;
   max-width: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
 
   ::-webkit-scrollbar {
     display: none;
@@ -48,7 +49,7 @@ export const ProfileData = styled.div`
     text-align: left;
     margin-top: -10px;
     color: #d9d9d9;
-    margin-left:15px;
+    margin-left:0px;
   }
 
   > h2 {
@@ -57,7 +58,7 @@ export const ProfileData = styled.div`
     text-align: left;
     color: #7a7a7a;
     margin-top: 5px;
-    margin-left:15px;
+    margin-left:0px;
   }
 
 
@@ -121,11 +122,11 @@ export const Tags = styled.div`
 // `;
 
 export const Institution = styled.div`
-  text-align: center;
+  text-align: start;
   border-radius: 10px;
   font-size: 12px;
-  padding: 5px 5px;
-  margin-left:10px;
+  padding: 5px 0 5px 0;
+  margin-left:0px;
   color: #9f9d9d;
 `;
 
