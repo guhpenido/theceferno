@@ -788,6 +788,12 @@ function PostPage() {
                                         </div>
                                     </div>
                                     {isReplying && (
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center'
+                                            }}
+                                        >
                                         <div className="tl-reply-section">
                                             <div className="tl-modo-resposta">
                                                 <label className="tl-modo-resposta-label">
@@ -802,7 +808,7 @@ function PostPage() {
                                             <textarea className="tl-reply-textarea" placeholder="Escreva sua resposta..." value={replyText} onChange={(e) => setReplyText(e.target.value)}></textarea>
                                             <button className="tl-reply-button" onClick={handleReply}>Responder</button>
                                         </div>
-
+                                        </div>
                                     )}
 
                                 </div>
