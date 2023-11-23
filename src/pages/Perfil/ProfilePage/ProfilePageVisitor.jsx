@@ -157,6 +157,7 @@ const ProfilePageVisitor = ({ userPId }) => {
                     const newAvatarValue = userData['avatar'] || ''; // Campo avatar
                     const nicknameValue = userData['usuario'] || '';
                     const userNameValue = userData['userName'] || '';
+                    const users = [];
                     // Verifique e defina o valor padrão para bannerUrl e newAvatarValue
                     if (!bannerUrlValue) {
                         setNewBanner(userData['bannerUrl'] || '');
@@ -175,8 +176,8 @@ const ProfilePageVisitor = ({ userPId }) => {
                     setUserName(userNameValue);
                     setUserCurso(cursoValue);
                     setUserInstituicao(instituicaoValue);
-                    setUserSeguidores(userData.seguidores ? userData.seguidores.length : "0");
-                    setUserSeguindo(userData.seguindo ? userData.seguindo.length : "0");
+                    setUserSeguidores(userData.seguidores?userData.seguidores.length:"0");
+                    setUserSeguindo(userData.seguindo?userData.seguindo.length:"0");
 
                 } else {
                     console.log('User not found');
@@ -210,38 +211,35 @@ const ProfilePageVisitor = ({ userPId }) => {
     async function handleFollow() {
         const userRef = doc(db, 'users', currentUser.id);
         const userProfileRef = doc(db, 'users', userPId);
-
+        console.log("aaa" + userPId);
+        console.log("bbb " + currentUser.id);
         // Deixa de seguir
-        if (currentUser.seguindo.includes(userPId)) {
-            await updateDoc(userRef, {
-                seguindo: arrayRemove(userPId)
-            });
-            await updateDoc(userProfileRef, {
-                seguidores: arrayRemove(currentUser.id)
-            });
-            setUserSeguidores(userSeguidores - 1)
-            buttonFollowRef.current.innerHTML = "Seguir";
-            buttonFollowRef.current.setAttribute('data-follow', 'false');
-            // Começa a Seguir
-        } else {
-            await updateDoc(userRef, {
-                seguindo: arrayUnion(userPId)
-            });
-            await updateDoc(userProfileRef, {
-                seguidores: arrayUnion(currentUser.id)
-            });
-            setUserSeguidores(userSeguidores + 1)
-            buttonFollowRef.current.innerHTML = "Deixar de Seguir";
-            buttonFollowRef.current.setAttribute('data-follow', 'true');
-        }
-
-        // Atualiza o Documento de 'CurrentUser'
-        const userDocRef = doc(db, 'users', currentUser.id);
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-            setCurrentUser(userDoc.data());
-        }
-    }
+        if(currentUser.seguindo){
+            if (currentUser.seguindo.includes(userPId)) {
+                        console.log("entra ");
+                        await updateDoc(userRef, {
+                            seguindo: arrayRemove(userPId)
+                        });
+                        await updateDoc(userProfileRef, {
+                            seguidores: arrayRemove(currentUser.id)
+                        });
+                        setUserSeguidores(userSeguidores - 1)
+                        buttonFollowRef.current.innerHTML = "Seguir";
+                        buttonFollowRef.current.setAttribute('data-follow', 'false');
+                        // Começa a Seguir
+                    } 
+            } else {
+                        await updateDoc(userRef, {
+                            seguindo: arrayUnion(userPId)
+                        });
+                        await updateDoc(userProfileRef, {
+                            seguidores: arrayUnion(currentUser.id)
+                        });
+                        setUserSeguidores(userSeguidores + 1)
+                        buttonFollowRef.current.innerHTML = "Deixar de Seguir";
+                        buttonFollowRef.current.setAttribute('data-follow', 'true');
+                    }
+                }
 
     return (
         <Container>
@@ -252,18 +250,40 @@ const ProfilePageVisitor = ({ userPId }) => {
                     <Avatar />
                 )}
             </Banner>
+            
             <ProfileData>
-                <p>
-                    {bio || 'Nenhuma bio disponível'} {/* Mostra a bio ou uma mensagem se não houver bio */}
-                </p>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row-reverse',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}
+                >
+            <div className="perfil-dm-icon-container"
+                        style={{
+                               display: 'flex',
+
+                            }}
+                    >
+                    <Link to={`/Chat/${userPId}`}>
+                        <FontAwesomeIcon className="perfil-dm-icon" icon={faEnvelope} />
+                        </Link>
+                    </div>
                 <h1>{userName}</h1>
-                <h2>@{nickname}</h2>
+                <h2
+                    style={{
+                        fontSize: '20px'
+                    }}
+                >@{nickname}</h2>
+
+                </div>
                 <Tags>
                     <Institution>
-                        <p style={{ color: 'white', textAlign: 'center' }}>{userInstituicao}</p>
+                        <p style={{ color: 'white', textAlign: 'start' }}>{userInstituicao}</p>
                     </Institution>
                     <Course>
-                        <p style={{ color: 'white', textAlign: 'center' }}>{capitalizeFirstLetter(userCurso)}</p>
+                        <p style={{ color: 'white', textAlign: 'start' }}>{capitalizeFirstLetter(userCurso)}</p>
                     </Course>
                     <Followers>
                         <p><span ref={followersRef}>{userSeguidores}</span>Seguidores</p>
@@ -273,14 +293,19 @@ const ProfilePageVisitor = ({ userPId }) => {
                     </Following>
                 </Tags>
                 
-                <div className="perfil-dm-icon-container">
-                <Link to={`/Chat/${userPId}`}>
-                    <FontAwesomeIcon className="perfil-dm-icon" icon={faEnvelope} />
-                    </Link>
-                </div>
+                
                 
                 <Botao className="ppv-button-follow" onClick={handleFollow} ref={buttonFollowRef}>Seguir</Botao>
             </ProfileData>
+            <p
+                style={{
+                color: '#fff',
+                marginLeft: '16px',
+                marginTop: '15px'
+                }}
+            >
+                {bio || 'Nenhuma bio disponível'} {/* Mostra a bio ou uma mensagem se não houver bio */}
+            </p>
             <FeedVisitor userId={userPId} />
         </Container>
     );

@@ -292,9 +292,7 @@ const ProfilePage: React.FC = () => {
         )}
       </Banner>
       <ProfileData>
-        <p>
-          {bio || 'Nenhuma bio disponível'} {/* Mostra a bio ou uma mensagem se não houver bio */}
-        </p>
+        
         <EditButton outlined={true} onClick={openModal}>Editar Perfil</EditButton>
         <ModalReact className="Modal" isOpen={isModalOpen} onRequestClose={closeModal}
           style={{
@@ -419,13 +417,24 @@ const ProfilePage: React.FC = () => {
         <h2>@{nickname}</h2>
         <Tags>
           <Institution>
-            <p style={{ color: 'white', textAlign: 'center' }}>{userInstituicao}</p>
+            <p style={{ color: 'white', textAlign: 'start' }}>{userInstituicao}</p>
           </Institution>
           <Course>
-            <p style={{ color: 'white', textAlign: 'center' }}>{capitalizeFirstLetter(userCurso)}</p>
+            <p style={{ color: 'white', textAlign: 'start' }}>{capitalizeFirstLetter(userCurso)}</p>
           </Course>
         </Tags>
+        
       </ProfileData>
+      <p 
+      style={{
+        color: '#fff',
+        marginLeft: '16px',
+        marginTop: '15px'
+        
+      }}
+      >
+          {bio || 'Nenhuma bio disponível'} {/* Mostra a bio ou uma mensagem se não houver bio */}
+        </p>
       <Feed avatarUrl={newAvatar} />
     </Container >
   );
