@@ -132,14 +132,17 @@ export function Timeline() {
         setUserId(user.uid);
         console.log(user);
         fetchUserDataAndSetState(user.uid);
-        carregaTml();
+        carregaTml(selectedInstituicaoFilter, selectedCursoFilter);
       } else {
         navigate("/login");
       }
     });
 
+    // Load timeline when the component mounts
+    carregaTml(selectedInstituicaoFilter, selectedCursoFilter);
+
     return () => unsubscribe();
-  }, [auth, navigate]);
+  }, [auth, navigate, selectedInstituicaoFilter, selectedCursoFilter]);
 
   const [scrolling, setScrolling] = useState(false);
 
@@ -217,6 +220,10 @@ export function Timeline() {
   useEffect(() => {
     fetchInstituicoes();
     fetchCursos();
+  }, []);
+  
+  useEffect(() => {
+    carregaTml();
   }, []);
 
   const carregaTml = async (instituicao = "", curso = "") => {
@@ -417,6 +424,7 @@ export function Timeline() {
     console.log("clicou");
     console.log(isMobileLateralVisible);
   };
+
   const recarregarTml = async () => {
     // Limpe o estado dos posts carregados
     setLoadedPosts([]);
