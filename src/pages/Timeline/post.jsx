@@ -135,38 +135,66 @@ function PostDisplay({
   };
 
   useEffect(() => {
+    if (liked) {
+        setLikeIcon('solid');
+    }
+    else
+        setLikeIcon('regular');
+}, [liked]);
+
+useEffect(() => {
+    if (disliked) {
+        setDislikeIcon('solid');
+    }
+    else
+        setDislikeIcon('regular');
+}, [disliked]);
+
+useEffect(() => {
+  const fetchData = async () => {
+    const interactionsRef = collection(db, "interactions");
+        const queryInteraction = query(
+          interactionsRef,
+          where("userId", "==", userId),
+          where("postId", "==", post.id),
+          where("interaction", "==", "like")
+        );
+
+        const querySnapshot = await getDocs(queryInteraction);
+
+    if (!querySnapshot.empty) {
+      setLikeIcon("solid");
+    }
+  }
+  fetchData();
+}, [userLoggedData, post]);
+
+useEffect(() => {
+  const fetchData = async () => {
+    const interactionsRef = collection(db, "interactions");
+        const queryInteraction = query(
+          interactionsRef,
+          where("userId", "==", userId),
+          where("postId", "==", post.id),
+          where("interaction", "==", "dislike")
+        );
+
+        const querySnapshot = await getDocs(queryInteraction);
+        console.log(querySnapshot);
+    if (!querySnapshot.empty) {
+      setDislikeIcon("solid");
+    }
+  }
+  fetchData();
+}, [userLoggedData, post]);
+
+  useEffect(() => {
     if (
       userLoggedData &&
       userLoggedData.savedPosts &&
       userLoggedData.savedPosts.includes(post.id)
     ) {
       setSaveIcon("solid");
-    }
-  }, [userLoggedData, post]);
-
-  useEffect(() => {
-    if (liked) {
-      setLikeIcon('solid');
-    }
-    else
-      setLikeIcon('regular');
-  }, [liked]);
-
-  useEffect(() => {
-    if (disliked) {
-      setDislikeIcon('solid');
-    }
-    else
-      setDislikeIcon('regular');
-  }, [disliked]);
-
-  useEffect(() => {
-    if (
-      userLoggedData &&
-      userLoggedData.savedPosts &&
-      userLoggedData.savedPosts.includes(post.id)
-    ) {
-      setDislikeIcon("solid");
     }
   }, [userLoggedData, post]);
 
@@ -186,11 +214,12 @@ function PostDisplay({
       const db = getFirestore(app);
       const q = query(
         collection(db, "timeline"),
-        where("postId", "==", post.id)
+        where("postId", "==", post.postId)
       );
 
       try {
         const querySnapshot = await getDocs(q);
+        console.log(querySnapshot);
 
         if (!querySnapshot.empty) {
           const postDoc = querySnapshot.docs[0]; // Supondo que haja apenas um documento correspondente
@@ -202,6 +231,7 @@ function PostDisplay({
           // Adicionar a interação na coleção "interactions"
           await addInteraction(userId, post.id, "like");
           setLiked(true);
+          setLikeIcon('solid');
         } else {
           console.error("Post não encontrado no Firebase.");
           // Reverter a contagem local de likes em caso de erro
@@ -230,7 +260,8 @@ function PostDisplay({
           const interactionDoc = querySnapshotInteraction.docs[0];
           await deleteDoc(interactionDoc.ref);
           console.log("Like removido com sucesso!");
-
+          setLiked(false);
+          setLikeIcon('regular');
           // Decrementar o número de likes na coleção "timeline"
           const newLikes = likes - 1;
           setLikes(newLikes);
@@ -246,7 +277,6 @@ function PostDisplay({
               likes: newLikes,
             });
             console.log("Likes atualizados no Firebase com sucesso!");
-            setLiked(false);
           }
         }
       } catch (error) {
@@ -294,6 +324,113 @@ function PostDisplay({
     }
   };
 
+  const handleDislikeClick = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    // Verificar se o usuário já curtiu a postagem na coleção "interactions"
+    const userAlreadyDisliked = await checkUserDislikeInteraction(userId, post.id);
+
+    if (!userAlreadyDisliked) {
+      // Incrementar o número de likes localmente
+      const newDislikes = dislikes + 1;
+      setDislikes(newDislikes);
+
+      // Atualizar o número de likes no Firebase na coleção "timeline"
+      const db = getFirestore(app);
+      const q = query(
+        collection(db, "timeline"),
+        where("postId", "==", post.postId)
+      );
+
+      try {
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const postDoc = querySnapshot.docs[0]; // Supondo que haja apenas um documento correspondente
+
+          // Atualizar o campo "likes" no documento
+          await updateDoc(doc(db, "timeline", postDoc.id), { deslikes: newDislikes });
+          console.log("Likes atualizados no Firebase com sucesso!");
+
+          // Adicionar a interação na coleção "interactions"
+          await addInteraction(userId, post.id, "dislike");
+          setDisliked(true);
+          setDislikeIcon('solid');
+        } else {
+          console.error("Dislike não encontrado no Firebase.");
+          // Reverter a contagem local de likes em caso de erro
+          setDislikes(dislikes);
+        }
+      } catch (error) {
+        console.error("Erro ao atualizar Dislikes no Firebase: ", error);
+        // Reverter a contagem local de likes em caso de erro
+        setDislikes(dislikes);
+      }
+    } else {
+      // Remover a interação da coleção "interactions"
+      const db = getFirestore(app);
+      const interactionsRef = collection(db, "interactions");
+      const queryInteraction = query(
+        interactionsRef,
+        where("userId", "==", userId),
+        where("postId", "==", post.id),
+        where("interaction", "==", "dislike")
+      );
+
+      try {
+        const querySnapshotInteraction = await getDocs(queryInteraction);
+
+        if (!querySnapshotInteraction.empty) {
+          const interactionDoc = querySnapshotInteraction.docs[0];
+          await deleteDoc(interactionDoc.ref);
+          console.log("Dislikes removido com sucesso!");
+          setDisliked(false);
+          setDislikeIcon('regular');
+          // Decrementar o número de likes na coleção "timeline"
+          const newDislikes = dislikes - 1;
+          setDislikes(newDislikes);
+          const qTimeline = query(
+            collection(db, "timeline"),
+            where("postId", "==", post.id)
+          );
+          const querySnapshotTimeline = await getDocs(qTimeline);
+
+          if (!querySnapshotTimeline.empty) {
+            const postDocTimeline = querySnapshotTimeline.docs[0];
+            await updateDoc(doc(db, "timeline", postDocTimeline.id), {
+              deslikes: newDislikes,
+            });
+            console.log("Dislikes atualizados no Firebase com sucesso!");
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao remover Dislikes: ", error);
+      }
+    }
+  };
+
+  // Função para verificar se o usuário já interagiu com a postagem na coleção "interactions"
+  const checkUserDislikeInteraction = async (userId, postId) => {
+    try {
+      const db = getFirestore(app);
+      const interactionsRef = collection(db, "interactions");
+      const queryInteraction = query(
+        interactionsRef,
+        where("userId", "==", userId),
+        where("postId", "==", postId),
+        where("interaction", "==", "dislike")
+      );
+
+      const querySnapshot = await getDocs(queryInteraction);
+
+      return !querySnapshot.empty;
+    } catch (error) {
+      console.error("Erro ao verificar interação: ", error);
+      return false;
+    }
+  };
+
   // Calcule a diferença em segundos entre as datas
   const secondsAgo = Math.floor((now - postDate) / 1000);
 
@@ -326,11 +463,6 @@ function PostDisplay({
     userEnvio = userSentData.usuario;
     userEnvioId = userSentData.id;
   }
-
-  useEffect(() => {
-    // Use um useEffect para atualizar a UI quando o estado dislikes mudar
-    // Isso garante que a UI seja renderizada após a atualização do estado
-  }, [dislikes]);
 
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState("");
@@ -372,40 +504,8 @@ function PostDisplay({
     }
   }, [showReplies]);
 
-  // Função para mostrar/ocultar as respostas
-  const toggleReplies = () => {
-    setShowReplies(!showReplies);
-  };
-
   const toggleReply = () => {
     setIsReplying(!isReplying);
-  };
-
-  const handleReply = async () => {
-    const db = getFirestore(app);
-    const date = new Date();
-    const timestamp = date.getTime();
-    const newReplyData = {
-      deslikes: 0,
-      likes: 0,
-      mode: "anon",
-      time: timestamp,
-      messageReplyed: post.id,
-      replyId: 1,
-      text: replyText, // O texto da resposta
-      userReplyed:
-        userMentionedData !== null ? userMentionedData.id : userSentData.id,
-      userSent: userSentData.id,
-    };
-
-    try {
-      const response = await addDoc(collection(db, "replys"), newReplyData);
-      // console.log("Resposta enviada com sucesso com ID: ", response.id);
-      setIsReplying(false);
-      setReplyText("");
-    } catch (error) {
-      console.error("Erro ao enviar a resposta: ", error);
-    }
   };
 
   const handleSavePost = async (e, postId) => {
@@ -472,141 +572,143 @@ function PostDisplay({
     color: "inherit",
   };
   // Função para verificar se o usuário já interagiu com a postagem na coleção "interactions"
-  const checkUserDislikeInteraction = async (userId, postId) => {
-    try {
-      const db = getFirestore(app);
-      const interactionsRef = collection(db, "interactions");
-      const queryInteraction = query(
-        interactionsRef,
-        where("userId", "==", userId),
-        where("postId", "==", postId),
-        where("interaction", "==", "dislike")
-      );
+  // const checkUserDislikeInteraction = async (userId, postId) => {
+  //   try {
+  //     const db = getFirestore(app);
+  //     const interactionsRef = collection(db, "interactions");
+  //     const queryInteraction = query(
+  //       interactionsRef,
+  //       where("userId", "==", userId),
+  //       where("postId", "==", postId),
+  //       where("interaction", "==", "dislike")
+  //     );
 
-      const querySnapshot = await getDocs(queryInteraction);
+  //     const querySnapshot = await getDocs(queryInteraction);
 
-      return !querySnapshot.empty;
-    } catch (error) {
-      console.error("Erro ao verificar interação de deslike: ", error);
-      return false;
-    }
-  };
+  //     return !querySnapshot.empty;
+  //   } catch (error) {
+  //     console.error("Erro ao verificar interação de deslike: ", error);
+  //     return false;
+  //   }
+  // };
 
-  // Função para adicionar ou remover a interação de deslike na coleção "interactions"
-  const addOrRemoveDislikeInteraction = async (
-    userId,
-    postId,
-    interactionType
-  ) => {
-    const db = getFirestore(app);
-    const interactionsRef = collection(db, "interactions");
+  // // Função para adicionar ou remover a interação de deslike na coleção "interactions"
+  // const addOrRemoveDislikeInteraction = async (
+  //   userId,
+  //   postId,
+  //   interactionType
+  // ) => {
+  //   const db = getFirestore(app);
+  //   const interactionsRef = collection(db, "interactions");
 
-    // Verificar se o usuário já interagiu com a postagem
-    const existingDislikeInteraction = await checkUserDislikeInteraction(
-      userId,
-      postId
-    );
+  //   // Verificar se o usuário já interagiu com a postagem
+  //   const existingDislikeInteraction = await checkUserDislikeInteraction(
+  //     userId,
+  //     postId
+  //   );
 
-    if (existingDislikeInteraction) {
-      // Se já houver uma interação de deslike, remova-a
-      const queryRemoveInteraction = query(
-        interactionsRef,
-        where("userId", "==", userId),
-        where("postId", "==", postId),
-        where("interaction", "==", interactionType)
-      );
+  //   if (existingDislikeInteraction) {
+  //     // Se já houver uma interação de deslike, remova-a
+  //     const queryRemoveInteraction = query(
+  //       interactionsRef,
+  //       where("userId", "==", userId),
+  //       where("postId", "==", postId),
+  //       where("interaction", "==", interactionType)
+  //     );
 
-      const querySnapshotRemove = await getDocs(queryRemoveInteraction);
+  //     const querySnapshotRemove = await getDocs(queryRemoveInteraction);
 
-      if (!querySnapshotRemove.empty) {
-        const interactionDoc = querySnapshotRemove.docs[0];
-        setDislikes(dislikes - 1);
-        await deleteDoc(interactionDoc.ref);
+  //     if (!querySnapshotRemove.empty) {
+  //       const interactionDoc = querySnapshotRemove.docs[0];
+  //       setDislikes(dislikes - 1);
+  //       await deleteDoc(interactionDoc.ref);
 
-        console.log(`Deslike removido com sucesso!`);
-      }
-    } else {
-      // Se o usuário ainda não interagiu com a postagem, adicione a interação de deslike
-      const newInteraction = {
-        userId,
-        postId,
-        interaction: interactionType,
-      };
+  //       console.log(`Deslike removido com sucesso!`);
+  //     }
+  //   } else {
+  //     // Se o usuário ainda não interagiu com a postagem, adicione a interação de deslike
+  //     const newInteraction = {
+  //       userId,
+  //       postId,
+  //       interaction: interactionType,
+  //     };
 
-      await addDoc(interactionsRef, newInteraction);
-      console.log(`Deslike registrado com sucesso!`);
-      setDisliked(true);
-    }
-  };
+  //     await addDoc(interactionsRef, newInteraction);
+  //     console.log(`Deslike registrado com sucesso!`);
+  //     setDisliked(true);
+  //     setDislikeIcon('solid');
+  //   }
+  // };
 
-  // Função para adicionar a interação de deslike na coleção "interactions"
-  const addDislikeInteraction = async (userId, postId) => {
-    addOrRemoveDislikeInteraction(userId, postId, "dislike");
-  };
+  // // Função para adicionar a interação de deslike na coleção "interactions"
+  // const addDislikeInteraction = async (userId, postId) => {
+  //   addOrRemoveDislikeInteraction(userId, postId, "dislike");
+  // };
 
   // Função para lidar com o clique em "deslike"
-  const handleDislikeClick = async (e) => {
-    e.stopPropagation();
-    e.preventDefault();
+  // const handleDislikeClick = async (e) => {
+  //   e.stopPropagation();
+  //   e.preventDefault();
 
-    // Verificar se o usuário já interagiu com a postagem na coleção "interactions"
-    const userAlreadyDisliked = await checkUserDislikeInteraction(
-      userId,
-      post.id
-    );
+  //   // Verificar se o usuário já interagiu com a postagem na coleção "interactions"
+  //   const userAlreadyDisliked = await checkUserDislikeInteraction(
+  //     userId,
+  //     post.id
+  //   );
 
-    if (!userAlreadyDisliked) {
-      // Atualizar o número de deslikes localmente
-      const newDislikes = dislikes + 1;
-      setDislikes(newDislikes);
+  //   if (!userAlreadyDisliked) {
+  //     // Atualizar o número de deslikes localmente
+  //     const newDislikes = dislikes + 1;
+  //     setDislikes(newDislikes);
 
-      // Adicionar a interação de deslike na coleção "interactions"
-      addDislikeInteraction(userId, post.id);
-    } else {
-      // Remover a interação de deslike da coleção "interactions"
-      const db = getFirestore(app);
-      const interactionsRef = collection(db, "interactions");
-      const queryInteraction = query(
-        interactionsRef,
-        where("userId", "==", userId),
-        where("postId", "==", post.id),
-        where("interaction", "==", "dislike")
-      );
+  //     // Adicionar a interação de deslike na coleção "interactions"
+  //     addDislikeInteraction(userId, post.id);
+  //   } else {
+  //     // Remover a interação de deslike da coleção "interactions"
+  //     const db = getFirestore(app);
+  //     const interactionsRef = collection(db, "interactions");
+  //     const queryInteraction = query(
+  //       interactionsRef,
+  //       where("userId", "==", userId),
+  //       where("postId", "==", post.id),
+  //       where("interaction", "==", "dislike")
+  //     );
 
-      try {
-        const querySnapshotInteraction = await getDocs(queryInteraction);
+  //     try {
+  //       const querySnapshotInteraction = await getDocs(queryInteraction);
 
-        if (!querySnapshotInteraction.empty) {
-          const interactionDoc = querySnapshotInteraction.docs[0];
-          await deleteDoc(interactionDoc.ref);
-          console.log("Deslike removido com sucesso!");
-          const newDislikes = dislikes - 1;
-          setDislikes(newDislikes);
-          console.log("Deslike removido com sucessoaaa!");
-          setDisliked(false);
-        }
-      } catch (error) {
-        console.error("Erro ao remover deslike: ", error);
-      }
-    }
-  };
-  async function countRepliesWithMessageReplyed(postId) {
-    const db = getFirestore(app);
-    const repliesCollectionRef = collection(db, "replys");
-    const queryRef = query(
-      repliesCollectionRef,
-      where("messageReplyed", "==", postId)
-    );
+  //       if (!querySnapshotInteraction.empty) {
+  //         const interactionDoc = querySnapshotInteraction.docs[0];
+  //         await deleteDoc(interactionDoc.ref);
+  //         console.log("Deslike removido com sucesso!");
+  //         const newDislikes = dislikes - 1;
+  //         setDislikes(newDislikes);
+  //         console.log("Deslike removido com sucessoaaa!");
+  //         setDisliked(false);
+  //         setDislikeIcon('regular');
+  //       }
+  //     } catch (error) {
+  //       console.error("Erro ao remover deslike: ", error);
+  //     }
+  //   }
+  // };
+  // async function countRepliesWithMessageReplyed(postId) {
+  //   const db = getFirestore(app);
+  //   const repliesCollectionRef = collection(db, "replys");
+  //   const queryRef = query(
+  //     repliesCollectionRef,
+  //     where("messageReplyed", "==", postId)
+  //   );
 
-    try {
-      const querySnapshot = await getDocs(queryRef);
-      const replyCount = querySnapshot.size;
-      return replyCount;
-    } catch (error) {
-      console.error("Erro ao contar as respostas:", error);
-      return 0; // Retorna 0 em caso de erro
-    }
-  }
+  //   try {
+  //     const querySnapshot = await getDocs(queryRef);
+  //     const replyCount = querySnapshot.size;
+  //     return replyCount;
+  //   } catch (error) {
+  //     console.error("Erro ao contar as respostas:", error);
+  //     return 0; // Retorna 0 em caso de erro
+  //   }
+  // }
 
   const deletePost = async () => {
     try {
@@ -637,12 +739,20 @@ function PostDisplay({
     setOptionsOpen(false)
   };
 
-  const notify = () => toast.success('Here is your toast.');
+  const notiPostExcluido = () => toast.success('O Post foi excluído com sucesso !', {
+    duration: 7000,
 
-  const testenot = (event) =>  {
+    iconTheme: {
+      primary: '#4763E4',
+      secondary: '#fff',
+    },
+  });
+
+  const excluiENotifica = (event) =>  {
+    notiPostExcluido();
     deletePost();
-    notify();
   };
+
   return (
     <>
       <div className="tl-box" key={post.postId}>
@@ -655,7 +765,7 @@ function PostDisplay({
           {optionsOpen && (
             <div className="options-menu-post">
               {post.userSent === userId && (
-                <div className="option-post" onClick={testenot}>
+                <div className="option-post" onClick={excluiENotifica}>
                   Excluir Post
                   <Toaster
                     position="top-center"
@@ -681,7 +791,7 @@ function PostDisplay({
               userMentionedData: userMentionedData,
               userLoggedData: userLoggedData,
             }}
-            to={`/timeline/${post.id}`}
+            to={`/timeline/${post.postId}`}
           >
             <div className="tl-ps-header">
               {post.mode !== "anon" ? (<Link
@@ -760,7 +870,7 @@ function PostDisplay({
                 <div
                   className="tl-ps-salvar"
                   onClick={(e) => {
-                    handleSavePost(e, post.id);
+                    handleSavePost(e, post.postId);
                     handleIconClickB();
                   }}
                 >

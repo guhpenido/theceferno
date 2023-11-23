@@ -58,9 +58,9 @@ function Header(props) {
           <h1> Trending </h1>
         </Link>
         <div className="tl-header-filter">
-          <div className="tl-header-filter-in">
+          <div className="tl-header-filter-in" onClick={props.abreMenu}>
             <img
-              src="https://cdn.discordapp.com/attachments/812025565615882270/1168379201146077205/recurring-appointment-xxl.png?ex=65518cec&is=653f17ec&hm=5bb554d4e8f281a9ca4e2e554ab14d50d1c55cc82413fef5a1372af880dd7a07&"
+              src="https://cdn.discordapp.com/attachments/871728576972615680/1167909847866560643/settings-17-xxl.png?ex=654fd7ce&is=653d62ce&hm=f0fda7a77e21a3e137d47b2556d96ff236cdbbbab707e8042f010a3a4c980a17&"
               alt=""
             />
           </div>
@@ -82,7 +82,7 @@ function Header(props) {
           </div>
           <div
             className="mobile-tl-header-header-config"
-            onClick={props.carregatml}
+            onClick={props.abreMenu}
           >
             <img
               src="https://cdn.discordapp.com/attachments/871728576972615680/1167909847866560643/settings-17-xxl.png?ex=654fd7ce&is=653d62ce&hm=f0fda7a77e21a3e137d47b2556d96ff236cdbbbab707e8042f010a3a4c980a17&"
@@ -92,7 +92,13 @@ function Header(props) {
         </div>
         <div className="mobile-tl-header-down">
           <div className="mobile-tl-header-div1 active-mobile-role">
-            <h1>Para você</h1>
+            {/* <h1 style={{fontSize: }}>Para você</h1> */}
+            <Link className="tl-header-div2" to="/timeline">
+              <h1> Para você </h1>
+            </Link>
+            <Link className="tl-header-div2" to="/trending">
+              <h1> Trending </h1>
+            </Link>
           </div>
         </div>
       </div>

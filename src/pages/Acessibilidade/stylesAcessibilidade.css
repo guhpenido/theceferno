@@ -106,3 +106,9 @@
 .acc-actives{
   display: flex;
 }
+
+@media (max-width: 470px) {
+  .acc-container{
+    width: 50vw;
+  }
+}

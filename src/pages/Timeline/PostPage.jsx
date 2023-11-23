@@ -127,6 +127,43 @@ function PostPage() {
         else
             setDislikeIcon('regular');
     }, [disliked]);
+    useEffect(() => {
+        const fetchData = async () => {
+          const interactionsRef = collection(db, "interactions");
+              const queryInteraction = query(
+                interactionsRef,
+                where("userId", "==", userLoggedData.id),
+                where("postId", "==", postIdInt),
+                where("interaction", "==", "like")
+              );
+      
+              const querySnapshot = await getDocs(queryInteraction);
+      
+          if (!querySnapshot.empty) {
+            setLikeIcon("solid");
+          }
+        }
+        fetchData();
+      }, [userLoggedData, post]);
+      
+      useEffect(() => {
+        const fetchData = async () => {
+          const interactionsRef = collection(db, "interactions");
+              const queryInteraction = query(
+                interactionsRef,
+                where("userId", "==", userLoggedData.id),
+                where("postId", "==", postIdInt),
+                where("interaction", "==", "dislike")
+              );
+      
+              const querySnapshot = await getDocs(queryInteraction);
+              console.log(querySnapshot);
+          if (!querySnapshot.empty) {
+            setDislikeIcon("solid");
+          }
+        }
+        fetchData();
+      }, [userLoggedData, post]);
 
     useEffect(() => {
         console.log(imageSentData); // Aqui, você verá o valor atualizado de imageSentData
@@ -135,11 +172,11 @@ function PostPage() {
     console.log(postIdInt);
     useEffect(() => {
         if (userLoggedData && Array.isArray(userLoggedData.savedPosts) && userLoggedData.savedPosts.includes(postIdInt)) {
-          setSaveIcon('solid');
+            setSaveIcon('solid');
         } else {
-          setSaveIcon('regular');
+            setSaveIcon('regular');
         }
-      }, [userLoggedData, postIdInt]);
+    }, [userLoggedData, postIdInt]);
 
     useEffect(() => {
         console.log("useEffect está sendo executado!");
@@ -694,7 +731,6 @@ function PostPage() {
         console.log("clicou");
         console.log(isMobileLateralVisible);
     };
-    console.log(userLoggedData.id);
     return (
         <>
             <div className="tl-screen">
@@ -717,11 +753,16 @@ function PostPage() {
                             <div className="tl-box">
                                 <div className="tl-post">
                                     <div className="tl-ps-header">
-                                        <div className="tl-ps-foto">
-                                            {imageSent && (
-                                                <img src={imageSent} alt="" />
-                                            )}
-                                        </div>
+                                        {mode !== "anon" ? (<Link
+                                            to={`/VisitorPage/${userSentData.id}`}
+                                            style={{ color: "white" }}
+                                        >
+                                            <div className="tl-ps-foto">
+                                                {imageSent && <img src={imageSent} alt="" />}
+                                            </div>
+                                        </Link>) : (<div className="tl-ps-foto">
+                                            {imageSent && <img src={imageSent} alt="" />}
+                                        </div>)}
                                         {userMentioned !== null ? (
                                             <div className="tl-ps-nomes">
                                                 <p className="tl-ps-nome">
@@ -730,7 +771,7 @@ function PostPage() {
                                                     <span className="tl-ps-tempo">• {timeAgo}</span>
                                                     {userMentionedData && (
                                                         <FontAwesomeIcon className="arrow" icon={faArrowRight} />
-                                                    )}   
+                                                    )}
                                                     {userMentionedData && (
                                                         <img src={userMentionedData.imageUrl} alt="" />
                                                     )}
