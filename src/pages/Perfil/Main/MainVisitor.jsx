@@ -28,7 +28,7 @@ const MainVisitor = ({ userPId }) => {
     }, []);
 
     const handleButtonClick = () => {
-        window.location.href = "/perfil";
+        window.location.href = "/timeline";
     };
 
 

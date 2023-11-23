@@ -201,6 +201,7 @@ const WhispersUsuario: React.FC = () => {
                 <PostDisplay
                   key={post.id}
                   post={post}
+                  userId={currentUser}
                   userSentData={userSentData}
                   userMentionedData={userMentionedData}
                   setRendState={true}
