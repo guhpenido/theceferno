@@ -97,7 +97,9 @@ function Denuncia ({  postId, userId, userSentData }) {
 
   const denunciaENotifica = (event) =>  {
     notiDenunciaFeita();
-    CriarDenuncia();
+    setTimeout(() => {
+      CriarDenuncia();
+  }, 3000);
   };
 
 
