@@ -7,6 +7,8 @@ import homeIcon from "../../../assets/home-icon.svg";
 import dmIcon from "../../../assets/dm-icon.svg";
 import perfilIcon from "../../../assets/perfil-icon.svg";
 import { Link } from "react-router-dom";
+import searchIcon from "../../../assets/search.svg";
+import faBookmark  from "../../../assets/saved.svg";
 
 
 const MainVisitor = ({ userPId }) => {
@@ -65,6 +67,24 @@ const MainVisitor = ({ userPId }) => {
 								id="dm"
 								src={dmIcon}
 								alt="Botão ir para DM, chat conversas privadas"
+							></img>
+						</div>
+					</Link>
+                    <Link className="botaoAcessar" to="/savedPosts">
+						<div>
+							<img
+								id="dm"
+								src={faBookmark}
+								alt="Botão ir para salvos."
+							></img>
+						</div>
+					</Link>
+                    <Link className="botaoAcessar" to="/pesquisa">
+						<div>
+							<img
+								id="dm"
+								src={searchIcon}
+								alt="Botão ir para pesqusisa."
 							></img>
 						</div>
 					</Link>

@@ -73,8 +73,6 @@ const PostagensUsuario: React.FC = () => {
         const userLoggedData = await fetchUserData(user.uid);
         setUserLoggedData(userLoggedData);
   
-        // Certifique-se de que fetchUserDataAndSetState retorna uma promessa
-        await fetchUserDataAndSetState(user.uid);
       } else {
         navigate("/login");
       }
@@ -89,6 +87,7 @@ const PostagensUsuario: React.FC = () => {
     const q = query(
       collection(db, "timeline"),
       where("userSent", "==", currentUser),
+      where("mode", "==", "public"),
       orderBy("time", "desc")
     );
 
@@ -116,6 +115,7 @@ const PostagensUsuario: React.FC = () => {
     const postsCollectionRef = collection(db, "timeline");
     const postsQuery = query(
       postsCollectionRef,
+      where("mode", "==", "public"),
       orderBy("time", "desc"),
     );
 

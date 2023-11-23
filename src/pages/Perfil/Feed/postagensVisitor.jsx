@@ -78,6 +78,7 @@ const PostagensVisitor = ({ userPId }) => {
     const q = query(
       collection(db, "timeline"),
       where("userSent", "==", currentUser),
+      where("mode", "==", "public"),
       orderBy("time", "desc")
     );
 
@@ -105,7 +106,8 @@ const PostagensVisitor = ({ userPId }) => {
     const postsCollectionRef = collection(db, "timeline");
     const postsQuery = query(
       postsCollectionRef,
-      orderBy("time", "desc"),
+      where("mode", "==", "public"),
+      orderBy("time", "desc")
     );
 
     const fetchData = async () => {
