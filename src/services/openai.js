@@ -1,43 +1,57 @@
 // api.js
-const apiKey = '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'; // Substitua com sua chave de API da OpenAI
+const apiKey = "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"; // Substitua com sua chave de API da OpenAI
 
 async function verificarAdequacaoDoPost(textoDoPost) {
-  const apiUrl = 'https://api.openai.com/v1/completions';
+  const apiUrl = "https://api.openai.com/v1/chat/completions";
 
-  const prompt = `É este post adequado? Permita palavrões, mas não muitos.\n"${textoDoPost}"\nResponda somente com "true" ou "false":`;
+  const prompt = `Este post é ofensivo?\n"${textoDoPost}"\nResponda somente com "true", se sim ou "false", se não. Sem pontos:`;
 
   try {
     const response = await fetch(apiUrl, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
+        messages: [
+          {
+            role: "system",
+            content: "You are a helpful assistant.",
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+        max_tokens: 100, // Ajuste conforme necessário
+        temperature: 0.7,
         model: "gpt-3.5-turbo",
-        prompt,
-        max_tokens: 100,
-        stop: ['\n'],
+        stop: ["\n"],
       }),
     });
 
     if (!response.ok) {
-      throw new Error('Erro ao chamar a API do ChatGPT');
+      throw new Error(
+        `Erro ao chamar a API do ChatGPT. Status: ${response.status}`
+      );
     }
 
     const data = await response.json();
-    const respostaDoChatGPT = data.choices[0].text.trim().toLowerCase();
+    console.log("Prompt enviado:", prompt.length);
+    console.log("Resposta da API:", data);
+    const respostaDoChatGPT = data.choices[0]?.message?.content?.trim().toLowerCase();
 
-    if (respostaDoChatGPT === 'true') {
+    if (respostaDoChatGPT === "false") {
       return true;
-    } else if (respostaDoChatGPT === 'false') {
+    } else if (respostaDoChatGPT === "true") {
       return false;
     } else {
       console.log(respostaDoChatGPT);
-      throw new Error('Resposta inesperada do ChatGPT', respostaDoChatGPT); 
+      throw new Error("Resposta inesperada do ChatGPT");
     }
   } catch (error) {
-    console.error('Erro ao verificar a adequação do post:', error.message);
+    console.error("Erro ao verificar a adequação do post:", error.message);
     return false;
   }
 }

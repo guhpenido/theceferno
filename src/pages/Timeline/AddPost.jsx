@@ -221,14 +221,29 @@ function AddPost() {
       postId: nextPostId,
     });
   };
+  const postEnviado = () => toast.success('Whispado com sucesso!', {
+    duration: 1000,
 
+    iconTheme: {
+      primary: '#4763E4',
+      secondary: '#fff',
+    },
+  });
+  const postBarrado = () => toast.error('Sua postagem infringe os termos e condições.', {
+    duration: 1000,
+
+    iconTheme: {
+      primary: '#4763E4',
+      secondary: '#fff',
+    },
+  });
   const handleSubmitPost = async (e) => {
     e.preventDefault();
     // Verifique a adequação do texto do post
     const adequado = await verificarAdequacaoDoPost(newPost.text);
     if (!adequado) {
       // Se o post não for adequado, emita um alerta e retorne
-      toast.error("Sua postagem infringe os termos e condições.");
+      postBarrado();
       return;
     }
     // Se o post for adequado, crie um novo documento na coleção "timeline" com os dados do novo post
@@ -251,6 +266,7 @@ function AddPost() {
       });
       setNextPostId(nextPostId + 1);
       toggleVisibility();
+      postEnviado();
     } catch (error) {
       console.error("Erro ao adicionar o post: ", error);
     }
@@ -458,6 +474,10 @@ function AddPost() {
           alt=""
         />
       </div>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
     </>
   );
 }
