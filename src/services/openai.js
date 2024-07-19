@@ -1,6 +1,6 @@
 // api.js
-const parteKey = "sk-iQddP1Lj3QSi6qYo3Iyh";
-const parte2Key = "T3BlbkFJps6TZobL3bLstuECqZiU";
+const parteKey = "sk-proj-RAQOzyNotFDpRdG4HIBqT3Bl";
+const parte2Key = "bkFJcyUGARPgRCIKWa6suqbP";
 const chaveCompleta = parteKey + parte2Key;
 const apiKey = chaveCompleta; // Substitua com sua chave de API da OpenAI
 

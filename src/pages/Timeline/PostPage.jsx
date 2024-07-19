@@ -55,7 +55,7 @@ import { icon } from "@fortawesome/fontawesome-svg-core";
 
 
 function PostPage() {
-    const [imageSentData, setImageSentData] = useState("https://cdn.discordapp.com/attachments/871728576972615680/1133946789343531079/logo.png");
+    const [imageSentData, setImageSentData] = useState("https://i.postimg.cc/qMCG260x/logo-ceferno-perfil.png");
     const location = useLocation();
     const { userSentData, userMentionedData, userLoggedData } = location.state;
     const { postId } = useParams();
@@ -221,7 +221,7 @@ function PostPage() {
             setProfile({
                 username: userLoggedDataResponse.pseudonimo,
                 photoURL:
-                    "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png",
+                    "https://i.postimg.cc/qMCG260x/logo-ceferno-perfil.png",
             });
             setIsLoadingUser(false); // Data has been fetched, no longer loading
         } catch (error) {
@@ -552,7 +552,7 @@ function PostPage() {
     let userEnvio = null;
     if (mode == "anon") {
         imageSent =
-            "https://media.discordapp.net/attachments/871728576972615680/1148261217840926770/logoanon.png?width=473&height=473";
+            "https://i.postimg.cc/bY5TG9Xv/logo-Livre2.png";
         nomeEnvio = userSentData.pseudonimo;
         userEnvio = "ceferno 😈";
     } else {
@@ -712,7 +712,7 @@ function PostPage() {
         const profileImageUrl =
             (selectedProfile)
                 ? userLoggedData.imageUrl
-                : "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png";
+                : "https://i.postimg.cc/qMCG260x/logo-ceferno-perfil.png";
 
         return <img src={profileImageUrl} alt="Perfil" />;
     }

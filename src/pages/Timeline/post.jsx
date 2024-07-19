@@ -456,7 +456,7 @@ function PostDisplay({
   let userEnvioId = null;
   if (post.mode == "anon") {
     imageSent =
-      "https://media.discordapp.net/attachments/871728576972615680/1148261217840926770/logoanon.png?width=473&height=473";
+      "https://i.postimg.cc/bY5TG9Xv/logo-Livre2.png";
     nomeEnvio = userSentData.pseudonimo;
     userEnvio = "ceferno 😈";
   } else {

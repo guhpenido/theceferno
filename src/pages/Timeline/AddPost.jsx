@@ -200,7 +200,7 @@ function AddPost() {
   const profile = {
     username: userLoggedData.pseudonimo,
     photoURL:
-      "https://cdn.discordapp.com/attachments/812025565615882270/1142990318845821058/image.png",
+      "https://i.postimg.cc/bY5TG9Xv/logo-Livre2.png",
   };
 
   const handleProfileChange = (e) => {
@@ -240,12 +240,12 @@ function AddPost() {
   const handleSubmitPost = async (e) => {
     e.preventDefault();
     // Verifique a adequação do texto do post
-    const adequado = await verificarAdequacaoDoPost(newPost.text);
-    if (!adequado) {
-      // Se o post não for adequado, emita um alerta e retorne
-      postBarrado();
-      return;
-    }
+    // const adequado = await verificarAdequacaoDoPost(newPost.text);
+    // if (!adequado) {
+    //   // Se o post não for adequado, emita um alerta e retorne
+    //   postBarrado();
+    //   return;
+    // }
     // Se o post for adequado, crie um novo documento na coleção "timeline" com os dados do novo post
     setNewPost({
       ...newPost,
@@ -470,7 +470,7 @@ function AddPost() {
       )}
       <div className="tl-addpost" onClick={toggleVisibility}>
         <img
-          src="https://cdn.discordapp.com/attachments/871728576972615680/1142352433352294482/asa.png"
+          src="https://cdn.discordapp.com/attachments/871728576972615680/1263682559510970378/113-1138570_png-file-new-post-icon-png.png?ex=669b1f98&is=6699ce18&hm=b379668830fd1d549ac1711f03dd165e37d170e7f3c3d78610744562884bd6d4&"
           alt=""
         />
       </div>

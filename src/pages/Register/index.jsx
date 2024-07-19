@@ -43,9 +43,9 @@ export function Register() {
     usuario: "",
     pseudonimo: "",
     imageSrc:
-      "https://cdn.discordapp.com/attachments/920399601993908274/1176539083284172930/logo-ceferno-perfil.png?ex=656f3c68&is=655cc768&hm=db7c133e5722d58253f1d518f073e60b317710c58872be5e7c69272dd9a05d43&",
+      "https://i.postimg.cc/qMCG260x/logo-ceferno-perfil.png",
     bannerSrc:
-      "https://media.discordapp.net/attachments/1100381589805998080/1147535718642614322/Cabecalho_do_Twitter_1500x500_px..jpeg?width=1025&height=342",
+      "https://cdn.discordapp.com/attachments/871728576972615680/1263678662138527814/cabecalhoceferno.png?ex=669b1bf7&is=6699ca77&hm=596b4597d1f87e7a67c60f61fce840e96955e1d9f150a5901b7579170e92ace4&",
     etapa: 1,
     isEmailValid: true,
     isPasswordMatch: true,

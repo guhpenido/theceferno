@@ -120,12 +120,12 @@ export function Acessibilidade() {
     <>
       <div className="acc-btn-menu" onClick={toggleAccContainer}>
         <img
-          src="https://cdn.discordapp.com/attachments/871728576972615680/1142352433352294482/asa.png?ex=653cb19b&is=652a3c9b&hm=65990ae9be81fbaaa9ddb580196ca2f21fdd9f2e5d12dd8e53979164ec5dda13&"
+          src="https://i.postimg.cc/bY5TG9Xv/logo-Livre2.png"
           alt="Logo CEFERNO"
           className="acc-btn-img1"
         />
         <img
-          src="https://cdn.discordapp.com/attachments/871728576972615680/1163441952683991080/icon-Acessibilidade.png?ex=653f96c1&is=652d21c1&hm=70decd6e9eec47200c5bce148cb471b63a3686498ccacbbd7204d435e10ffda2&"
+          src="https://cdn.discordapp.com/attachments/871728576972615680/1263675810586296372/07145744_9079_GDO.png?ex=669b194f&is=6699c7cf&hm=efb78637015994dee4f3899e9be7e5d30f68cf1e735487a33a46cafb81b52c98&"
           alt="Acessibilidade"
           className="acc-btn-img2"
         />
@@ -138,7 +138,7 @@ export function Acessibilidade() {
             </div>
             <div className="acc-close" onClick={toggleAccContainer}>
               <img
-                src="https://cdn.discordapp.com/attachments/871728576972615680/1163446720408059944/signs-close-icon-png.png?ex=653f9b31&is=652d2631&hm=e3648557c0a15979e5464a85cdb74a82246e55b2d9b2d0a06222fa9060fecc6d&"
+                src="https://cdn.discordapp.com/attachments/871728576972615680/1263676311180673124/d3826a943b0d3a9d54ec3d3cba01d0ef.png?ex=669b19c6&is=6699c846&hm=13c44c3a6328bec96854ae11dad2b2a6a6932fc4ddba08d6b8e6dfda40d1ff76&"
                 alt=""
                 className="acc-close-img"
               />
@@ -169,7 +169,7 @@ export function Acessibilidade() {
               )}
               <div className="acc-item-body">
                 <img
-                  src="https://cdn.discordapp.com/attachments/871728576972615680/1163445320479428629/font-size-increase-icon.png?ex=653f99e4&is=652d24e4&hm=6652e44edb9cf24aeca0178179bad6ce2c5c90dd923d42ebca8c5eec64cc7ea7&"
+                  src="https://cdn.discordapp.com/attachments/871728576972615680/1263676029936078878/Increase_Font_icon-icons.png?ex=669b1983&is=6699c803&hm=91f1cdeab22757006642ec39ef0aeb6808f30fca8f118278a5b9b336f54908bc&"
                   alt="Aumentar Texto"
                 />
                 <h3>Aumentar fonte</h3>
@@ -189,7 +189,7 @@ export function Acessibilidade() {
               )}
               <div className="acc-item-body">
                 <img
-                  src="https://cdn.discordapp.com/attachments/871728576972615680/1163445459306680440/text_spacing_horizontal_icon_148693.png?ex=653f9a05&is=652d2505&hm=733b8464ef9aec5deedb9e04e5e84a1b308c0e30b43d689f5f371ece5be19d6e&"
+                  src="https://cdn.discordapp.com/attachments/871728576972615680/1263676113226432645/12379211.png?ex=669b1997&is=6699c817&hm=2710f0e40d51a7dd5a00ff6d34a10ecfcbdc814b4f64e28dbcf8209888f185cf&"
                   alt="Espaçamento letras"
                 />
                 <h3>Aumentar espaçamento</h3>
@@ -216,7 +216,7 @@ export function Acessibilidade() {
               )}
               <div className="acc-item-body">
                 <img
-                  src="https://cdn.discordapp.com/attachments/871728576972615680/1163445606602264646/1994261.png?ex=653f9a28&is=652d2528&hm=b3b3bbcb7daea1eecb0846ed3d6d9a6ad6d59e51c28becb087d19e3e4ab7d3ac&"
+                  src="https://cdn.discordapp.com/attachments/871728576972615680/1263676237684015166/row_height_icon_154882.png?ex=669b19b5&is=6699c835&hm=3c2caca11b766f0b30c67585161d493b8b38e976ef4268e37029f53386946088&"
                   alt="Altura linha"
                 />
                 <h3>Aumentar altura</h3>
